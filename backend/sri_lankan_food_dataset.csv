@@ -1,0 +1,156 @@
+name,category,is_veg,meal_time,spicy_level,price_range
+String Hoppers,Main Meals,TRUE,Breakfast/Dinner,None,Low
+Plain Hoppers,Main Meals,TRUE,Breakfast/Dinner,None,Low
+Egg Hoppers,Main Meals,FALSE,Breakfast/Dinner,Low,Low
+Pittu,Main Meals,TRUE,Breakfast,None,Low
+Kiribath,Main Meals,TRUE,Breakfast,Low,Low
+Kadala (Chickpeas),Main Meals,TRUE,Breakfast,Low,Low
+Boiled Manioc,Main Meals,TRUE,Breakfast,None,Low
+Boiled Sweet Potatoes,Main Meals,TRUE,Breakfast,None,Low
+Dosa,Main Meals,TRUE,Breakfast/Dinner,None,Low
+Pol Roti,Main Meals,TRUE,Breakfast/Dinner,None,Low
+Kurakkan Roti,Main Meals,TRUE,Breakfast/Dinner,None,Low
+Egg Roti,Main Meals,FALSE,Breakfast/Dinner,Low,Low
+Vegetable Roti,Main Meals,TRUE,Breakfast/Dinner,Medium,Low
+Paratha,Main Meals,TRUE,Breakfast/Dinner,None,Low
+Puri,Main Meals,TRUE,Breakfast/Dinner,None,Low
+Idli,Main Meals,TRUE,Breakfast/Dinner,None,Low
+Naan,Main Meals,TRUE,Breakfast/Dinner,None,Low
+Godamba Roti,Main Meals,TRUE,Breakfast/Dinner,None,Low
+Chicken Roll,Short Eats,FALSE,Any,Medium,Low
+Fish Roll,Short Eats,FALSE,Any,Medium,Low
+Egg Roll,Short Eats,FALSE,Any,Medium,Low
+Samosa,Short Eats,FALSE,Any,Medium,Low
+Bread,Short Eats,TRUE,Any,None,Low
+Roast Pan,Short Eats,TRUE,Any,None,Low
+Sandwiches,Short Eats,TRUE,Any,Low,Low
+Chicken Bun,Short Eats,FALSE,Any,Medium,Low
+Fish Bun (Malu Pan),Short Eats,FALSE,Any,Medium,Low
+Sausage Bun,Short Eats,FALSE,Any,Medium,Low
+Egg Bun,Short Eats,FALSE,Any,Medium,Low
+Seeni Sambol Bun,Short Eats,TRUE,Any,Medium,Low
+Kimbula Bun,Short Eats,TRUE,Any,None,Low
+Fish Patties,Short Eats,FALSE,Any,Medium,Low
+Chicken Patties,Short Eats,FALSE,Any,Medium,Low
+Ulundhu Vadai,Short Eats,TRUE,Any,Low,Low
+Parippu vada,Short Eats,TRUE,Any,Low,Low
+Kola Kenda,Short Eats,TRUE,Breakfast,None,Low
+Vegetable Soup,Soups,TRUE,Any,Low,Medium
+Chicken Soup,Soups,FALSE,Any,Low,Medium
+Pork Soup,Soups,FALSE,Any,Low,Medium
+Beef Soup,Soups,FALSE,Any,Low,Medium
+Mutton Soup,Soups,FALSE,Any,Low,Medium
+Vegetable Noodles,Main Meals,TRUE,Any,Medium,Medium
+Egg Noodles,Main Meals,FALSE,Any,Medium,Medium
+Chicken Noodles,Main Meals,FALSE,Any,Medium,Medium
+Mixed Seafood Noodles,Main Meals,FALSE,Any,Medium,High
+Lunumiris,Sauces & Sides,TRUE,Any,High,Low
+Seeni Sambol,Sauces & Sides,TRUE,Any,Medium,Low
+Coconut Sambol,Sauces & Sides,TRUE,Any,Medium,Low
+Kochchi Sambol,Sauces & Sides,TRUE,Any,High,Low
+Dhal Curry,Curries,TRUE,Any,Low,Low
+Ala Baduma (Stir-fried Potato),Curries,TRUE,Lunch/Dinner,High,Low
+Omelet,Short Eats,FALSE,Any,Low,Low
+Kiri Hodi,Curries,TRUE,Any,Low,Low
+Ala Hodi (Potato White Curry),Curries,TRUE,Any,Low,Low
+Chicken Curry,Curries,FALSE,Any,Medium,Low
+Devilled Chicken,Curries,FALSE,Lunch/Dinner,High,Medium
+Butter Chicken Curry,Curries,FALSE,Lunch/Dinner,Medium,Medium
+Egg Curry,Curries,FALSE,Any,Medium,Low
+Fish Curry,Curries,FALSE,Any,Medium,Low
+Fish White Curry,Curries,FALSE,Any,Low,Low
+Devilled Fish,Curries,FALSE,Lunch/Dinner,High,Medium
+Fish Ambul Thiyal (Sour Fish Curry),Curries,FALSE,Lunch/Dinner,High,Low
+Cuttlefish Curry,Curries,FALSE,Lunch/Dinner,Medium,Low
+Devilled Cuttlefish,Curries,FALSE,Lunch/Dinner,High,Medium
+Black Pork Curry,Curries,FALSE,Any,High,Medium
+Devilled Pork,Curries,FALSE,Lunch/Dinner,High,Medium
+Beef Curry,Curries,FALSE,Any,Medium,Medium
+Devilled Beef,Curries,FALSE,Lunch/Dinner,High,Medium
+Mutton Curry,Curries,FALSE,Any,Medium,Medium
+Hot Butter Cuttlefish,Curries,FALSE,Lunch/Dinner,Medium,Medium
+Prawn Curry,Curries,FALSE,Lunch/Dinner,Medium,Medium
+Devilled Prawns,Curries,FALSE,Lunch/Dinner,High,Medium
+Crab Curry,Curries,FALSE,Lunch/Dinner,Medium,Medium
+Meatball Curry,Curries,FALSE,Lunch/Dinner,Medium,Low
+Mushroom Curry,Curries,TRUE,Any,Medium,Low
+Soya Meat Curry,Curries,TRUE,Lunch/Dinner,Medium,Low
+Devilled Soya Meat,Curries,TRUE,Lunch/Dinner,High,Low
+Polos Curry,Curries,TRUE,Lunch/Dinner,Medium,Low
+Cashew Nut Curry,Curries,TRUE,Lunch/Dinner,Low,Medium
+Kir Kos (Jackfruit Curry),Curries,TRUE,Any,Low,Low
+Pumpkin Curry,Curries,TRUE,Any,Low,Low
+Beetroot Curry,Curries,TRUE,Any,Low,Low
+Green Bean Curry,Curries,TRUE,Any,Low,Low
+Ambarella Curry,Curries,TRUE,Any,Medium,Low
+Kesel Muwa Curry (Banana Blossom Curry),Curries,TRUE,Any,Low,Low
+Nelum Ala Curry (Lotus Root Curry),Curries,TRUE,Any,Low,Low
+Eggplant Curry,Curries,TRUE,Any,Low,Low
+Wambatu Moju (Eggplant Pickle),Sauces & Sides,TRUE,Lunch/Dinner,Medium,Low
+Gotukola Sambol (Pennywort Salad),Sauces & Sides,TRUE,Any,Low,Low
+Mango Chutney,Sauces & Sides,TRUE,Any,Medium,Low
+Chicken Cutlet,Short Eats,FALSE,Any,Medium,Low
+Fish Cutlet,Short Eats,FALSE,Any,Medium,Low
+Vegetable Cutlet,Short Eats,TRUE,Any,Medium,Low
+Papadam,Sauces & Sides,TRUE,Any,None,Low
+Malay Pickle,Sauces & Sides,TRUE,Any,High,Low
+Rice and Curry,Main Meals,TRUE,Any,Medium,Medium
+Yellow rice,Main Meals,TRUE,Lunch/Dinner,Low,Medium
+Rathu Kekulu Rice (Red Raw Rice),Main Meals,TRUE,Any,None,Medium
+Lamprais (Lump Rice),Main Meals,FALSE,Lunch,Medium,High
+Biryani,Main Meals,FALSE,Lunch/Dinner,Medium,High
+Vegetable Fried Rice,Main Meals,TRUE,Lunch/Dinner,Medium,Medium
+Chicken Fried Rice,Main Meals,FALSE,Lunch/Dinner,Medium,Medium
+Egg Fried Rice,Main Meals,FALSE,Lunch/Dinner,Medium,Medium
+Seafood Fried Rice,Main Meals,FALSE,Lunch/Dinner,Medium,High
+Mixed Fried Rice,Main Meals,FALSE,Lunch/Dinner,Medium,High
+Chopsuey Rice,Main Meals,FALSE,Lunch/Dinner,Medium,High
+Vegetable Kottu,Main Meals,TRUE,Lunch/Dinner,Medium,Medium
+Chicken Kottu,Main Meals,FALSE,Lunch/Dinner,Medium,Medium
+Egg Kottu,Main Meals,FALSE,Lunch/Dinner,Medium,Medium
+Cheese Kottu,Main Meals,FALSE,Lunch/Dinner,Low,High
+Dolphin Kottu,Main Meals,FALSE,Lunch/Dinner,Medium,Medium
+Seafood Kottu,Main Meals,FALSE,Lunch/Dinner,Medium,High
+String Hopper kottu,Main Meals,FALSE,Dinner,Medium,Medium
+Watalappan,Desserts,TRUE,Any,None,Low
+Curd and Treacle,Desserts,TRUE,Any,None,Low
+Biscuit Pudding,Desserts,TRUE,Any,None,Low
+Caramel Pudding,Desserts,TRUE,Any,None,Low
+Kiri Toffee (Milk Toffee),Desserts,TRUE,Any,None,Low
+Pol Toffee (Coconut Toffee),Desserts,TRUE,Any,None,Low
+Thala Bola (Sesame Seed bolls),Desserts,TRUE,Any,None,Low
+Thala Karali (Sesame Seed Rolls),Desserts,TRUE,Any,None,Low
+Wali thalapa,Desserts,TRUE,Any,None,Low
+Lavariya,Desserts,TRUE,Any,None,Low
+Helapa,Desserts,TRUE,Any,None,Low
+Aggala,Desserts,TRUE,Any,Medium,Low
+Aluwa,Desserts,TRUE,Any,None,Low
+Athirasa,Desserts,TRUE,Any,None,Low
+Kevum (Oil Cake),Desserts,TRUE,Any,None,Low
+Aasmi,Desserts,TRUE,Any,None,Low
+Kokis,Desserts,TRUE,Any,Low,Low
+Dosi,Desserts,TRUE,Any,None,Low
+Pani Walalu,Desserts,TRUE,Any,None,Low
+Kalu Dodol,Desserts,TRUE,Any,None,Low
+Coconut Cake,Desserts,TRUE,Any,None,Low
+Butter Cake,Desserts,TRUE,Any,None,Low
+Ribbon Cake,Desserts,TRUE,Any,None,Low
+Jaggery,Desserts,TRUE,Any,None,Low
+Spicy Cashew,Snacks,TRUE,Any,High,High
+Ceylon Coffee,Drinks,TRUE,Any,None,Low
+Iced Coffee,Drinks,TRUE,Any,None,Low
+Ceylon Tea,Drinks,TRUE,Any,None,Low
+Green Tea,Drinks,TRUE,Any,None,Low
+Iced Tea,Drinks,TRUE,Any,None,Low
+Milk Tea,Drinks,TRUE,Any,None,Low
+Bubble Tea,Drinks,TRUE,Any,None,Medium
+Masala chai,Drinks,TRUE,Any,Low,Low
+Thambili (King Coconut),Drinks,TRUE,Any,None,Low
+Koththamalli,Drinks,TRUE,Any,None,Low
+Ginger Beer,Drinks,TRUE,Any,Low,Low
+Mango Lassi,Drinks,TRUE,Any,None,Medium
+Lemonade,Drinks,TRUE,Any,None,Low
+Avocado Juice,Drinks,TRUE,Any,None,Medium
+Falooda,Drinks,TRUE,Any,None,Medium
+Hot Chocolate,Drinks,TRUE,Any,None,Medium
+Soya Milk,Drinks,TRUE,Any,None,Low
