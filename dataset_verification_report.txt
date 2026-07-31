@@ -1,0 +1,33 @@
+=================================================================
+          SAFETRAVEL LK — DATASET VERIFICATION REPORT           
+=================================================================
+Initial Raw Records:      394,212
+Short / Noise Removed:    1
+Duplicates Removed:       30,804
+Invalid Coords Cleared:   0
+Final Cleaned Records:    363,407
+-----------------------------------------------------------------
+CLASS BALANCE & DATA DISTRIBUTION:
+  - Scam / Incident (1):  15,111 (4.2%)
+  - Safe / General (0):   348,296 (95.8%)
+-----------------------------------------------------------------
+CATEGORY BREAKDOWN:
+  - NEWS: 317,812 (87.5%)
+  - REVIEW: 44,413 (12.2%)
+  - REPORT: 1,182 (0.3%)
+-----------------------------------------------------------------
+DATASET SOURCES BREAKDOWN:
+  - archive (5)/Derana_News: 184,192
+  - archive (4)/news (dailymirror): 75,808
+  - archive (4)/news (newsfirst): 57,812
+  - archive (2)/Destination Reviews: 28,264
+  - Reviews.csv: 16,149
+  - db_tripadvisor_csv: 1,144
+  - db_google_news: 26
+  - db_news (recovered): 8
+  - db_newswire_lk: 3
+  - db_youtube: 1
+-----------------------------------------------------------------
+GEOLOCATION METRICS:
+  - Valid SL Geocoded:   54,585 (15.0%)
+=================================================================

@@ -1,0 +1,103 @@
+COVERAGE GAP ANALYSIS REPORT
+Generated: 2026-07-28T22:17:08.226234
+Database: 120882 records, 629 unique locations
+Canonical: 94 destinations
+Coverage: 94/94 (100.0%)
+
+GAPS (0):
+
+COVERED (94):
+  [19159 records] Colombo Galle Face Green -> Colombo
+  [19159 records] Colombo National Museum -> Colombo
+  [19159 records] Independence Square Colombo -> Colombo
+  [19159 records] Viharamahadevi Park -> Colombo
+  [2183 records] Little Adam's Peak -> Ella
+  [2183 records] Ella Rock -> Ella
+  [2183 records] Ravana Falls -> Ella
+  [2183 records] Negombo Fish Market -> Ella
+  [2183 records] Belihuloya -> Ella
+  [2002 records] Central Highlands (Horton Plains) -> Horton plains national park, Hatton
+  [1769 records] Galle Fort -> Galle
+  [1769 records] Tangalle Beach -> Galle
+  [1769 records] Rumassala -> Galle
+  [1769 records] Jungle Beach Galle -> Galle
+  [1224 records] Kandy Sacred City -> Kandy
+  [1224 records] Bahirawakanda Buddha Statue -> Kandy
+  [1129 records] Yapahuwa Rock Fortress -> Yapahuwa rock fortress, Kurunagela
+  [994 records] Jaffna Fort -> Jaffna
+  [994 records] Jaffna Public Library -> Jaffna
+  [669 records] Polonnaruwa Ancient City -> Polonnaruwa
+  [669 records] Pinnawala Elephant Orphanage -> Polonnaruwa
+  [602 records] Anuradhapura Sacred City -> Anuradhapura
+  [533 records] Weligama Beach -> Snake Farm Weligama (Traditional Farm), Matara
+  [530 records] Diyaluma Falls -> Diyaluma Falls, Badulla
+  [473 records] Peradeniya Botanical Garden -> Gampaha Botanical Garden, Gampaha
+  [472 records] Mirissa Beach -> Mirissa Beach, Matara
+  [448 records] Unawatuna Beach -> Jungle Beach, Unawatuna, Galle
+  [446 records] Mannar Island -> Matara
+  [411 records] Pettah Market -> Pettah Floating Market, Colombo
+  [407 records] Dondra Head Lighthouse -> Dondra Head, Matara
+  [401 records] Negombo Beach -> Negombo
+  [401 records] Negombo Dutch Fort -> Negombo
+  [396 records] Marble Beach Trincomalee -> Trincomalee
+  [396 records] Koneswaram Temple -> Trincomalee
+  [396 records] Fort Frederick Trincomalee -> Trincomalee
+  [380 records] Kelaniya Raja Maha Vihara -> Kelaniya Raja Maha Viharaya, Colombo
+  [342 records] Bundala National Park -> Bundala National Park, Hambantota
+  [321 records] Dambulla Cave Temple -> Dambulla Cave Temple
+  [314 records] Sigiriya Rock Fortress -> Sigiriya Museum
+  [301 records] Batticaloa Lagoon -> Kandy Lake
+  [289 records] Gangaramaya Temple -> Gangaramaya (Vihara) Buddhist Temple
+  [279 records] Mihintale -> Mihintale
+  [265 records] Nuwara Eliya Town -> Victoria Park of Nuwara Eliya
+  [264 records] Munneswaram Temple -> Koneswaram Temple
+  [264 records] Dowa Rock Temple -> Koneswaram Temple
+  [256 records] Gregory Lake -> Gregory Lake
+  [248 records] Hakgala Botanical Garden -> Hakgala Botanic Gardens
+  [248 records] Muthurajawela Boat Ride -> Hakgala Botanic Gardens
+  [233 records] Bentota Beach -> Bentota Beach
+  [230 records] Minneriya National Park -> Minneriya National Park
+  [226 records] Nallur Kandaswamy Temple -> Nallur Kovil
+  [213 records] Hikkaduwa Beach -> Hikkaduwa Beach
+  [213 records] Koggala Beach -> Hikkaduwa Beach
+  [213 records] Pasikudah Beach -> Hikkaduwa Beach
+  [211 records] Kaudulla National Park -> Dambulla
+  [211 records] Ambuluwawa Tower -> Dambulla
+  [202 records] Wewurukannala Buddha Statue -> Wewurukannala Buduraja Maha Viharaya
+  [196 records] Ramboda Falls -> Arugam Bay
+  [196 records] Arugam Bay -> Arugam Bay
+  [196 records] Batticaloa Dutch Fort -> Galle Dutch Fort
+  [193 records] Pigeon Island National Park -> Horton Plains National Park
+  [183 records] Nilaveli Beach -> Jungle Beach
+  [180 records] Mount Lavinia Beach -> Mount Lavinia Beach
+  [158 records] Pidurutalagala -> Thalangama Lake
+  [151 records] Adam's Peak -> Sri Lanka
+  [148 records] Nagadeepa Purana Vihara -> Yatagala Raja Maha Viharaya
+  [132 records] Sinharaja Forest Reserve -> Ritigala Forest Monastery
+  [132 records] Ritigala -> Ritigala Forest Monastery
+  [117 records] Knuckles Mountain Range -> Yakdessagala mountain, Kurunagela
+  [114 records] Kalkudah Beach -> Madiha Beach
+  [114 records] Casuarina Beach -> Madiha Beach
+  [95 records] Adam's Bridge -> Samadhi Statue
+  [81 records] Haputale -> Haputale, Uva Province
+  [51 records] Muthurajawela Wetland -> Atha Mala Ella
+  [43 records] Point Pedro -> Torington park
+  [34 records] Habarana -> Habarana
+  [14 records] Kalpitiya -> Dutch Bay Road, Kandakuliya, Kalpitiya, Sri Lanka
+  [13 records] Dambadeniya -> Dandeniya Wewa
+  [11 records] Bandarawela -> Abarana Ella
+  [10 records] Kosgoda Turtle Hatchery -> Mahapalena, No. 13/A Galle Rd, Kosgoda 80570, Sri Lanka
+  [7 records] Udawalawe National Park -> Udawalawe National Park
+  [7 records] Wilpattu National Park -> Udawalawe National Park
+  [7 records] Ratnapura Gem City -> M9MX+PRP, Ratnapura, Sri Lanka
+  [6 records] Buduruwagala -> Buduruwagala Rd, Sri Lanka
+  [2 records] Yala National Park -> Bundala National Park
+  [2 records] Kumana National Park -> Bundala National Park
+  [1 records] Nine Arch Bridge -> Nine Arch Bridge, Uva
+  [1 records] Lipton's Seat -> Lipton's Seat, Uva
+  [1 records] Delft Island -> Delft Island, Northern
+  [1 records] Keerimalai Springs -> Keerimalai Springs, Northern
+  [1 records] Baobab Tree Mannar -> Baobab Tree Mannar, Northern
+  [1 records] Chilaw -> Chilaw, North Western
+  [1 records] Pidurangala Rock -> Pidurangala Rock, North Central
+  [1 records] Handunugoda Tea Estate -> Handunugoda Tea Estate, Southern

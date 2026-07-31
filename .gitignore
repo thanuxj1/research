@@ -1,0 +1,53 @@
+# Environment Variables & Secrets
+.env
+.env.*
+backend/.env
+backend/.env.*
+
+# Python & Virtual Environments
+.venv/
+venv/
+env/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Heavy Binaries & ML Models (>10MB)
+*.joblib
+*.pkl
+*.h5
+*.onnx
+*.pth
+
+# Heavy Raw Datasets & Databases (>100MB GitHub Limit)
+*.csv
+*.db
+*.sqlite
+*.sqlite3
+archive/
+archive (1)/
+archive (2)/
+archive (3)/
+archive (4)/
+archive (5)/
+archive (6)/
+backend/*.db
+backend/training/dataset/*.csv
+
+# Node.js & Build Outputs
+node_modules/
+dist/
+build/
+.npm/
+
+# IDE & OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Temp & Artifact Storage
+.tempmediaStorage/
+scratch/
+*.log
