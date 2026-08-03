@@ -195,6 +195,55 @@ html, body { height: 100%; font-family: var(--font); background: var(--bg); colo
 }
 .btn-secondary:hover { border-color: var(--accent); color: var(--accent); }
 
+/* ── Leaflet MarkerCluster Dark Theme ─────────────────────── */
+.marker-cluster-small {
+  background-color: rgba(245, 158, 11, 0.35) !important;
+}
+.marker-cluster-small div {
+  background-color: rgba(245, 158, 11, 0.85) !important;
+  color: #fff !important;
+  font-weight: 700 !important;
+  font-family: var(--font) !important;
+}
+
+.marker-cluster-medium {
+  background-color: rgba(139, 92, 246, 0.35) !important;
+}
+.marker-cluster-medium div {
+  background-color: rgba(139, 92, 246, 0.85) !important;
+  color: #fff !important;
+  font-weight: 700 !important;
+  font-family: var(--font) !important;
+}
+
+.marker-cluster-large {
+  background-color: rgba(239, 68, 68, 0.35) !important;
+}
+.marker-cluster-large div {
+  background-color: rgba(239, 68, 68, 0.9) !important;
+  color: #fff !important;
+  font-weight: 800 !important;
+  font-family: var(--font) !important;
+}
+
+.marker-cluster {
+  background-clip: padding-box;
+  border-radius: 20px;
+  box-shadow: 0 0 16px rgba(0, 0, 0, 0.6);
+}
+.marker-cluster div {
+  width: 30px;
+  height: 30px;
+  margin-left: 5px;
+  margin-top: 5px;
+  text-align: center;
+  border-radius: 15px;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 /* ── Leaflet Map ──────────────────────────────────────────── */
 #map-container { flex: 1; z-index: 1; }
 .leaflet-popup-content-wrapper {
@@ -1358,3 +1407,173 @@ html, body { height: 100%; font-family: var(--font); background: var(--bg); colo
   .chat-layout { flex-direction: column; }
   .chat-sidebar { width: 100%; max-height: 200px; flex-direction: row; overflow-x: auto; }
 }
+
+/* ── District Choropleth: legend + tooltip ─────────────────────────── */
+.district-legend {
+  position: absolute;
+  left: 20px;
+  bottom: 85px;
+  z-index: 1000;
+  padding: 12px 14px;
+  border-radius: 12px;
+  max-width: 230px;
+  font-size: 11px;
+  color: #e2e8f0;
+  background: rgba(15, 23, 42, 0.94);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+.dl-title { font-weight: 700; font-size: 12px; margin-bottom: 8px; color: #f8fafc; }
+.dl-row { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
+.dl-swatch { width: 12px; height: 12px; border-radius: 3px; display: inline-block; flex-shrink: 0; }
+.dl-note { margin-top: 8px; font-size: 9.5px; color: #94a3b8; line-height: 1.4; }
+
+.district-tooltip-wrap.leaflet-tooltip { background: #0f172a; color: #e2e8f0; border: 1px solid #334155; border-radius: 8px; padding: 8px 10px; }
+.district-tooltip .dt-title { font-weight: 700; font-size: 13px; margin-bottom: 2px; }
+.district-tooltip .dt-tier { font-size: 12px; margin-bottom: 4px; }
+.district-tooltip .dt-row { font-size: 10.5px; color: #cbd5e1; margin-bottom: 2px; }
+.district-tooltip .dt-conf b { color: #fbbf24; }
+.district-tooltip .dt-warn, .popup-body .dt-warn { color: #f97316; }
+
+/* ── Leaflet Custom Dark Glassmorphism Popups ─────────────────────── */
+.leaflet-popup-content-wrapper {
+  background: rgba(15, 23, 42, 0.96) !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+  border-radius: 14px !important;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.65) !important;
+  color: #f8fafc !important;
+  padding: 0 !important;
+  overflow: hidden !important;
+}
+
+.leaflet-popup-content {
+  margin: 0 !important;
+  line-height: 1.4 !important;
+  color: #f8fafc !important;
+  font-family: inherit !important;
+}
+
+.leaflet-popup-tip-container {
+  overflow: visible !important;
+}
+
+.leaflet-popup-tip {
+  background: rgba(15, 23, 42, 0.96) !important;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5) !important;
+}
+
+.leaflet-container a.leaflet-popup-close-button {
+  color: #94a3b8 !important;
+  padding: 8px 10px 0 0 !important;
+  font-size: 18px !important;
+  font-weight: 600 !important;
+}
+.leaflet-container a.leaflet-popup-close-button:hover {
+  color: #ef4444 !important;
+}
+
+.popup-header {
+  padding: 12px 14px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.popup-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: #f8fafc;
+}
+
+.popup-badge {
+  font-size: 10px;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 99px;
+  white-space: nowrap;
+}
+
+.popup-badge.badge-red { background: rgba(239, 68, 68, 0.2); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.4); }
+.popup-badge.badge-yellow { background: rgba(245, 158, 11, 0.2); color: #f59e0b; border: 1px solid rgba(245, 158, 11, 0.4); }
+.popup-badge.badge-orange { background: rgba(249, 115, 22, 0.2); color: #f97316; border: 1px solid rgba(249, 115, 22, 0.4); }
+.popup-badge.badge-green { background: rgba(34, 197, 94, 0.2); color: #22c55e; border: 1px solid rgba(34, 197, 94, 0.4); }
+.popup-badge.badge-blue { background: rgba(59, 130, 246, 0.2); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.4); }
+
+.popup-body {
+  max-height: 250px;
+  overflow-y: auto;
+  padding: 12px 14px;
+  font-size: 12px;
+  line-height: 1.5;
+  color: #cbd5e1;
+}
+
+.popup-body::-webkit-scrollbar {
+  width: 4px;
+}
+.popup-body::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+}
+
+.popup-section {
+  margin-bottom: 10px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+.popup-section:last-child {
+  margin-bottom: 0;
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+.popup-scams {
+  margin: 4px 0 0 0;
+  padding-left: 16px;
+  color: #e2e8f0;
+}
+
+.popup-scams li {
+  margin-bottom: 3px;
+  font-size: 11.5px;
+}
+
+.popup-titles {
+  margin: 6px 0 0 0;
+  padding-left: 16px;
+}
+
+.popup-titles li {
+  margin-bottom: 6px;
+  font-size: 11px;
+}
+
+.popup-titles a {
+  color: #818cf8 !important;
+  text-decoration: none !important;
+  font-weight: 500;
+}
+.popup-titles a:hover {
+  text-decoration: underline !important;
+  color: #a5b4fc !important;
+}
+
+.dt-row {
+  font-size: 11px;
+  color: #cbd5e1;
+  margin-bottom: 3px;
+}
+
+.dt-warn {
+  color: #f97316;
+  font-weight: 600;
+}
+

@@ -1,14 +1,11 @@
 """
-FULL Destination Reviews Ingestion — ALL Reviews, Not Just Scam-Flagged
+FULL Destination Reviews Ingestion — STRICT Safety Filter Enabled
 IT22629180
 
-CRITICAL FIX: Previously we only ingested reviews containing scam keywords.
-This meant places like Ruwanwelisaya, Ambuluwawa, Ravana Falls etc. never
-appeared on the map because their reviews were mostly positive.
-
-NOW: We ingest EVERY review. Safe reviews get is_scam=0, risk_level=1.
-Flagged reviews get properly classified. This ensures every destination
-appears on the map with its actual safety status.
+STRICT SAFETY FILTER:
+We ONLY ingest reviews that contain explicit safety incident signals
+(scam, theft, harassment, physical danger, overcharging, transport fraud, etc.).
+Positive, safe, or generic tourist reviews are strictly dropped.
 """
 import os
 import csv
@@ -292,15 +289,16 @@ def ingest_all_reviews():
                 lat, lng = get_coords(dest, district)
                 is_scam, scam_type, risk_level = classify_review(review)
 
-                if is_scam:
-                    file_flagged += 1
-                else:
+                if not is_scam:
                     file_safe += 1
+                    continue  # DROP positive/safe reviews — only ingest genuine safety signals!
+
+                file_flagged += 1
 
                 all_records.append({
                     "source": "destination_reviews",
                     "source_weight": 0.60,
-                    "title": f"Review: {dest}",
+                    "title": f"Safety Report: {dest}",
                     "content": review,
                     "url": f"https://maps.google.com/?q={lat},{lng}",
                     "latitude": lat,
@@ -308,7 +306,7 @@ def ingest_all_reviews():
                     "location_name": f"{dest}, {district.title()}" if district else dest,
                     "scam_type": scam_type,
                     "risk_level": risk_level,
-                    "is_scam": is_scam,
+                    "is_scam": 1,
                     "created_at": datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S"),
                 })
 

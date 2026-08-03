@@ -6,6 +6,8 @@
     <title>SafeTravel LK — AI Safety Heatmap for Sri Lanka</title>
     <meta name="description" content="Real-time AI-powered safety heatmap for tourists in Sri Lanka. View scam hotspots, risk zones, and personalized travel warnings." />
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css" />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="/src/style.css" />
   </head>
@@ -74,6 +76,13 @@
                 </div>
               </div>
 
+              <div class="panel-section">
+                <label class="section-label" style="display:flex; align-items:center; gap:8px; cursor:pointer;">
+                  <input type="checkbox" id="toggle-choropleth" checked style="width:auto;" />
+                  District Risk Map (shaded)
+                </label>
+              </div>
+
               <button id="btn-refresh" class="btn-primary btn-sm">🔄 Refresh Map</button>
             </div>
 
@@ -99,8 +108,8 @@
               <div id="intel-content"><!-- Populated by JS --></div>
             </div>
 
-            <!-- Top Right: Active Warnings (shows when no assessment active) -->
-            <div id="warnings-panel" class="floating-panel panel-top-right glass warnings-panel">
+            <!-- Top Right: Active Warnings (hidden by default on page load) -->
+            <div id="warnings-panel" class="floating-panel panel-top-right glass warnings-panel hidden">
               <div class="panel-header pulse-alert">
                 <span class="icon">⚠️</span> Active Warnings
               </div>
@@ -313,6 +322,7 @@
       </div>
     </div>
 
+    <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
     <script type="module" src="/src/main.js"></script>
   </body>
 </html>

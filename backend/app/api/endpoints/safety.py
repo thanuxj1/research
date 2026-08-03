@@ -271,18 +271,21 @@ def get_heatmap(
     db: Session = Depends(get_db),
 ):
     """
-    Returns geolocated reports grouped into grid-based zones.
-    Ensures consistency with the Dashboard by using shared scoring/clustering logic.
+    Returns geolocated safety incident reports grouped into grid-based risk zones.
+    Filtered strictly to active safety events (no 'safe' or non-scam noise).
     """
     from app.core.clustering import get_grid_zones
 
     reports = db.query(Report).filter(
         Report.latitude.isnot(None),
-        Report.longitude.isnot(None)
+        Report.longitude.isnot(None),
+        Report.is_scam == True,
+        Report.scam_type != 'safe',
+        Report.scam_type.isnot(None),
     ).all()
 
     if not reports:
-        return _demo_zones()
+        return []
 
     # Use shared grid-based clustering and scoring
     zones = get_grid_zones(reports)
@@ -290,7 +293,6 @@ def get_heatmap(
     # Format for frontend and apply demographic adjustments
     result = []
     for i, z in enumerate(zones):
-        # Additional metadata for the popup
         scam_types = {}
         sources = {}
         titles = []
@@ -298,14 +300,14 @@ def get_heatmap(
         scam_count = 0
         
         for r in z["reports"]:
-            if r.is_scam: scam_count += 1
-            if r.scam_type:
+            if r.is_scam:
+                scam_count += 1
+            if r.scam_type and r.scam_type != 'safe':
                 scam_types[r.scam_type] = scam_types.get(r.scam_type, 0) + 1
             src = r.source or "unknown"
             sources[src] = sources.get(src, 0) + 1
 
             if len(titles) < 5:
-                # Skip non-tourism noise
                 if is_tourism_irrelevant(r.title, r.content):
                     continue
                 raw_t = (r.title or "").strip()
@@ -323,6 +325,10 @@ def get_heatmap(
                     seen_fps.add(fp)
                     url = build_source_link(r.url, disp_t, r.content, z["location_name"], source=r.source)
                     titles.append({"title": disp_t, "url": url, "source": r.source})
+
+        # Drop zones with no active scam types
+        if not scam_types:
+            continue
 
         result.append({
             "cluster_id":        i,

@@ -1,4 +1,4 @@
-import { SafetyMap } from './map.js';
+import { SafetyMap, isAccessibleWebUrl } from './map.js';
 
 const API = 'http://localhost:8000/api/v1';
 
@@ -45,6 +45,27 @@ chips.forEach(chip => {
     map.setFilters({ ...filters });
   });
 });
+
+/* ── District Choropleth (risk-per-district, replaces "everything red" clusters) ── */
+async function fetchDistrictRiskMap() {
+  try {
+    const res = await fetch(`${API}/districts/risk-map`);
+    if (!res.ok) throw new Error(res.statusText);
+    const geojson = await res.json();
+    map.renderDistrictChoropleth(geojson);
+  } catch (err) {
+    console.warn('[DistrictMap] Could not reach backend.', err);
+  }
+}
+
+const choroplethToggle = document.getElementById('toggle-choropleth');
+if (choroplethToggle) {
+  choroplethToggle.addEventListener('change', () => {
+    map.toggleDistrictChoropleth(choroplethToggle.checked);
+  });
+}
+
+fetchDistrictRiskMap();
 
 async function fetchHeatmap() {
   const demo = demoSelect.value;
@@ -208,6 +229,11 @@ map.map.on('click', (e) => {
 
 /* ── Safety Intelligence Assessment ──────────────────────── */
 async function assessLocation(lat, lng, placeName) {
+  // Ensure ONLY ONE panel/popup is visible: close any open map popup
+  if (map && map.map) {
+    map.map.closePopup();
+  }
+
   // Show loading state
   intelPanel.classList.remove('hidden');
   warningsPanel.style.display = 'none';
@@ -266,7 +292,8 @@ async function assessLocation(lat, lng, placeName) {
 
 function closeIntelPanel() {
   intelPanel.classList.add('hidden');
-  warningsPanel.style.display = '';
+  warningsPanel.classList.add('hidden');
+  warningsPanel.style.display = 'none';
   if (clickMarker) { map.map.removeLayer(clickMarker); clickMarker = null; }
 }
 window.closeIntelPanel = closeIntelPanel;
@@ -372,10 +399,40 @@ function renderIntelligencePanel(data, placeName, lat, lng) {
     </div>
   ` : '';
 
+  const scoreDisplay = data.composite_score !== null && data.composite_score !== undefined 
+    ? `${(data.composite_score * 100).toFixed(0)}%` 
+    : 'N/A';
+
+  const filterWarningHtml = (data.verdict === 'HIGH RISK' && !filters.high) ? `
+    <div style="margin: 10px 0; padding: 8px 12px; background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.3); border-radius: 6px; font-size: 11px; color: #fca5a5;">
+      💡 <strong>Map Filter Notice:</strong> "High Risk" toggle is currently OFF in the left panel. High-risk hotspot markers are hidden on the map.
+    </div>
+  ` : (data.verdict === 'MODERATE RISK' && !filters.med) ? `
+    <div style="margin: 10px 0; padding: 8px 12px; background: rgba(245, 158, 11, 0.15); border: 1px solid rgba(245, 158, 11, 0.3); border-radius: 6px; font-size: 11px; color: #fcd34d;">
+      💡 <strong>Map Filter Notice:</strong> "Moderate" toggle is currently OFF in the left panel. Moderate-risk hotspot markers are hidden on the map.
+    </div>
+  ` : '';
+
+  const dc = data.district_context;
+  const tierFormatted = dc && dc.risk_tier ? (dc.risk_tier === 'insufficient_data' ? '⚪ Insufficient Data' : dc.risk_tier.toUpperCase() + ' RISK') : '';
+  const districtContextHtml = dc ? `
+    <div style="margin: 12px 0; padding: 10px 12px; background: rgba(30, 41, 59, 0.7); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 8px; font-size: 11px; color: #cbd5e1;">
+      <div style="font-weight: 600; color: #93c5fd; margin-bottom: 3px; display: flex; align-items: center; justify-content: space-between;">
+        <span>🏛️ District Level Context (${dc.district_name})</span>
+        <span style="font-size: 10px; padding: 2px 6px; border-radius: 4px; background: rgba(255, 255, 255, 0.1);">${tierFormatted}</span>
+      </div>
+      <div>
+        District Total: <strong>${dc.report_count ?? 0} reports</strong> (${dc.scam_report_count ?? 0} scam-flagged).
+        ${dc.exposure_status === 'unavailable' ? '<br><span style="color:#fcd34d;">⚠️ No SLTDA visitor footfall baseline — district score is density-based.</span>' : ''}
+      </div>
+    </div>
+  ` : '';
+
   intelContent.innerHTML = `
     <div class="intel-header">
       <div>
         <div class="intel-location">📍 ${placeName}</div>
+        <div style="font-size:11px; color:#94a3b8; font-weight:500; margin-top:2px;">🎯 Local Point Assessment (15km radius)</div>
         <div class="intel-coords">${lat.toFixed(5)}, ${lng.toFixed(5)}</div>
       </div>
       <button class="intel-close" onclick="closeIntelPanel()">✕</button>
@@ -384,7 +441,7 @@ function renderIntelligencePanel(data, placeName, lat, lng) {
     <div class="intel-verdict ${verdictClass}">
       <div class="intel-verdict-label">${data.verdict}</div>
       <div class="intel-score-row">
-        <div class="intel-score-big" style="color:${scoreColor}">${(data.composite_score * 100).toFixed(0)}%</div>
+        <div class="intel-score-big" style="color:${scoreColor}">${scoreDisplay}</div>
         <div class="intel-score-meta">
           <div class="intel-confidence">Confidence: ${data.confidence}</div>
           <div class="intel-data-count">${data.total_reports_analyzed.toLocaleString()} reports analyzed</div>
@@ -393,6 +450,8 @@ function renderIntelligencePanel(data, placeName, lat, lng) {
       </div>
     </div>
 
+    ${districtContextHtml}
+    ${filterWarningHtml}
     ${noDataHtml}
 
     ${data.verdict !== 'INSUFFICIENT DATA' ? `
@@ -465,15 +524,28 @@ function renderIncidentsListHtml(incidents) {
     const sourceTitle = inc.source_display || inc.source || '';
     const isVerified = (inc.credibility_score || 0) >= 0.85;
     const scamLabel = inc.scam_type_display || inc.scam_type || 'Safety Incident';
-    const url = inc.url;
+    const validUrl = isAccessibleWebUrl(inc.url, inc.source);
 
-    // Detect button text dynamically based on source type
+    // Detect source type for badge & button styling
     const srcLower = (inc.source || '').toLowerCase();
+    const urlLower = (inc.url || '').toLowerCase();
+    const isYouTube = srcLower.includes('youtube') || urlLower.includes('youtube.com') || urlLower.includes('youtu.be');
+    const isTier1News = isVerified || srcLower.includes('mirror') || srcLower.includes('derana') || srcLower.includes('news') || srcLower.includes('times') || srcLower.includes('ceylon') || srcLower.includes('hiru');
+
     let btnText = '🔗 View Source';
-    if (srcLower.includes('tripadvisor') || srcLower.includes('maps') || srcLower.includes('reviews')) {
-      btnText = '⭐ Review Source';
-    } else if (srcLower.includes('mirror') || srcLower.includes('derana') || srcLower.includes('news') || srcLower.includes('times') || srcLower.includes('ceylon') || srcLower.includes('hiru')) {
-      btnText = '🔗 News Source';
+    let btnStyle = 'background: rgba(139, 92, 246, 0.15); color: var(--primary); border: 1px solid rgba(139, 92, 246, 0.4);';
+    let badgeHtml = `<span class="intel-incident-cred ${isVerified ? 'verified' : ''}">${credBadge}</span>`;
+
+    if (isYouTube) {
+      btnText = '▶️ Watch Video ↗';
+      btnStyle = 'background: rgba(239, 68, 68, 0.2); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.5); font-weight: 700;';
+      badgeHtml = `<span class="intel-incident-cred" style="background: rgba(239, 68, 68, 0.15); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.4); font-weight: 700;">🎥 YouTube Video</span>`;
+    } else if (isTier1News) {
+      btnText = '📰 News Article ↗';
+      btnStyle = 'background: rgba(59, 130, 246, 0.2); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.5); font-weight: 700;';
+      badgeHtml = `<span class="intel-incident-cred verified" style="background: rgba(59, 130, 246, 0.15); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.4); font-weight: 700;">🏛️ Tier 1 Verified News</span>`;
+    } else if (srcLower.includes('tripadvisor') || srcLower.includes('maps') || srcLower.includes('reviews')) {
+      btnText = '⭐ Review Source ↗';
     }
 
     const titleText = inc.title ? `"${inc.title}"` : '';
@@ -483,14 +555,14 @@ function renderIncidentsListHtml(incidents) {
         <span class="intel-incident-type" style="color:${inc.risk_level === 3 ? 'var(--red)' : 'var(--yellow)'}">
           ${SCAM_ICONS_INTEL[inc.scam_type_display] || SCAM_ICONS_INTEL[inc.scam_type] || '⚠️'} ${scamLabel}
         </span>
-        <span class="intel-incident-cred ${isVerified ? 'verified' : ''}">${credBadge}</span>
+        ${badgeHtml}
       </div>
       ${titleText ? `<div class="intel-incident-headline" style="font-weight:700; font-size:13.5px; margin:7px 0 4px 0; color:#f8fafc; line-height:1.35;">${titleText}</div>` : ''}
       <div class="intel-incident-text" style="color: #94a3b8; font-size:12.5px; line-height:1.45;">${inc.content_snippet || ''}</div>
       <div class="intel-incident-footer">
         <span class="intel-incident-source">📍 ${inc.location_name} · ${sourceTitle}</span>
         <span class="intel-incident-action-wrap">
-          ${url ? `<a href="${url}" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation();" class="intel-card-link" title="Open source webpage">${btnText} ↗</a>` : '<span class="intel-card-expand">🔍 View Details</span>'}
+          ${validUrl ? `<a href="${inc.url}" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation();" class="intel-card-link" style="${btnStyle}" title="Open source webpage">${btnText}</a>` : '<span class="intel-card-expand">🔍 View Details</span>'}
           <span class="intel-incident-dist">📏 ${inc.distance_km}km away</span>
         </span>
       </div>
@@ -516,9 +588,8 @@ window.sortNearbyIncidents = function(sortBy) {
 };
 
 window.openIncidentModal = function(index) {
-  const inc = (window.currentNearbyIncidents || [])[index];
-  if (!inc) return;
-
+  if (!window.currentNearbyIncidents || !window.currentNearbyIncidents[index]) return;
+  const inc = window.currentNearbyIncidents[index];
   const modal = document.getElementById('incident-modal');
   if (!modal) return;
 
@@ -526,11 +597,23 @@ window.openIncidentModal = function(index) {
   document.getElementById('modal-scam-badge').innerText = `⚠️ ${inc.scam_type_display || inc.scam_type || 'Scam Alert'}`;
   
   const credBadgeEl = document.getElementById('modal-cred-badge');
-  credBadgeEl.innerText = inc.credibility_label || '💬 Public Community Discussion';
-  if ((inc.credibility_score || 0) >= 0.85) {
-    credBadgeEl.className = 'intel-incident-cred verified';
-  } else {
+  const srcLower = (inc.source || '').toLowerCase();
+  const urlLower = (inc.url || '').toLowerCase();
+  const isYouTube = srcLower.includes('youtube') || urlLower.includes('youtube.com') || urlLower.includes('youtu.be');
+  const isTier1News = (inc.credibility_score || 0) >= 0.85 || srcLower.includes('mirror') || srcLower.includes('derana') || srcLower.includes('news') || srcLower.includes('times') || srcLower.includes('ceylon') || srcLower.includes('hiru');
+
+  if (isYouTube) {
+    credBadgeEl.innerText = '🎥 YouTube Video Evidence';
     credBadgeEl.className = 'intel-incident-cred';
+    credBadgeEl.style.cssText = 'background: rgba(239, 68, 68, 0.15); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.4); font-weight: 700;';
+  } else if (isTier1News) {
+    credBadgeEl.innerText = '🏛️ Tier 1 Verified News';
+    credBadgeEl.className = 'intel-incident-cred verified';
+    credBadgeEl.style.cssText = 'background: rgba(59, 130, 246, 0.15); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.4); font-weight: 700;';
+  } else {
+    credBadgeEl.innerText = inc.credibility_label || '💬 Public Community Discussion';
+    credBadgeEl.className = (inc.credibility_score || 0) >= 0.85 ? 'intel-incident-cred verified' : 'intel-incident-cred';
+    credBadgeEl.style.cssText = '';
   }
 
   document.getElementById('modal-location').innerText = `📍 ${inc.location_name || 'Sri Lanka'}`;
@@ -540,14 +623,21 @@ window.openIncidentModal = function(index) {
   document.getElementById('modal-summary-text').innerText = inc.full_summary || inc.content_snippet || 'Detailed report documented by safety intelligence monitoring.';
 
   const sourceLinkBtn = document.getElementById('modal-source-link');
-  if (inc.url && (inc.url.startsWith ? inc.url.startsWith('http') : inc.url.indexOf('http') === 0)) {
+  const validUrl = isAccessibleWebUrl(inc.url, inc.source);
+  if (validUrl) {
     sourceLinkBtn.href = inc.url;
-    const srcLower = (inc.source || '').toLowerCase();
     let btnText = '🔗 View Source ↗';
-    if (srcLower.includes('tripadvisor') || srcLower.includes('maps') || srcLower.includes('reviews')) {
-      btnText = '⭐ Review Source ↗';
-    } else if (srcLower.includes('mirror') || srcLower.includes('derana') || srcLower.includes('news') || srcLower.includes('times') || srcLower.includes('ceylon') || srcLower.includes('hiru')) {
-      btnText = '🔗 News Source ↗';
+    if (isYouTube) {
+      btnText = '▶️ Watch YouTube Video ↗';
+      sourceLinkBtn.style.cssText = 'background: rgba(239, 68, 68, 0.2); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.5); font-weight: 700;';
+    } else if (isTier1News) {
+      btnText = '📰 Read News Article ↗';
+      sourceLinkBtn.style.cssText = 'background: rgba(59, 130, 246, 0.2); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.5); font-weight: 700;';
+    } else if (srcLower.includes('tripadvisor') || srcLower.includes('maps') || srcLower.includes('reviews')) {
+      btnText = '⭐ Read Review ↗';
+      sourceLinkBtn.style.cssText = '';
+    } else {
+      sourceLinkBtn.style.cssText = '';
     }
     sourceLinkBtn.innerText = btnText;
     sourceLinkBtn.classList.remove('hidden');
@@ -1058,50 +1148,69 @@ window.toggleCheck = function(i) {
   if (el) el.classList.toggle('checked');
 };
 
-
-
+/* ── Dashboard (Tab 3) ─────────────────────────────────── */
 async function loadDashboard() {
   try {
-    const [stats, scamTypes, topLoc, reports, patterns] = await Promise.all([
-      fetch(`${API}/admin/stats`).then(r => r.json()),
-      fetch(`${API}/admin/scam-types`).then(r => r.json()),
-      fetch(`${API}/admin/top-locations`).then(r => r.json()),
-      fetch(`${API}/admin/reports?per_page=10`).then(r => r.json()),
-      fetch(`${API}/admin/patterns`).then(r => r.json()),
+    const [statsRes, reportsRes, patternsRes] = await Promise.all([
+      fetch(`${API}/admin/stats`),
+      fetch(`${API}/admin/reports?per_page=50`),
+      fetch(`${API}/admin/patterns`),
     ]);
 
-    document.getElementById('d-total').textContent    = stats.total_reports ?? '—';
-    document.getElementById('d-scams').textContent    = stats.scam_reports  ?? '—';
-    document.getElementById('d-zones').textContent    = stats.total_zones   ?? '—';
-    document.getElementById('d-highrisk').textContent = stats.high_risk_zones ?? '—';
-    statReports.querySelector('.stat-num').textContent = stats.total_reports ?? '—';
+    const stats = await statsRes.json();
+    const reports = await reportsRes.json();
+    const patterns = await patternsRes.json();
+
+    document.getElementById('d-total').textContent = (stats.total_reports || 0).toLocaleString();
+    document.getElementById('d-scams').textContent = (stats.scam_reports || 0).toLocaleString();
+    document.getElementById('d-zones').textContent = (stats.total_zones || 0).toLocaleString();
+    document.getElementById('d-highrisk').textContent = (stats.high_risk_zones || 0).toLocaleString();
+
+    // Aggregate scam types from patterns
+    const scamCounts = {};
+    if (Array.isArray(patterns)) {
+      patterns.forEach(p => {
+        if (p.scam_type) {
+          scamCounts[p.scam_type] = (scamCounts[p.scam_type] || 0) + (p.count || 1);
+        }
+      });
+    }
+    const scamTypes = Object.entries(scamCounts)
+      .map(([k, v]) => ({ scam_type: k.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase()), count: v }))
+      .sort((a, b) => b.count - a.count);
+    
+    const topLoc = Array.isArray(patterns) ? patterns.slice(0, 10).map(p => ({
+      location: p.location,
+      report_count: p.count
+    })) : [];
 
     renderBarChart('chart-scam-types', scamTypes, 'scam_type', 'count');
     renderBarChart('chart-locations', topLoc, 'location', 'report_count');
 
     const tbody = document.getElementById('reports-tbody');
-    if (!reports.items?.length) {
+    const items = reports.items || (Array.isArray(reports) ? reports : []);
+    if (!items.length) {
       tbody.innerHTML = '<tr><td colspan="6" class="loading-row">No reports yet.</td></tr>';
     } else {
-      tbody.innerHTML = reports.items.map(r => {
+      tbody.innerHTML = items.map(r => {
         const hasUrl = r.url && r.url.startsWith('http');
         const trustedSources = ['adaderana', 'sundaytimes', 'daily_mirror', 'google_news', 'colombo_gazette', 'newsfirst', 'ceylon_today', 'themorning_lk', 'hirunews_lk', 'theisland_lk', 'economynext_lk', 'newswire_lk'];
         const isVerified = trustedSources.includes(r.source?.toLowerCase());
-        const sourceLabel = r.source + (isVerified ? ' <span title="Verified News Source" style="color: #1da1f2; font-size: 14px;">✔</span>' : '');
+        const sourceLabel = (r.source || 'Verified Feed') + (isVerified ? ' <span title="Verified News Source" style="color: #1da1f2; font-size: 14px;">✔</span>' : '');
         
         const scamLabel = r.scam_type
           ? r.scam_type.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase())
-          : '<span style="color:#64748b;font-style:italic;">Uncategorized Incident</span>';
-        const locationLabel = r.location
-          ? r.location
+          : '<span style="color:#64748b;font-style:italic;">Safety Incident</span>';
+        const locationLabel = r.location_name || r.location
+          ? (r.location_name || r.location)
           : '<span style="color:#64748b;font-style:italic;">Sri Lanka</span>';
         return `<tr>
           <td>#${r.id}</td>
           <td>${sourceLabel}${hasUrl ? `<a href="${r.url}" target="_blank" rel="noopener noreferrer" class="source-link" style="margin-left:5px" title="View Source">&#x1F517;</a>` : ''}</td>
           <td>${scamLabel}</td>
-          <td><span class="risk-badge risk-${r.risk_level}">${['', 'Low', 'Moderate', 'High'][r.risk_level]}</span></td>
+          <td><span class="risk-badge risk-${r.risk_level || 2}">${['', 'Low', 'Moderate', 'High'][r.risk_level || 2]}</span></td>
           <td>${locationLabel}</td>
-          <td>${new Date(r.created_at).toLocaleDateString()}</td>
+          <td>${r.created_at ? new Date(r.created_at).toLocaleDateString() : 'Recent'}</td>
         </tr>`;
       }).join('');
     }
@@ -1110,20 +1219,22 @@ async function loadDashboard() {
     if (!patterns?.length) {
       ptbody.innerHTML = '<tr><td colspan="4" class="loading-row">No recurring patterns detected yet.</td></tr>';
     } else {
-      ptbody.innerHTML = patterns.map(p => {
-        const scamLabel = p.scam_type.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+      ptbody.innerHTML = patterns.slice(0, 15).map(p => {
+        const scamLabel = (p.scam_type || 'Incident').replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+        const avgRisk = Math.min(3, Math.max(1, Math.ceil(p.avg_risk || 2)));
         return `<tr>
           <td style="font-weight:600; color:var(--text);">${p.location}</td>
           <td>${scamLabel}</td>
-          <td><span class="risk-badge" style="background:var(--accent-glow); color:var(--accent);">${p.count} reports</span></td>
-          <td><span class="risk-badge risk-${Math.ceil(p.avg_risk)}">${['', 'Low', 'Moderate', 'High'][Math.ceil(p.avg_risk)]}</span></td>
+          <td><span class="risk-badge" style="background:var(--accent-glow); color:var(--accent);">${p.count} incidents</span></td>
+          <td><span class="risk-badge risk-${avgRisk}">${['', 'Low', 'Moderate', 'High'][avgRisk]}</span></td>
         </tr>`;
       }).join('');
     }
   } catch (err) {
-    console.warn('[Dashboard] Backend unreachable:', err);
+    console.warn('[Dashboard] Error fetching admin statistics:', err);
     ['d-total','d-scams','d-zones','d-highrisk'].forEach(id => {
-      document.getElementById(id).textContent = '—';
+      const el = document.getElementById(id);
+      if (el) el.textContent = '—';
     });
   }
 }

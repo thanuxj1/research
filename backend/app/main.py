@@ -6,7 +6,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from apscheduler.schedulers.background import BackgroundScheduler
 from apscheduler.triggers.cron import CronTrigger
 from app.core.config import settings
-from app.api.endpoints import reports, safety, admin, pipeline, ml, advisor, chat, authority
+from app.api.endpoints import reports, safety, admin, pipeline, ml, advisor, chat, authority, districts
 
 _scheduler = None
 _continuous_process = None
@@ -99,6 +99,7 @@ def health_check():
 PREFIX = settings.API_V1_STR
 app.include_router(reports.router,   prefix=f"{PREFIX}/reports",   tags=["Reports"])
 app.include_router(safety.router,    prefix=f"{PREFIX}/safety",    tags=["Safety Heatmap"])
+app.include_router(districts.router, prefix=f"{PREFIX}/districts", tags=["District Risk Map"])
 app.include_router(admin.router,     prefix=f"{PREFIX}/admin",     tags=["Admin Dashboard"])
 app.include_router(pipeline.router,  prefix=f"{PREFIX}/pipeline",  tags=["Data Pipeline"])
 app.include_router(ml.router,        prefix=f"{PREFIX}/ml",        tags=["ML Predictor"])

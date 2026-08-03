@@ -44,53 +44,88 @@ SCAM_SAFETY_TIPS = {
         "Ask your hotel for approximate costs to common destinations.",
         "Carry small denominations to avoid 'no change' overcharging tricks.",
     ],
+    "Price Gouging": [
+        "Confirm item prices or fare rates before accepting services.",
+        "Use official ride-hailing apps (PickMe/Uber) to avoid inflated rates.",
+        "Verify menu prices and bill breakdowns carefully at tourist spots.",
+    ],
     "General Scam": [
         "Be cautious of unsolicited help from strangers at tourist attractions.",
         "Verify any claims by checking with your hotel or official tourism offices.",
         "If a deal sounds too good to be true, it probably is.",
         "Report suspicious activity to the Tourist Police hotline: 1912.",
     ],
+    "General Tourist Safety": [
+        "Stay alert in busy tourist hubs and maintain awareness of belongings.",
+        "Keep emergency contacts saved offline (Tourist Police: 1912).",
+        "Use accredited tour operators and official transport options.",
+    ],
     "Fake Guide": [
         "Only hire guides through your hotel or SLTDA-certified agencies.",
         "Ask to see the guide's official SLTDA accreditation card.",
         "Avoid 'free' guides who approach you at attraction entrances — they often lead to commission-based shops.",
-        "Book guided tours through reputable platforms with verified reviews.",
+    ],
+    "Unlicensed Guide Scam": [
+        "Verify official credentials before hiring any tour guide.",
+        "Refuse unrequested guided walk-throughs at historical sites.",
     ],
     "Theft": [
         "Keep valuables in your hotel safe, not on your person.",
         "Use a money belt or front pocket for cash and cards.",
-        "Be extra vigilant on crowded beaches and in markets.",
-        "Carry photocopies of your passport; leave the original in the safe.",
+        "Be extra vigilant on crowded beaches, buses, and markets.",
     ],
-    "Theft / Robbery": [
-        "Keep valuables in your hotel safe, not on your person.",
-        "Use a money belt or front pocket for cash and cards.",
-        "Be extra vigilant on crowded beaches and in markets.",
-        "Carry photocopies of your passport; leave the original in the safe.",
+    "Theft & Robbery": [
+        "Keep bags zipped and held closely in crowded tourist zones.",
+        "Do not display expensive electronics or large amounts of cash.",
     ],
     "Harassment": [
         "Travel in groups when possible, especially after dark.",
         "Stay in well-lit, populated areas at night.",
         "Download the local emergency number: 119 (Police) or 1912 (Tourist Police).",
-        "Trust your instincts — leave any situation that feels uncomfortable.",
+    ],
+    "Tourist Harassment": [
+        "Avoid isolated streets late at night and stay in well-lit areas.",
+        "Report persistent harassment immediately to local authorities or hotel staff.",
     ],
     "Physical Assault": [
         "Avoid isolated areas, especially at night.",
         "Stay in well-known tourist zones with good lighting.",
         "Report any incidents immediately to 119 (Police) or 1912 (Tourist Police).",
-        "Keep your embassy's emergency contact number accessible.",
+    ],
+    "Safety Hazard / Assault": [
+        "Exercise heightened caution in this area and avoid traveling alone after dark.",
+        "Ensure emergency contacts (1912 Tourist Police / 119 Emergency) are readily accessible.",
     ],
     "Unsafe Area": [
         "Check government travel advisories before visiting remote areas.",
         "Inform your hotel when visiting off-the-beaten-path locations.",
         "Avoid areas with no mobile phone coverage without a local guide.",
-        "Carry a charged phone with emergency contacts saved offline.",
+    ],
+    "Tuk-Tuk Overcharging": [
+        "Insist on using a metered tuk-tuk or book via PickMe / Uber.",
+        "Agree on exact fare before starting the trip if meters are unavailable.",
+    ],
+    "Commission Shop Trap": [
+        "Decline unsolicited detour stops to spice gardens, gem shops, or tea factories.",
+        "Purchase souvenirs directly from verified municipal markets or certified stores.",
+    ],
+    "Gem & Jewelry Scam": [
+        "Never purchase gemstones from unverified street vendors or recommended 'discount' shops.",
+        "Demand official gemology certification for high-value purchases.",
     ],
     "safe": [
-        "This area appears safe based on available data.",
+        "This location has low recorded incident density.",
         "Standard travel precautions are still recommended.",
         "Keep emergency contacts accessible: Tourist Police 1912, Ambulance 1990.",
-        "Register with your embassy for travel alerts.",
+    ],
+    "high_risk": [
+        "Exercise heightened vigilance — multiple safety incidents documented nearby.",
+        "Avoid poorly lit or secluded areas, especially after sunset.",
+        "Rely strictly on verified ride-hailing apps (PickMe / Uber) for local transit.",
+    ],
+    "moderate_risk": [
+        "Maintain normal safety awareness and secure personal belongings.",
+        "Verify rates for transport and tours before agreeing to services.",
     ],
 }
 
@@ -155,8 +190,9 @@ NON_TOURISM_NOISE = {
     "expired contracts", "non- payment of wages", "non-payment of wages",
     "plantation worker", "garment factory", "garment worker",
     "labor bureau", "labour bureau", "slbfe",
-    # Domestic crime unrelated to tourists
+    # Domestic crime & financial crime unrelated to tourists
     "underworld", "underworld figure", "gang leader", "drug lord",
+    "finance company", "finance co", "microfinance", "bank robbery", "pawn shop",
     "drug trafficking", "heroin", "cocaine", "methamphetamine", "ice",
     "narcotics bureau", "drug haul", "contraband", "illegal timber",
     "smuggling ring", "murder suspect", "murder charge", "murder accused",
@@ -182,7 +218,9 @@ NON_TOURISM_NOISE = {
     "tnpf", "calls for immediate arrest", "calls on the government",
     "remove state min", "allegedly threatening",
     "political solution", "political crisis", "political reform",
-    "ceasefire", "peace talk", "peace process", "ltte",
+    "ceasefire", "peace talk", "peace process", "ltte", "ex-ltte", "ex-ltteers",
+    "jhu", "jathika hela urumaya", "jayalalithaa", "ranjan", "lawyers urge", "catholic lawyers",
+    "frontline socialist party", "fsp",
     "tamil national", "sri lanka freedom party", "united national party",
     # Labor & trade unions
     "trade union", "wage dispute", "salary arrears", "pension",
@@ -331,73 +369,73 @@ def get_human_source_info(raw_src: str):
     if "fcdo" in s or "state_dept" in s or "dfat" in s or "sltda" in s or "official" in s:
         return ("Official Gov Advisory", "🏛️ Official Government Advisory", 1.00)
     if "derana" in s:
-        return ("Ada Derana News", "🏛️ Verified News Outlets", 0.95)
+        return ("Ada Derana News", "🏛️ Tier 1 Verified News", 0.95)
     if "dailymirror" in s or "daily_mirror" in s or "daily mirror" in s:
-        return ("Daily Mirror LK", "🏛️ Verified News Outlets", 0.95)
+        return ("Daily Mirror LK", "🏛️ Tier 1 Verified News", 0.95)
     if "newsfirst" in s or "news_first" in s or "news first" in s:
-        return ("News First LK", "🏛️ Verified News Outlets", 0.95)
+        return ("News First LK", "🏛️ Tier 1 Verified News", 0.95)
     if "google_news" in s or "google news" in s or "db_google_news" in s:
-        return ("Google News", "🏛️ Verified News Outlets", 0.90)
+        return ("Google News", "🏛️ Tier 1 Verified News", 0.90)
     if "newswire" in s:
-        return ("NewsWire LK", "🏛️ Verified News Outlets", 0.90)
+        return ("NewsWire LK", "🏛️ Tier 1 Verified News", 0.90)
     if "sundaytimes" in s or "sunday times" in s:
-        return ("Sunday Times LK", "🏛️ Verified News Outlets", 0.95)
+        return ("Sunday Times LK", "🏛️ Tier 1 Verified News", 0.95)
     if "ceylon" in s:
-        return ("Ceylon Today", "🏛️ Verified News Outlets", 0.90)
+        return ("Ceylon Today", "🏛️ Tier 1 Verified News", 0.90)
     if "hirunews" in s or "hiru" in s:
-        return ("Hiru News", "🏛️ Verified News Outlets", 0.90)
+        return ("Hiru News", "🏛️ Tier 1 Verified News", 0.90)
     if "theisland" in s or "island" in s:
-        return ("The Island LK", "🏛️ Verified News Outlets", 0.90)
+        return ("The Island LK", "🏛️ Tier 1 Verified News", 0.90)
     if "themorning" in s or "morning" in s:
-        return ("The Morning LK", "🏛️ Verified News Outlets", 0.90)
+        return ("The Morning LK", "🏛️ Tier 1 Verified News", 0.90)
     if "news" in s:
-        return ("Verified News Outlet", "🏛️ Verified News Outlets", 0.88)
+        return ("Verified News Outlet", "🏛️ Tier 1 Verified News", 0.88)
     if "tripadvisor" in s:
         return ("TripAdvisor Reviews", "🟢 Verified Traveler Reviews", 0.70)
     if "google_maps" in s or "google maps" in s:
         return ("Google Maps Reviews", "📍 Location-Verified Reviews", 0.65)
     if "destination" in s or "canonical" in s or "reviews.csv" in s:
         return ("Verified Destination Registry", "📍 Location-Verified Reviews", 0.75)
+    if "youtube" in s or "youtu.be" in s:
+        return ("YouTube Travel Vlogs", "🎥 Verified Video Evidence", 0.65)
     if "reddit" in s:
         return ("Reddit Travel Community", "💬 Public Community Discussion", 0.40)
-    if "youtube" in s:
-        return ("YouTube Travel Vlogs", "💬 Public Community Discussion", 0.40)
     return (raw_src.replace("_", " ").replace("archive", "").strip().title() or "User Incident Report", "💬 Public Community Discussion", 0.45)
 
 def detect_publisher_info(raw_src: str, title: str, content: str):
     text_combo = f"{title or ''} {content or ''} {raw_src or ''}".lower()
     if "tamil guardian" in text_combo or "tamilguardian" in text_combo:
-        return ("Tamil Guardian", "🏛️ Verified News Outlets", 0.95)
+        return ("Tamil Guardian", "🏛️ Tier 1 Verified News", 0.95)
     if "ada derana" in text_combo or "adaderana" in text_combo or "derana" in text_combo:
-        return ("Ada Derana News", "🏛️ Verified News Outlets", 0.95)
+        return ("Ada Derana News", "🏛️ Tier 1 Verified News", 0.95)
     if "daily mirror" in text_combo or "dailymirror" in text_combo:
-        return ("Daily Mirror LK", "🏛️ Verified News Outlets", 0.95)
+        return ("Daily Mirror LK", "🏛️ Tier 1 Verified News", 0.95)
     if "news first" in text_combo or "newsfirst" in text_combo:
-        return ("News First LK", "🏛️ Verified News Outlets", 0.95)
+        return ("News First LK", "🏛️ Tier 1 Verified News", 0.95)
     if "newswire" in text_combo:
-        return ("NewsWire LK", "🏛️ Verified News Outlets", 0.90)
+        return ("NewsWire LK", "🏛️ Tier 1 Verified News", 0.90)
     if "global times" in text_combo or "globaltimes" in text_combo:
-        return ("Global Times", "🏛️ Verified News Outlets", 0.90)
+        return ("Global Times", "🏛️ Tier 1 Verified News", 0.90)
     if "sunday times" in text_combo or "sundaytimes" in text_combo:
-        return ("Sunday Times LK", "🏛️ Verified News Outlets", 0.95)
+        return ("Sunday Times LK", "🏛️ Tier 1 Verified News", 0.95)
     if "ceylon today" in text_combo or "ceylontoday" in text_combo:
-        return ("Ceylon Today", "🏛️ Verified News Outlets", 0.90)
+        return ("Ceylon Today", "🏛️ Tier 1 Verified News", 0.90)
     if "hiru news" in text_combo or "hirunews" in text_combo:
-        return ("Hiru News", "🏛️ Verified News Outlets", 0.90)
+        return ("Hiru News", "🏛️ Tier 1 Verified News", 0.90)
     if "the island" in text_combo or "theisland" in text_combo:
-        return ("The Island LK", "🏛️ Verified News Outlets", 0.90)
+        return ("The Island LK", "🏛️ Tier 1 Verified News", 0.90)
     if "the morning" in text_combo or "themorning" in text_combo:
-        return ("The Morning LK", "🏛️ Verified News Outlets", 0.90)
+        return ("The Morning LK", "🏛️ Tier 1 Verified News", 0.90)
     if "fcdo" in text_combo or "state_dept" in text_combo or "dfat" in text_combo or "sltda" in text_combo:
         return ("Official Gov Advisory", "🏛️ Official Government Advisory", 1.00)
+    if "youtube" in text_combo or "youtu.be" in text_combo:
+        return ("YouTube Travel Vlogs", "🎥 Verified Video Evidence", 0.65)
     if "tripadvisor" in text_combo:
         return ("TripAdvisor Reviews", "🟢 Verified Traveler Reviews", 0.70)
     if "google maps" in text_combo or "google_maps" in text_combo:
         return ("Google Maps Reviews", "📍 Location-Verified Reviews", 0.65)
     if "reddit" in text_combo:
         return ("Reddit Travel Community", "💬 Public Community Discussion", 0.40)
-    if "youtube" in text_combo:
-        return ("YouTube Travel Vlogs", "💬 Public Community Discussion", 0.40)
     
     return get_human_source_info(raw_src)
 
@@ -492,12 +530,12 @@ class SafetyIntelligenceEngine:
         rows = cur.fetchall()
         conn.close()
 
-        # Compute precise distances and filter to exact radius
+        # Compute precise distances, filter to exact radius, and exclude non-tourism noise
         nearby = []
         for row in rows:
             dist = haversine_km(lat, lng, row["latitude"], row["longitude"])
             if dist <= radius_km:
-                nearby.append({
+                item = {
                     "id": row["id"],
                     "source": row["source"],
                     "source_weight": row["source_weight"] or 0.35,
@@ -512,7 +550,9 @@ class SafetyIntelligenceEngine:
                     "is_scam": bool(row["is_scam"]),
                     "created_at": row["created_at"],
                     "distance_km": round(dist, 2),
-                })
+                }
+                if not is_irrelevant_noise(item):
+                    nearby.append(item)
 
         if not nearby:
             # Expand search to find nearest data at any distance
@@ -556,12 +596,9 @@ class SafetyIntelligenceEngine:
             combined = spatial_weight * source_weight * temporal_weight
             total_weight += combined
 
-            # Accumulate weighted risk
-            weighted_risk_sum += (r["risk_level"] / 3.0) * combined
-            weighted_scam_sum += (1.0 if r["is_scam"] else 0.0) * combined
-
             # Track scam types and sources
             raw_st = r.get("scam_type")
+            refined_st = "general_safety"
             if raw_st:
                 st_str = str(raw_st).strip()
                 if st_str.lower() not in ("nan", "none", "null", "safe", "") and st_str not in ("Unsafe Area", "General Scam"):
@@ -569,13 +606,20 @@ class SafetyIntelligenceEngine:
                     disp_st = SCAM_DISPLAY_NAMES.get(refined_st, refined_st.replace("_", " ").title())
                     if disp_st not in ("General Tourist Safety", "Verified Safe Area"):
                         scam_types[disp_st] += 1
+
+            # Determine whether this is an active scam (excluding general safety / positive reviews)
+            is_active_scam = bool(r["is_scam"]) and refined_st not in ("general_safety", "safe", "Verified Safe Area")
+
+            # Accumulate weighted risk and scam ratio
+            weighted_risk_sum += (r["risk_level"] / 3.0) * combined
+            weighted_scam_sum += (1.0 if is_active_scam else 0.0) * combined
             sources[r["source"]] += 1
 
-            if r["is_scam"]:
+            if is_active_scam:
                 scam_reports.append(r)
 
         # ── Composite Score ───────────────────────────────────────────────────
-        if total_weight == 0:
+        if total_weight == 0 or len(nearby) == 0:
             return self._assess_no_data(lat, lng)
 
         # Component scores (0.0 to 1.0)
@@ -608,31 +652,54 @@ class SafetyIntelligenceEngine:
         composite = round(min(max(composite, 0.0), 1.0), 4)
 
         # ── Safety Verdict ────────────────────────────────────────────────────
+        if len(nearby) < 3:
+            conf_level = "Low (Preliminary Data)"
+        elif len(nearby) >= 10:
+            conf_level = "High"
+        else:
+            conf_level = "Medium"
+
         if composite >= 0.60:
-            verdict = "HIGH RISK"
-            verdict_color = "red"
-            confidence = "High"
+            # Require at least 3 supporting reports to declare confirmed HIGH RISK
+            if len(nearby) < 3:
+                verdict = "MODERATE RISK"
+                verdict_color = "orange"
+                confidence = "Low (Single Incident Warning)"
+            else:
+                verdict = "HIGH RISK"
+                verdict_color = "red"
+                confidence = conf_level
         elif composite >= 0.35:
             verdict = "MODERATE RISK"
             verdict_color = "orange"
-            confidence = "Medium"
+            confidence = conf_level
         elif composite >= 0.15:
             verdict = "LOW RISK"
             verdict_color = "yellow"
-            confidence = "Medium"
+            confidence = conf_level
         else:
             verdict = "SAFE"
             verdict_color = "green"
-            confidence = "High" if len(nearby) > 20 else "Medium"
+            confidence = conf_level
 
         # ── Safety Tips ───────────────────────────────────────────────────────
         tips = set()
         top_scam_types = scam_types.most_common(3)
         for stype, _ in top_scam_types:
-            for tip in SCAM_SAFETY_TIPS.get(stype, [])[:2]:
+            stype_tips = SCAM_SAFETY_TIPS.get(stype, [])
+            if not stype_tips:
+                # Try finding mapped key from SCAM_DISPLAY_NAMES
+                stype_tips = SCAM_SAFETY_TIPS.get(SCAM_DISPLAY_NAMES.get(stype, ""), [])
+            for tip in stype_tips[:2]:
                 tips.add(tip)
+
         if not tips:
-            tips = set(SCAM_SAFETY_TIPS["safe"][:2])
+            if verdict == "HIGH RISK":
+                tips = set(SCAM_SAFETY_TIPS["high_risk"])
+            elif verdict == "MODERATE RISK":
+                tips = set(SCAM_SAFETY_TIPS["moderate_risk"])
+            else:
+                tips = set(SCAM_SAFETY_TIPS["safe"][:2])
         tips.update(GENERAL_TIPS[:2])
 
         # Select incidents to display (filtering out non-tourism noise)
@@ -774,39 +841,88 @@ class SafetyIntelligenceEngine:
             "nearby_incidents": incidents,
             "source_breakdown": source_breakdown,
             "authority_report": authority_report,
+            "district_context": self._get_district_context(lat, lng),
         }
 
     def _assess_no_data(self, lat: float, lng: float) -> dict:
         """Return assessment when no data exists within search radius."""
-        # Find the absolute nearest report to give some context
+        import re
         conn = sqlite3.connect(self.db_path)
         cur = conn.cursor()
         cur.execute("""
             SELECT location_name, latitude, longitude, scam_type, risk_level, is_scam
             FROM reports
-            WHERE latitude IS NOT NULL AND longitude IS NOT NULL
-            ORDER BY ABS(latitude - ?) + ABS(longitude - ?)
-            LIMIT 5
-        """, (lat, lng))
-        nearest = cur.fetchall()
+            WHERE latitude IS NOT NULL AND longitude IS NOT NULL AND location_name IS NOT NULL AND location_name != ''
+        """)
+        all_rows = cur.fetchall()
         conn.close()
 
-        nearest_places = []
-        for n in nearest:
-            dist = haversine_km(lat, lng, n[1], n[2])
-            nearest_places.append({
-                "location_name": n[0],
-                "distance_km": round(dist, 1),
-                "scam_type": n[3],
-                "risk_level": n[4],
-                "is_scam": bool(n[5]),
-            })
+        # Deduplicate places by normalized base name and spatial distance (< 3.0km)
+        unique_places = []
+        for r in all_rows:
+            loc_name, rlat, rlon, stype, rlevel, is_scam = r
+            clean_name = str(loc_name).strip()
+            if not clean_name or clean_name.lower() in ["sri lanka", "review", "nan", "none", "null", "unknown"]:
+                continue
+
+            base_name = clean_name.split(",")[0].strip()
+            norm_name = re.sub(r'[^a-z0-9]', '', base_name.lower())
+            if not norm_name:
+                continue
+
+            dist = haversine_km(lat, lng, rlat, rlon)
+
+            # Check if this place is already represented in unique_places (by name or within 3km)
+            duplicate_idx = None
+            for idx, existing in enumerate(unique_places):
+                ex_base = existing["location_name"].split(",")[0].strip()
+                ex_norm = re.sub(r'[^a-z0-9]', '', ex_base.lower())
+                spatial_dup = haversine_km(rlat, rlon, existing["lat"], existing["lon"]) < 3.0
+                name_dup = (norm_name == ex_norm) or (len(norm_name) > 4 and len(ex_norm) > 4 and (norm_name in ex_norm or ex_norm in norm_name))
+
+                if spatial_dup or name_dup:
+                    duplicate_idx = idx
+                    break
+
+            if duplicate_idx is not None:
+                if dist < unique_places[duplicate_idx]["distance_km"]:
+                    unique_places[duplicate_idx] = {
+                        "location_name": base_name,
+                        "distance_km": round(dist, 1),
+                        "scam_type": stype,
+                        "risk_level": rlevel or 1,
+                        "is_scam": bool(is_scam),
+                        "lat": rlat,
+                        "lon": rlon,
+                    }
+            else:
+                unique_places.append({
+                    "location_name": base_name,
+                    "distance_km": round(dist, 1),
+                    "scam_type": stype,
+                    "risk_level": rlevel or 1,
+                    "is_scam": bool(is_scam),
+                    "lat": rlat,
+                    "lon": rlon,
+                })
+
+        unique_places.sort(key=lambda p: p["distance_km"])
+        nearest_places = [
+            {
+                "location_name": p["location_name"],
+                "distance_km": p["distance_km"],
+                "scam_type": p["scam_type"],
+                "risk_level": p["risk_level"],
+                "is_scam": p["is_scam"],
+            }
+            for p in unique_places[:5]
+        ]
 
         return {
             "query": {"lat": lat, "lng": lng},
             "verdict": "INSUFFICIENT DATA",
             "verdict_color": "gray",
-            "composite_score": 0.0,
+            "composite_score": None,
             "confidence": "Low",
             "total_reports_analyzed": 0,
             "scam_reports_found": 0,
@@ -822,7 +938,8 @@ class SafetyIntelligenceEngine:
             "source_breakdown": [],
             "authority_report": None,
             "nearest_known_places": nearest_places,
-            "message": f"No incident data within 15km. Nearest known location: {nearest_places[0]['location_name']} ({nearest_places[0]['distance_km']}km away)." if nearest_places else "No data available for this region.",
+            "district_context": self._get_district_context(lat, lng),
+            "message": f"No incident data within 15km search radius. Nearest known location: {nearest_places[0]['location_name']} ({nearest_places[0]['distance_km']}km away)." if nearest_places else "No incident data available for this region.",
         }
 
     @staticmethod
@@ -834,6 +951,39 @@ class SafetyIntelligenceEngine:
             return max(0, (datetime.now(timezone.utc) - dt).days)
         except Exception:
             return 365
+
+
+    def _get_district_context(self, lat: float, lng: float) -> dict:
+        """Helper to fetch macro-district context for a given coordinate."""
+        try:
+            from app.core.district_engine import get_boundary_index, score_all_districts
+            from app.db.session import SessionLocal
+            from app.db.models import Report
+            
+            idx = get_boundary_index()
+            dist_name = idx.locate(lat, lng)
+            if not dist_name:
+                return None
+
+            db = SessionLocal()
+            reports = db.query(Report).filter(Report.latitude.isnot(None), Report.longitude.isnot(None)).all()
+            db.close()
+
+            scores = score_all_districts(reports)
+            s = scores.get(dist_name)
+            if not s:
+                return {"district_name": dist_name, "risk_tier": "insufficient_data"}
+
+            return {
+                "district_name": dist_name,
+                "risk_tier": s["risk_tier"],
+                "confidence": s["confidence"],
+                "report_count": s["report_count"],
+                "scam_report_count": s["scam_report_count"],
+                "exposure_status": s["exposure_status"],
+            }
+        except Exception:
+            return None
 
 
 # Singleton instance
