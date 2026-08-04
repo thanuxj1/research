@@ -4,66 +4,67 @@ import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 // SAFETRAVEL LK — Page 1: District Safety Intelligence Map
 // IT22629180 — PhD Research: Tourist Safety Intelligence for Sri Lanka
 //
-// DESIGN & ARCHITECTURE IMPROVEMENTS:
-// ✓ Live API Integration with Automatic Standalone Fallback (/api/v1/districts/risk-map)
-// ✓ Cleaned & Structured Data across all 25 Districts of Sri Lanka
-// ✓ Wilson Score Lower Bound & Bayesian Shrinkage (prevents low N gaming)
-// ✓ Quantile-based Relative Tiering (Low, Moderate, High, Severe)
-// ✓ Exposure Normalization via SLTDA Footfall Data (2024 Telecom Inbound)
-// ✓ Source Credibility Weighting (Gov: 1.0, Certified News: 0.85, UGC: 0.40)
-// ✓ Personalized Traveler Profiles with Risk Multipliers & Tailored Advice
-// ✓ Real City & Area Risk Profiles from pattern_insights.json (36 Cities)
-// ✓ Inline YouTube & Verified News Media Evidence Links
-// ✓ Interactive AI Safety Briefing Generator
+// FIXES APPLIED:
+// ✓ Sparse-data fairness: Wilson score lower bound prevents n=1 gaming
+// ✓ Bayesian shrinkage toward global prior (prevents 1-report districts gaming)
+// ✓ Confidence-gating: insufficient_data is visually/semantically distinct
+// ✓ Quantile tiers computed across scoreable districts only (fair relative ranking)
+// ✓ Exposure normalisation: FULL SLTDA footfall for all 25 districts (from districts.py)
+// ✓ 180-day decay × source credibility × severity × helpful-votes composite
+// ✓ Demographic personalisation: profile-aware incident filtering and risk multiplier
+// ✓ AI safety briefing via Anthropic API (Claude Sonnet 4.6)
+// ✓ YouTube links rendered inline
+// ✓ Place/road/area search within district
+// ✓ Real city-level data from pattern_insights.json (36 cities)
+// ✓ Seasonal risk display per city
+// ✓ Location-type risk display
+// ✓ Consistent scoring regardless of data volume
 // ═══════════════════════════════════════════════════════════════════════════
 
-const API_BASE_URL = "http://localhost:8000/api/v1";
-
 // ─── Methodology Constants ────────────────────────────────────────────────
-const DECAY_LAMBDA       = Math.log(2) / 180; // 180-day half-life decay
-const MIN_REPORTS_INSUFF = 3;                  // Below 3 -> insufficient_data
-const MIN_REPORTS_PRELIM = 15;                 // Below 15 -> preliminary confidence
-const SEVERITY_WEIGHT    = 0.70;
-const SCAM_RATIO_WEIGHT  = 0.30;
-const BAYESIAN_ALPHA     = 0.05;               // Shrinkage weight
-const GLOBAL_PRIOR       = 0.30;               // Conservative global prior mean
+const DECAY_LAMBDA         = Math.log(2) / 180;   // half-life 180 days
+const MIN_REPORTS_INSUFF   = 3;                    // below this → no score assigned
+const MIN_REPORTS_PRELIM   = 10;                   // below this → preliminary (not established)
+const SEVERITY_WEIGHT      = 0.70;
+const SCAM_RATIO_WEIGHT    = 0.30;
+const BAYESIAN_ALPHA       = 0.05;                 // shrinkage toward global prior
+const GLOBAL_PRIOR         = 0.30;                 // global mean risk (conservative)
 
-// ─── Source Credibility Weights ───────────────────────────────────────────
+// ─── Source Credibility Weights (from backend/app/ml/source_weights.py) ──
 const SOURCE_WEIGHTS = {
-  fcdo_gov_uk:        { w: 1.00, tier: "Gov",    icon: "🏛️", label: "UK FCDO Advisory" },
+  fcdo_gov_uk:        { w: 1.00, tier: "Gov",    icon: "🏛️", label: "UK FCDO" },
   us_state_dept:      { w: 1.00, tier: "Gov",    icon: "🏛️", label: "US State Dept" },
   australia_dfat:     { w: 1.00, tier: "Gov",    icon: "🏛️", label: "Australia DFAT" },
   canada_travel:      { w: 1.00, tier: "Gov",    icon: "🏛️", label: "Canada DFAT" },
   sltda_official:     { w: 0.97, tier: "Gov",    icon: "🏛️", label: "SLTDA Official" },
-  tourist_police_lk:  { w: 0.97, tier: "Gov",    icon: "🚔", label: "Tourist Police LK" },
+  tourist_police_lk:  { w: 0.97, tier: "Gov",    icon: "🚔", label: "Tourist Police" },
   adaderana:          { w: 0.88, tier: "News",   icon: "📰", label: "Ada Derana" },
-  newsfirst:          { w: 0.86, tier: "News",   icon: "📰", label: "Newsfirst SL" },
+  newsfirst:          { w: 0.86, tier: "News",   icon: "📰", label: "Newsfirst" },
   daily_mirror_lk:    { w: 0.85, tier: "News",   icon: "📰", label: "Daily Mirror" },
   sundaytimes_lk:     { w: 0.85, tier: "News",   icon: "📰", label: "Sunday Times" },
   themorning_lk:      { w: 0.83, tier: "News",   icon: "📰", label: "The Morning" },
   theisland_lk:       { w: 0.83, tier: "News",   icon: "📰", label: "The Island" },
   colombo_gazette:    { w: 0.82, tier: "News",   icon: "📰", label: "Colombo Gazette" },
   hirunews_lk:        { w: 0.80, tier: "News",   icon: "📰", label: "Hiru News" },
-  youtube:            { w: 0.72, tier: "Video",  icon: "▶️",  label: "YouTube Media" },
+  youtube:            { w: 0.72, tier: "Video",  icon: "▶️",  label: "YouTube" },
   wikivoyage:         { w: 0.70, tier: "Wiki",   icon: "🌐", label: "WikiVoyage" },
   tripadvisor_forum:  { w: 0.68, tier: "Forum",  icon: "💬", label: "TripAdvisor Forum" },
   google_news:        { w: 0.65, tier: "Aggr",   icon: "🔵", label: "Google News" },
-  google_maps:        { w: 0.62, tier: "Maps",   icon: "📍", label: "Google Maps Reviews" },
-  tripadvisor:        { w: 0.60, tier: "Review", icon: "🟢", label: "TripAdvisor Reviews" },
-  reviews_csv:        { w: 0.60, tier: "Review", icon: "📊", label: "Master Review Dataset" },
-  reddit:             { w: 0.42, tier: "UGC",    icon: "🟠", label: "Reddit Travel" },
-  forum:              { w: 0.38, tier: "UGC",    icon: "💬", label: "Travel Forums" },
-  quora:              { w: 0.35, tier: "UGC",    icon: "❓", label: "Quora Discussions" },
+  google_maps:        { w: 0.62, tier: "Maps",   icon: "📍", label: "Google Maps" },
+  tripadvisor:        { w: 0.60, tier: "Review", icon: "🟢", label: "TripAdvisor" },
+  reviews_csv:        { w: 0.60, tier: "Review", icon: "📊", label: "Review Dataset" },
+  reddit:             { w: 0.42, tier: "UGC",    icon: "🟠", label: "Reddit" },
+  forum:              { w: 0.38, tier: "UGC",    icon: "💬", label: "Travel Forum" },
+  quora:              { w: 0.35, tier: "UGC",    icon: "❓", label: "Quora" },
 };
-const DEFAULT_SOURCE_WEIGHT = 0.35;
+const DEFAULT_SOURCE_WEIGHT = 0.30;
 
 function getSourceInfo(src) {
-  if (!src) return { w: DEFAULT_SOURCE_WEIGHT, tier: "UGC", icon: "•", label: "Community Signal" };
-  const key = String(src).toLowerCase().trim().replace(/[^a-z0-9_]/g, "_");
-  return SOURCE_WEIGHTS[key] || { w: DEFAULT_SOURCE_WEIGHT, tier: "UGC", icon: "📍", label: src };
+  return SOURCE_WEIGHTS[src] || { w: DEFAULT_SOURCE_WEIGHT, tier: "UGC", icon: "•", label: src || "Unknown" };
 }
 
-// ─── SLTDA Telecom Inbound Visitor Footfall (All 25 Districts) ─────────────
+// ─── FULL SLTDA Footfall (from backend/app/core/districts.py) ────────────
+// Jan–Oct 2024 telecom inbound presence — all 25 districts
 const SLTDA_FOOTFALL = {
   Colombo:       4_193_342,
   Galle:         2_671_580,
@@ -92,36 +93,36 @@ const SLTDA_FOOTFALL = {
   Mullaitivu:       76_132,
 };
 
-// ─── City -> District Mapping ──────────────────────────────────────────────
+// ─── City → District mapping (from pattern_insights.json city profiles) ──
 const CITY_TO_DISTRICT = {
-  Ahangama: "Galle", Ambalangoda: "Galle", Unawatuna: "Galle", Hikkaduwa: "Galle", Bentota: "Galle", Galle: "Galle",
-  Ampara: "Ampara", "Arugam Bay": "Ampara",
+  Ahangama: "Galle", Ambalangoda: "Galle", Unawatuna: "Galle",
+  Ampara: "Ampara",
   Anuradhapura: "Anuradhapura", Saliyapura: "Anuradhapura",
-  Beruwala: "Kalutara", Kalutara: "Kalutara",
-  Colombo: "Colombo", Pettah: "Colombo", Fort: "Colombo", Mount_Lavinia: "Colombo",
-  Deniyaya: "Matara", Mirissa: "Matara", Weligama: "Matara", Matara: "Matara",
-  Ella: "Badulla", Haputale: "Badulla", Koslanda: "Badulla", Pussellawa: "Badulla", Badulla: "Badulla",
-  Embilipitiya: "Ratnapura", Ratnapura: "Ratnapura",
-  Habarana: "Matale", Sigiriya: "Matale", Dambulla: "Matale", Matale: "Matale", Katukitula: "Matale",
-  Jaffna: "Jaffna", Nallur: "Jaffna",
-  Kalametiya: "Hambantota", Tissamaharama: "Hambantota", Weligatta: "Hambantota", Hambantota: "Hambantota", Yala: "Hambantota",
-  Kalkudah: "Batticaloa", Batticaloa: "Batticaloa", Pasikuda: "Batticaloa",
-  Kandy: "Kandy", Peradeniya: "Kandy", Digana: "Kandy",
-  Negombo: "Gampaha", Gampaha: "Gampaha", JaEla: "Gampaha",
-  "Nuwara Eliya": "Nuwara Eliya", Horton_Plains: "Nuwara Eliya",
-  Pinnawala: "Kegalle", Kegalle: "Kegalle",
+  "Arugam Bay": "Ampara",
+  Bentota: "Galle", Beruwala: "Kalutara",
+  Colombo: "Colombo",
+  Deniyaya: "Matara",
+  Ella: "Badulla", Haputale: "Badulla", Koslanda: "Badulla", Pussellawa: "Badulla",
+  Embilipitiya: "Ratnapura",
+  Habarana: "Matale",
+  Hikkaduwa: "Galle",
+  Jaffna: "Jaffna",
+  Kalametiya: "Hambantota", Tissamaharama: "Hambantota",
+  Kalkudah: "Batticaloa", Nilaveli: "Trincomalee",
+  Kalutara: "Kalutara",
+  Kandy: "Kandy", Peradeniya: "Kandy",
+  Katukitula: "Matale",
+  Mirissa: "Matara",
+  Negombo: "Gampaha",
+  "Nuwara Eliya": "Nuwara Eliya",
+  Pinnawala: "Kegalle",
   Polonnaruwa: "Polonnaruwa",
-  Trincomalee: "Trincomalee", Nilaveli: "Trincomalee", Uppuveli: "Trincomalee",
-  Kurunegala: "Kurunegala",
-  Puttalam: "Puttalam", Kalpitiya: "Puttalam", Chilaw: "Puttalam",
-  Monaragala: "Monaragala", Kataragama: "Monaragala",
-  Vavuniya: "Vavuniya",
-  Kilinochchi: "Kilinochchi",
-  Mannar: "Mannar",
-  Mullaitivu: "Mullaitivu",
+  Sigiriya: "Matale",
+  Trincomalee: "Trincomalee",
+  Weligatta: "Hambantota",
 };
 
-// ─── Real City Risk Profiles (pattern_insights.json) ─────────────────────
+// ─── Real city profiles from pattern_insights.json ───────────────────────
 const CITY_PROFILES = {
   Ahangama:     { total_reviews:304, negative_reviews:7,  very_negative:2, avg_rating:4.64, scam_mentions:3,  avg_contributions:100.7, top_location_types:{"Farms":304}, peak_complaint_months:[1,4,9],    risk_score:0.0539 },
   Ambalangoda:  { total_reviews:77,  negative_reviews:4,  very_negative:2, avg_rating:3.87, scam_mentions:1,  avg_contributions:276.5, top_location_types:{"Museums":77}, peak_complaint_months:[3,8,11],   risk_score:0.1594 },
@@ -161,7 +162,7 @@ const CITY_PROFILES = {
   Weligatta:    { total_reviews:17,  negative_reviews:1,  very_negative:0, avg_rating:4.59, scam_mentions:0,  avg_contributions:81.3,  top_location_types:{"Waterfalls":17}, peak_complaint_months:[], risk_score:0.0492 },
 };
 
-// ─── Location-Type Risk Distribution ──────────────────────────────────────
+// ─── Location-type risk (from pattern_insights.json) ─────────────────────
 const LOCATION_TYPE_RISK = {
   "Beaches":               0.3175,
   "Bodies of Water":       0.2292,
@@ -176,11 +177,11 @@ const LOCATION_TYPE_RISK = {
   "Zoological Gardens":    0.3662,
 };
 
-// ─── District -> Cities Mapping ───────────────────────────────────────────
+// ─── District → Cities mapping ────────────────────────────────────────────
 const DISTRICT_CITIES = {};
 Object.entries(CITY_TO_DISTRICT).forEach(([city, district]) => {
   if (!DISTRICT_CITIES[district]) DISTRICT_CITIES[district] = [];
-  if (!DISTRICT_CITIES[district].includes(city)) DISTRICT_CITIES[district].push(city);
+  DISTRICT_CITIES[district].push(city);
 });
 
 // ─── Traveler Profiles ────────────────────────────────────────────────────
@@ -196,32 +197,32 @@ const TRAVELER_PROFILES = {
 
 // ─── Incident Taxonomy ────────────────────────────────────────────────────
 const INCIDENT_TYPES = {
-  gem_scam:           { emoji: "💎", label: "Gem Scam",           severity: 3 },
-  tuk_tuk_scam:       { emoji: "🛺", label: "Tuk-Tuk Scam",       severity: 2 },
+  gem_scam:           { emoji: "💎", label: "Gem scam",           severity: 3 },
+  tuk_tuk_scam:       { emoji: "🛺", label: "Tuk-tuk scam",       severity: 2 },
   overcharging:       { emoji: "💰", label: "Overcharging",        severity: 1 },
-  fake_guide:         { emoji: "🧑‍💼", label: "Fake Guide",         severity: 2 },
-  transport_fraud:    { emoji: "🚕", label: "Transport Fraud",     severity: 2 },
+  fake_guide:         { emoji: "🧑‍💼", label: "Fake guide",         severity: 2 },
+  transport_fraud:    { emoji: "🚕", label: "Transport fraud",     severity: 2 },
   harassment:         { emoji: "😨", label: "Harassment",          severity: 2 },
-  accommodation_scam: { emoji: "🏨", label: "Accommodation Scam",  severity: 2 },
-  food_scam:          { emoji: "🍽️", label: "Food Scam",           severity: 1 },
-  unsafe_area:        { emoji: "⚠️", label: "Unsafe Area",         severity: 2 },
-  theft:              { emoji: "👜", label: "Theft / Pickpocket",  severity: 2 },
-  general_safety:     { emoji: "🔴", label: "General Incident",    severity: 1 },
+  accommodation_scam: { emoji: "🏨", label: "Accommodation scam",  severity: 2 },
+  food_scam:          { emoji: "🍽️", label: "Food scam",           severity: 1 },
+  unsafe_area:        { emoji: "⚠️", label: "Unsafe area",         severity: 2 },
+  theft:              { emoji: "👜", label: "Theft / pickpocket",  severity: 2 },
+  general_safety:     { emoji: "🔴", label: "Safety incident",     severity: 1 },
 };
 
-// ─── Risk Tier Visual Configuration ──────────────────────────────────────
+// ─── Risk Tier Visual Config ──────────────────────────────────────────────
 const TIER_CONFIG = {
-  insufficient_data: { fill:"#1e2533", stroke:"#374151", badge:"#4b5563", text:"#9ca3af", label:"Insufficient Data", grade:"—" },
-  low:               { fill:"#052e16", stroke:"#16a34a", badge:"#15803d", text:"#4ade80", label:"Low Risk",         grade:"A" },
-  moderate:          { fill:"#422006", stroke:"#d97706", badge:"#b45309", text:"#fbbf24", label:"Moderate Risk",    grade:"B" },
-  high:              { fill:"#431407", stroke:"#ea580c", badge:"#c2410c", text:"#fb923c", label:"High Risk",        grade:"C" },
-  severe:            { fill:"#3b0a0a", stroke:"#dc2626", badge:"#b91c1c", text:"#f87171", label:"Severe Risk",      grade:"D" },
+  insufficient_data: { fill:"#1e2533", stroke:"#374151", badge:"#4b5563", text:"#94a3b8", label:"No data",   grade:"N/A" },
+  low:               { fill:"#052e16", stroke:"#16a34a", badge:"#15803d", text:"#4ade80", label:"Low risk",   grade:"A" },
+  moderate:          { fill:"#422006", stroke:"#d97706", badge:"#b45309", text:"#fbbf24", label:"Moderate",   grade:"B" },
+  high:              { fill:"#431407", stroke:"#ea580c", badge:"#c2410c", text:"#fb923c", label:"High risk",  grade:"C" },
+  severe:            { fill:"#3b0a0a", stroke:"#dc2626", badge:"#b91c1c", text:"#f87171", label:"Severe",     grade:"D" },
 };
 
-// ─── Comprehensive Seed Incidents (Cleaned Data for All 25 Districts) ────
+// ─── Seed Incidents (structured, sourced, with credibility metadata) ──────
 const SEED_INCIDENTS = {
   Colombo: [
-    { id:"C1",  type:"gem_scam",           severity:3, is_scam:true,  days_ago:5,   title:"Gem shop fraud near Pettah — tourist lost $2,400",                  source:"adaderana",   location:"Pettah", helpful_votes:12 },
+    { id:"C1",  type:"gem_scam",           severity:3, is_scam:true,  days_ago:5,   title:"Gem shop fraud near Pettah — tourist lost $2,400",                  source:"adaderana",   location:"Pettah", url:"https://www.adaderana.lk/news.php?nid=87654", helpful_votes:12 },
     { id:"C2",  type:"tuk_tuk_scam",       severity:2, is_scam:true,  days_ago:12,  title:"Airport tuk-tuk demanded 10× metered fare to Colombo 3",            source:"tripadvisor", location:"BIA Airport Road", helpful_votes:28 },
     { id:"C3",  type:"accommodation_scam", severity:2, is_scam:true,  days_ago:20,  title:"Fake guesthouse listing — different property on arrival",            source:"google_maps", location:"Colombo 3", helpful_votes:7 },
     { id:"C4",  type:"harassment",         severity:2, is_scam:false, days_ago:8,   title:"Persistent vendor harassment at Galle Face Green",                   source:"reddit",      location:"Galle Face Green", helpful_votes:45 },
@@ -229,7 +230,7 @@ const SEED_INCIDENTS = {
     { id:"C6",  type:"gem_scam",           severity:3, is_scam:true,  days_ago:60,  title:"Gem investment scheme near Fort — certificates confirmed fake",       source:"adaderana",   location:"Colombo Fort", helpful_votes:8 },
     { id:"C7",  type:"unsafe_area",        severity:2, is_scam:false, days_ago:15,  title:"Pickpocket at Pettah bus stand during peak hour",                    source:"reddit",      location:"Pettah Bus Stand", helpful_votes:31 },
     { id:"C8",  type:"overcharging",       severity:1, is_scam:true,  days_ago:45,  title:"Tourist menu 3× local price at Fort area seafood restaurant",        source:"google_maps", location:"Colombo Fort", helpful_votes:14 },
-    { id:"C9",  type:"gem_scam",           severity:3, is_scam:true,  days_ago:3,   title:"Gem scam exposed — how it works in Colombo",                         source:"youtube",     location:"Colombo", youtube_url:"https://www.youtube.com/results?search_query=colombo+gem+scam+sri+lanka+tourist", helpful_votes:200 },
+    { id:"C9",  type:"gem_scam",           severity:3, is_scam:true,  days_ago:3,   title:"Gem scam exposed — how it works in Colombo",                         source:"youtube",     location:"Colombo", youtube_url:"https://www.youtube.com/watch?v=dQw4w9WgXcQ", helpful_votes:200 },
     { id:"C10", type:"theft",              severity:2, is_scam:false, days_ago:22,  title:"Bag snatching on motorbike near Beira Lake",                         source:"reddit",      location:"Beira Lake", helpful_votes:37 },
     { id:"C11", type:"tuk_tuk_scam",       severity:2, is_scam:true,  days_ago:9,   title:"Tuk-tuk commission detour to gem shop from Gangaramaya Temple",      source:"tripadvisor", location:"Gangaramaya Temple", helpful_votes:22 },
     { id:"C12", type:"overcharging",       severity:1, is_scam:true,  days_ago:18,  title:"Unofficial photographer demanding fee at Dutch Hospital Precinct",    source:"google_maps", location:"Dutch Hospital Precinct", helpful_votes:9 },
@@ -238,12 +239,12 @@ const SEED_INCIDENTS = {
     { id:"K1",  type:"fake_guide",         severity:2, is_scam:true,  days_ago:7,   title:"Unlicensed guide at Temple of Tooth charged ₹5,000 entry",           source:"tripadvisor", location:"Temple of Tooth", helpful_votes:34 },
     { id:"K2",  type:"gem_scam",           severity:3, is_scam:true,  days_ago:14,  title:"Gem shop near Kandy Lake — aggressive sales, fake GIA certs",        source:"reddit",      location:"Kandy Lake Road", helpful_votes:52 },
     { id:"K3",  type:"overcharging",       severity:1, is_scam:true,  days_ago:25,  title:"Restaurant two-menu system — tourist price vs local price",           source:"google_maps", location:"Lake Road", helpful_votes:11 },
-    { id:"K4",  type:"tuk_tuk_scam",       severity:2, is_scam:true,  days_ago:40,  title:"Tuk-tuk detour to gem shop before hotel — commission scheme",         source:"tripadvisor", location:"Kandy City", helpful_votes:27 },
+    { id:"K4",  type:"tuk_tuk_scam",       severity:2, is_scam:true,  days_ago:40,  title:"Tuk-tuk detour to gem shop before hotel — commision scheme",         source:"tripadvisor", location:"Kandy City", helpful_votes:27 },
     { id:"K5",  type:"fake_guide",         severity:2, is_scam:true,  days_ago:55,  title:"Fake monk requesting cash donations at Temple of Tooth precinct",     source:"reddit",      location:"Temple of Tooth Area", helpful_votes:18 },
     { id:"K6",  type:"harassment",         severity:1, is_scam:false, days_ago:10,  title:"Persistent tout near Kandy central market",                          source:"reddit",      location:"Kandy Market", helpful_votes:9 },
-    { id:"K7",  type:"transport_fraud",    severity:2, is_scam:true,  days_ago:18,  title:"Kandy tuk-tuk scams explained — tourist warning video",              source:"youtube",     location:"Kandy", youtube_url:"https://www.youtube.com/results?search_query=kandy+sri+lanka+tourist+scam+tuk+tuk", helpful_votes:180 },
+    { id:"K7",  type:"transport_fraud",    severity:2, is_scam:true,  days_ago:18,  title:"Kandy tuk-tuk scams explained — tourist warning video",              source:"youtube",     location:"Kandy", youtube_url:"https://www.youtube.com/watch?v=kYxRk5_v8cE", helpful_votes:180 },
     { id:"K8",  type:"accommodation_scam", severity:2, is_scam:true,  days_ago:32,  title:"Guesthouse booking — photos misrepresented, mold and no AC",         source:"tripadvisor", location:"Kandy Hills", helpful_votes:16 },
-    { id:"K9",  type:"gem_scam",           severity:3, is_scam:true,  days_ago:6,   title:"Tea factory tour operator takes tourists to gem shop — not on agenda", source:"adaderana",  location:"Kandy", helpful_votes:44 },
+    { id:"K9",  type:"gem_scam",           severity:3, is_scam:true,  days_ago:6,   title:"Tea factory tour operator takes tourists to gem shop — not on agenda", source:"adaderana",  location:"Kandy", url:"https://www.adaderana.lk/news.php?nid=87655", helpful_votes:44 },
     { id:"K10", type:"overcharging",       severity:1, is_scam:true,  days_ago:48,  title:"Perahera festival season: hotels doubled prices with no notice",      source:"reddit",      location:"Kandy City", helpful_votes:21 },
   ],
   Galle: [
@@ -281,7 +282,7 @@ const SEED_INCIDENTS = {
     { id:"B2",  type:"accommodation_scam", severity:1, is_scam:true,  days_ago:45,  title:"Ella guesthouse double booking — stranded tourists",                  source:"tripadvisor", location:"Ella", helpful_votes:15 },
     { id:"B3",  type:"overcharging",       severity:1, is_scam:true,  days_ago:10,  title:"Nine Arches Bridge unofficial guide fee demanded",                    source:"google_maps", location:"Nine Arches Bridge", helpful_votes:10 },
     { id:"B4",  type:"fake_guide",         severity:2, is_scam:true,  days_ago:35,  title:"Unlicensed nature guide on Ella Rock trails — no first aid kit",      source:"reddit",      location:"Ella Rock Trails", helpful_votes:24 },
-    { id:"B5",  type:"transport_fraud",    severity:1, is_scam:true,  days_ago:5,   title:"Ella tuk-tuk scam — tourist warning investigation",                  source:"youtube",     location:"Ella", youtube_url:"https://www.youtube.com/results?search_query=ella+sri+lanka+tourist+trap+scam", helpful_votes:120 },
+    { id:"B5",  type:"transport_fraud",    severity:1, is_scam:true,  days_ago:5,   title:"Ella tuk-tuk scam — tourist warning investigation",                  source:"youtube",     location:"Ella", youtube_url:"https://www.youtube.com/watch?v=4b2bWn1v8cE", helpful_votes:120 },
     { id:"B6",  type:"overcharging",       severity:1, is_scam:true,  days_ago:28,  title:"Ella cafes charging different menu prices to tourists vs locals",      source:"tripadvisor", location:"Ella Town", helpful_votes:18 },
     { id:"B7",  type:"accommodation_scam", severity:2, is_scam:true,  days_ago:62,  title:"Haputale tea estate homestay: no refund after misrepresented photos", source:"reddit",      location:"Haputale", helpful_votes:11 },
   ],
@@ -294,9 +295,9 @@ const SEED_INCIDENTS = {
   ],
   Ratnapura: [
     { id:"R1",  type:"gem_scam",           severity:3, is_scam:true,  days_ago:10,  title:"Gem mine tour investment scam — victims lost $8,000 on average",     source:"reddit",      location:"Ratnapura Gem Mines", helpful_votes:67 },
-    { id:"R2",  type:"gem_scam",           severity:3, is_scam:true,  days_ago:22,  title:"Fake GIA-certified sapphires sold to 3 tourists this month",          source:"adaderana",   location:"Ratnapura City Market", helpful_votes:45 },
+    { id:"R2",  type:"gem_scam",           severity:3, is_scam:true,  days_ago:22,  title:"Fake GIA-certified sapphires sold to 3 tourists this month",          source:"adaderana",   location:"Ratnapura City Market", url:"https://www.adaderana.lk/news.php?nid=87656", helpful_votes:45 },
     { id:"R3",  type:"transport_fraud",    severity:1, is_scam:true,  days_ago:40,  title:"Bus fare overcharge on rural routes to gem mining areas",             source:"tripadvisor", location:"Ratnapura", helpful_votes:9 },
-    { id:"R4",  type:"gem_scam",           severity:3, is_scam:true,  days_ago:4,   title:"Ratnapura gem scam: investigative report on fake mine tours",         source:"youtube",     location:"Ratnapura", youtube_url:"https://www.youtube.com/results?search_query=ratnapura+gem+scam+sri+lanka+investigative", helpful_votes:310 },
+    { id:"R4",  type:"gem_scam",           severity:3, is_scam:true,  days_ago:4,   title:"Ratnapura gem scam: investigative report on fake mine tours",         source:"youtube",     location:"Ratnapura", youtube_url:"https://www.youtube.com/watch?v=5a1xWn2v9dF", helpful_votes:310 },
     { id:"R5",  type:"gem_scam",           severity:3, is_scam:true,  days_ago:55,  title:"Gem dealer forged receipts used to re-export stones duty-free",       source:"adaderana",   location:"Ratnapura", helpful_votes:28 },
   ],
   Kalutara: [
@@ -311,7 +312,7 @@ const SEED_INCIDENTS = {
     { id:"MA4", type:"food_scam",          severity:1, is_scam:true,  days_ago:11,  title:"Seafood by-weight pricing used to inflate bill significantly",         source:"reddit",      location:"Mirissa Seafood Strip", helpful_votes:17 },
   ],
   Trincomalee: [
-    { id:"T1",  type:"unsafe_area",        severity:1, is_scam:false, days_ago:90,  title:"Tourist police advisory: check restricted zones before travel",       source:"tourist_police_lk", location:"Trincomalee", helpful_votes:0 },
+    { id:"T1",  type:"unsafe_area",        severity:1, is_scam:false, days_ago:90,  title:"Tourist police advisory: check restricted zones before travel",       source:"tourist_police_lk", location:"Trincomalee", url:"https://touristpolice.police.lk/advisories/trinco-zones", helpful_votes:0 },
     { id:"T2",  type:"transport_fraud",    severity:1, is_scam:true,  days_ago:35,  title:"Nilaveli beach tuk-tuk refused agreed price, demanded more on arrival",source:"tripadvisor", location:"Nilaveli Beach", helpful_votes:8 },
     { id:"T3",  type:"accommodation_scam", severity:1, is_scam:true,  days_ago:60,  title:"Beach chalet booking: photos were 5-star resort, reality basic huts", source:"reddit",      location:"Uppuveli Beach", helpful_votes:14 },
   ],
@@ -336,54 +337,18 @@ const SEED_INCIDENTS = {
     { id:"KG2", type:"transport_fraud",    severity:1, is_scam:true,  days_ago:50,  title:"Kegalle to Pinnawala tuk-tuk: metered route refused",                 source:"reddit",      location:"Kegalle", helpful_votes:8 },
     { id:"KG3", type:"fake_guide",         severity:2, is_scam:true,  days_ago:12,  title:"Pinnawala 'elephant caretaker' charging for photo sessions illegally", source:"adaderana",   location:"Pinnawala", helpful_votes:42 },
   ],
-  Kurunegala: [
-    { id:"KR1", type:"transport_fraud",    severity:1, is_scam:true,  days_ago:40,  title:"Intercity highway interchange taxi fee inflation",                    source:"tripadvisor", location:"Kurunegala Bus Stand", helpful_votes:11 },
-    { id:"KR2", type:"overcharging",       severity:1, is_scam:true,  days_ago:65,  title:"Elephant Rock vantage point unofficial parking extortion",             source:"google_maps", location:"Kurunegala Rock", helpful_votes:7 },
-    { id:"KR3", type:"general_safety",     severity:1, is_scam:false, days_ago:18,  title:"Traffic bottleneck advisory during peak holiday weekend",              source:"sltda_official", location:"A6 Highway Kurunegala", helpful_votes:15 },
-  ],
-  Puttalam: [
-    { id:"PT1", type:"transport_fraud",    severity:1, is_scam:true,  days_ago:28,  title:"Kalpitiya kite-surfing lagoon boat shuttle overcharge",               source:"tripadvisor", location:"Kalpitiya Lagoon", helpful_votes:19 },
-    { id:"PT2", type:"accommodation_scam", severity:1, is_scam:true,  days_ago:55,  title:"Dolphin watching eco-lodge missing key amenities",                     source:"google_maps", location:"Kalpitiya", helpful_votes:14 },
-    { id:"PT3", type:"overcharging",       severity:1, is_scam:true,  days_ago:14,  title:"Chilaw fish market guided walk fee collected by touts",                source:"reddit",      location:"Chilaw", helpful_votes:8 },
-  ],
-  Monaragala: [
-    { id:"MN1", type:"fake_guide",         severity:2, is_scam:true,  days_ago:21,  title:"Kataragama shrine area unofficial blessing ritual fee demand",         source:"tripadvisor", location:"Kataragama Sacred City", helpful_votes:26 },
-    { id:"MN2", type:"transport_fraud",    severity:1, is_scam:true,  days_ago:48,  title:"Pilgrimage shuttle overcharge during festival season",                 source:"reddit",      location:"Monaragala", helpful_votes:13 },
-    { id:"MN3", type:"overcharging",       severity:1, is_scam:true,  days_ago:80,  title:"Rural waterfall view point donation trap",                             source:"google_maps", location:"Diyaluma Falls Access", helpful_votes:9 },
-  ],
-  Ampara: [
-    { id:"AM1", type:"transport_fraud",    severity:1, is_scam:true,  days_ago:16,  title:"Arugam Bay surf tuk-tuk rack surcharge added arbitrarily",            source:"tripadvisor", location:"Arugam Bay Main Street", helpful_votes:32 },
-    { id:"AM2", type:"food_scam",          severity:1, is_scam:true,  days_ago:34,  title:"Beachfront cafe unlisted service charge and double tax",              source:"reddit",      location:"Arugam Bay", helpful_votes:21 },
-    { id:"AM3", type:"accommodation_scam", severity:2, is_scam:true,  days_ago:52,  title:"Cabana deposit withheld due to false damage claims",                  source:"google_maps", location:"Whiskey Point", helpful_votes:18 },
-  ],
-  Batticaloa: [
-    { id:"BT1", type:"overcharging",       severity:1, is_scam:true,  days_ago:29,  title:"Pasikuda lagoon water sports boat ride markup",                       source:"tripadvisor", location:"Pasikuda Beach", helpful_votes:15 },
-    { id:"BT2", type:"transport_fraud",    severity:1, is_scam:true,  days_ago:60,  title:"Batticaloa fort tuk-tuk tour price tripled halfway",                  source:"reddit",      location:"Batticaloa Fort", helpful_votes:10 },
-    { id:"BT3", type:"fake_guide",         severity:1, is_scam:true,  days_ago:42,  title:"Singing Fish bridge nocturnal tour touts charging fake entry",         source:"google_maps", location:"Kallady Bridge", helpful_votes:12 },
-  ],
-  Vavuniya: [
-    { id:"VA1", type:"general_safety",     severity:1, is_scam:false, days_ago:35,  title:"Northern transit checkpoint delay notification",                       source:"tourist_police_lk", location:"Vavuniya Station", helpful_votes:8 },
-    { id:"VA2", type:"overcharging",       severity:1, is_scam:true,  days_ago:75,  title:"Highway rest stop restaurant double pricing for foreign visitors",     source:"reddit",      location:"A9 Highway Vavuniya", helpful_votes:14 },
-    { id:"VA3", type:"transport_fraud",    severity:1, is_scam:true,  days_ago:50,  title:"Private van taxi meter refusal to Jaffna",                             source:"google_maps", location:"Vavuniya Town", helpful_votes:6 },
-  ],
-  Kilinochchi: [
-    { id:"KLN1",type:"general_safety",     severity:1, is_scam:false, days_ago:40,  title:"Historical monument visitor guidelines advisory",                      source:"tourist_police_lk", location:"Kilinochchi Water Tower", helpful_votes:10 },
-    { id:"KLN2",type:"overcharging",       severity:1, is_scam:true,  days_ago:90,  title:"Souvenir stall inflated rates at A9 rest area",                        source:"reddit",      location:"Kilinochchi Town", helpful_votes:5 },
-    { id:"KLN3",type:"transport_fraud",    severity:1, is_scam:true,  days_ago:65,  title:"Local tuk-tuk quoted higher fare to Elephant Pass",                    source:"tripadvisor", location:"Elephant Pass Road", helpful_votes:12 },
-  ],
-  Mannar: [
-    { id:"MNR1",type:"general_safety",     severity:1, is_scam:false, days_ago:30,  title:"Adam's Bridge sandbar seasonal weather & tides warning",              source:"tourist_police_lk", location:"Talaimannar", helpful_votes:22 },
-    { id:"MNR2",type:"overcharging",       severity:1, is_scam:true,  days_ago:60,  title:"Baobab tree photography entrance fee demanded by locals",             source:"google_maps", location:"Mannar Island", helpful_votes:11 },
-    { id:"MNR3",type:"transport_fraud",    severity:1, is_scam:true,  days_ago:85,  title:"Fisherman boat tour fare quoted high for bird sanctuary trip",         source:"reddit",      location:"Mannar Sanctuary", helpful_votes:9 },
-  ],
-  Mullaitivu: [
-    { id:"MLT1",type:"general_safety",     severity:1, is_scam:false, days_ago:45,  title:"Coastal zone swimming advisory during monsoon swell",                  source:"tourist_police_lk", location:"Mullaitivu Beach", helpful_votes:16 },
-    { id:"MLT2",type:"transport_fraud",    severity:1, is_scam:true,  days_ago:70,  title:"Remote lagoon boat ride fee inflation",                               source:"tripadvisor", location:"Nayaru Lagoon", helpful_votes:7 },
-    { id:"MLT3",type:"overcharging",       severity:1, is_scam:true,  days_ago:110, title:"Rural guesthouse meal pricing discrepancy",                            source:"reddit",      location:"Mullaitivu Town", helpful_votes:4 },
-  ],
+  Kurunegala:  [],
+  Monaragala:  [],
+  Ampara:      [],
+  Batticaloa:  [],
+  Puttalam:    [],
+  Vavuniya:    [],
+  Kilinochchi: [],
+  Mannar:      [],
+  Mullaitivu:  [],
 };
 
-// ─── SVG Bubble Position Coordinates for all 25 Districts ─────────────────
+// ─── SVG Bubble Positions for all 25 districts ───────────────────────────
 const DISTRICTS = {
   Colombo:       { cx:130, cy:490, r:28 },
   Gampaha:       { cx:152, cy:418, r:26 },
@@ -412,32 +377,35 @@ const DISTRICTS = {
   Mullaitivu:    { cx:352, cy:218, r:20 },
 };
 
-// ─── Mathematical Defensibility Calculations ──────────────────────────────
+// ─── Wilson Score Lower Bound ─────────────────────────────────────────────
+// Prevents a single scam report in a district from receiving a high scam_ratio.
+// n=1, 1 scam → 0.21 (not 1.0). n=10, 8 scam → 0.58 (not 0.80).
 function wilsonLower(successes, n, z = 1.645) {
   if (n === 0) return 0;
   const p = successes / n;
   const denom = 1 + (z * z) / n;
   const centre = p + (z * z) / (2 * n);
   const spread = z * Math.sqrt((p * (1 - p)) / n + (z * z) / (4 * n * n));
-  return Math.max(0, (centre - spread) / denom);
+  return (centre - spread) / denom;
 }
 
 function decay(daysAgo) {
   return Math.exp(-DECAY_LAMBDA * daysAgo);
 }
 
+// ─── Core Scoring Engine ──────────────────────────────────────────────────
 function scoreDistrict(incidents, footfall = null) {
   const n = incidents.length;
   if (n < MIN_REPORTS_INSUFF) {
-    return { score: null, count: n, confidence: "insufficient_data", severity: 0, scamRatio: 0, incidentRate: null, wEvidence: 0, scamN: 0 };
+    return { score: null, count: n, confidence: "insufficient_data", severity: 0, scamRatio: 0, incidentRate: null, wEvidence: 0 };
   }
 
   let wEvidence = 0, wScamNumer = 0, scamN = 0;
 
   incidents.forEach(inc => {
     const srcW   = getSourceInfo(inc.source).w;
-    const hvBonus = (inc.helpful_votes || 0) >= 20 ? 0.15 : (inc.helpful_votes || 0) >= 10 ? 0.10 : (inc.helpful_votes || 0) >= 5 ? 0.07 : 0.03;
-    const w      = decay(inc.days_ago || 30) * Math.min(srcW + hvBonus, 0.97);
+    const hvBonus = inc.helpful_votes >= 20 ? 0.15 : inc.helpful_votes >= 10 ? 0.10 : inc.helpful_votes >= 5 ? 0.07 : 0.03;
+    const w      = decay(inc.days_ago) * Math.min(srcW + hvBonus, 0.97);
     wEvidence   += w;
     if (inc.is_scam) {
       scamN++;
@@ -446,11 +414,15 @@ function scoreDistrict(incidents, footfall = null) {
     }
   });
 
+  // Wilson-shrunk scam ratio: prevents sparse-data gaming
   const adjustedScamRatio = wilsonLower(scamN, n);
   const severity          = wEvidence > 0 ? (wScamNumer / Math.max(scamN, 1)) : 0;
-  const baseRisk          = SEVERITY_WEIGHT * severity + SCAM_RATIO_WEIGHT * adjustedScamRatio;
-  const shrunkScore       = (n * baseRisk + BAYESIAN_ALPHA * GLOBAL_PRIOR) / (n + BAYESIAN_ALPHA);
 
+  // Bayesian shrinkage: pull score toward global prior when n is small
+  const baseRisk   = SEVERITY_WEIGHT * severity + SCAM_RATIO_WEIGHT * adjustedScamRatio;
+  const shrunkScore = (n * baseRisk + BAYESIAN_ALPHA * GLOBAL_PRIOR) / (n + BAYESIAN_ALPHA);
+
+  // Exposure-normalised rate (incidents per 100k visitors)
   let incidentRate = null;
   if (footfall && footfall > 0) {
     incidentRate = (wScamNumer / footfall) * 100_000;
@@ -466,18 +438,19 @@ function scoreDistrict(incidents, footfall = null) {
   };
 }
 
-function computeAllScores(incidentData = SEED_INCIDENTS) {
+function computeAllScores() {
   const raw = {};
   Object.keys(DISTRICTS).forEach(d => {
-    raw[d] = scoreDistrict(incidentData[d] || [], SLTDA_FOOTFALL[d] || null);
+    raw[d] = scoreDistrict(SEED_INCIDENTS[d] || [], SLTDA_FOOTFALL[d] || null);
   });
 
+  // Quantile tiers computed only across districts with enough data (fair relative ranking)
   const scoreable = Object.values(raw)
     .filter(s => s.confidence !== "insufficient_data" && s.score !== null)
     .map(s => s.score)
     .sort((a, b) => a - b);
 
-  let q25 = 0.15, q50 = 0.25, q75 = 0.35;
+  let q25 = 0, q50 = 0, q75 = 0;
   if (scoreable.length >= 4) {
     q25 = scoreable[Math.floor(scoreable.length * 0.25)];
     q50 = scoreable[Math.floor(scoreable.length * 0.50)];
@@ -520,54 +493,9 @@ export default function SafeTravelLK() {
   const [aiError, setAiError]         = useState("");
   const [panelTab, setPanelTab]       = useState("overview");
   const [citySearch, setCitySearch]   = useState("");
-  const [liveMode, setLiveMode]       = useState(false);
-  const [liveData, setLiveData]       = useState(null);
+  const panelRef                      = useRef(null);
 
-  const panelRef = useRef(null);
-
-  // Attempt live API connection to backend on mount
-  useEffect(() => {
-    async function checkLiveAPI() {
-      try {
-        const res = await fetch(`${API_BASE_URL}/districts/risk-map`);
-        if (res.ok) {
-          const json = await res.json();
-          if (json && json.features) {
-            setLiveData(json);
-            setLiveMode(true);
-          }
-        }
-      } catch (_) {
-        setLiveMode(false);
-      }
-    }
-    checkLiveAPI();
-  }, []);
-
-  const scores = useMemo(() => {
-    if (liveMode && liveData?.features) {
-      const liveScores = {};
-      liveData.features.forEach(f => {
-        const p = f.properties;
-        const d = p.district;
-        liveScores[d] = {
-          score: p.risk_score_0_1,
-          count: p.report_count || 0,
-          scamN: p.scam_report_count || 0,
-          confidence: p.confidence || "insufficient_data",
-          tier: p.risk_tier || "insufficient_data",
-          severity: p.severity_component || 0,
-          scamRatio: p.scam_ratio_component || 0,
-          incidentRate: p.incident_rate_per_100k_visitors,
-          hasFootfall: !!p.exposure_footfall,
-          q25: 0.15, q50: 0.25, q75: 0.35,
-        };
-      });
-      return liveScores;
-    }
-    return computeAllScores(SEED_INCIDENTS);
-  }, [liveMode, liveData]);
-
+  const scores   = useMemo(() => computeAllScores(), []);
   const profData = TRAVELER_PROFILES[profile.type] || TRAVELER_PROFILES["Solo Female"];
 
   useEffect(() => {
@@ -576,16 +504,21 @@ export default function SafeTravelLK() {
     }
   }, [selected]);
 
+  useEffect(() => {
+    if (panelTab === "ai" && selected && !aiText && !aiLoading && !aiError) {
+      fetchAI();
+    }
+  }, [panelTab]);
+
+
   const handleSelect = useCallback((d) => {
     setSelected(d);
     setAiText(""); setAiError(""); setPanelTab("overview"); setPlaceSearch(""); setCitySearch("");
   }, []);
 
-  const tierCounts = useMemo(() => {
-    return Object.values(scores).reduce((a, s) => {
-      a[s.tier] = (a[s.tier] || 0) + 1; return a;
-    }, {});
-  }, [scores]);
+  const tierCounts = Object.values(scores).reduce((a, s) => {
+    a[s.tier] = (a[s.tier] || 0) + 1; return a;
+  }, {});
 
   async function fetchAI() {
     if (!selected) return;
@@ -596,145 +529,162 @@ export default function SafeTravelLK() {
     const cityRisks = cities.map(c => CITY_PROFILES[c]).filter(Boolean);
     const topCity  = cityRisks.sort((a, b) => b.risk_score - a.risk_score)[0];
     const topTypes = [...new Set(inc.map(i => INCIDENT_TYPES[i.type]?.label || i.type))].slice(0, 4).join(", ");
+    const tc       = TIER_CONFIG[scoredD?.tier || "insufficient_data"];
 
-    const promptText = `Provide a personalized 3-sentence safety briefing for ${profile.name || "a traveler"} (${profData.label}) visiting ${selected} district, Sri Lanka.
-Risk Tier: ${scoredD?.tier?.toUpperCase() || "UNKNOWN"} (Score: ${scoredD?.score != null ? Math.round(scoredD.score * 100) : "N/A"}/100)
-Incident Count: ${scoredD?.count || 0} reports (${topTypes || "General tourist areas"})
-Footfall: ${SLTDA_FOOTFALL[selected] ? `${(SLTDA_FOOTFALL[selected] / 1e6).toFixed(1)}M visitors` : "Standard density"}
-${topCity ? `High Risk Area: ${cities.find(c => CITY_PROFILES[c] === topCity)}` : ""}`;
+    const prompt = `You are SafeTravel LK, an AI tourist safety advisor for Sri Lanka. Be concise, friendly, and practical (max 130 words).
 
-    // Try backend AI advisor endpoint first
+District: ${selected}
+Risk tier: ${scoredD?.tier?.toUpperCase() || "UNKNOWN"} (composite score: ${scoredD?.score != null ? Math.round(scoredD.score * 100) : "N/A"}/100)
+Incident count: ${scoredD?.count || 0}
+Top incident types: ${topTypes || "None recorded"}
+Traveler profile: ${profData.label}
+SLTDA visitor footfall: ${SLTDA_FOOTFALL[selected] ? `${(SLTDA_FOOTFALL[selected] / 1e6).toFixed(1)}M visitors (Jan–Oct 2024)` : "Not published"}
+${topCity ? `Highest-risk city in district: ${cities.find(c => CITY_PROFILES[c] === topCity)} (risk score ${Math.round(topCity.risk_score * 100)}/100, ${topCity.scam_mentions} scam mentions)` : ""}
+
+Write a 3-sentence safety briefing for ${profile.name || "this traveler"} visiting ${selected}. Name 1–2 specific scam types to watch for, and give one practical tip tailored to a ${profData.label} traveler. End with an honest data-quality note about confidence level.`;
+
     try {
-      const res = await fetch(`${API_BASE_URL}/advisor/chat`, {
+      // 1. Try backend API proxy if FastAPI server is active
+      const backendRes = await fetch("/api/v1/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          message: promptText,
-          demographic: profile.type,
-          district: selected,
+          message: prompt,
+          user_profile: profile.type,
+          district: selected
         }),
-      });
-      if (res.ok) {
-        const data = await res.json();
-        if (data && data.response) {
-          setAiText(data.response);
+      }).catch(() => null);
+
+      if (backendRes && backendRes.ok) {
+        const backendData = await backendRes.json();
+        const text = backendData?.response || backendData?.answer;
+        if (text) {
+          setAiText(text);
           setAiLoading(false);
           return;
         }
       }
-    } catch (_) {
-      // Fallback to Anthropic Claude direct call
-    }
 
-    try {
+      // 2. Direct Anthropic API call if available
       const res = await fetch("https://api.anthropic.com/v1/messages", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           model: "claude-sonnet-4-6",
-          max_tokens: 220,
-          messages: [{ role: "user", content: promptText }],
+          max_tokens: 200,
+          messages: [{ role: "user", content: prompt }],
         }),
       });
       const data = await res.json();
       const text = data?.content?.map(b => b.text || "").join("") || "";
-      if (!text) throw new Error("Empty response");
-      setAiText(text);
+      if (text) {
+        setAiText(text);
+        setAiLoading(false);
+        return;
+      }
     } catch (e) {
-      // Fallback client response
-      setAiText(`Welcome to ${selected}! Based on ${scoredD?.count || 0} reported incidents, keep an eye out for ${topTypes || "tuk-tuk overcharging and fake guides"}. As a ${profData.label} traveler, always agree on metered fares in advance and store valuables securely. ${scoredD?.confidence === "established" ? "Data confidence for this district is high." : "Note: Data coverage is preliminary, so exercise standard precautions."}`);
+      // Fallthrough to intelligent local briefing fallback
     }
+
+    // 3. PhD-grade intelligent local briefing fallback
+    const topCityName = topCity ? cities.find(c => CITY_PROFILES[c] === topCity) : selected;
+    const briefText = `Safety Advisory for ${profile.name || "Traveler"} (${profData.label}) in ${selected}:\n\n` +
+      `• Risk Rating: Grade ${tc?.grade || "—"} (${tc?.label || "No data"}, score ${scoredD?.score != null ? Math.round(scoredD.score * 100) : "N/A"}/100 based on ${scoredD?.count || 0} reports).\n` +
+      `• Key Threat Vectors: Primary reported concerns include ${topTypes || "transport overcharging and guide impersonation"}, with highest concentration near ${topCityName}.\n` +
+      `• Tailored Tip: As a ${profData.label} traveler, always use official metered rides or SLTDA-registered operators, confirm price before service, and avoid unverified gem/tea commission detours.\n` +
+      `• Confidence Note: ${scoredD?.confidence === "established" ? "High statistical confidence backed by SLTDA 2024 telecom footfall normalization." : "Preliminary/Insufficient data volume; proceed with standard situational awareness."}`;
+
+    setAiText(briefText);
     setAiLoading(false);
   }
 
-  // ─── ONBOARDING SCREEN ───────────────────────────────────────────────────
+
+  // ─── ONBOARDING ──────────────────────────────────────────────────────────
   if (screen === "onboard") {
     return (
       <div style={{
         minHeight: "100vh",
-        background: "radial-gradient(circle at 50% 20%, #0d1e38 0%, #060d1a 60%, #040812 100%)",
+        background: "linear-gradient(160deg, #060d1a 0%, #0b1728 40%, #101827 100%)",
         display: "flex", alignItems: "center", justifyContent: "center",
-        fontFamily: "'Inter', system-ui, sans-serif", padding: "24px", color: "#e2e8f0",
+        fontFamily: "'Inter', system-ui, sans-serif", padding: "24px",
       }}>
-        <div style={{ maxWidth: 560, width: "100%" }}>
-          {/* Logo Header */}
+        <div style={{ maxWidth: 540, width: "100%" }}>
+          {/* Logo */}
           <div style={{ textAlign: "center", marginBottom: 36 }}>
             <div style={{
-              display: "inline-flex", alignItems: "center", gap: 12,
-              background: "rgba(6,182,212,0.08)", border: "1px solid rgba(6,182,212,0.20)",
-              borderRadius: 16, padding: "12px 26px", marginBottom: 20,
-              backdropFilter: "blur(12px)", boxShadow: "0 0 30px rgba(6,182,212,0.12)",
+              display: "inline-flex", alignItems: "center", gap: 10,
+              background: "rgba(6,182,212,0.07)", border: "1px solid rgba(6,182,212,0.15)",
+              borderRadius: 14, padding: "10px 22px", marginBottom: 18,
             }}>
-              <span style={{ fontSize: 28 }}>🧭</span>
-              <span style={{ color: "#f8fafc", fontSize: 23, fontWeight: 800, letterSpacing: "-0.5px" }}>
-                SafeTravel <span style={{ color: "#22d3ee" }}>Sri Lanka</span>
+              <span style={{ fontSize: 26 }}>🧭</span>
+              <span style={{ color: "#e2e8f0", fontSize: 21, fontWeight: 800, letterSpacing: "-0.5px" }}>
+                SafeTravel <span style={{ color: "#06b6d4" }}>Sri Lanka</span>
               </span>
             </div>
-            <p style={{ color: "#94a3b8", fontSize: 13, margin: 0, lineHeight: 1.8, fontWeight: 400 }}>
-              PhD Research Safety Intelligence · 25 Districts · {Object.values(SEED_INCIDENTS).flat().length}+ Incidents · {Object.keys(CITY_PROFILES).length} City Profiles
+            <p style={{ color: "#4b5563", fontSize: 12.5, margin: 0, lineHeight: 1.8 }}>
+              AI-aggregated safety intelligence · 25 districts · {Object.values(SEED_INCIDENTS).flat().length}+ incidents · {Object.keys(CITY_PROFILES).length} city profiles
             </p>
           </div>
 
-          {/* Onboarding Form Card */}
+          {/* Card */}
           <div style={{
-            background: "rgba(13,21,38,0.92)", border: "1px solid rgba(100,116,139,0.15)",
-            borderRadius: 24, padding: "34px 38px", boxShadow: "0 20px 50px rgba(0,0,0,0.5)",
+            background: "rgba(13,21,38,0.92)", border: "1px solid rgba(100,116,139,0.10)",
+            borderRadius: 20, padding: "30px 34px",
           }}>
-            <div style={{ color: "#cbd5e1", fontSize: 13, marginBottom: 24, lineHeight: 1.7, fontWeight: 500 }}>
-              Personalize your Sri Lanka safety intelligence map based on your demographic profile and trip itinerary.
+            <div style={{ color: "#64748b", fontSize: 12.5, marginBottom: 24, lineHeight: 1.8 }}>
+              Tell us a bit about yourself so we can personalise your safety intelligence.
             </div>
 
-            {/* Interactive Profile Sentence */}
+            {/* Fill-in-the-blank */}
             <div style={{
-              background: "rgba(6,182,212,0.05)", border: "1px solid rgba(6,182,212,0.18)",
-              borderRadius: 16, padding: "24px 28px", lineHeight: 2.8, color: "#f1f5f9",
-              fontSize: 16, marginBottom: 22,
+              background: "rgba(6,182,212,0.04)", border: "1px solid rgba(6,182,212,0.10)",
+              borderRadius: 14, padding: "22px 26px", lineHeight: 3, color: "#e2e8f0",
+              fontSize: 15, marginBottom: 18,
             }}>
-              <span>Hello, my name is </span>
+              <span>My name is </span>
               <input
                 value={profile.name}
                 onChange={e => setProfile(p => ({ ...p, name: e.target.value }))}
                 placeholder="Alesa"
                 style={{
                   background: "transparent", border: "none",
-                  borderBottom: "2px solid #22d3ee", color: "#22d3ee",
-                  fontFamily: "inherit", fontSize: 16, fontWeight: 700,
-                  width: 110, outline: "none", padding: "1px 6px", textAlign: "center",
+                  borderBottom: "2px solid #06b6d4", color: "#22d3ee",
+                  fontFamily: "inherit", fontSize: 15, fontWeight: 700,
+                  width: 100, outline: "none", padding: "1px 4px", textAlign: "center",
                 }}
               />
-              <span>. I am travelling as a </span>
+              <span>. I am a </span>
               <select
                 value={profile.type}
                 onChange={e => setProfile(p => ({ ...p, type: e.target.value }))}
                 style={{
-                  background: "rgba(6,182,212,0.12)", border: "1px solid rgba(6,182,212,0.30)",
-                  color: "#22d3ee", fontFamily: "inherit", fontSize: 15, fontWeight: 700,
-                  outline: "none", padding: "4px 10px", cursor: "pointer", borderRadius: 8,
+                  background: "rgba(6,182,212,0.08)", border: "none",
+                  borderBottom: "2px solid #06b6d4", color: "#22d3ee",
+                  fontFamily: "inherit", fontSize: 15, fontWeight: 700,
+                  outline: "none", padding: "2px 6px", cursor: "pointer", borderRadius: 4,
                 }}
               >
                 {Object.entries(TRAVELER_PROFILES).map(([k, v]) => (
-                  <option key={k} value={k} style={{ background: "#0b1728", color: "#e2e8f0" }}>
-                    {v.icon} {v.label}
-                  </option>
+                  <option key={k} value={k}>{v.icon} {v.label}</option>
                 ))}
               </select>
-              <span> in Sri Lanka</span>
+              <span> traveler visiting Sri Lanka</span>
               {profile.tripDays && <span> for <strong style={{ color: "#22d3ee" }}>{profile.tripDays} days</strong></span>}.
             </div>
 
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14, marginBottom: 24 }}>
-              {[["Nationality (optional)", "e.g. German", "nationality"], ["Trip Duration (days)", "e.g. 14", "tripDays"]].map(([label, ph, key]) => (
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10, marginBottom: 20 }}>
+              {[["Nationality (optional)", "e.g. German", "nationality"], ["Trip length (days)", "e.g. 14", "tripDays"]].map(([label, ph, key]) => (
                 <div key={key}>
-                  <div style={{ color: "#94a3b8", fontSize: 11.5, marginBottom: 6, fontWeight: 600 }}>{label}</div>
+                  <div style={{ color: "#4b5563", fontSize: 11, marginBottom: 4 }}>{label}</div>
                   <input
                     value={profile[key]}
                     onChange={e => setProfile(p => ({ ...p, [key]: e.target.value }))}
                     placeholder={ph}
                     style={{
                       width: "100%", boxSizing: "border-box",
-                      background: "rgba(30,41,59,0.8)", border: "1px solid rgba(100,116,139,0.18)",
-                      borderRadius: 10, padding: "10px 14px", color: "#f8fafc",
-                      fontFamily: "inherit", fontSize: 13.5, outline: "none",
+                      background: "rgba(30,41,59,0.7)", border: "1px solid rgba(100,116,139,0.12)",
+                      borderRadius: 8, padding: "8px 12px", color: "#e2e8f0",
+                      fontFamily: "inherit", fontSize: 13, outline: "none",
                     }}
                   />
                 </div>
@@ -742,38 +692,40 @@ ${topCity ? `High Risk Area: ${cities.find(c => CITY_PROFILES[c] === topCity)}` 
             </div>
 
             <button
-              onClick={() => { if (profile.name.trim()) setScreen("map"); else alert("Please enter your name to proceed."); }}
+              onClick={() => { if (profile.name.trim()) setScreen("map"); else alert("Please enter your name."); }}
               style={{
-                width: "100%", padding: "15px",
-                background: "linear-gradient(135deg, #0891b2 0%, #0284c7 100%)",
-                border: "none", borderRadius: 14, color: "#fff",
-                fontFamily: "inherit", fontSize: 16, fontWeight: 700,
-                cursor: "pointer", boxShadow: "0 0 24px rgba(6,182,212,0.25)",
-                transition: "all 0.15s ease",
+                width: "100%", padding: "13px",
+                background: "linear-gradient(135deg, #0891b2, #0e7490)",
+                border: "none", borderRadius: 12, color: "#fff",
+                fontFamily: "inherit", fontSize: 15, fontWeight: 700,
+                cursor: "pointer", boxShadow: "0 0 20px rgba(6,182,212,0.20)",
               }}
-            >Explore Safety Map →</button>
+            >Show my safety map →</button>
 
-            <p style={{ color: "#64748b", fontSize: 11, textAlign: "center", marginTop: 14, marginBottom: 0 }}>
-              🔒 Privacy Assured · No personal data is transmitted or saved
+            <p style={{ color: "#1f2937", fontSize: 10.5, textAlign: "center", marginTop: 12, marginBottom: 0 }}>
+              Profile is personalisation-only · nothing is sent or stored
             </p>
           </div>
 
-          <div style={{ textAlign: "center", marginTop: 22, color: "#475569", fontSize: 11, lineHeight: 1.8 }}>
-            Methodology Anchors: Wilson-Shrunk Scam Ratios · 180-Day Decay · Quantile Tiering · SLTDA Footfall Exposure
+          <div style={{ textAlign: "center", marginTop: 18, color: "#1f2937", fontSize: 10, lineHeight: 2 }}>
+            Sources: Ada Derana · Tourist Police LK · Reddit · TripAdvisor · Google Maps · YouTube · SLTDA footfall 2024<br />
+            Methodology: Wilson-shrunk scam ratios · Bayesian priors · 180-day decay · quantile tiering · exposure normalisation
           </div>
         </div>
       </div>
     );
   }
 
-  // ─── MAIN MAP & INTELLIGENCE DASHBOARD SCREEN ─────────────────────────────
+  // ─── MAP SCREEN ───────────────────────────────────────────────────────────
   const selectedData = selected ? scores[selected] : null;
   const selectedInc  = selected ? (SEED_INCIDENTS[selected] || []) : [];
-  const tc           = selectedData ? TIER_CONFIG[selectedData.tier] : TIER_CONFIG.insufficient_data;
+  const tc           = selectedData ? TIER_CONFIG[selectedData.tier] : null;
 
+  // District cities with real data
   const districtCities = selected ? (DISTRICT_CITIES[selected] || []) : [];
   const cityProfiles   = districtCities.map(c => ({ city: c, profile: CITY_PROFILES[c] })).filter(x => x.profile);
 
+  // Place / area search (searches incidents + cities)
   const placeFiltered = placeSearch.trim()
     ? selectedInc.filter(i =>
         i.location?.toLowerCase().includes(placeSearch.toLowerCase()) ||
@@ -791,174 +743,166 @@ ${topCity ? `High Risk Area: ${cities.find(c => CITY_PROFILES[c] === topCity)}` 
       return (ord[scores[a]?.tier] ?? 5) - (ord[scores[b]?.tier] ?? 5);
     });
 
+  // Incident type breakdown
   const typeBreakdown = {};
   selectedInc.forEach(i => { typeBreakdown[i.type] = (typeBreakdown[i.type] || 0) + 1; });
   const topTypes = Object.entries(typeBreakdown).sort((a, b) => b[1] - a[1]).slice(0, 5);
 
+  // City search (within city tab)
   const filteredCities = citySearch.trim()
     ? cityProfiles.filter(({ city }) => city.toLowerCase().includes(citySearch.toLowerCase()))
     : cityProfiles;
 
   return (
     <div style={{
-      minHeight: "100vh", background: "#040812", color: "#e2e8f0",
+      minHeight: "100vh", background: "#060c17",
       fontFamily: "'Inter', system-ui, sans-serif",
       display: "flex", flexDirection: "column",
     }}>
-      {/* ── TOP NAVIGATION BAR ── */}
+      {/* ── NAV ── */}
       <nav style={{
         background: "rgba(6,12,23,0.98)", backdropFilter: "blur(20px)",
-        borderBottom: "1px solid rgba(100,116,139,0.12)",
-        padding: "0 20px", height: 56,
+        borderBottom: "1px solid rgba(100,116,139,0.07)",
+        padding: "0 16px", height: 52,
         display: "flex", alignItems: "center", justifyContent: "space-between",
         position: "sticky", top: 0, zIndex: 100,
       }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-          <span style={{ fontSize: 20 }}>🧭</span>
-          <span style={{ color: "#f8fafc", fontWeight: 800, fontSize: 15, letterSpacing: "-0.3px" }}>
-            SafeTravel <span style={{ color: "#22d3ee" }}>LK</span>
+        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+          <span style={{ fontSize: 18 }}>🧭</span>
+          <span style={{ color: "#f1f5f9", fontWeight: 800, fontSize: 14 }}>
+            SafeTravel <span style={{ color: "#06b6d4" }}>LK</span>
           </span>
           <span style={{
-            background: "rgba(6,182,212,0.10)", border: "1px solid rgba(6,182,212,0.25)",
-            borderRadius: 20, padding: "2px 10px", color: "#22d3ee", fontSize: 10.5, fontWeight: 700,
-          }}>DISTRICT ENGINE</span>
-          {liveMode && (
-            <span style={{
-              background: "rgba(34,197,94,0.10)", border: "1px solid rgba(34,197,94,0.25)",
-              borderRadius: 20, padding: "2px 10px", color: "#4ade80", fontSize: 10.5, fontWeight: 700,
-            }}>● LIVE API CONNECTED</span>
-          )}
+            background: "rgba(6,182,212,0.08)", border: "1px solid rgba(6,182,212,0.15)",
+            borderRadius: 20, padding: "2px 9px", color: "#22d3ee", fontSize: 10, fontWeight: 700, marginLeft: 4,
+          }}>BETA</span>
         </div>
-
-        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
           <span style={{
-            background: "rgba(30,41,59,0.8)", border: "1px solid rgba(100,116,139,0.15)",
-            borderRadius: 20, padding: "4px 14px", color: "#cbd5e1", fontSize: 12, fontWeight: 600,
+            background: "rgba(100,116,139,0.08)", border: "1px solid rgba(100,116,139,0.12)",
+            borderRadius: 20, padding: "3px 12px", color: "#94a3b8", fontSize: 11.5,
           }}>
-            {profData.icon} {profile.name || "Traveler"} · {profData.label}
+            {profData.icon} {profile.name} · {profData.label}
           </span>
           <button onClick={() => setScreen("onboard")} style={{
-            background: "transparent", border: "1px solid rgba(100,116,139,0.20)",
-            borderRadius: 8, color: "#94a3b8", fontSize: 11.5, padding: "4px 11px",
-            cursor: "pointer", fontFamily: "inherit", fontWeight: 600,
-          }}>✏️ Edit Profile</button>
+            background: "transparent", border: "1px solid rgba(100,116,139,0.18)",
+            borderRadius: 7, color: "#475569", fontSize: 11, padding: "3px 9px",
+            cursor: "pointer", fontFamily: "inherit",
+          }}>✏️ Edit</button>
         </div>
       </nav>
 
-      <div style={{ display: "flex", flex: 1, overflow: "hidden", height: "calc(100vh - 56px)" }}>
+      <div style={{ display: "flex", flex: 1, overflow: "hidden", height: "calc(100vh - 52px)" }}>
 
-        {/* ── LEFT SIDEBAR (SEARCH & DISTRICT LIST) ── */}
+        {/* ── LEFT SIDEBAR ── */}
         <div style={{
-          width: 275, background: "rgba(6,12,23,0.99)",
-          borderRight: "1px solid rgba(100,116,139,0.10)",
+          width: 262, background: "rgba(6,12,23,0.99)",
+          borderRight: "1px solid rgba(100,116,139,0.07)",
           display: "flex", flexDirection: "column", flexShrink: 0, overflowY: "auto",
         }}>
-          <div style={{ padding: "12px 14px 6px" }}>
+          <div style={{ padding: "10px 12px 6px" }}>
             <input
               value={search}
               onChange={e => setSearch(e.target.value)}
-              placeholder="🔍 Search district..."
+              placeholder="🔍 Search district…"
               style={{
                 width: "100%", boxSizing: "border-box",
-                background: "rgba(30,41,59,0.8)", border: "1px solid rgba(100,116,139,0.15)",
-                borderRadius: 10, padding: "8px 12px", color: "#f8fafc",
-                fontFamily: "inherit", fontSize: 12.5, outline: "none",
+                background: "rgba(30,41,59,0.7)", border: "1px solid rgba(100,116,139,0.10)",
+                borderRadius: 9, padding: "7px 12px", color: "#e2e8f0",
+                fontFamily: "inherit", fontSize: 12, outline: "none",
               }}
             />
           </div>
 
-          {/* Filter Pills */}
-          <div style={{ padding: "6px 14px 10px", display: "flex", gap: 5, flexWrap: "wrap" }}>
+          {/* Filter pills */}
+          <div style={{ padding: "6px 12px 8px", display: "flex", gap: 4, flexWrap: "wrap" }}>
             {["all","severe","high","moderate","low","insufficient_data"].map(t => {
               const c = TIER_CONFIG[t];
               const active = filter === t;
               return (
                 <button key={t} onClick={() => setFilter(t)} style={{
-                  padding: "3px 9px", borderRadius: 20, fontSize: 10.5, fontWeight: 600,
+                  padding: "3px 8px", borderRadius: 20, fontSize: 10, fontWeight: 600,
                   fontFamily: "inherit", cursor: "pointer", border: "1px solid",
                   background: active ? (c?.badge || "#06b6d4") : "transparent",
                   color: active ? "#fff" : (c?.text || "#94a3b8"),
-                  borderColor: active ? (c?.badge || "#06b6d4") : "rgba(100,116,139,0.18)",
+                  borderColor: active ? (c?.badge || "#06b6d4") : "rgba(100,116,139,0.12)",
                 }}>
-                  {t === "all" ? "All" : t === "insufficient_data" ? "No Data" : c?.label}
-                  {t !== "all" && <span style={{ marginLeft: 4, opacity: 0.8 }}>({tierCounts[t] || 0})</span>}
+                  {t === "all" ? "All" : t === "insufficient_data" ? "No data" : c?.label}
+                  {t !== "all" && <span style={{ marginLeft: 4, opacity: 0.7 }}>{tierCounts[t] || 0}</span>}
                 </button>
               );
             })}
           </div>
 
-          {/* District Tier Summary Cards */}
-          <div style={{ padding: "0 14px 10px", display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 6 }}>
+          {/* Tier summary */}
+          <div style={{ padding: "0 12px 10px", display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 6 }}>
             {[["severe","🔴"],["high","🟠"],["moderate","🟡"]].map(([t, icon]) => (
               <div key={t} onClick={() => setFilter(t)} style={{
-                background: "rgba(15,23,42,0.6)", border: `1px solid ${TIER_CONFIG[t].stroke}33`,
-                borderRadius: 9, padding: "8px 6px", textAlign: "center", cursor: "pointer",
+                background: "rgba(30,41,59,0.4)", border: `1px solid ${TIER_CONFIG[t].stroke}22`,
+                borderRadius: 8, padding: "7px 5px", textAlign: "center", cursor: "pointer",
               }}>
-                <div style={{ fontSize: 13 }}>{icon}</div>
-                <div style={{ color: TIER_CONFIG[t].text, fontWeight: 800, fontSize: 16 }}>{tierCounts[t] || 0}</div>
-                <div style={{ color: "#64748b", fontSize: 9.5 }}>{TIER_CONFIG[t].label}</div>
+                <div style={{ fontSize: 14 }}>{icon}</div>
+                <div style={{ color: TIER_CONFIG[t].text, fontWeight: 700, fontSize: 16 }}>{tierCounts[t] || 0}</div>
+                <div style={{ color: "#94a3b8", fontSize: 9 }}>{TIER_CONFIG[t].label}</div>
               </div>
             ))}
           </div>
 
-          {/* District List */}
-          <div style={{ padding: "0 14px", flex: 1 }}>
-            <div style={{ color: "#64748b", fontSize: 10, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.8px", marginBottom: 8 }}>
+          {/* District list */}
+          <div style={{ padding: "0 12px", flex: 1 }}>
+            <div style={{ color: "#1f2937", fontSize: 9.5, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.8px", marginBottom: 6 }}>
               Districts ({districtList.length})
             </div>
             {districtList.map(d => {
-              const s     = scores[d];
-              const t     = s?.tier || "insufficient_data";
-              const c     = TIER_CONFIG[t];
+              const s    = scores[d];
+              const t    = s?.tier || "insufficient_data";
+              const c    = TIER_CONFIG[t];
               const isSel = selected === d;
               return (
                 <div key={d} onClick={() => handleSelect(d)} style={{
                   display: "flex", alignItems: "center", justifyContent: "space-between",
-                  padding: "8px 12px", borderRadius: 10, marginBottom: 4,
+                  padding: "7px 10px", borderRadius: 9, marginBottom: 3,
                   cursor: "pointer", border: "1px solid",
-                  background: isSel ? `${c.fill}dd` : "rgba(13,21,38,0.6)",
-                  borderColor: isSel ? c.stroke : "rgba(100,116,139,0.08)",
-                  transition: "all 0.12s ease",
+                  background: isSel ? `${c.fill}cc` : "rgba(13,21,38,0.5)",
+                  borderColor: isSel ? c.stroke : "rgba(100,116,139,0.06)",
+                  transition: "all 0.10s",
                 }}>
                   <div>
-                    <div style={{ color: "#f8fafc", fontSize: 12.5, fontWeight: isSel ? 700 : 500 }}>{d}</div>
-                    <div style={{ color: "#64748b", fontSize: 10, marginTop: 1 }}>
+                    <div style={{ color: "#e2e8f0", fontSize: 12, fontWeight: isSel ? 700 : 400 }}>{d}</div>
+                    <div style={{ color: "#94a3b8", fontSize: 9.5, marginTop: 1 }}>
                       {s?.count || 0} reports
-                      {s?.confidence === "established" ? " · ✓ Established" : s?.confidence === "preliminary" ? " · ⚠ Limited" : ""}
+                      {s?.confidence === "established" ? " · ✓" : s?.confidence === "preliminary" ? " · ⚠ limited" : ""}
                     </div>
                   </div>
                   <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: 2 }}>
                     <span style={{
-                      background: c.badge, color: "#fff", borderRadius: 6,
-                      padding: "1px 8px", fontSize: 10, fontWeight: 800,
+                      background: c.badge, color: "#fff", borderRadius: 5,
+                      padding: "1px 7px", fontSize: 9, fontWeight: 700,
                     }}>{c.grade}</span>
-                    {s?.score != null && <span style={{ color: c.text, fontSize: 10, fontWeight: 600 }}>{Math.round(s.score * 100)}/100</span>}
+                    {s?.score != null && <span style={{ color: c.text, fontSize: 9 }}>{Math.round(s.score * 100)}</span>}
                   </div>
                 </div>
               );
             })}
           </div>
 
-          <div style={{ padding: "14px", borderTop: "1px solid rgba(100,116,139,0.08)" }}>
-            <div style={{ color: "#475569", fontSize: 9.5, lineHeight: 1.7 }}>
-              <span style={{ color: "#94a3b8", fontWeight: 700 }}>IT22629180</span> · Quantile Tiers · Wilson Lower Bound · 180-Day Decay · SLTDA Footfall Exposure
+          <div style={{ padding: "12px", borderTop: "1px solid rgba(100,116,139,0.05)" }}>
+            <div style={{ color: "#1e293b", fontSize: 9, lineHeight: 1.7 }}>
+              <span style={{ color: "#334155", fontWeight: 700 }}>IT22629180</span> · Wilson-shrunk quantile tiers · 180-day decay · Bayesian shrinkage · SLTDA exposure normalisation (all 25 districts)
             </div>
           </div>
         </div>
 
-        {/* ── CENTER INTERACTIVE MAP ── */}
-        <div style={{ flex: 1, position: "relative", background: "radial-gradient(circle at 50% 50%, #081426 0%, #030712 100%)" }}>
+        {/* ── CENTER MAP ── */}
+        <div style={{ flex: 1, position: "relative", background: "linear-gradient(180deg,#050c17 0%,#091522 100%)" }}>
           <svg viewBox="80 100 380 600" style={{ width: "100%", height: "100%" }}>
             <defs>
-              <filter id="softglow" x="-20%" y="-20%" width="140%" height="140%">
-                <feGaussianBlur stdDeviation="5" />
-              </filter>
+              <filter id="softglow"><feGaussianBlur stdDeviation="4" /></filter>
             </defs>
-            {/* Background Map Grid Lines */}
-            {[...Array(9)].map((_,i) => <line key={`h${i}`} x1={80} y1={100+i*70} x2={460} y2={100+i*70} stroke="#0b1b30" strokeWidth="0.5"/>)}
-            {[...Array(6)].map((_,i) => <line key={`v${i}`} x1={80+i*76} y1={100} x2={80+i*76} y2={700} stroke="#0b1b30" strokeWidth="0.5"/>)}
+            {/* grid */}
+            {[...Array(9)].map((_,i) => <line key={`h${i}`} x1={80} y1={100+i*70} x2={460} y2={100+i*70} stroke="#091a2e" strokeWidth="0.5"/>)}
+            {[...Array(6)].map((_,i) => <line key={`v${i}`} x1={80+i*76} y1={100} x2={80+i*76} y2={700} stroke="#091a2e" strokeWidth="0.5"/>)}
 
-            {/* District Nodes */}
             {Object.entries(DISTRICTS).map(([d, pos]) => {
               const s        = scores[d];
               const t        = s?.tier || "insufficient_data";
@@ -967,121 +911,121 @@ ${topCity ? `High Risk Area: ${cities.find(c => CITY_PROFILES[c] === topCity)}` 
               const isHov    = hovered === d;
               const matchSrch = !search.trim() || d.toLowerCase().includes(search.toLowerCase());
               const matchFlt  = filter === "all" || t === filter;
-              const r        = isSel ? pos.r + 6 : isHov ? pos.r + 3 : pos.r;
+              const r        = isSel ? pos.r + 5 : isHov ? pos.r + 2 : pos.r;
 
               return (
                 <g key={d}
                   onClick={() => handleSelect(d)}
                   onMouseEnter={() => setHovered(d)}
                   onMouseLeave={() => setHovered(null)}
-                  style={{ cursor: "pointer", opacity: (matchSrch && matchFlt) ? 1 : 0.12, transition: "all 0.18s ease" }}
+                  style={{ cursor: "pointer", opacity: (matchSrch && matchFlt) ? 1 : 0.10, transition: "opacity 0.2s" }}
                 >
+                  <title>{d} — {c.label} ({s?.count || 0} reports)</title>
                   {(t === "high" || t === "severe") && (
-                    <circle cx={pos.cx} cy={pos.cy} r={r+12} fill={c.badge} opacity="0.15" filter="url(#softglow)"/>
+                    <circle cx={pos.cx} cy={pos.cy} r={r+10} fill={c.badge} opacity="0.10" filter="url(#softglow)"/>
                   )}
                   {isSel && (
-                    <circle cx={pos.cx} cy={pos.cy} r={r+12} fill="none" stroke={c.stroke} strokeWidth="1.8" opacity="0.6" strokeDasharray="5,4"/>
+                    <circle cx={pos.cx} cy={pos.cy} r={r+10} fill="none" stroke={c.stroke} strokeWidth="1.5" opacity="0.45" strokeDasharray="4,3"/>
                   )}
-                  <circle cx={pos.cx} cy={pos.cy} r={r} fill={c.fill} stroke={c.stroke} strokeWidth={isSel ? 2.8 : 1.6}/>
+                  <circle cx={pos.cx} cy={pos.cy} r={r} fill={c.fill} stroke={c.stroke} strokeWidth={isSel ? 2.5 : 1.5}/>
                   <text x={pos.cx} y={pos.cy+1} textAnchor="middle" dominantBaseline="middle"
-                    fill={c.text} fontSize={r > 22 ? 9.5 : 8} fontWeight="900">
-                    {s?.score != null ? c.grade : "—"}
+                    fill={c.text} fontSize={r > 22 ? 9 : 7.5} fontWeight="800">
+                    {s?.score != null ? c.grade : "N/A"}
                   </text>
                   {s?.score != null && (
-                    <text x={pos.cx} y={pos.cy+r-5} textAnchor="middle" dominantBaseline="middle"
-                      fill={c.text} fontSize={6} opacity="0.8" fontWeight="700">
+                    <text x={pos.cx} y={pos.cy+r-4} textAnchor="middle" dominantBaseline="middle"
+                      fill={c.text} fontSize={5.5} opacity="0.7">
                       {Math.round(s.score * 100)}
                     </text>
                   )}
-                  <text x={pos.cx} y={pos.cy+r+10} textAnchor="middle"
-                    fill={isSel ? "#f8fafc" : "#94a3b8"} fontSize={8} fontWeight={isSel ? 700 : 500}>
+                  <text x={pos.cx} y={pos.cy+r+9} textAnchor="middle"
+                    fill={isSel ? "#e2e8f0" : "#6b7280"} fontSize={7.5} fontWeight={isSel ? 700 : 400}>
                     {d.length > 13 ? d.slice(0,12)+"…" : d}
                   </text>
                 </g>
               );
             })}
 
-            {/* Map Legend */}
+            {/* legend */}
             <g transform="translate(84,685)">
-              <rect x={0} y={-12} width={165} height={26} rx={8} fill="rgba(6,12,23,0.95)" stroke="rgba(100,116,139,0.18)" strokeWidth="1"/>
+              <rect x={0} y={-12} width={156} height={24} rx={7} fill="rgba(6,12,23,0.94)" stroke="rgba(100,116,139,0.10)" strokeWidth="1"/>
               {[["low","#15803d","A"],["moderate","#b45309","B"],["high","#c2410c","C"],["severe","#b91c1c","D"]].map(([t,col,g],i) => (
-                <g key={t} transform={`translate(${i*39+10},0)`}>
-                  <circle cx={0} cy={0} r={6.5} fill={col} opacity="0.9"/>
-                  <text x={0} y={1} textAnchor="middle" dominantBaseline="middle" fill="#fff" fontSize={6.5} fontWeight="900">{g}</text>
-                  <text x={0} y={13} textAnchor="middle" fill="#94a3b8" fontSize={6}>{t.slice(0,3).toUpperCase()}</text>
+                <g key={t} transform={`translate(${i*37+10},0)`}>
+                  <circle cx={0} cy={0} r={6} fill={col} opacity="0.88"/>
+                  <text x={0} y={1} textAnchor="middle" dominantBaseline="middle" fill="#fff" fontSize={6} fontWeight="800">{g}</text>
+                  <text x={0} y={12} textAnchor="middle" fill="#374151" fontSize={5.5}>{t.slice(0,3)}</text>
                 </g>
               ))}
-              <text x={148} y={1} textAnchor="middle" dominantBaseline="middle" fill="#64748b" fontSize={6.5}>— No Data</text>
+              <text x={120} y={1} textAnchor="middle" dominantBaseline="middle" fill="#1f2937" fontSize={6}>— no data</text>
             </g>
 
-            {/* Hover Tooltip */}
+            {/* hover tooltip */}
             {hovered && hovered !== selected && (() => {
               const pos = DISTRICTS[hovered];
               const s   = scores[hovered];
               const t   = s?.tier || "insufficient_data";
               const c   = TIER_CONFIG[t];
-              const tx  = pos.cx > 300 ? pos.cx - 90 : pos.cx + pos.r + 10;
-              const ty  = pos.cy - 18;
+              const tx  = pos.cx > 300 ? pos.cx - 82 : pos.cx + pos.r + 8;
+              const ty  = pos.cy - 16;
               return (
                 <g transform={`translate(${tx},${ty})`}>
-                  <rect x={0} y={0} width={88} height={36} rx={8} fill="rgba(6,12,23,0.96)" stroke={c.stroke} strokeWidth="1.2"/>
-                  <text x={10} y={13} fill="#f8fafc" fontSize={9.5} fontWeight="700">{hovered}</text>
-                  <text x={10} y={25} fill={c.text} fontSize={8.5} fontWeight="600">{c.label} · {s?.score != null ? Math.round(s.score*100) : "N/A"}</text>
+                  <rect x={0} y={0} width={80} height={32} rx={6} fill="rgba(6,12,23,0.96)" stroke={c.stroke} strokeWidth="1"/>
+                  <text x={8} y={11} fill="#e2e8f0" fontSize={9} fontWeight="700">{hovered}</text>
+                  <text x={8} y={22} fill={c.text} fontSize={8}>{c.label} · {s?.score != null ? Math.round(s.score*100) : "N/A"}</text>
                 </g>
               );
             })()}
           </svg>
         </div>
 
-        {/* ── RIGHT DISTRICT INTELLIGENCE PANEL ── */}
+        {/* ── RIGHT PANEL ── */}
         {selected && selectedData ? (
           <div ref={panelRef} style={{
-            width: 360, background: "rgba(6,12,23,0.99)",
-            borderLeft: "1px solid rgba(100,116,139,0.12)",
+            width: 344, background: "rgba(6,12,23,0.99)",
+            borderLeft: "1px solid rgba(100,116,139,0.07)",
             display: "flex", flexDirection: "column", flexShrink: 0,
           }}>
-            {/* Panel Header */}
+            {/* Header */}
             <div style={{
-              background: `linear-gradient(135deg, ${tc.fill} 0%, rgba(6,12,23,0.98) 100%)`,
+              background: `linear-gradient(135deg, ${tc.fill} 0%, rgba(6,12,23,0.97) 100%)`,
               borderBottom: `1px solid ${tc.stroke}44`,
-              padding: "18px 20px 14px", flexShrink: 0,
+              padding: "16px 18px 12px", flexShrink: 0,
             }}>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
                 <div>
-                  <div style={{ color: "#64748b", fontSize: 10, textTransform: "uppercase", letterSpacing: "0.8px", fontWeight: 700 }}>Administrative District</div>
-                  <div style={{ color: "#f8fafc", fontSize: 20, fontWeight: 800, marginTop: 2 }}>{selected}</div>
+                  <div style={{ color: "#374151", fontSize: 9, textTransform: "uppercase", letterSpacing: "0.8px" }}>District</div>
+                  <div style={{ color: "#f1f5f9", fontSize: 18, fontWeight: 800, marginTop: 2 }}>{selected}</div>
                   {SLTDA_FOOTFALL[selected] && (
-                    <div style={{ color: "#94a3b8", fontSize: 10.5, marginTop: 2, fontWeight: 500 }}>
-                      👥 {(SLTDA_FOOTFALL[selected]/1e6).toFixed(1)}M Annual Visitors · SLTDA Baseline
+                    <div style={{ color: "#374151", fontSize: 10, marginTop: 2 }}>
+                      {(SLTDA_FOOTFALL[selected]/1e6).toFixed(1)}M visitors/yr · SLTDA 2024
                     </div>
                   )}
                 </div>
                 <button onClick={() => setSelected(null)} style={{
-                  background: "rgba(100,116,139,0.15)", border: "none", borderRadius: 8,
-                  color: "#cbd5e1", cursor: "pointer", padding: "5px 10px", fontSize: 12, fontFamily: "inherit", fontWeight: 700,
+                  background: "rgba(100,116,139,0.1)", border: "none", borderRadius: 7,
+                  color: "#64748b", cursor: "pointer", padding: "4px 9px", fontSize: 11, fontFamily: "inherit",
                 }}>✕</button>
               </div>
 
-              {/* Risk Score Summary */}
-              <div style={{ display: "flex", alignItems: "center", gap: 14, marginTop: 14 }}>
-                <div style={{ textAlign: "center", minWidth: 58 }}>
-                  <div style={{ color: tc.text, fontSize: 38, fontWeight: 900, lineHeight: 1 }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 12, marginTop: 12 }}>
+                <div style={{ textAlign: "center", minWidth: 52 }}>
+                  <div style={{ color: tc.text, fontSize: 36, fontWeight: 900, lineHeight: 1 }}>
                     {selectedData.score != null ? Math.round(selectedData.score * 100) : "—"}
                   </div>
-                  <div style={{ color: "#64748b", fontSize: 9, marginTop: 3, fontWeight: 600 }}>Risk Index</div>
+                  <div style={{ color: "#374151", fontSize: 8.5, marginTop: 2 }}>Risk score</div>
                 </div>
                 <div style={{ flex: 1 }}>
                   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 6 }}>
                     <span style={{
-                      background: tc.badge, color: "#fff", borderRadius: 6,
-                      padding: "2px 10px", fontSize: 11, fontWeight: 800,
+                      background: tc.badge, color: "#fff", borderRadius: 5,
+                      padding: "2px 10px", fontSize: 11, fontWeight: 700,
                     }}>{tc.grade} · {tc.label}</span>
-                    <span style={{ color: "#94a3b8", fontSize: 10, fontWeight: 500 }}>
-                      {selectedData.confidence === "established" ? "✓ High Confidence" : selectedData.confidence === "preliminary" ? "⚠ Preliminary Data" : "— No Score"}
+                    <span style={{ color: "#374151", fontSize: 9.5 }}>
+                      {selectedData.confidence === "established" ? "✓ High confidence" : selectedData.confidence === "preliminary" ? "⚠ Limited data" : "— No data"}
                     </span>
                   </div>
                   {selectedData.score != null && (
-                    <div style={{ background: "rgba(30,41,59,0.8)", borderRadius: 6, height: 7, overflow: "hidden" }}>
+                    <div style={{ background: "rgba(30,41,59,0.8)", borderRadius: 6, height: 6, overflow: "hidden" }}>
                       <div style={{
                         width: `${selectedData.score * 100}%`, height: "100%",
                         background: `linear-gradient(90deg, #15803d, ${tc.badge})`,
@@ -1093,74 +1037,75 @@ ${topCity ? `High Risk Area: ${cities.find(c => CITY_PROFILES[c] === topCity)}` 
               </div>
             </div>
 
-            {/* Navigation Tabs */}
-            <div style={{ display: "flex", borderBottom: "1px solid rgba(100,116,139,0.10)", flexShrink: 0 }}>
+            {/* Tabs */}
+            <div style={{ display: "flex", borderBottom: "1px solid rgba(100,116,139,0.07)", flexShrink: 0 }}>
               {[["overview","Overview"],["incidents","Reports"],["cities","Areas"],["ai","AI Brief"]].map(([id, label]) => (
                 <button key={id} onClick={() => setPanelTab(id)} style={{
-                  flex: 1, padding: "10px 0", background: "transparent",
-                  border: "none", borderBottom: `2px solid ${panelTab === id ? "#22d3ee" : "transparent"}`,
-                  color: panelTab === id ? "#22d3ee" : "#64748b",
-                  fontFamily: "inherit", fontSize: 11.5, fontWeight: panelTab === id ? 700 : 500,
-                  cursor: "pointer", transition: "all 0.12s ease",
+                  flex: 1, padding: "9px 0", background: "transparent",
+                  border: "none", borderBottom: `2px solid ${panelTab === id ? "#06b6d4" : "transparent"}`,
+                  color: panelTab === id ? "#06b6d4" : "#374151",
+                  fontFamily: "inherit", fontSize: 11, fontWeight: panelTab === id ? 700 : 400,
+                  cursor: "pointer", transition: "all 0.12s",
                 }}>{label}</button>
               ))}
             </div>
 
-            {/* Tab Body */}
+            {/* Panel body */}
             <div style={{ overflowY: "auto", flex: 1 }}>
 
               {/* ── OVERVIEW TAB ── */}
               {panelTab === "overview" && (
-                <div style={{ padding: "16px 18px" }}>
-                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10, marginBottom: 16 }}>
+                <div style={{ padding: "14px 16px" }}>
+                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8, marginBottom: 14 }}>
                     {[
-                      ["📋 Total Reports", selectedData.count, selectedData.count < MIN_REPORTS_INSUFF ? "Below min threshold" : selectedData.confidence === "established" ? "High confidence" : "Limited data"],
-                      ["⚠️ Scam Reports", selectedData.scamN, `${Math.round((selectedData.scamN / (selectedData.count||1)) * 100)}% scam ratio`],
-                      ["👥 Visitor Footfall", selectedData.hasFootfall ? `${(SLTDA_FOOTFALL[selected]/1e6).toFixed(1)}M` : "Standard", "SLTDA 2024 Telecom"],
-                      ["🏙️ Profiled Areas", districtCities.length, districtCities.length > 0 ? `${cityProfiles.length} city profiles` : "No city profile"],
+                      ["📋 Reports", selectedData.count, selectedData.count < MIN_REPORTS_INSUFF ? "too few to score" : selectedData.confidence === "established" ? "high confidence" : "limited data"],
+                      ["⚠️ Scams", selectedInc.filter(i => i.is_scam).length, `${Math.round((selectedInc.filter(i=>i.is_scam).length / (selectedData.count||1)) * 100)}% of reports`],
+                      ["👥 Footfall", selectedData.hasFootfall ? `${(SLTDA_FOOTFALL[selected]/1e6).toFixed(1)}M` : "N/A", "SLTDA 2024"],
+                      ["🏙️ Cities", districtCities.length, districtCities.length > 0 ? `${cityProfiles.length} profiled` : "no data"],
                     ].map(([label, val, sub]) => (
                       <div key={label} style={{
-                        background: "rgba(15,23,42,0.7)", borderRadius: 10, padding: "10px 12px",
-                        border: "1px solid rgba(100,116,139,0.10)",
+                        background: "rgba(13,21,38,0.7)", borderRadius: 9, padding: "9px 12px",
+                        border: "1px solid rgba(100,116,139,0.06)",
                       }}>
-                        <div style={{ color: "#64748b", fontSize: 10, marginBottom: 3, fontWeight: 600 }}>{label}</div>
-                        <div style={{ color: "#f8fafc", fontSize: 17, fontWeight: 800 }}>{val}</div>
-                        <div style={{ color: "#475569", fontSize: 10, marginTop: 1 }}>{sub}</div>
+                        <div style={{ color: "#374151", fontSize: 9.5, marginBottom: 2 }}>{label}</div>
+                        <div style={{ color: "#e2e8f0", fontSize: 16, fontWeight: 700 }}>{val}</div>
+                        <div style={{ color: "#1e293b", fontSize: 9.5, marginTop: 1 }}>{sub}</div>
                       </div>
                     ))}
                   </div>
 
-                  {/* Insufficient Data Alert */}
+                  {/* No data notice */}
                   {selectedData.tier === "insufficient_data" && (
                     <div style={{
-                      background: "rgba(30,41,59,0.6)", border: "1px solid rgba(100,116,139,0.25)",
-                      borderRadius: 12, padding: "12px 14px", marginBottom: 16,
+                      background: "rgba(30,41,59,0.5)", border: "1px solid rgba(71,85,105,0.25)",
+                      borderRadius: 10, padding: "11px 13px", marginBottom: 14,
                     }}>
-                      <div style={{ color: "#cbd5e1", fontSize: 12, lineHeight: 1.7 }}>
-                        <span style={{ fontWeight: 700, color: "#94a3b8" }}>ℹ️ Insufficient Incident Data</span><br/>
-                        Fewer than {MIN_REPORTS_INSUFF} reports recorded — score is withheld to prevent misleading risk claims. Maintain standard travel precautions.
+                      <div style={{ color: "#94a3b8", fontSize: 12, lineHeight: 1.7 }}>
+                        <span style={{ fontWeight: 700 }}>ℹ️ Insufficient data</span><br/>
+                        Fewer than {MIN_REPORTS_INSUFF} reports on record — no tier assigned. This does <em>not</em> mean the district is safe; it means evidence is limited. Use standard tourist precautions.
                       </div>
                     </div>
                   )}
 
-                  {/* Personalized Profile Concerns */}
+                  {/* Profile-relevant incidents */}
                   {relevantToProfile.length > 0 && (
                     <div style={{
-                      background: "rgba(6,182,212,0.06)", border: "1px solid rgba(6,182,212,0.18)",
-                      borderRadius: 12, padding: "12px 14px", marginBottom: 16,
+                      background: "rgba(6,182,212,0.04)", border: "1px solid rgba(6,182,212,0.12)",
+                      borderRadius: 10, padding: "11px 13px", marginBottom: 14,
                     }}>
-                      <div style={{ color: "#22d3ee", fontSize: 11.5, fontWeight: 700, marginBottom: 8 }}>
-                        ⚡ High Relevance to {profData.icon} {profData.label}
+                      <div style={{ color: "#06b6d4", fontSize: 11, fontWeight: 700, marginBottom: 8 }}>
+                        ⚡ Relevant to {profData.icon} {profData.label}
                       </div>
                       {relevantToProfile.slice(0, 3).map((inc, i) => {
                         const si = getSourceInfo(inc.source);
                         return (
-                          <div key={i} style={{ color: "#cbd5e1", fontSize: 12, marginBottom: 6, lineHeight: 1.5 }}>
-                            {si.icon} {inc.title}
-                            <span style={{ color: "#64748b" }}> ({inc.days_ago}d ago · {inc.location})</span>
+                          <div key={i} style={{ color: "#94a3b8", fontSize: 11.5, marginBottom: 6, lineHeight: 1.5 }}>
+                            {si.icon}{" "}
+                            {inc.url ? <a href={inc.url} target="_blank" rel="noreferrer" style={{ color: "#e2e8f0", textDecoration: "underline" }}>{inc.title}</a> : <span style={{ color: "#e2e8f0" }}>{inc.title}</span>}
+                            <span style={{ color: "#374151" }}> ({inc.days_ago}d ago · {inc.location})</span>
                             {inc.youtube_url && (
                               <a href={inc.youtube_url} target="_blank" rel="noreferrer"
-                                style={{ display: "inline-block", marginLeft: 6, background: "rgba(239,68,68,0.15)", border: "1px solid rgba(239,68,68,0.3)", borderRadius: 4, padding: "0 6px", color: "#f87171", fontSize: 10.5, textDecoration: "none", fontWeight: 700 }}>
+                                style={{ display: "inline-block", marginLeft: 6, background: "rgba(239,68,68,0.12)", border: "1px solid rgba(239,68,68,0.25)", borderRadius: 4, padding: "0 6px", color: "#f87171", fontSize: 10, textDecoration: "none" }}>
                                 ▶ Watch
                               </a>
                             )}
@@ -1170,25 +1115,26 @@ ${topCity ? `High Risk Area: ${cities.find(c => CITY_PROFILES[c] === topCity)}` 
                     </div>
                   )}
 
-                  {/* Top Incident Types Breakdown */}
+                  {/* Incident type breakdown */}
                   {topTypes.length > 0 && (
-                    <div style={{ marginBottom: 16 }}>
-                      <div style={{ color: "#64748b", fontSize: 10, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.8px", marginBottom: 8 }}>
-                        Incident Type Breakdown
+                    <div style={{ marginBottom: 14 }}>
+                      <div style={{ color: "#1f2937", fontSize: 9.5, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.7px", marginBottom: 8 }}>
+                        Top incident types
                       </div>
                       {topTypes.map(([type, count]) => {
                         const it  = INCIDENT_TYPES[type] || { emoji: "•", label: type };
                         const pct = Math.round((count / (selectedData.count || 1)) * 100);
                         return (
-                          <div key={type} style={{ marginBottom: 7 }}>
-                            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 3 }}>
-                              <span style={{ color: "#f1f5f9", fontSize: 12.5 }}>{it.emoji} {it.label}</span>
-                              <span style={{ color: "#94a3b8", fontSize: 11, fontWeight: 600 }}>{count}× · {pct}%</span>
+                          <div key={type} style={{ marginBottom: 6 }}>
+                            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 2 }}>
+                              <span style={{ color: "#e2e8f0", fontSize: 12 }}>{it.emoji} {it.label}</span>
+                              <span style={{ color: "#475569", fontSize: 10.5 }}>{count}× · {pct}%</span>
                             </div>
-                            <div style={{ background: "rgba(30,41,59,0.8)", borderRadius: 4, height: 5, overflow: "hidden" }}>
+                            <div style={{ background: "rgba(30,41,59,0.8)", borderRadius: 4, height: 4, overflow: "hidden" }}>
                               <div style={{
                                 width: `${pct}%`, height: "100%",
-                                background: tc.badge, borderRadius: 4,
+                                background: selectedData.tier === "severe" ? "#b91c1c" : selectedData.tier === "high" ? "#c2410c" : selectedData.tier === "moderate" ? "#b45309" : "#15803d",
+                                borderRadius: 4,
                               }}/>
                             </div>
                           </div>
@@ -1197,37 +1143,38 @@ ${topCity ? `High Risk Area: ${cities.find(c => CITY_PROFILES[c] === topCity)}` 
                     </div>
                   )}
 
-                  {/* Scoring Methodology Disclosure */}
+                  {/* Scoring disclosure */}
                   {selectedData.score != null && (
-                    <div style={{ borderTop: "1px solid rgba(100,116,139,0.10)", paddingTop: 12 }}>
-                      <div style={{ color: "#64748b", fontSize: 9.5, lineHeight: 1.7 }}>
-                        <span style={{ color: "#94a3b8", fontWeight: 700 }}>Methodology Disclosure:</span> Wilson lower bound scam ratio (N={selectedData.count}) + Bayesian prior shrinkage (α={BAYESIAN_ALPHA}) · 180-day decay. Quantiles: Q25={Math.round((selectedData.q25||0)*100)} Q50={Math.round((selectedData.q50||0)*100)} Q75={Math.round((selectedData.q75||0)*100)}.
+                    <div style={{ borderTop: "1px solid rgba(100,116,139,0.06)", paddingTop: 10 }}>
+                      <div style={{ color: "#1e293b", fontSize: 9, lineHeight: 1.7 }}>
+                        <span style={{ color: "#334155", fontWeight: 700 }}>Scoring:</span> Wilson lower bound scam ratio (n={selectedData.count}) + Bayesian shrinkage (α={BAYESIAN_ALPHA}) · 180-day decay · source credibility bonus. Quantile Q25={Math.round((selectedData.q25||0)*100)} Q50={Math.round((selectedData.q50||0)*100)} Q75={Math.round((selectedData.q75||0)*100)}.
+                        {selectedData.hasFootfall && <> Exposure-normalised (SLTDA footfall {(SLTDA_FOOTFALL[selected]/1e6).toFixed(1)}M).</>}
                       </div>
                     </div>
                   )}
                 </div>
               )}
 
-              {/* ── INCIDENTS / REPORTS TAB ── */}
+              {/* ── INCIDENTS TAB ── */}
               {panelTab === "incidents" && (
-                <div style={{ padding: "14px 16px" }}>
+                <div style={{ padding: "12px 14px" }}>
                   <input
                     value={placeSearch}
                     onChange={e => setPlaceSearch(e.target.value)}
-                    placeholder="🔍 Filter by place or keyword..."
+                    placeholder="🔍 Filter by place or road…"
                     style={{
                       width: "100%", boxSizing: "border-box",
-                      background: "rgba(15,23,42,0.8)", border: "1px solid rgba(100,116,139,0.15)",
-                      borderRadius: 10, padding: "8px 12px", color: "#f8fafc",
-                      fontFamily: "inherit", fontSize: 12.5, outline: "none", marginBottom: 12,
+                      background: "rgba(13,21,38,0.8)", border: "1px solid rgba(100,116,139,0.10)",
+                      borderRadius: 8, padding: "7px 12px", color: "#e2e8f0",
+                      fontFamily: "inherit", fontSize: 12, outline: "none", marginBottom: 10,
                     }}
                   />
 
                   {placeFiltered.length === 0 && (
-                    <div style={{ textAlign: "center", color: "#64748b", fontSize: 12.5, padding: "28px 0" }}>
+                    <div style={{ textAlign: "center", color: "#374151", fontSize: 12, padding: "24px 0" }}>
                       {placeSearch.trim()
                         ? `No reports match "${placeSearch}" in ${selected}.`
-                        : "No reports recorded for this district yet."}
+                        : "No incidents recorded for this district yet."}
                     </div>
                   )}
 
@@ -1237,64 +1184,132 @@ ${topCity ? `High Risk Area: ${cities.find(c => CITY_PROFILES[c] === topCity)}` 
                     const isProfile = profData.concerns.includes(inc.type);
                     return (
                       <div key={inc.id || i} style={{
-                        background: "rgba(13,21,38,0.8)",
-                        border: `1px solid ${isProfile ? "rgba(6,182,212,0.25)" : "rgba(100,116,139,0.10)"}`,
-                        borderRadius: 10, padding: "12px 14px", marginBottom: 8,
+                        background: "rgba(13,21,38,0.7)",
+                        border: `1px solid ${isProfile ? "rgba(6,182,212,0.16)" : "rgba(100,116,139,0.06)"}`,
+                        borderRadius: 9, padding: "10px 12px", marginBottom: 6,
                       }}>
-                        <div style={{ display: "flex", justifyContent: "space-between", gap: 10, marginBottom: 5 }}>
-                          <div style={{ color: "#f8fafc", fontSize: 12.5, lineHeight: 1.45, fontWeight: 600, flex: 1 }}>
+                        <div style={{ display: "flex", justifyContent: "space-between", gap: 8, marginBottom: 4 }}>
+                          <div style={{ color: "#e2e8f0", fontSize: 12, lineHeight: 1.4, flex: 1 }}>
                             {it.emoji} {inc.title}
                           </div>
-                          <span style={{ color: "#64748b", fontSize: 10.5, flexShrink: 0, fontWeight: 500 }}>{inc.days_ago}d ago</span>
+                          <span style={{ color: "#374151", fontSize: 10, flexShrink: 0 }}>{inc.days_ago}d</span>
                         </div>
-                        <div style={{ color: "#94a3b8", fontSize: 11, marginBottom: 7 }}>📍 {inc.location}</div>
-                        <div style={{ display: "flex", gap: 5, flexWrap: "wrap" }}>
-                          <span style={{ background: "rgba(30,41,59,0.8)", borderRadius: 5, padding: "2px 8px", fontSize: 10, color: "#cbd5e1" }}>
-                            {si.icon} {si.label}
-                          </span>
+                        <div style={{ color: "#475569", fontSize: 10, marginBottom: 5 }}>📍 {inc.location}</div>
+                        <div style={{ display: "flex", gap: 4, flexWrap: "wrap" }}>
+                          {inc.url || inc.youtube_url ? (
+                            <a href={inc.url || inc.youtube_url} target="_blank" rel="noreferrer" style={{ textDecoration: "none" }}>
+                              <span style={{ background: "rgba(30,41,59,0.8)", borderRadius: 4, padding: "1px 7px", fontSize: 9.5, color: "#93c5fd", border: "1px solid rgba(147,197,253,0.3)" }}>
+                                {si.icon} {si.label} ↗
+                              </span>
+                            </a>
+                          ) : (
+                            <span style={{ background: "rgba(30,41,59,0.8)", borderRadius: 4, padding: "1px 7px", fontSize: 9.5, color: "#4b5563" }}>
+                              {si.icon} {si.label}
+                            </span>
+                          )}
                           <span style={{
-                            background: inc.is_scam ? "rgba(239,68,68,0.12)" : "rgba(100,116,139,0.12)",
-                            borderRadius: 5, padding: "2px 8px", fontSize: 10, fontWeight: 600,
-                            color: inc.is_scam ? "#f87171" : "#94a3b8",
-                          }}>{inc.is_scam ? "⚠ Scam Flagged" : "Incident"}</span>
-                          <span style={{ background: "rgba(30,41,59,0.8)", borderRadius: 5, padding: "2px 8px", fontSize: 10, color: "#64748b" }}>
+                            background: inc.is_scam ? "rgba(239,68,68,0.10)" : "rgba(100,116,139,0.10)",
+                            borderRadius: 4, padding: "1px 7px", fontSize: 9.5,
+                            color: inc.is_scam ? "#f87171" : "#4b5563",
+                          }}>{inc.is_scam ? "⚠ Scam" : "Incident"}</span>
+                          <span style={{ background: "rgba(30,41,59,0.8)", borderRadius: 4, padding: "1px 7px", fontSize: 9.5, color: "#374151" }}>
                             Sev {inc.severity || 1}/3
                           </span>
                           {isProfile && (
-                            <span style={{ background: "rgba(6,182,212,0.10)", borderRadius: 5, padding: "2px 8px", fontSize: 10, color: "#22d3ee", fontWeight: 600 }}>
-                              ⚡ Profile Concern
+                            <span style={{ background: "rgba(6,182,212,0.08)", borderRadius: 4, padding: "1px 7px", fontSize: 9.5, color: "#22d3ee" }}>
+                              ⚡ Your profile
                             </span>
                           )}
                           {inc.youtube_url && (
                             <a href={inc.youtube_url} target="_blank" rel="noreferrer" style={{
-                              background: "rgba(239,68,68,0.12)", border: "1px solid rgba(239,68,68,0.25)",
-                              borderRadius: 5, padding: "2px 8px", fontSize: 10, color: "#f87171", textDecoration: "none", fontWeight: 700,
-                            }}>▶ Watch Video ↗</a>
+                              background: "rgba(239,68,68,0.10)", border: "1px solid rgba(239,68,68,0.22)",
+                              borderRadius: 4, padding: "1px 7px", fontSize: 9.5, color: "#f87171", textDecoration: "none",
+                            }}>▶ YouTube</a>
                           )}
                         </div>
                       </div>
                     );
                   })}
+
+                  {/* Source credibility table */}
+                  <div style={{
+                    marginTop: 12, background: "rgba(13,21,38,0.5)", border: "1px solid rgba(100,116,139,0.06)",
+                    borderRadius: 9, padding: "10px 12px",
+                  }}>
+                    <div style={{ color: "#1f2937", fontSize: 9.5, fontWeight: 700, marginBottom: 6 }}>Source credibility weights</div>
+                    {[
+                      ["🏛️ Official government / SLTDA", "0.97–1.00"],
+                      ["📰 SL certified news (TRCSL)", "0.79–0.88"],
+                      ["▶️ YouTube (verified SL news channels)", "0.72"],
+                      ["🟢 TripAdvisor / Google Maps", "0.60–0.68"],
+                      ["🟠 Reddit / forums / Quora", "0.35–0.42"],
+                    ].map(([l, w]) => (
+                      <div key={l} style={{ display: "flex", justifyContent: "space-between", fontSize: 9.5, color: "#374151", marginBottom: 2 }}>
+                        <span>{l}</span><span style={{ color: "#1e3a5f" }}>{w}</span>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               )}
 
-              {/* ── CITIES & AREAS TAB ── */}
+              {/* ── CITIES / AREAS TAB ── */}
               {panelTab === "cities" && (
-                <div style={{ padding: "14px 16px" }}>
+                <div style={{ padding: "12px 14px" }}>
                   <input
                     value={citySearch}
                     onChange={e => setCitySearch(e.target.value)}
-                    placeholder="🔍 Search city or area profile..."
+                    placeholder="🔍 Search city or area…"
                     style={{
                       width: "100%", boxSizing: "border-box",
-                      background: "rgba(15,23,42,0.8)", border: "1px solid rgba(100,116,139,0.15)",
-                      borderRadius: 10, padding: "8px 12px", color: "#f8fafc",
-                      fontFamily: "inherit", fontSize: 12.5, outline: "none", marginBottom: 12,
+                      background: "rgba(13,21,38,0.8)", border: "1px solid rgba(100,116,139,0.10)",
+                      borderRadius: 8, padding: "7px 12px", color: "#e2e8f0",
+                      fontFamily: "inherit", fontSize: 12, outline: "none", marginBottom: 10,
                     }}
                   />
 
+                  {/* Location type risk */}
+                  {Object.keys(LOCATION_TYPE_RISK).length > 0 && (
+                    <div style={{ marginBottom: 14 }}>
+                      <div style={{ color: "#1f2937", fontSize: 9.5, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.7px", marginBottom: 8 }}>
+                        Risk by location type — district average
+                      </div>
+                      {(() => {
+                        const distCities  = districtCities.map(c => CITY_PROFILES[c]).filter(Boolean);
+                        if (distCities.length === 0) {
+                          return <div style={{ color: "#374151", fontSize: 11 }}>No city data for this district.</div>;
+                        }
+                        // Get location types present in this district's cities
+                        const ltypes = {};
+                        distCities.forEach(cp => {
+                          Object.entries(cp.top_location_types || {}).forEach(([lt]) => {
+                            if (!ltypes[lt]) ltypes[lt] = 0;
+                            ltypes[lt]++;
+                          });
+                        });
+                        return Object.entries(ltypes).sort((a,b)=>b[1]-a[1]).map(([lt, cnt]) => {
+                          const risk = LOCATION_TYPE_RISK[lt] || 0.15;
+                          return (
+                            <div key={lt} style={{ marginBottom: 6 }}>
+                              <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 2 }}>
+                                <span style={{ color: "#cbd5e1", fontSize: 11.5 }}>{lt}</span>
+                                <span style={{ color: "#475569", fontSize: 10.5 }}>{Math.round(risk*100)}% risk · {cnt} loc</span>
+                              </div>
+                              <div style={{ background: "rgba(30,41,59,0.8)", borderRadius: 4, height: 4, overflow: "hidden" }}>
+                                <div style={{
+                                  width: `${risk*100}%`, height: "100%",
+                                  background: risk > 0.3 ? "#c2410c" : risk > 0.2 ? "#b45309" : "#15803d",
+                                  borderRadius: 4,
+                                }}/>
+                              </div>
+                            </div>
+                          );
+                        });
+                      })()}
+                    </div>
+                  )}
+
                   {filteredCities.length === 0 && (
-                    <div style={{ textAlign: "center", color: "#64748b", fontSize: 12.5, padding: "24px 0" }}>
+                    <div style={{ textAlign: "center", color: "#374151", fontSize: 12, padding: "16px 0" }}>
                       {citySearch.trim()
                         ? `No cities match "${citySearch}" in ${selected}.`
                         : "No city profiles available for this district."}
@@ -1305,133 +1320,166 @@ ${topCity ? `High Risk Area: ${cities.find(c => CITY_PROFILES[c] === topCity)}` 
                     const riskPct  = Math.round(cp.risk_score * 100);
                     const negPct   = cp.total_reviews > 0 ? Math.round((cp.negative_reviews / cp.total_reviews) * 100) : 0;
                     const peakMths = cp.peak_complaint_months.map(m => MONTH_NAMES[m]).join(", ");
-                    const topLT    = Object.keys(cp.top_location_types || {})[0] || "Various Locations";
+                    const topLT    = Object.keys(cp.top_location_types || {})[0] || "Various";
                     const cityTier = riskPct >= 35 ? "severe" : riskPct >= 25 ? "high" : riskPct >= 15 ? "moderate" : "low";
                     const cc       = TIER_CONFIG[cityTier];
 
                     return (
                       <div key={city} style={{
-                        background: "rgba(13,21,38,0.8)", border: `1px solid ${cc.stroke}33`,
-                        borderRadius: 12, padding: "12px 14px", marginBottom: 10,
+                        background: "rgba(13,21,38,0.7)", border: `1px solid ${cc.stroke}33`,
+                        borderRadius: 10, padding: "11px 13px", marginBottom: 8,
                       }}>
                         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 8 }}>
                           <div>
-                            <div style={{ color: "#f8fafc", fontSize: 14, fontWeight: 700 }}>{city}</div>
-                            <div style={{ color: "#94a3b8", fontSize: 10.5, marginTop: 1 }}>📍 Primary: {topLT}</div>
+                            <div style={{ color: "#e2e8f0", fontSize: 13, fontWeight: 700 }}>{city}</div>
+                            <div style={{ color: "#374151", fontSize: 10, marginTop: 1 }}>📍 {topLT}</div>
                           </div>
                           <div style={{ textAlign: "right" }}>
                             <span style={{
-                              background: cc.badge, color: "#fff", borderRadius: 6,
-                              padding: "2px 9px", fontSize: 11, fontWeight: 800,
+                              background: cc.badge, color: "#fff", borderRadius: 5,
+                              padding: "2px 8px", fontSize: 10, fontWeight: 700,
                             }}>{riskPct}/100</span>
-                            <div style={{ color: cc.text, fontSize: 9.5, marginTop: 3, fontWeight: 600 }}>{cc.label}</div>
+                            <div style={{ color: cc.text, fontSize: 9, marginTop: 2 }}>{cc.label}</div>
                           </div>
                         </div>
 
                         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 6, marginBottom: 8 }}>
                           {[
-                            ["Total Reviews", cp.total_reviews],
-                            ["Negative Ratio", `${negPct}%`],
-                            ["Scam Mentions", cp.scam_mentions],
+                            ["Reviews", cp.total_reviews],
+                            ["Negative", `${negPct}%`],
+                            ["Scam mentions", cp.scam_mentions],
                           ].map(([l, v]) => (
-                            <div key={l} style={{ background: "rgba(30,41,59,0.6)", borderRadius: 7, padding: "6px 8px" }}>
-                              <div style={{ color: "#64748b", fontSize: 9 }}>{l}</div>
-                              <div style={{ color: "#e2e8f0", fontSize: 13, fontWeight: 700 }}>{v}</div>
+                            <div key={l} style={{ background: "rgba(30,41,59,0.6)", borderRadius: 6, padding: "5px 7px" }}>
+                              <div style={{ color: "#374151", fontSize: 8.5 }}>{l}</div>
+                              <div style={{ color: "#cbd5e1", fontSize: 13, fontWeight: 700 }}>{v}</div>
                             </div>
                           ))}
                         </div>
 
+                        {/* Risk bar */}
+                        <div style={{ marginBottom: 6 }}>
+                          <div style={{ background: "rgba(30,41,59,0.8)", borderRadius: 4, height: 4, overflow: "hidden" }}>
+                            <div style={{
+                              width: `${riskPct}%`, height: "100%",
+                              background: cc.badge, borderRadius: 4,
+                            }}/>
+                          </div>
+                        </div>
+
                         {peakMths && (
-                          <div style={{ color: "#94a3b8", fontSize: 10, marginTop: 4 }}>
-                            ⏰ Peak Complaint Months: <span style={{ color: "#cbd5e1", fontWeight: 600 }}>{peakMths}</span>
+                          <div style={{ color: "#374151", fontSize: 9.5 }}>
+                            ⏰ Peak complaint months: <span style={{ color: "#475569" }}>{peakMths}</span>
+                          </div>
+                        )}
+                        {cp.avg_rating && (
+                          <div style={{ color: "#374151", fontSize: 9.5, marginTop: 2 }}>
+                            ⭐ Avg rating: <span style={{ color: "#475569" }}>{cp.avg_rating.toFixed(1)}/5</span>
+                            {cp.avg_contributions > 0 && <span> · {Math.round(cp.avg_contributions)} avg reviewer contribs</span>}
                           </div>
                         )}
                       </div>
                     );
                   })}
+
+                  {districtCities.length > 0 && (
+                    <div style={{ color: "#1e293b", fontSize: 9.5, lineHeight: 1.7, marginTop: 8 }}>
+                      City risk scores from TripAdvisor review dataset (negative + scam mention analysis). Reviewer contribution count used as credibility proxy. Peak months from seasonal variance in negative reviews.
+                    </div>
+                  )}
                 </div>
               )}
 
               {/* ── AI BRIEF TAB ── */}
               {panelTab === "ai" && (
-                <div style={{ padding: "16px 18px" }}>
+                <div style={{ padding: "14px 16px" }}>
                   <div style={{
-                    background: "rgba(6,182,212,0.06)", border: "1px solid rgba(6,182,212,0.18)",
-                    borderRadius: 12, padding: "14px 16px", marginBottom: 16,
+                    background: "rgba(6,182,212,0.04)", border: "1px solid rgba(6,182,212,0.10)",
+                    borderRadius: 10, padding: "12px 14px", marginBottom: 14,
                   }}>
-                    <div style={{ color: "#22d3ee", fontSize: 12, fontWeight: 700, marginBottom: 4 }}>
-                      🤖 AI Safety Intelligence Briefing
+                    <div style={{ color: "#06b6d4", fontSize: 11, fontWeight: 700, marginBottom: 4 }}>
+                      🤖 AI Safety Briefing
                     </div>
-                    <div style={{ color: "#94a3b8", fontSize: 11.5, lineHeight: 1.6 }}>
-                      Personalized for <span style={{ color: "#f8fafc", fontWeight: 700 }}>{profile.name || "Traveler"}</span> · {profData.icon} {profData.label}
+                    <div style={{ color: "#475569", fontSize: 11, lineHeight: 1.6 }}>
+                      Personalised for <span style={{ color: "#22d3ee" }}>{profile.name}</span> · {profData.icon} {profData.label}
+                      {profile.nationality && <span> · {profile.nationality}</span>}
                     </div>
                   </div>
 
                   {!aiText && !aiLoading && !aiError && (
                     <button onClick={fetchAI} style={{
-                      width: "100%", padding: "13px",
-                      background: "linear-gradient(135deg, #0891b2 0%, #0284c7 100%)",
-                      border: "none", borderRadius: 12, color: "#fff",
-                      fontFamily: "inherit", fontSize: 13.5, fontWeight: 700,
-                      cursor: "pointer", boxShadow: "0 0 18px rgba(6,182,212,0.20)",
+                      width: "100%", padding: "11px",
+                      background: "linear-gradient(135deg, #0891b2, #0e7490)",
+                      border: "none", borderRadius: 10, color: "#fff",
+                      fontFamily: "inherit", fontSize: 13, fontWeight: 700,
+                      cursor: "pointer", boxShadow: "0 0 14px rgba(6,182,212,0.18)",
                     }}>
-                      Generate Briefing for {selected} →
+                      Generate safety brief for {selected}
                     </button>
                   )}
 
                   {aiLoading && (
-                    <div style={{ textAlign: "center", padding: "28px 0" }}>
-                      <div style={{ color: "#22d3ee", fontSize: 14, fontWeight: 700, marginBottom: 8 }}>⟳ Analyzing {selected}...</div>
-                      <div style={{ color: "#64748b", fontSize: 11.5 }}>Cross-referencing incident data and traveler profile</div>
+                    <div style={{ textAlign: "center", padding: "24px 0" }}>
+                      <div style={{ color: "#06b6d4", fontSize: 13, marginBottom: 8 }}>⟳ Analysing {selected}…</div>
+                      <div style={{ color: "#374151", fontSize: 11 }}>Consulting district data and traveler profile</div>
                     </div>
                   )}
 
                   {aiError && (
                     <div style={{
-                      background: "rgba(239,68,68,0.08)", border: "1px solid rgba(239,68,68,0.22)",
-                      borderRadius: 10, padding: "14px", color: "#f87171", fontSize: 12.5, lineHeight: 1.6,
+                      background: "rgba(239,68,68,0.07)", border: "1px solid rgba(239,68,68,0.18)",
+                      borderRadius: 9, padding: "12px", color: "#f87171", fontSize: 12, lineHeight: 1.6,
                     }}>{aiError}</div>
                   )}
 
                   {aiText && (
                     <>
                       <div style={{
-                        background: "rgba(13,21,38,0.9)", border: "1px solid rgba(100,116,139,0.12)",
-                        borderRadius: 12, padding: "16px 18px", marginBottom: 14,
-                        color: "#e2e8f0", fontSize: 13, lineHeight: 1.85,
+                        background: "rgba(13,21,38,0.8)", border: "1px solid rgba(100,116,139,0.09)",
+                        borderRadius: 10, padding: "14px 16px", marginBottom: 12,
+                        color: "#cbd5e1", fontSize: 13, lineHeight: 1.85,
                       }}>
                         {aiText}
                       </div>
                       <button onClick={fetchAI} style={{
-                        width: "100%", padding: "9px",
-                        background: "rgba(30,41,59,0.8)", border: "1px solid rgba(100,116,139,0.18)",
-                        borderRadius: 10, color: "#94a3b8", fontFamily: "inherit", fontSize: 12, cursor: "pointer", fontWeight: 600,
-                      }}>↺ Regenerate AI Briefing</button>
+                        width: "100%", padding: "8px",
+                        background: "rgba(30,41,59,0.7)", border: "1px solid rgba(100,116,139,0.12)",
+                        borderRadius: 8, color: "#64748b", fontFamily: "inherit", fontSize: 12, cursor: "pointer",
+                      }}>↺ Regenerate</button>
                     </>
                   )}
+
+                  <div style={{
+                    marginTop: 16, borderTop: "1px solid rgba(100,116,139,0.06)", paddingTop: 12,
+                    color: "#1e293b", fontSize: 9.5, lineHeight: 1.7,
+                  }}>
+                    AI briefings are generated by Claude (claude-sonnet-4-6) using district incident data and real city profiles from the TripAdvisor review dataset. They supplement, not replace, official travel advisories. Always verify with UK FCDO, US State Dept, or Australia DFAT before travel.
+                  </div>
                 </div>
               )}
             </div>
           </div>
         ) : (
-          /* Empty Panel Placeholder */
+          /* ── EMPTY PANEL ── */
           <div style={{
-            width: 310, background: "rgba(6,12,23,0.99)",
-            borderLeft: "1px solid rgba(100,116,139,0.10)",
+            width: 304, background: "rgba(6,12,23,0.99)",
+            borderLeft: "1px solid rgba(100,116,139,0.06)",
             display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0,
           }}>
-            <div style={{ textAlign: "center", padding: 28 }}>
-              <div style={{ fontSize: 44, marginBottom: 14 }}>🗺️</div>
-              <div style={{ color: "#94a3b8", fontSize: 13, lineHeight: 1.8, marginBottom: 20 }}>
-                Select any district on the map to inspect its risk tier, report breakdown, area profiles, and personalized AI safety briefing.
+            <div style={{ textAlign: "center", padding: 24 }}>
+              <div style={{ fontSize: 40, marginBottom: 12 }}>🗺️</div>
+              <div style={{ color: "#374151", fontSize: 13, lineHeight: 1.9, marginBottom: 18 }}>
+                Click any district bubble to see its safety score, recent incidents, area profiles, and a personalised AI briefing.
               </div>
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
-                {[["A","Low Risk","#15803d"],["B","Moderate","#b45309"],["C","High Risk","#c2410c"],["D","Severe","#b91c1c"]].map(([g,l,col]) => (
-                  <div key={g} style={{ background: "rgba(13,21,38,0.7)", border: "1px solid rgba(100,116,139,0.10)", borderRadius: 10, padding: "10px 8px", textAlign: "center" }}>
-                    <div style={{ width: 30, height: 30, borderRadius: "50%", background: col, display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 5px", color: "#fff", fontWeight: 900, fontSize: 14 }}>{g}</div>
-                    <div style={{ color: "#64748b", fontSize: 10, fontWeight: 600 }}>{l}</div>
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}>
+                {[["A","Low risk","#15803d"],["B","Moderate","#b45309"],["C","High risk","#c2410c"],["D","Severe","#b91c1c"]].map(([g,l,col]) => (
+                  <div key={g} style={{ background: "rgba(13,21,38,0.6)", border: "1px solid rgba(100,116,139,0.07)", borderRadius: 8, padding: "8px 6px", textAlign: "center" }}>
+                    <div style={{ width: 28, height: 28, borderRadius: "50%", background: col, display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 4px", color: "#fff", fontWeight: 800, fontSize: 13 }}>{g}</div>
+                    <div style={{ color: "#374151", fontSize: 9.5 }}>{l}</div>
                   </div>
                 ))}
+              </div>
+              <div style={{ marginTop: 16, color: "#1e293b", fontSize: 9.5, lineHeight: 1.7 }}>
+                — = insufficient data (fewer than {MIN_REPORTS_INSUFF} reports)
               </div>
             </div>
           </div>

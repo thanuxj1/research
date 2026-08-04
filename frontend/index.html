@@ -3,326 +3,40 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>SafeTravel LK — AI Safety Heatmap for Sri Lanka</title>
-    <meta name="description" content="Real-time AI-powered safety heatmap for tourists in Sri Lanka. View scam hotspots, risk zones, and personalized travel warnings." />
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css" />
-    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css" />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="/src/style.css" />
+    <title>SafeTravel LK — District Safety Intelligence Map</title>
+    <meta name="description" content="AI-aggregated safety intelligence for Sri Lanka districts. Real-time scam detection, exposure normalization, and traveler briefings." />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        padding: 0;
+        background-color: #060c17;
+        color: #e2e8f0;
+        font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        -webkit-font-smoothing: antialiased;
+      }
+      ::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
+      }
+      ::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: rgba(100, 116, 139, 0.4);
+        border-radius: 4px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: rgba(100, 116, 139, 0.6);
+      }
+    </style>
   </head>
+
   <body>
-
-    <!-- ── Top Navigation ─────────────────────────────────────── -->
-    <nav class="topnav">
-      <div class="brand">
-        <span class="brand-icon">🧭</span>
-        <span class="brand-name">Lost In <strong>Sri Lanka</strong></span>
-      </div>
-      <div class="nav-tabs">
-        <button class="nav-tab active" data-tab="heatmap">🗺️ Heatmap</button>
-        <button class="nav-tab" data-tab="advisor">🤖 AI Advisor</button>
-        <button class="nav-tab" data-tab="admin">📊 Dashboard</button>
-      </div>
-      <div class="nav-meta">
-        <span id="last-updated" class="last-updated">Updating…</span>
-      </div>
-    </nav>
-
-    <!-- ── Main Content ────────────────────────────────────────── -->
-    <main id="app">
-
-      <!-- ════ TAB: HEATMAP ════ -->
-      <div id="tab-heatmap" class="tab-content active">
-        <div class="layout-heatmap map-full-bleed">
-          
-          <!-- Map (Takes 100% background) -->
-          <div id="map-container"></div>
-
-          <!-- Glassmorphic Overlay Container -->
-          <div class="map-overlays">
-            
-            <!-- Top Left: Controls & Profile -->
-            <div class="floating-panel panel-top-left glass">
-              <!-- Uber-style Address Search -->
-              <div class="panel-section">
-                <label class="section-label">🔍 Search Any Location in Sri Lanka</label>
-                <div class="search-autocomplete-wrap">
-                  <input id="map-search" class="styled-select search-autocomplete-input" type="text" 
-                         placeholder="Type an address, place, or landmark…" autocomplete="off" />
-                  <div id="search-suggestions" class="search-suggestions hidden"></div>
-                </div>
-                <div class="search-hint">Or click anywhere on the map for an instant safety assessment</div>
-              </div>
-
-              <div class="panel-section">
-                <label class="section-label">Your Profile</label>
-                <select id="demographic-select" class="styled-select">
-                  <option value="General">🌍 General Tourist</option>
-                  <option value="Solo Female">👩 Solo Female</option>
-                  <option value="Solo Male">👨 Solo Male</option>
-                  <option value="Couple">💑 Couple</option>
-                  <option value="Family">👨‍👩‍👧 Family</option>
-                  <option value="Group">👥 Group</option>
-                </select>
-              </div>
-
-
-              <div class="panel-section">
-                <label class="section-label">Risk Level Filter</label>
-                <div class="risk-filter-group">
-                  <div class="chip chip-red active" data-risk="high">High Risk</div>
-                  <div class="chip chip-yellow active" data-risk="med">Moderate</div>
-                </div>
-              </div>
-
-              <div class="panel-section">
-                <label class="section-label" style="display:flex; align-items:center; gap:8px; cursor:pointer;">
-                  <input type="checkbox" id="toggle-choropleth" checked style="width:auto;" />
-                  District Risk Map (shaded)
-                </label>
-              </div>
-
-              <button id="btn-refresh" class="btn-primary btn-sm">🔄 Refresh Map</button>
-            </div>
-
-            <!-- Bottom Left: Stats & Legend -->
-            <div class="floating-panel panel-bottom-left glass panel-horizontal">
-              <div class="stats-mini">
-                <div class="stat-card minimal" id="stat-zones">
-                  <div class="stat-num">—</div><div class="stat-label">Risk Zones</div>
-                </div>
-                <div class="stat-card minimal" id="stat-reports">
-                  <div class="stat-num">—</div><div class="stat-label">Reports</div>
-                </div>
-              </div>
-              <div class="divider-vertical"></div>
-              <div class="legend-box minimal">
-                <div class="legend-item"><span class="dot dot-red"></span> High Risk (≥0.7)</div>
-                <div class="legend-item"><span class="dot dot-yellow"></span> Moderate (0.4–0.7)</div>
-              </div>
-            </div>
-
-            <!-- Top Right: Intelligence Assessment Panel -->
-            <div id="intelligence-panel" class="floating-panel panel-top-right glass intelligence-panel hidden">
-              <div id="intel-content"><!-- Populated by JS --></div>
-            </div>
-
-            <!-- Top Right: Active Warnings (hidden by default on page load) -->
-            <div id="warnings-panel" class="floating-panel panel-top-right glass warnings-panel hidden">
-              <div class="panel-header pulse-alert">
-                <span class="icon">⚠️</span> Active Warnings
-              </div>
-              <ul id="warnings-list" class="warnings-list minimal-list">
-                <li class="warnings-placeholder">Loading…</li>
-              </ul>
-            </div>
-
-          </div>
-        </div>
-      </div>
-
-
-      <!-- ════ TAB: AI ADVISOR (CHAT) ════ -->
-      <div id="tab-advisor" class="tab-content">
-        <div class="chat-layout">
-
-          <!-- Chat Sidebar -->
-          <div class="chat-sidebar">
-            <div class="chat-sidebar-header">
-              <div class="bot-avatar-lg">🤖</div>
-              <div class="bot-info">
-                <div class="bot-name">SafeTravel AI</div>
-                <div class="bot-status"><span class="status-dot"></span>Online · Sri Lanka Expert</div>
-              </div>
-            </div>
-
-            <div class="sidebar-section">
-              <div class="sidebar-label">Quick Ask</div>
-              <div class="quick-ask-list">
-                <button class="quick-ask-btn" data-msg="Is Kandy safe for solo female travellers?">👩 Solo female in Kandy?</button>
-                <button class="quick-ask-btn" data-msg="What are the most common scams in Colombo?">💎 Scams in Colombo?</button>
-                <button class="quick-ask-btn" data-msg="Is it safe to travel in July?">🌧️ Travelling in July?</button>
-                <button class="quick-ask-btn" data-msg="What should a family avoid in Galle?">👨‍👩‍👧 Family in Galle?</button>
-                <button class="quick-ask-btn" data-msg="Is Ella safe? What are the risks?">🏔️ Is Ella safe?</button>
-                <button class="quick-ask-btn" data-msg="What transport scams should I watch out for?">🛺 Transport scams?</button>
-              </div>
-            </div>
-
-            <div class="sidebar-section">
-              <div class="sidebar-label">Context</div>
-              <select id="chat-profile" class="chat-select">
-                <option value="General">🌍 General Tourist</option>
-                <option value="Solo Female">👩 Solo Female</option>
-                <option value="Solo Male">👨 Solo Male</option>
-                <option value="Couple">💑 Couple</option>
-                <option value="Family">👨‍👩‍👧 Family</option>
-                <option value="Group">👥 Group</option>
-              </select>
-              <select id="chat-month" class="chat-select" style="margin-top:8px">
-                <option value="1">January</option><option value="2">February</option>
-                <option value="3">March</option><option value="4">April</option>
-                <option value="5">May</option><option value="6">June</option>
-                <option value="7">July</option><option value="8">August</option>
-                <option value="9">September</option><option value="10">October</option>
-                <option value="11">November</option><option value="12">December</option>
-              </select>
-            </div>
-
-            <div class="sidebar-section">
-              <button id="chat-clear-btn" class="chat-clear-btn">🗑️ Clear Chat</button>
-            </div>
-          </div>
-
-          <!-- Chat Main -->
-          <div class="chat-main">
-            <!-- Messages -->
-            <div class="chat-messages" id="chat-messages">
-              <!-- Populated by JS -->
-            </div>
-
-            <!-- Input Bar -->
-            <div class="chat-input-bar">
-              <input id="chat-input" class="chat-input" type="text"
-                     placeholder="Ask anything about safety in Sri Lanka…"
-                     autocomplete="off" maxlength="300" />
-              <button id="chat-send-btn" class="chat-send-btn">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                  <line x1="22" y1="2" x2="11" y2="13"></line>
-                  <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
-                </svg>
-              </button>
-            </div>
-          </div>
-
-        </div>
-      </div>
-
-
-      <!-- ════ TAB: ADMIN DASHBOARD ════ -->
-      <div id="tab-admin" class="tab-content">
-        <div class="dashboard">
-          <h2 class="dash-title">📊 Analytics Dashboard</h2>
-
-          <!-- Stats row -->
-          <div class="dash-stats">
-            <div class="dash-stat-card">
-              <div class="dash-stat-icon">📁</div>
-              <div class="dash-stat-num" id="d-total">—</div>
-              <div class="dash-stat-label">Total Reports</div>
-            </div>
-            <div class="dash-stat-card">
-              <div class="dash-stat-icon">🚨</div>
-              <div class="dash-stat-num" id="d-scams">—</div>
-              <div class="dash-stat-label">Scam Reports</div>
-            </div>
-            <div class="dash-stat-card">
-              <div class="dash-stat-icon">🗺️</div>
-              <div class="dash-stat-num" id="d-zones">—</div>
-              <div class="dash-stat-label">Risk Zones</div>
-            </div>
-            <div class="dash-stat-card">
-              <div class="dash-stat-icon">🔴</div>
-              <div class="dash-stat-num" id="d-highrisk">—</div>
-              <div class="dash-stat-label">High-Risk Zones</div>
-            </div>
-          </div>
-
-          <!-- Charts row -->
-          <div class="dash-charts">
-            <div class="chart-card">
-              <h3>Scam Type Breakdown</h3>
-              <div id="chart-scam-types" class="bar-chart"></div>
-            </div>
-            <div class="chart-card">
-              <h3>Top Locations</h3>
-              <div id="chart-locations" class="bar-chart"></div>
-            </div>
-          </div>
-
-          <!-- Pattern Recognition -->
-          <div class="chart-card patterns-card">
-            <h3 style="display:flex; align-items:center; gap:8px;">
-              🔍 Recurring Scam Patterns
-              <span class="badge-red" style="font-size:10px; padding:2px 6px;">AI Detected</span>
-            </h3>
-            <p style="font-size:12px; color:var(--muted); margin-bottom:12px;">Identifying the same scams reported multiple times in the same location.</p>
-            <div class="table-wrap">
-              <table class="reports-table">
-                <thead>
-                  <tr>
-                    <th>Location</th><th>Scam Type</th><th>Frequency</th><th>Avg. Severity</th>
-                  </tr>
-                </thead>
-                <tbody id="patterns-tbody">
-                  <tr><td colspan="4" class="loading-row">Analyzing patterns…</td></tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-
-          <!-- Pipeline control -->
-          <div class="dash-pipeline">
-            <h3>Data Pipeline</h3>
-            <div class="pipeline-controls">
-              <button id="btn-run-pipeline" class="btn-primary">▶ Run Collection Now</button>
-              <button id="btn-recluster" class="btn-secondary">🔁 Re-cluster Zones</button>
-              <span id="pipeline-status" class="pipeline-status">Status: idle</span>
-            </div>
-          </div>
-
-          <!-- Recent reports table -->
-          <div class="chart-card reports-table-card">
-            <h3>Recent Reports</h3>
-            <div class="table-wrap">
-              <table id="reports-table" class="reports-table">
-                <thead>
-                  <tr>
-                    <th>ID</th><th>Source</th><th>Type</th>
-                    <th>Risk</th><th>Location</th><th>Date</th>
-                  </tr>
-                </thead>
-                <tbody id="reports-tbody">
-                  <tr><td colspan="6" class="loading-row">Loading…</td></tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-      </div>
-
-    <!-- ── Incident Details Modal ────────────────────────────── -->
-    <div id="incident-modal" class="modal-backdrop hidden" onclick="if(event.target === this) closeIncidentModal()">
-      <div class="modal-content glass">
-        <div class="modal-header">
-          <div class="modal-title-wrap">
-            <span id="modal-scam-badge" class="modal-scam-badge">⚠️ Scam Alert</span>
-            <span id="modal-cred-badge" class="intel-incident-cred verified">🏛️ Verified News Outlets</span>
-          </div>
-          <button class="modal-close" onclick="closeIncidentModal()">✕</button>
-        </div>
-        <div class="modal-body">
-          <h3 id="modal-incident-title" class="modal-incident-title">Title</h3>
-          <div class="modal-meta-row">
-            <span id="modal-location">📍 Location</span>
-            <span id="modal-distance">📏 Distance</span>
-            <span id="modal-source">📰 Source</span>
-          </div>
-          <div class="modal-summary-box">
-            <div class="modal-summary-label">📝 News Summary & Detailed Report</div>
-            <div id="modal-summary-text" class="modal-summary-text">Summary text...</div>
-          </div>
-        </div>
-        <div class="modal-footer">
-          <a id="modal-source-link" href="#" target="_blank" rel="noopener noreferrer" class="btn-primary btn-sm modal-link-btn hidden">
-            🔗 Read Original News Source ↗
-          </a>
-          <button class="btn-secondary btn-sm" onclick="closeIncidentModal()">Close</button>
-        </div>
-      </div>
-    </div>
-
-    <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
-    <script type="module" src="/src/main.js"></script>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>
