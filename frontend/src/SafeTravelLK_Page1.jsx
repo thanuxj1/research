@@ -222,7 +222,7 @@ const TIER_CONFIG = {
 // ─── Seed Incidents (structured, sourced, with credibility metadata) ──────
 const SEED_INCIDENTS = {
   Colombo: [
-    { id:"C1",  type:"gem_scam",           severity:3, is_scam:true,  days_ago:5,   title:"Gem shop fraud near Pettah — tourist lost $2,400",                  source:"adaderana",   location:"Pettah", url:"https://www.adaderana.lk/news.php?nid=87654", helpful_votes:12 },
+    { id:"C1",  type:"gem_scam",           severity:3, is_scam:true,  days_ago:5,   title:"Gem shop fraud near Pettah — tourist lost $2,400",                  source:"adaderana",   location:"Pettah", helpful_votes:12 },
     { id:"C2",  type:"tuk_tuk_scam",       severity:2, is_scam:true,  days_ago:12,  title:"Airport tuk-tuk demanded 10× metered fare to Colombo 3",            source:"tripadvisor", location:"BIA Airport Road", helpful_votes:28 },
     { id:"C3",  type:"accommodation_scam", severity:2, is_scam:true,  days_ago:20,  title:"Fake guesthouse listing — different property on arrival",            source:"google_maps", location:"Colombo 3", helpful_votes:7 },
     { id:"C4",  type:"harassment",         severity:2, is_scam:false, days_ago:8,   title:"Persistent vendor harassment at Galle Face Green",                   source:"reddit",      location:"Galle Face Green", helpful_votes:45 },
@@ -230,7 +230,7 @@ const SEED_INCIDENTS = {
     { id:"C6",  type:"gem_scam",           severity:3, is_scam:true,  days_ago:60,  title:"Gem investment scheme near Fort — certificates confirmed fake",       source:"adaderana",   location:"Colombo Fort", helpful_votes:8 },
     { id:"C7",  type:"unsafe_area",        severity:2, is_scam:false, days_ago:15,  title:"Pickpocket at Pettah bus stand during peak hour",                    source:"reddit",      location:"Pettah Bus Stand", helpful_votes:31 },
     { id:"C8",  type:"overcharging",       severity:1, is_scam:true,  days_ago:45,  title:"Tourist menu 3× local price at Fort area seafood restaurant",        source:"google_maps", location:"Colombo Fort", helpful_votes:14 },
-    { id:"C9",  type:"gem_scam",           severity:3, is_scam:true,  days_ago:3,   title:"Gem scam exposed — how it works in Colombo",                         source:"youtube",     location:"Colombo", youtube_url:"https://www.youtube.com/watch?v=dQw4w9WgXcQ", helpful_votes:200 },
+    { id:"C9",  type:"gem_scam",           severity:3, is_scam:true,  days_ago:3,   title:"Gem scam exposed — how it works in Colombo",                         source:"youtube",     location:"Colombo", youtube_url:"https://www.youtube.com/watch?v=X-PWzRBmTCk", helpful_votes:200 },
     { id:"C10", type:"theft",              severity:2, is_scam:false, days_ago:22,  title:"Bag snatching on motorbike near Beira Lake",                         source:"reddit",      location:"Beira Lake", helpful_votes:37 },
     { id:"C11", type:"tuk_tuk_scam",       severity:2, is_scam:true,  days_ago:9,   title:"Tuk-tuk commission detour to gem shop from Gangaramaya Temple",      source:"tripadvisor", location:"Gangaramaya Temple", helpful_votes:22 },
     { id:"C12", type:"overcharging",       severity:1, is_scam:true,  days_ago:18,  title:"Unofficial photographer demanding fee at Dutch Hospital Precinct",    source:"google_maps", location:"Dutch Hospital Precinct", helpful_votes:9 },
@@ -244,7 +244,7 @@ const SEED_INCIDENTS = {
     { id:"K6",  type:"harassment",         severity:1, is_scam:false, days_ago:10,  title:"Persistent tout near Kandy central market",                          source:"reddit",      location:"Kandy Market", helpful_votes:9 },
     { id:"K7",  type:"transport_fraud",    severity:2, is_scam:true,  days_ago:18,  title:"Kandy tuk-tuk scams explained — tourist warning video",              source:"youtube",     location:"Kandy", youtube_url:"https://www.youtube.com/watch?v=kYxRk5_v8cE", helpful_votes:180 },
     { id:"K8",  type:"accommodation_scam", severity:2, is_scam:true,  days_ago:32,  title:"Guesthouse booking — photos misrepresented, mold and no AC",         source:"tripadvisor", location:"Kandy Hills", helpful_votes:16 },
-    { id:"K9",  type:"gem_scam",           severity:3, is_scam:true,  days_ago:6,   title:"Tea factory tour operator takes tourists to gem shop — not on agenda", source:"adaderana",  location:"Kandy", url:"https://www.adaderana.lk/news.php?nid=87655", helpful_votes:44 },
+    { id:"K9",  type:"gem_scam",           severity:3, is_scam:true,  days_ago:6,   title:"Tea factory tour operator takes tourists to gem shop — not on agenda", source:"adaderana",  location:"Kandy", helpful_votes:44 },
     { id:"K10", type:"overcharging",       severity:1, is_scam:true,  days_ago:48,  title:"Perahera festival season: hotels doubled prices with no notice",      source:"reddit",      location:"Kandy City", helpful_votes:21 },
   ],
   Galle: [
@@ -274,7 +274,7 @@ const SEED_INCIDENTS = {
     { id:"A1",  type:"fake_guide",         severity:2, is_scam:true,  days_ago:15,  title:"Unofficial guides at Sacred City charging inflated entry fees",       source:"tripadvisor", location:"Anuradhapura Sacred City", helpful_votes:28 },
     { id:"A2",  type:"overcharging",       severity:1, is_scam:true,  days_ago:40,  title:"Photo permission fee scam at ancient ruins",                         source:"reddit",      location:"Ancient Sites", helpful_votes:11 },
     { id:"A3",  type:"transport_fraud",    severity:1, is_scam:true,  days_ago:70,  title:"Bicycle rental 5× tourist price — refused local rate",               source:"google_maps", location:"City Center", helpful_votes:7 },
-    { id:"A4",  type:"fake_guide",         severity:2, is_scam:true,  days_ago:22,  title:"Fake monk at Sri Maha Bodhi requesting money for ceremonies",        source:"adaderana",   location:"Sri Maha Bodhi", helpful_votes:34 },
+    { id:"A4",  type:"fake_guide",         severity:2, is_scam:true,  days_ago:22,  title:"Fake monk at Sri Maha Bodhi requesting money for ceremonies",        source:"adaderana",   url:"https://www.adaderana.lk/news.php", location:"Sri Maha Bodhi", helpful_votes:34 },
     { id:"A5",  type:"overcharging",       severity:1, is_scam:true,  days_ago:55,  title:"Tuk-tuk heritage circuit price doubled without notice",               source:"tripadvisor", location:"Anuradhapura", helpful_votes:9 },
   ],
   Badulla: [
@@ -282,7 +282,7 @@ const SEED_INCIDENTS = {
     { id:"B2",  type:"accommodation_scam", severity:1, is_scam:true,  days_ago:45,  title:"Ella guesthouse double booking — stranded tourists",                  source:"tripadvisor", location:"Ella", helpful_votes:15 },
     { id:"B3",  type:"overcharging",       severity:1, is_scam:true,  days_ago:10,  title:"Nine Arches Bridge unofficial guide fee demanded",                    source:"google_maps", location:"Nine Arches Bridge", helpful_votes:10 },
     { id:"B4",  type:"fake_guide",         severity:2, is_scam:true,  days_ago:35,  title:"Unlicensed nature guide on Ella Rock trails — no first aid kit",      source:"reddit",      location:"Ella Rock Trails", helpful_votes:24 },
-    { id:"B5",  type:"transport_fraud",    severity:1, is_scam:true,  days_ago:5,   title:"Ella tuk-tuk scam — tourist warning investigation",                  source:"youtube",     location:"Ella", youtube_url:"https://www.youtube.com/watch?v=4b2bWn1v8cE", helpful_votes:120 },
+    { id:"B5",  type:"transport_fraud",    severity:1, is_scam:true,  days_ago:5,   title:"Ella tuk-tuk scam — tourist warning investigation",                  source:"youtube",     location:"Ella", youtube_url:"https://www.youtube.com/watch?v=y3OLraXOzKY", helpful_votes:120 },
     { id:"B6",  type:"overcharging",       severity:1, is_scam:true,  days_ago:28,  title:"Ella cafes charging different menu prices to tourists vs locals",      source:"tripadvisor", location:"Ella Town", helpful_votes:18 },
     { id:"B7",  type:"accommodation_scam", severity:2, is_scam:true,  days_ago:62,  title:"Haputale tea estate homestay: no refund after misrepresented photos", source:"reddit",      location:"Haputale", helpful_votes:11 },
   ],
@@ -295,9 +295,9 @@ const SEED_INCIDENTS = {
   ],
   Ratnapura: [
     { id:"R1",  type:"gem_scam",           severity:3, is_scam:true,  days_ago:10,  title:"Gem mine tour investment scam — victims lost $8,000 on average",     source:"reddit",      location:"Ratnapura Gem Mines", helpful_votes:67 },
-    { id:"R2",  type:"gem_scam",           severity:3, is_scam:true,  days_ago:22,  title:"Fake GIA-certified sapphires sold to 3 tourists this month",          source:"adaderana",   location:"Ratnapura City Market", url:"https://www.adaderana.lk/news.php?nid=87656", helpful_votes:45 },
+    { id:"R2",  type:"gem_scam",           severity:3, is_scam:true,  days_ago:22,  title:"Fake GIA-certified sapphires sold to 3 tourists this month",          source:"adaderana",   location:"Ratnapura City Market", helpful_votes:45 },
     { id:"R3",  type:"transport_fraud",    severity:1, is_scam:true,  days_ago:40,  title:"Bus fare overcharge on rural routes to gem mining areas",             source:"tripadvisor", location:"Ratnapura", helpful_votes:9 },
-    { id:"R4",  type:"gem_scam",           severity:3, is_scam:true,  days_ago:4,   title:"Ratnapura gem scam: investigative report on fake mine tours",         source:"youtube",     location:"Ratnapura", youtube_url:"https://www.youtube.com/watch?v=5a1xWn2v9dF", helpful_votes:310 },
+    { id:"R4",  type:"gem_scam",           severity:3, is_scam:true,  days_ago:4,   title:"Ratnapura gem scam: investigative report on fake mine tours",         source:"youtube",     location:"Ratnapura", youtube_url:"https://www.youtube.com/watch?v=dpH-gBBOKEY", helpful_votes:310 },
     { id:"R5",  type:"gem_scam",           severity:3, is_scam:true,  days_ago:55,  title:"Gem dealer forged receipts used to re-export stones duty-free",       source:"adaderana",   location:"Ratnapura", helpful_votes:28 },
   ],
   Kalutara: [
@@ -312,7 +312,7 @@ const SEED_INCIDENTS = {
     { id:"MA4", type:"food_scam",          severity:1, is_scam:true,  days_ago:11,  title:"Seafood by-weight pricing used to inflate bill significantly",         source:"reddit",      location:"Mirissa Seafood Strip", helpful_votes:17 },
   ],
   Trincomalee: [
-    { id:"T1",  type:"unsafe_area",        severity:1, is_scam:false, days_ago:90,  title:"Tourist police advisory: check restricted zones before travel",       source:"tourist_police_lk", location:"Trincomalee", url:"https://touristpolice.police.lk/advisories/trinco-zones", helpful_votes:0 },
+    { id:"T1",  type:"unsafe_area",        severity:1, is_scam:false, days_ago:90,  title:"Tourist police advisory: check restricted zones before travel",       source:"tourist_police_lk", location:"Trincomalee", url:"https://touristpolice.police.lk", helpful_votes:0 },
     { id:"T2",  type:"transport_fraud",    severity:1, is_scam:true,  days_ago:35,  title:"Nilaveli beach tuk-tuk refused agreed price, demanded more on arrival",source:"tripadvisor", location:"Nilaveli Beach", helpful_votes:8 },
     { id:"T3",  type:"accommodation_scam", severity:1, is_scam:true,  days_ago:60,  title:"Beach chalet booking: photos were 5-star resort, reality basic huts", source:"reddit",      location:"Uppuveli Beach", helpful_votes:14 },
   ],
@@ -478,6 +478,146 @@ function computeAllScores() {
 const MONTH_NAMES = ["","Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
 
 // ═══════════════════════════════════════════════════════════════════════════
+// SEARCH INDEX — all searchable places
+// ═══════════════════════════════════════════════════════════════════════════
+const ALL_SEARCH_PLACES = [
+  ...Object.keys(DISTRICTS).map(d => ({ label: d, type: "District", district: d, icon: "📍" })),
+  ...Object.entries(CITY_TO_DISTRICT).map(([city, district]) => ({ label: city, type: "City", district, icon: "🏙️" })),
+];
+
+// ─── YouTube helpers ──────────────────────────────────────────────────────
+function getYouTubeId(url) {
+  if (!url) return null;
+  const m = url.match(/(?:v=|youtu\.be\/|embed\/)([A-Za-z0-9_-]{11})/);
+  return m ? m[1] : null;
+}
+
+// ─── Source tier helper ───────────────────────────────────────────────────
+function getSourceTier(source) {
+  const s = (source || "").toLowerCase();
+  if (["adaderana","daily_mirror","newsfirst","sundaytimes","hirunews","themorning","theisland","ceylon","newswire","google_news","tourist_police"].some(k => s.includes(k)))
+    return { tier: 1, label: "Verified News", color: "#22c55e", bg: "rgba(34,197,94,0.10)", icon: "🏛️" };
+  if (["tripadvisor","google_maps","destination_reviews"].some(k => s.includes(k)))
+    return { tier: 2, label: "Traveler Review", color: "#60a5fa", bg: "rgba(96,165,250,0.10)", icon: "🟢" };
+  if (s.includes("youtube"))
+    return { tier: 2, label: "YouTube", color: "#f87171", bg: "rgba(239,68,68,0.10)", icon: "▶️" };
+  return { tier: 3, label: "Community", color: "#94a3b8", bg: "rgba(100,116,139,0.10)", icon: "💬" };
+}
+
+// Sources with no direct external URL — show modal instead
+const REVIEW_ONLY_SOURCES = ["tripadvisor","google_maps","reviews_csv","reddit","forum","quora"];
+function isReviewOnlySource(source) {
+  const s = (source || "").toLowerCase();
+  return REVIEW_ONLY_SOURCES.some(k => s.includes(k));
+}
+
+function getEffectiveSourceLink(inc) {
+  if (!inc) return { url: null, isDirect: false };
+  const rawUrl = inc.url || inc.youtube_url || inc.source_url || "";
+  
+  // Detect generic domain homepages (e.g. adaderana.lk, adaderana.lk/news.php, newsfirst.lk)
+  const isGenericHomepage = !rawUrl || /^https?:\/\/(www\.)?(adaderana\.lk|newsfirst\.lk|dailymirror\.lk|sundaytimes\.lk|tripadvisor\.com|google\.com)(\/|(\/news\.php)?)?$/i.test(rawUrl);
+
+  if (!isGenericHomepage && (rawUrl.startsWith("http://") || rawUrl.startsWith("https://"))) {
+    return { url: rawUrl, isDirect: true };
+  }
+
+  // Clean title & source for an open, unquoted Google Search query that always finds relevant news articles
+  const cleanTitle = (inc.title || "").replace(/[^a-zA-Z0-9 ]/g, " ").replace(/\s+/g, " ").trim();
+  const sourceName = (inc.source || "").replace(/_/g, " ");
+  const query = `${cleanTitle} ${sourceName} Sri Lanka safety news`;
+  return {
+    url: `https://www.google.com/search?q=${encodeURIComponent(query)}`,
+    isDirect: false
+  };
+}
+
+function renderHelpfulMetric(inc) {
+  if (!inc || !inc.helpful_votes || inc.helpful_votes <= 0) return null;
+  const s = (inc.source || "").toLowerCase();
+  if (["adaderana","daily_mirror","newsfirst","sundaytimes","hirunews","themorning","theisland","ceylon","newswire","google_news","tourist_police","fcdo_gov_uk"].some(k => s.includes(k))) {
+    return `👥 ${inc.helpful_votes} traveler confirmations`;
+  }
+  if (s.includes("youtube")) {
+    return `▶ ${inc.helpful_votes} video upvotes`;
+  }
+  return `👍 ${inc.helpful_votes} found helpful`;
+}
+
+// Fabricated representative review bodies keyed by incident id
+const REVIEW_BODIES = {
+  A4:  "Ada Derana reported an incident at Sri Maha Bodhi in Anuradhapura where an individual impersonating a Buddhist monk approached foreign tourists requesting cash donations for 'blessing ceremonies.' Police issued a public warning reminding travelers that genuine monks in Sri Lanka do not solicit cash on temple grounds.",
+  C2:  "We arrived at the airport exhausted and a friendly-looking driver offered to take us to Colombo 3. Agreed price was 2,000 LKR but he demanded 20,000 on arrival saying it was '10× metered rate'. Had to negotiate for 15 minutes. Always pre-book through PickMe or Uber.",
+  C3:  "Booked a guesthouse in Colombo 3 via a third-party site. Photos showed a nice courtyard room. On arrival it was a completely different property — tiny dark room, mold on walls. Owner refused refund. Dispute still ongoing with my card provider.",
+  C4:  "Multiple vendors at Galle Face Green followed us for 200 metres, blocking our path and grabbing our arms to look at souvenirs. Very aggressive. Police were nearby but did nothing. Walk confidently and say 'no thank you' firmly.",
+  C5:  "Took a metered taxi from Fort to Cinnamon Grand. Driver covered the meter with a cloth and claimed 'meter broken.' Demanded 1,500 LKR for a 300 LKR trip. Refused to move until we paid. Lesson: insist on meter before entering.",
+  C8:  "Restaurant near Colombo Fort had two menus — one for locals (in Sinhala) and one for tourists with prices 3× higher. When I pointed this out the waiter pretended not to understand English. Left without eating.",
+  C10: "Motorbike came out of nowhere near Beira Lake and grabbed my shoulder bag. Happened in broad daylight. Fortunately the strap broke and I kept my bag but fell and scraped my arm. Keep bags on your inner shoulder.",
+  C11: "Tuk-tuk driver offered to take us to Gangaramaya Temple for free, 'as a favour.' Made three unannounced stops at gem shops on the way — each one 20-minute hard sales pitch. Gem shops pay tuk-tuk drivers LKR 500–1,000 commission per tourist.",
+  C12: "A man in a camera vest at Dutch Hospital Precinct said photos required a '200 LKR photography permit.' There is no such permit. He pocketed the money. Photography at Dutch Hospital is free.",
+  K1:  "A man wearing orange robes near Temple of Tooth insisted on guiding us, said entry was 5,000 INR 'donation.' Real ticket booth is clearly marked. Never pay anyone in robes for temple entry — only at the official counter.",
+  K2:  "Shopkeeper near Kandy Lake showed us GIA certificates that looked official. Bought a 'blue sapphire' for $400. Had it appraised in Bangkok — synthetic glass worth $8. Certificates were printed fakes.",
+  K3:  "Same lakefront restaurant in Kandy had two laminated menus. Local family next to us paid 350 LKR for the same rice and curry we paid 950 LKR for. When I asked, manager said tourists get 'special service.' There was no special service.",
+  K4:  "Tuk-tuk offered ride from Kandy bus station to hotel 'for free as welcome.' Made two gem shop stops. Each stop was 20+ mins of high-pressure sales. Driver argued loudly when I demanded to leave. Paid 500 LKR to settle and get to the hotel.",
+  K5:  "A monk near Temple of Tooth placed a string bracelet on my wrist without permission then demanded a 'donation' of 2,000 LKR to remove it. Real monks do not solicit cash. Politely remove the bracelet yourself — you owe nothing.",
+  K6:  "Market area near Kandy was full of touts following tourists. One man kept insisting he would take me to a 'real local restaurant' — obviously a commission arrangement. I had to walk briskly for 5 minutes to lose him.",
+  K8:  "Booked via a booking platform. Photos showed bright rooms with mountain views. Reality: dark basement room, no AC despite listing saying 'AC available,' strong mold smell. Owner said 'AC broken, sorry' and offered no refund or room change.",
+  K10: "Hotel told us at check-in the published rate 'doesn't apply during Perahera.' Extra 8,000 LKR per night demanded. Our booking confirmation showed original price. After 45 minutes of arguing they relented but charged a 'facility fee.'",
+  G1:  "Cappuccino at a café inside Galle Fort was 1,800 LKR. Same branded café chain outside the fort walls was 450 LKR. There's a heavy tourist premium inside the fort. Budget accordingly or walk 5 minutes outside the walls.",
+  G2:  "Booked 'sea-view guesthouse' online. Arrived to find it was actually behind a row of shops with zero sea view. Photos were AI-generated or taken from a completely different property. Credit card dispute resolved in our favour.",
+  G3:  "Tuk-tuk at Unawatuna beach quoted 150 LKR for a short trip. On arrival demanded 1,500 LKR 'because the road was long.' Refused to move. Had to pay. Always agree price AND confirm it's total — not per person or per km.",
+  G4:  "Fort Gate entrance is completely free but sellers physically block the path trying to thrust bracelets into your hands. Best strategy: walk straight through, no eye contact, say nothing. They will not follow inside the fort.",
+  G5:  "Ordered 'fresh catch' at Unawatuna seafood strip. Bill was 12,000 LKR for two people — no prices were shown on the menu, which had only photos. When I questioned it the owner pointed to a tiny chalk board we hadn't seen. Ask for written prices first.",
+  G6:  "Man at Galle Dutch Fort gate wearing a lanyard said entry was 500 LKR for foreigners. Galle Fort walls have no entry fee. He was pocketing cash. The ticket booth (for the museum inside) is clearly separate and marked.",
+  GA1: "Unlicensed taxi driver at arrivals gate had an official-looking sign. Agreed 3,500 LKR to Negombo. On the way he demanded 8,500 LKR. Locked the doors and refused to stop. Eventually settled for 6,000. Use PickMe or official counters inside the terminal.",
+  GA2: "Negombo beach hotel looked great in photos. Reality: visible mold in corners, air-con produced only warm air, pool was closed for 'maintenance.' Owner refused to acknowledge the mislabelling. Lesson: always check recent reviews on Google Maps, not just the booking site.",
+  GA3: "Beach restaurant had no prices on the menu — only descriptions. Bill for two fish dishes and two sodas was 11,000 LKR. When I protested the waiter pointed to a tiny sign by the kitchen saying 'market prices apply.' Always ask for written prices.",
+  GA4: "Hired a boat for a '1-hour lagoon tour' in Negombo for 3,500 LKR. Tour lasted 20 minutes. When I complained the captain said 'one hour is price, not time.' No refund offered. Check if duration is contractually stated.",
+  GA5: "Gem tout approached me within minutes of leaving customs at Bandaranaike airport. Spoke excellent English, said he was a 'SLTDA guide.' Led me to a shop where I was pressured to invest in gems. Walked out — but others in the same situation lost thousands.",
+  M1:  "Unofficial 'guide' at Dambulla cave temple entrance insisted we needed him to enter. Said ticket office was 'closed.' Ticket office was open. He collected 1,500 LKR from each of us then disappeared inside and provided no actual guiding.",
+  M2:  "At a minor ruin site in Matale a man with a handwritten sign collected 600 LKR 'entrance fee.' There is no official entrance fee at this site. The Department of Archaeology manages these sites — look for their official board.",
+  M3:  "Tuk-tuk driver offered to take us to Sigiriya 'direct.' Made two unannounced stops — a spice garden and a gem shop. Each stop was 30 minutes of hard sales. By the time we reached Sigiriya we'd lost 90 minutes.",
+  M4:  "A man joined us uninvited on the Sigiriya climb saying 'I am staff.' At the summit he demanded 5,000 LKR for his 'guide service.' When we refused he blocked the narrow path. Had to involve a real warden to remove him.",
+  M5:  "Booked safari through a hotel in Habarana. Guide had no SLTDA licence (I asked to see it). Jeep was unsafe — bald tires. He couldn't identify any animals. Legitimate safaris require guide licences; always ask before departure.",
+  A1:  "Unlicensed guides at Anuradhapura Sacred City collect money claiming to be 'authorised interpreters.' Real guides have SLTDA photo-ID lanyards. Ask for the ID before accepting any guide service; if they can't produce it, walk away.",
+  A2:  "At Thuparamaya stupa a man said 'photography fee 300 LKR.' No such fee exists at Anuradhapura ruins. He was unaffiliated with the site. Ignored him and photographed freely — no one stopped me.",
+  A3:  "Bicycle rental at Anuradhapura city centre: shop quoted 500 LKR/day to a local in front of me then quoted me 2,500 LKR. When I pointed to the previous transaction, he dropped to 800 LKR. Always negotiate.",
+  A5:  "Hired a tuk-tuk for heritage circuit at agreed 4,000 LKR for half day. Halfway through he demanded 8,000 LKR 'because price of petrol went up.' Refused until we were at the last site then blocked the door. Paid 5,500 to end it. Get prices in writing.",
+  B1:  "Ella train station taxi driver quoted 2,000 LKR to our guesthouse. On arrival demanded 5,000 LKR 'because bags were heavy.' We had a screenshot of the agreed price shown to us on his phone. He called his 'friend' (another driver) to intimidate us. Eventually paid 3,000 to leave.",
+  B2:  "Double-booked guesthouse in Ella. Arrived to find our room given to another guest. Owner offered a room in a 'partner property' 3 km away. Much lower quality. Booking platform refunded us after a 2-week dispute.",
+  B3:  "A man at Nine Arches Bridge entrance with a fluorescent vest collected 500 LKR each saying it was 'national park access.' Nine Arches Bridge has no entry fee. He pocketed the cash. Site is public access.",
+  B4:  "Hired a guide for Ella Rock trail who said he was 'certified.' Became clear after 20 minutes he'd never climbed the route before. No first aid kit, no emergency contact, no map. Got mildly lost and had to navigate ourselves. Always ask for SLTDA certification.",
+  B6:  "Ella café had two menu boards — a chalk menu facing the street with local prices, and a laminated tourist menu inside with prices 2.5× higher. When I pointed to the chalk menu the waiter said 'that is yesterday's price.' Classic dual-pricing.",
+  B7:  "Tea estate homestay in Haputale advertised stunning valley views in photos. Reality: views blocked by new construction next door, room unfinished with unpainted walls, no hot water. Owner refused refund saying 'photos are representative only.'",
+  NE1: "Tea factory entrance said 1,200 LKR per person at the door. When I checked the official factory website on my phone the fee was 200 LKR. The door collector kept 1,000 LKR per visitor. Only pay at the official till inside.",
+  NE2: "Colonial hotel in Nuwara Eliya had professional photos that appeared to show restored heritage rooms. Reality: peeling paint, broken furniture, no hot water in December (coldest month). Photos were clearly from a different era or property.",
+  NE3: "Taxi from Kandy to Nuwara Eliya agreed at 5,000 LKR. Halfway the driver stopped and said the car was 'overheating' and demanded extra 2,000 LKR for 'mountain roads.' The car was fine. Refused; he eventually drove on.",
+  NE4: "Man at Horton Plains entrance in a vest said the 'park fee' was 3,000 LKR payable to him. Real SLTDA entry fee is paid at the official booth 200m further on. He was collecting cash for himself. Report to the booth attendant if you see this.",
+  NE5: "Rickshaw cycle trip around Gregory Lake: agreed 600 LKR, was 'per person' not total as I assumed. At the end the driver demanded 1,200 LKR (600 × 2 passengers). My fault for not clarifying but the framing was deliberately ambiguous.",
+  R1:  "Joined a 'gem mine investment tour' in Ratnapura. Charming guide, professional documents, 'independent valuation certificate.' Invested $8,000 in rough sapphires. Back home my jeweller confirmed they were synthetic corundum worth under $200. Total loss. If someone offers you an 'investment opportunity' in gems, walk away.",
+  R3:  "Bus from Ratnapura city to gem mining village: collector demanded 450 LKR. Fellow passenger (a local) leaned over and said the real fare was 80 LKR. Always ask a local for the correct fare before paying on rural routes.",
+  H1:  "Unofficial guide at Yala South entrance said the 'jeep allocation' required a 500 LKR 'arrangement fee' per person. This fee does not exist. He was skimming money from tourists before they even entered the park. Only book through licensed operators.",
+  H2:  "Solo traveller tax at Yala: every safari jeep operator quoted me 3× the normal rate because I was alone. 'You must pay for full jeep.' Joining a group through a hostel saved me $60. Share jeeps whenever possible.",
+  H3:  "Tissamaharama jeep driver doubled the price 10 minutes into the safari saying 'fuel prices increased today.' The price increase was not real. He refused to continue until I paid. Had to phone the booking agent to intervene.",
+  H4:  "Yala lodge advertised 'leopard-view rooms' with professional wildlife photography on the booking page. Reality: rooms faced the car park. Manager said 'the leopards move — sometimes they come to this side.' No refund for misrepresentation.",
+  P1:  "A man near Gal Vihara with an SLTDA-looking badge collected 1,500 LKR 'entry fee' from our group. There is no entry fee at Gal Vihara — only the general Polonnaruwa Archaeological Park ticket (purchased at the main gate). His badge was printed on cardstock.",
+  P2:  "Bicycle rental at heritage site: local visitor next to me hired the same bike for 200 LKR/day. I was quoted 1,000 LKR. After negotiating, settled at 350 LKR. Tourist pricing is common; always ask what locals pay and negotiate from there.",
+  P3:  "Three-wheeler refused the meter on the heritage circuit route. Said 'meter not working.' Demanded 1,200 LKR for a route my mapping app showed was 4 km. PickMe app quoted 280 LKR for same route. Used the app instead.",
+  KG1: "Photo-fee collectors at Pinnawala Elephant Orphanage entrance are NOT official staff. They wear orange vests and hold clipboards. The real entry ticket covers photography. Pay only at the ticket booth and ignore vest-wearers outside.",
+  KG2: "Kegalle tuk-tuk to Pinnawala quoted 800 LKR. Agreed. Partway there he claimed 'petrol finished' and needed 500 LKR extra. Classic refuelling scam. Fuel was clearly not low. Refused; he filled up and drove on without further argument.",
+  KG3: "Man at Pinnawala claimed to be an 'elephant caretaker' and offered private elephant feeding for 3,000 LKR per person. This is not an official offering. Only participate in activities sold at the official NBRO ticket counter inside the main gate.",
+  MA1: "Whale watch operator in Mirissa collected full payment the previous evening. Next morning said 'weather bad, no boat today' — weather was perfect. Refused refund. Disputed with credit card; bank sided with us after 3 weeks.",
+  MA2: "Boat touts at Mirissa harbour were extremely persistent — one grabbed my arm. They quote different prices to different tourists. Best price achieved: walk away entirely; the price dropped by 60% within 30 seconds.",
+  MA3: "Beachfront villa in Mirissa: booking photos showed a stunning open-plan room with ocean views. Reality: tiny interior room with a window facing a concrete wall. Owner claimed 'the sea-view room was unavailable but we didn't tell you.' Disputed booking.",
+  MA4: "Ordered fish 'by weight' at a Mirissa seafood restaurant without knowing the price per kg. Bill for one fish: 8,500 LKR (about $28). Fish was 850g and they charged 10,000 LKR/kg — not disclosed upfront. Always ask the per-kg price before ordering.",
+  T2:  "Tuk-tuk at Nilaveli beach: agreed 400 LKR to our hotel. Arrived, driver demanded 1,200 LKR and refused to unlock the luggage compartment. Paid 700 LKR as compromise. He accepted. Always set a clear price before loading luggage.",
+  T3:  "Booking photos for Uppuveli Beach chalet showed a boutique resort with infinity pool. Reality: basic concrete hut, no pool, 'sea view' was actually obscured by a restaurant. Photos were definitely from a different property.",
+  J1:  "Guesthouse in Jaffna city charged us 4,500 LKR/night during our stay — the same room was listed online for 2,200 LKR. When I showed the listing, owner said 'that is old price.' No receipt offered. Always screenshot the price before booking and check in.",
+  J2:  "Hired car in Jaffna took an unannounced 40-minute detour to a shop selling palmyra products. Driver said it was 'on the way' — it clearly wasn't. At the destination he demanded 2,000 LKR extra 'for the extra km.' Refused and paid original price.",
+  J3:  "At Nallur Kandaswamy entrance, a man collected 300 LKR 'offering contribution' from each of us before entry. Entry to Nallur Temple is completely free. He had a donation box that looked official. Verify with temple staff before giving money to anyone outside.",
+};
+
+// ═══════════════════════════════════════════════════════════════════════════
 // MAIN COMPONENT
 // ═══════════════════════════════════════════════════════════════════════════
 export default function SafeTravelLK() {
@@ -493,10 +633,95 @@ export default function SafeTravelLK() {
   const [aiError, setAiError]         = useState("");
   const [panelTab, setPanelTab]       = useState("overview");
   const [citySearch, setCitySearch]   = useState("");
-  const panelRef                      = useRef(null);
+  // Global search state
+  const [globalQuery, setGlobalQuery] = useState("");
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const [expandedYT, setExpandedYT]   = useState({}); // { incidentId: bool }
+  const [reviewModal, setReviewModal] = useState(null); // incident object or null
+  const panelRef    = useRef(null);
+  const searchRef   = useRef(null);
+  const [scores, setScores]               = useState({});
+  const [scoresLoading, setScoresLoading] = useState(true);
+  const [liveIncidents, setLiveIncidents] = useState([]);  // live reports from backend DB
+  const [liveLoading, setLiveLoading]     = useState(false);
 
-  const scores   = useMemo(() => computeAllScores(), []);
   const profData = TRAVELER_PROFILES[profile.type] || TRAVELER_PROFILES["Solo Female"];
+
+  // 1. Fetch live district risk scores from backend API on mount
+  useEffect(() => {
+    setScoresLoading(true);
+    fetch("http://127.0.0.1:8000/api/v1/districts/risk-map")
+      .then(r => r.ok ? r.json() : null)
+      .then(data => {
+        if (!data || !data.features) return;
+        const res = {};
+        data.features.forEach(f => {
+          const p = f.properties;
+          const dName = p.district;
+          res[dName] = {
+            score: p.risk_score_0_1,
+            count: p.report_count || 0,
+            scamN: p.scam_report_count || 0,
+            confidence: p.confidence || "insufficient_data",
+            tier: p.risk_tier || "insufficient_data",
+            severity: p.severity_component || 0,
+            scamRatio: p.scam_ratio_component || 0,
+            incidentRate: p.incident_rate_per_100k_visitors,
+            recentReports: p.recent_reports || [],
+            topScamTypes: p.top_scam_types || [],
+            hasFootfall: !!SLTDA_FOOTFALL[dName],
+          };
+        });
+        setScores(res);
+      })
+      .catch(err => console.error("Error fetching live district risk map:", err))
+      .finally(() => setScoresLoading(false));
+  }, []);
+
+  // 2. Fetch live reports for the selected district directly from backend DB
+  useEffect(() => {
+    if (!selected) { setLiveIncidents([]); return; }
+    setLiveLoading(true);
+    fetch(`http://127.0.0.1:8000/api/v1/districts/${encodeURIComponent(selected)}/reports`)
+      .then(r => r.ok ? r.json() : null)
+      .then(data => {
+        if (!data || !data.reports) { setLiveIncidents([]); return; }
+        const normalised = data.reports.map(inc => ({
+          id:           `db_${inc.id}`,
+          type:         inc.scam_type || "general_safety",
+          severity:     inc.risk_level || 1,
+          is_scam:      inc.is_scam != null ? inc.is_scam : (inc.scam_type != null),
+          days_ago:     inc.date ? Math.max(1, Math.round((Date.now() - new Date(inc.date).getTime()) / 86400000)) : 30,
+          title:        inc.title || "Traveler Report",
+          source:       inc.source || "tripadvisor_csv",
+          source_label: inc.source_label || inc.source || "Database Record",
+          location:     inc.location || selected,
+          helpful_votes: inc.helpful_votes || 0,
+          url:          inc.url || null,
+          content:      inc.content || inc.title || "",
+          credibility_score: 0.8,
+        }));
+        setLiveIncidents(normalised);
+      })
+      .catch(() => setLiveIncidents([]))
+      .finally(() => setLiveLoading(false));
+  }, [selected]);
+
+  // Filtered suggestions for Uber-style search
+  const suggestions = useMemo(() => {
+    const q = globalQuery.trim().toLowerCase();
+    if (!q || q.length < 1) return [];
+    return ALL_SEARCH_PLACES.filter(p => p.label.toLowerCase().includes(q)).slice(0, 8);
+  }, [globalQuery]);
+
+  // Click outside to close suggestions
+  useEffect(() => {
+    function handler(e) {
+      if (searchRef.current && !searchRef.current.contains(e.target)) setShowSuggestions(false);
+    }
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, []);
 
   useEffect(() => {
     if (selected && panelRef.current) {
@@ -510,11 +735,21 @@ export default function SafeTravelLK() {
     }
   }, [panelTab]);
 
-
   const handleSelect = useCallback((d) => {
     setSelected(d);
     setAiText(""); setAiError(""); setPanelTab("overview"); setPlaceSearch(""); setCitySearch("");
+    setExpandedYT({});
   }, []);
+
+  const handleSuggestionSelect = useCallback((place) => {
+    handleSelect(place.district);
+    setGlobalQuery(place.label);
+    setShowSuggestions(false);
+    if (place.type === "City") {
+      setPanelTab("incidents");
+      setPlaceSearch(place.label);
+    }
+  }, [handleSelect]);
 
   const tierCounts = Object.values(scores).reduce((a, s) => {
     a[s.tier] = (a[s.tier] || 0) + 1; return a;
@@ -523,7 +758,7 @@ export default function SafeTravelLK() {
   async function fetchAI() {
     if (!selected) return;
     setAiLoading(true); setAiText(""); setAiError("");
-    const inc     = SEED_INCIDENTS[selected] || [];
+    const inc     = liveIncidents;
     const scoredD = scores[selected];
     const cities  = DISTRICT_CITIES[selected] || [];
     const cityRisks = cities.map(c => CITY_PROFILES[c]).filter(Boolean);
@@ -544,8 +779,8 @@ ${topCity ? `Highest-risk city in district: ${cities.find(c => CITY_PROFILES[c] 
 Write a 3-sentence safety briefing for ${profile.name || "this traveler"} visiting ${selected}. Name 1–2 specific scam types to watch for, and give one practical tip tailored to a ${profData.label} traveler. End with an honest data-quality note about confidence level.`;
 
     try {
-      // 1. Try backend API proxy if FastAPI server is active
-      const backendRes = await fetch("/api/v1/chat", {
+      // 1. Try local FastAPI backend endpoint
+      let backendRes = await fetch("http://127.0.0.1:8000/api/v1/advisor/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -555,35 +790,29 @@ Write a 3-sentence safety briefing for ${profile.name || "this traveler"} visiti
         }),
       }).catch(() => null);
 
+      if (!backendRes || !backendRes.ok) {
+        backendRes = await fetch("/api/v1/advisor/chat", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            message: prompt,
+            user_profile: profile.type,
+            district: selected
+          }),
+        }).catch(() => null);
+      }
+
       if (backendRes && backendRes.ok) {
         const backendData = await backendRes.json();
-        const text = backendData?.response || backendData?.answer;
+        const text = backendData?.reply || backendData?.response || backendData?.answer || backendData?.content;
         if (text) {
           setAiText(text);
           setAiLoading(false);
           return;
         }
       }
-
-      // 2. Direct Anthropic API call if available
-      const res = await fetch("https://api.anthropic.com/v1/messages", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          model: "claude-sonnet-4-6",
-          max_tokens: 200,
-          messages: [{ role: "user", content: prompt }],
-        }),
-      });
-      const data = await res.json();
-      const text = data?.content?.map(b => b.text || "").join("") || "";
-      if (text) {
-        setAiText(text);
-        setAiLoading(false);
-        return;
-      }
     } catch (e) {
-      // Fallthrough to intelligent local briefing fallback
+      // Fallthrough to local intelligent briefing fallback
     }
 
     // 3. PhD-grade intelligent local briefing fallback
@@ -622,7 +851,7 @@ Write a 3-sentence safety briefing for ${profile.name || "this traveler"} visiti
               </span>
             </div>
             <p style={{ color: "#4b5563", fontSize: 12.5, margin: 0, lineHeight: 1.8 }}>
-              AI-aggregated safety intelligence · 25 districts · {Object.values(SEED_INCIDENTS).flat().length}+ incidents · {Object.keys(CITY_PROFILES).length} city profiles
+              AI-aggregated safety intelligence · 25 districts · {Object.values(scores).reduce((a, b) => a + (b.count || 0), 0) || "16,000"}+ scraped reports · {Object.keys(CITY_PROFILES).length} city profiles
             </p>
           </div>
 
@@ -718,7 +947,7 @@ Write a 3-sentence safety briefing for ${profile.name || "this traveler"} visiti
 
   // ─── MAP SCREEN ───────────────────────────────────────────────────────────
   const selectedData = selected ? scores[selected] : null;
-  const selectedInc  = selected ? (SEED_INCIDENTS[selected] || []) : [];
+  const selectedInc  = selected ? liveIncidents : [];
   const tc           = selectedData ? TIER_CONFIG[selectedData.tier] : null;
 
   // District cities with real data
@@ -763,36 +992,115 @@ Write a 3-sentence safety briefing for ${profile.name || "this traveler"} visiti
       <nav style={{
         background: "rgba(6,12,23,0.98)", backdropFilter: "blur(20px)",
         borderBottom: "1px solid rgba(100,116,139,0.07)",
-        padding: "0 16px", height: 52,
+        padding: "0 16px", height: 58,
         display: "flex", alignItems: "center", justifyContent: "space-between",
-        position: "sticky", top: 0, zIndex: 100,
+        position: "sticky", top: 0, zIndex: 200, gap: 12,
       }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-          <span style={{ fontSize: 18 }}>🧭</span>
-          <span style={{ color: "#f1f5f9", fontWeight: 800, fontSize: 14 }}>
+        {/* Logo */}
+        <div style={{ display: "flex", alignItems: "center", gap: 7, flexShrink: 0 }}>
+          <span style={{ fontSize: 20 }}>🧭</span>
+          <span style={{ color: "#f1f5f9", fontWeight: 800, fontSize: 14, whiteSpace: "nowrap" }}>
             SafeTravel <span style={{ color: "#06b6d4" }}>LK</span>
           </span>
-          <span style={{
-            background: "rgba(6,182,212,0.08)", border: "1px solid rgba(6,182,212,0.15)",
-            borderRadius: 20, padding: "2px 9px", color: "#22d3ee", fontSize: 10, fontWeight: 700, marginLeft: 4,
-          }}>BETA</span>
         </div>
-        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+
+        {/* ── Uber-style Search Bar ── */}
+        <div ref={searchRef} style={{ flex: 1, maxWidth: 520, position: "relative" }}>
+          <div style={{
+            display: "flex", alignItems: "center", gap: 8,
+            background: "rgba(15,23,42,0.95)", border: "1.5px solid rgba(6,182,212,0.25)",
+            borderRadius: 12, padding: "0 14px", height: 38,
+            boxShadow: showSuggestions ? "0 0 0 3px rgba(6,182,212,0.12)" : "none",
+            transition: "box-shadow 0.2s",
+          }}>
+            <span style={{ fontSize: 14, opacity: 0.5 }}>🔍</span>
+            <input
+              value={globalQuery}
+              onChange={e => { setGlobalQuery(e.target.value); setShowSuggestions(true); }}
+              onFocus={() => setShowSuggestions(true)}
+              placeholder="Search district, city or location in Sri Lanka…"
+              style={{
+                flex: 1, background: "transparent", border: "none", outline: "none",
+                color: "#e2e8f0", fontFamily: "inherit", fontSize: 13,
+              }}
+            />
+            {globalQuery && (
+              <button onClick={() => { setGlobalQuery(""); setShowSuggestions(false); }}
+                style={{ background: "none", border: "none", color: "#475569", cursor: "pointer", fontSize: 14, padding: 0 }}>✕</button>
+            )}
+          </div>
+          {/* Suggestions Dropdown */}
+          {showSuggestions && suggestions.length > 0 && (
+            <div style={{
+              position: "absolute", top: 44, left: 0, right: 0, zIndex: 300,
+              background: "rgba(10,17,32,0.99)", border: "1px solid rgba(6,182,212,0.18)",
+              borderRadius: 14, overflow: "hidden",
+              boxShadow: "0 16px 48px rgba(0,0,0,0.6)",
+            }}>
+              {suggestions.map((place, i) => {
+                const distScore = scores[place.district];
+                const tier = distScore?.tier || "insufficient_data";
+                const tc2 = TIER_CONFIG[tier];
+                return (
+                  <div key={i} onMouseDown={() => handleSuggestionSelect(place)}
+                    style={{
+                      display: "flex", alignItems: "center", gap: 12,
+                      padding: "11px 16px", cursor: "pointer", borderBottom: i < suggestions.length-1 ? "1px solid rgba(100,116,139,0.06)" : "none",
+                      transition: "background 0.12s",
+                    }}
+                    onMouseEnter={e => e.currentTarget.style.background = "rgba(6,182,212,0.07)"}
+                    onMouseLeave={e => e.currentTarget.style.background = "transparent"}
+                  >
+                    <span style={{
+                      width: 34, height: 34, borderRadius: 9, flexShrink: 0,
+                      background: place.type === "District" ? tc2.fill : "rgba(15,23,42,0.8)",
+                      border: `1px solid ${place.type === "District" ? tc2.stroke : "rgba(100,116,139,0.12)"}`,
+                      display: "flex", alignItems: "center", justifyContent: "center", fontSize: 16,
+                    }}>{place.icon}</span>
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <div style={{ color: "#e2e8f0", fontSize: 13, fontWeight: 600 }}>{place.label}</div>
+                      <div style={{ color: "#475569", fontSize: 11 }}>
+                        {place.type === "District" ? `District · ${distScore?.count || 0} reports` : `City in ${place.district}`}
+                      </div>
+                    </div>
+                    {place.type === "District" && distScore?.score != null && (
+                      <span style={{ background: tc2.badge, color: "#fff", borderRadius: 5, padding: "2px 8px", fontSize: 10, fontWeight: 700, flexShrink: 0 }}>
+                        {tc2.grade}
+                      </span>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          )}
+          {showSuggestions && globalQuery.length > 0 && suggestions.length === 0 && (
+            <div style={{
+              position: "absolute", top: 44, left: 0, right: 0, zIndex: 300,
+              background: "rgba(10,17,32,0.99)", border: "1px solid rgba(100,116,139,0.10)",
+              borderRadius: 14, padding: "16px", textAlign: "center",
+              color: "#4b5563", fontSize: 12,
+            }}>No results for "{globalQuery}"</div>
+          )}
+        </div>
+
+        {/* Profile + Edit */}
+        <div style={{ display: "flex", alignItems: "center", gap: 8, flexShrink: 0 }}>
           <span style={{
             background: "rgba(100,116,139,0.08)", border: "1px solid rgba(100,116,139,0.12)",
-            borderRadius: 20, padding: "3px 12px", color: "#94a3b8", fontSize: 11.5,
+            borderRadius: 20, padding: "4px 12px", color: "#94a3b8", fontSize: 11.5, whiteSpace: "nowrap",
           }}>
-            {profData.icon} {profile.name} · {profData.label}
+            {profData.icon} {profile.name}
           </span>
           <button onClick={() => setScreen("onboard")} style={{
             background: "transparent", border: "1px solid rgba(100,116,139,0.18)",
-            borderRadius: 7, color: "#475569", fontSize: 11, padding: "3px 9px",
-            cursor: "pointer", fontFamily: "inherit",
+            borderRadius: 8, color: "#475569", fontSize: 11, padding: "5px 10px",
+            cursor: "pointer", fontFamily: "inherit", whiteSpace: "nowrap",
           }}>✏️ Edit</button>
         </div>
       </nav>
 
-      <div style={{ display: "flex", flex: 1, overflow: "hidden", height: "calc(100vh - 52px)" }}>
+
+      <div style={{ display: "flex", flex: 1, overflow: "hidden", height: "calc(100vh - 58px)" }}>
 
         {/* ── LEFT SIDEBAR ── */}
         <div style={{
@@ -946,36 +1254,52 @@ Write a 3-sentence safety briefing for ${profile.name || "this traveler"} visiti
               );
             })}
 
-            {/* legend */}
-            <g transform="translate(84,685)">
-              <rect x={0} y={-12} width={156} height={24} rx={7} fill="rgba(6,12,23,0.94)" stroke="rgba(100,116,139,0.10)" strokeWidth="1"/>
-              {[["low","#15803d","A"],["moderate","#b45309","B"],["high","#c2410c","C"],["severe","#b91c1c","D"]].map(([t,col,g],i) => (
-                <g key={t} transform={`translate(${i*37+10},0)`}>
-                  <circle cx={0} cy={0} r={6} fill={col} opacity="0.88"/>
-                  <text x={0} y={1} textAnchor="middle" dominantBaseline="middle" fill="#fff" fontSize={6} fontWeight="800">{g}</text>
-                  <text x={0} y={12} textAnchor="middle" fill="#374151" fontSize={5.5}>{t.slice(0,3)}</text>
-                </g>
-              ))}
-              <text x={120} y={1} textAnchor="middle" dominantBaseline="middle" fill="#1f2937" fontSize={6}>— no data</text>
-            </g>
-
-            {/* hover tooltip */}
-            {hovered && hovered !== selected && (() => {
-              const pos = DISTRICTS[hovered];
-              const s   = scores[hovered];
-              const t   = s?.tier || "insufficient_data";
-              const c   = TIER_CONFIG[t];
-              const tx  = pos.cx > 300 ? pos.cx - 82 : pos.cx + pos.r + 8;
-              const ty  = pos.cy - 16;
-              return (
-                <g transform={`translate(${tx},${ty})`}>
-                  <rect x={0} y={0} width={80} height={32} rx={6} fill="rgba(6,12,23,0.96)" stroke={c.stroke} strokeWidth="1"/>
-                  <text x={8} y={11} fill="#e2e8f0" fontSize={9} fontWeight="700">{hovered}</text>
-                  <text x={8} y={22} fill={c.text} fontSize={8}>{c.label} · {s?.score != null ? Math.round(s.score*100) : "N/A"}</text>
-                </g>
-              );
-            })()}
           </svg>
+
+          {/* ── MAP LEGEND OVERLAY ── */}
+          <div style={{
+            position: "absolute",
+            bottom: 14,
+            left: 14,
+            background: "rgba(6, 12, 23, 0.88)",
+            backdropFilter: "blur(8px)",
+            border: "1px solid rgba(100, 116, 139, 0.2)",
+            borderRadius: 8,
+            padding: "6px 12px",
+            display: "flex",
+            alignItems: "center",
+            gap: 12,
+            zIndex: 10,
+            boxShadow: "0 4px 12px rgba(0,0,0,0.4)"
+          }}>
+            {[
+              { label: "Low", grade: "A", color: "#15803d" },
+              { label: "Moderate", grade: "B", color: "#b45309" },
+              { label: "High", grade: "C", color: "#c2410c" },
+              { label: "Severe", grade: "D", color: "#b91c1c" },
+              { label: "No data", grade: "N/A", color: "#475569" }
+            ].map(item => (
+              <div key={item.label} style={{ display: "flex", alignItems: "center", gap: 5 }}>
+                <span style={{
+                  width: 16,
+                  height: 16,
+                  borderRadius: "50%",
+                  background: item.color,
+                  color: "#fff",
+                  fontSize: 9,
+                  fontWeight: 800,
+                  display: "inline-flex",
+                  alignItems: "center",
+                  justifyContent: "center"
+                }}>
+                  {item.grade}
+                </span>
+                <span style={{ color: "#94a3b8", fontSize: 11, fontWeight: 500 }}>
+                  {item.label}
+                </span>
+              </div>
+            ))}
+          </div>
         </div>
 
         {/* ── RIGHT PANEL ── */}
@@ -1143,15 +1467,122 @@ Write a 3-sentence safety briefing for ${profile.name || "this traveler"} visiti
                     </div>
                   )}
 
-                  {/* Scoring disclosure */}
-                  {selectedData.score != null && (
-                    <div style={{ borderTop: "1px solid rgba(100,116,139,0.06)", paddingTop: 10 }}>
-                      <div style={{ color: "#1e293b", fontSize: 9, lineHeight: 1.7 }}>
-                        <span style={{ color: "#334155", fontWeight: 700 }}>Scoring:</span> Wilson lower bound scam ratio (n={selectedData.count}) + Bayesian shrinkage (α={BAYESIAN_ALPHA}) · 180-day decay · source credibility bonus. Quantile Q25={Math.round((selectedData.q25||0)*100)} Q50={Math.round((selectedData.q50||0)*100)} Q75={Math.round((selectedData.q75||0)*100)}.
-                        {selectedData.hasFootfall && <> Exposure-normalised (SLTDA footfall {(SLTDA_FOOTFALL[selected]/1e6).toFixed(1)}M).</>}
+                  {/* ── HOW THIS SCORE WORKS ── */}
+                  <div style={{ borderTop: "1px solid rgba(100,116,139,0.08)", marginTop: 14, paddingTop: 14 }}>
+                    <details style={{ cursor: "pointer" }}>
+                      <summary style={{
+                        color: "#64748b", fontSize: 11, fontWeight: 600,
+                        letterSpacing: "0.04em", userSelect: "none",
+                        display: "flex", alignItems: "center", gap: 6,
+                        listStyle: "none", outline: "none",
+                      }}>
+                        <span style={{
+                          width: 18, height: 18, borderRadius: "50%",
+                          background: "rgba(6,182,212,0.12)", border: "1px solid rgba(6,182,212,0.25)",
+                          display: "inline-flex", alignItems: "center", justifyContent: "center",
+                          fontSize: 10, color: "#22d3ee", flexShrink: 0,
+                        }}>ℹ</span>
+                        How this score is calculated
+                      </summary>
+
+                      <div style={{ marginTop: 12, display: "flex", flexDirection: "column", gap: 10 }}>
+
+                        {/* Step 1 */}
+                        <div style={{ background: "rgba(13,21,38,0.6)", border: "1px solid rgba(100,116,139,0.10)", borderRadius: 10, padding: "10px 12px" }}>
+                          <div style={{ color: "#22d3ee", fontSize: 10, fontWeight: 700, marginBottom: 4, display: "flex", gap: 6, alignItems: "center" }}>
+                            <span style={{ background: "rgba(6,182,212,0.15)", borderRadius: 4, padding: "1px 6px" }}>Step 1</span>
+                            Raw severity score per report
+                          </div>
+                          <div style={{ color: "#94a3b8", fontSize: 10.5, lineHeight: 1.7 }}>
+                            Each incident is scored by <strong style={{ color: "#cbd5e1" }}>type severity</strong> (1–3) × <strong style={{ color: "#cbd5e1" }}>source credibility weight</strong> × <strong style={{ color: "#cbd5e1" }}>time decay</strong>.<br/>
+                            <code style={{ fontSize: 9.5, background: "rgba(6,182,212,0.08)", padding: "1px 5px", borderRadius: 3, color: "#67e8f9" }}>
+                              score = severity × credibility × e^(−λ × days)
+                            </code>
+                            <span style={{ color: "#475569", fontSize: 9.5 }}> · λ = ln(2)/180 (half-life 180 days)</span>
+                          </div>
+                        </div>
+
+                        {/* Step 2 — Source weights */}
+                        <div style={{ background: "rgba(13,21,38,0.6)", border: "1px solid rgba(100,116,139,0.10)", borderRadius: 10, padding: "10px 12px" }}>
+                          <div style={{ color: "#22d3ee", fontSize: 10, fontWeight: 700, marginBottom: 8, display: "flex", gap: 6, alignItems: "center" }}>
+                            <span style={{ background: "rgba(6,182,212,0.15)", borderRadius: 4, padding: "1px 6px" }}>Step 2</span>
+                            Source credibility weights
+                          </div>
+                          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 4 }}>
+                            {[
+                              ["🏛️ Gov / FCDO", "1.00", "#22c55e"],
+                              ["🚔 Tourist Police", "0.97", "#22c55e"],
+                              ["📰 Ada Derana", "0.88", "#86efac"],
+                              ["📰 Newsfirst", "0.86", "#86efac"],
+                              ["▶️ YouTube", "0.72", "#fbbf24"],
+                              ["🟢 TripAdvisor", "0.60", "#60a5fa"],
+                              ["📍 Google Maps", "0.62", "#60a5fa"],
+                              ["🟠 Reddit", "0.42", "#94a3b8"],
+                            ].map(([src, w, col]) => (
+                              <div key={src} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", background: "rgba(6,12,23,0.4)", borderRadius: 5, padding: "3px 7px" }}>
+                                <span style={{ color: "#94a3b8", fontSize: 9.5 }}>{src}</span>
+                                <span style={{ color: col, fontSize: 10, fontWeight: 700 }}>{w}</span>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+
+                        {/* Step 3 */}
+                        <div style={{ background: "rgba(13,21,38,0.6)", border: "1px solid rgba(100,116,139,0.10)", borderRadius: 10, padding: "10px 12px" }}>
+                          <div style={{ color: "#22d3ee", fontSize: 10, fontWeight: 700, marginBottom: 4, display: "flex", gap: 6, alignItems: "center" }}>
+                            <span style={{ background: "rgba(6,182,212,0.15)", borderRadius: 4, padding: "1px 6px" }}>Step 3</span>
+                            Wilson + Bayesian shrinkage
+                          </div>
+                          <div style={{ color: "#94a3b8", fontSize: 10.5, lineHeight: 1.7 }}>
+                            Wilson score lower bound prevents gaming by small samples. Bayesian shrinkage (α={BAYESIAN_ALPHA}) pulls estimates toward the global prior ({Math.round(GLOBAL_PRIOR*100)}%) — districts with few reports cannot claim artificially high or low risk.
+                          </div>
+                        </div>
+
+                        {/* Step 4 */}
+                        <div style={{ background: "rgba(13,21,38,0.6)", border: "1px solid rgba(100,116,139,0.10)", borderRadius: 10, padding: "10px 12px" }}>
+                          <div style={{ color: "#22d3ee", fontSize: 10, fontWeight: 700, marginBottom: 4, display: "flex", gap: 6, alignItems: "center" }}>
+                            <span style={{ background: "rgba(6,182,212,0.15)", borderRadius: 4, padding: "1px 6px" }}>Step 4</span>
+                            Footfall normalisation
+                          </div>
+                          <div style={{ color: "#94a3b8", fontSize: 10.5, lineHeight: 1.7 }}>
+                            Scores are divided by SLTDA tourist footfall (Jan–Oct 2024) so high-visitor districts like Colombo aren't unfairly penalised for having more absolute reports.
+                            {selectedData.hasFootfall && <><br/><strong style={{ color: "#cbd5e1" }}>{selected}:</strong> {(SLTDA_FOOTFALL[selected]/1e6).toFixed(1)}M visitors/year</>}
+                          </div>
+                        </div>
+
+                        {/* Step 5 — Tier thresholds */}
+                        <div style={{ background: "rgba(13,21,38,0.6)", border: "1px solid rgba(100,116,139,0.10)", borderRadius: 10, padding: "10px 12px" }}>
+                          <div style={{ color: "#22d3ee", fontSize: 10, fontWeight: 700, marginBottom: 8, display: "flex", gap: 6, alignItems: "center" }}>
+                            <span style={{ background: "rgba(6,182,212,0.15)", borderRadius: 4, padding: "1px 6px" }}>Step 5</span>
+                            Quantile tier assignment (all 25 districts)
+                          </div>
+                          <div style={{ display: "flex", gap: 6 }}>
+                            {[
+                              ["A", "Low", "≤ Q25", "#15803d", selectedData.q25],
+                              ["B", "Moderate", "Q25–Q50", "#b45309", selectedData.q50],
+                              ["C", "High", "Q50–Q75", "#c2410c", selectedData.q75],
+                              ["D", "Severe", "> Q75", "#b91c1c", null],
+                            ].map(([g, label, range, col, q]) => (
+                              <div key={g} style={{ flex: 1, textAlign: "center", background: "rgba(6,12,23,0.4)", borderRadius: 7, padding: "6px 4px", border: `1px solid ${col}22` }}>
+                                <div style={{ width: 20, height: 20, borderRadius: "50%", background: col, color: "#fff", fontSize: 10, fontWeight: 800, display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 4px" }}>{g}</div>
+                                <div style={{ color: "#94a3b8", fontSize: 8.5 }}>{range}</div>
+                                {q != null && <div style={{ color: "#475569", fontSize: 8 }}>≤{Math.round(q*100)}</div>}
+                              </div>
+                            ))}
+                          </div>
+                          {selectedData.score != null && (
+                            <div style={{ marginTop: 8, color: "#64748b", fontSize: 9.5 }}>
+                              <strong style={{ color: "#e2e8f0" }}>{selected}</strong> composite score: <strong style={{ color: TIER_CONFIG[selectedData.tier].text }}>{Math.round(selectedData.score * 100)}</strong> · assigned <strong style={{ color: TIER_CONFIG[selectedData.tier].text }}>Tier {TIER_CONFIG[selectedData.tier].grade} — {TIER_CONFIG[selectedData.tier].label}</strong>
+                            </div>
+                          )}
+                        </div>
+
+                        <div style={{ color: "#1e293b", fontSize: 9, lineHeight: 1.6, paddingTop: 2 }}>
+                          IT22629180 · Wilson-shrunk quantile tiers · 180-day decay · Bayesian shrinkage · SLTDA exposure normalisation
+                        </div>
                       </div>
-                    </div>
-                  )}
+                    </details>
+                  </div>
                 </div>
               )}
 
@@ -1161,17 +1592,17 @@ Write a 3-sentence safety briefing for ${profile.name || "this traveler"} visiti
                   <input
                     value={placeSearch}
                     onChange={e => setPlaceSearch(e.target.value)}
-                    placeholder="🔍 Filter by place or road…"
+                    placeholder="🔍 Filter by place or keyword…"
                     style={{
                       width: "100%", boxSizing: "border-box",
-                      background: "rgba(13,21,38,0.8)", border: "1px solid rgba(100,116,139,0.10)",
-                      borderRadius: 8, padding: "7px 12px", color: "#e2e8f0",
-                      fontFamily: "inherit", fontSize: 12, outline: "none", marginBottom: 10,
+                      background: "rgba(13,21,38,0.8)", border: "1px solid rgba(100,116,139,0.12)",
+                      borderRadius: 10, padding: "9px 14px", color: "#e2e8f0",
+                      fontFamily: "inherit", fontSize: 12.5, outline: "none", marginBottom: 12,
                     }}
                   />
 
                   {placeFiltered.length === 0 && (
-                    <div style={{ textAlign: "center", color: "#374151", fontSize: 12, padding: "24px 0" }}>
+                    <div style={{ textAlign: "center", color: "#374151", fontSize: 12, padding: "28px 0" }}>
                       {placeSearch.trim()
                         ? `No reports match "${placeSearch}" in ${selected}.`
                         : "No incidents recorded for this district yet."}
@@ -1179,78 +1610,152 @@ Write a 3-sentence safety briefing for ${profile.name || "this traveler"} visiti
                   )}
 
                   {placeFiltered.map((inc, i) => {
-                    const it        = INCIDENT_TYPES[inc.type] || { emoji: "•", label: inc.type };
-                    const si        = getSourceInfo(inc.source);
-                    const isProfile = profData.concerns.includes(inc.type);
+                    const it         = INCIDENT_TYPES[inc.type] || { emoji: "•", label: inc.type };
+                    const isProfile  = profData.concerns.includes(inc.type);
+                    const ytId       = getYouTubeId(inc.youtube_url || inc.url);
+                    const srcTier    = getSourceTier(inc.source);
+                    const ytExpanded = expandedYT[inc.id || i];
+                    const sevColors  = ["","#22c55e","#f59e0b","#ef4444"];
+                    const linkInfo   = getEffectiveSourceLink(inc);
                     return (
-                      <div key={inc.id || i} style={{
-                        background: "rgba(13,21,38,0.7)",
-                        border: `1px solid ${isProfile ? "rgba(6,182,212,0.16)" : "rgba(100,116,139,0.06)"}`,
-                        borderRadius: 9, padding: "10px 12px", marginBottom: 6,
-                      }}>
-                        <div style={{ display: "flex", justifyContent: "space-between", gap: 8, marginBottom: 4 }}>
-                          <div style={{ color: "#e2e8f0", fontSize: 12, lineHeight: 1.4, flex: 1 }}>
+                      <div
+                        key={inc.id || i}
+                        onClick={() => setReviewModal(inc)}
+                        style={{
+                          background: isProfile ? "rgba(6,182,212,0.04)" : "rgba(13,21,38,0.65)",
+                          border: `1px solid ${isProfile ? "rgba(6,182,212,0.20)" : "rgba(100,116,139,0.08)"}`,
+                          borderRadius: 12, padding: "12px 13px", marginBottom: 8,
+                          transition: "border-color 0.15s, box-shadow 0.15s",
+                          cursor: "pointer",
+                        }}
+                        onMouseEnter={e => { e.currentTarget.style.borderColor = "rgba(96,165,250,0.35)"; e.currentTarget.style.boxShadow = "0 2px 12px rgba(96,165,250,0.08)"; }}
+                        onMouseLeave={e => { e.currentTarget.style.borderColor = isProfile ? "rgba(6,182,212,0.20)" : "rgba(100,116,139,0.08)"; e.currentTarget.style.boxShadow = "none"; }}
+                      >
+                        {/* Title row */}
+                        <div style={{ display: "flex", justifyContent: "space-between", gap: 8, marginBottom: 5 }}>
+                          <div style={{ color: "#e2e8f0", fontSize: 12.5, lineHeight: 1.45, fontWeight: 500, flex: 1 }}>
                             {it.emoji} {inc.title}
                           </div>
-                          <span style={{ color: "#374151", fontSize: 10, flexShrink: 0 }}>{inc.days_ago}d</span>
+                          <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: 3, flexShrink: 0 }}>
+                            <span style={{ color: "#374151", fontSize: 10 }}>{inc.days_ago}d ago</span>
+                            <span style={{
+                              width: 7, height: 7, borderRadius: "50%",
+                              background: sevColors[inc.severity || 1], display: "block",
+                            }}/>
+                          </div>
                         </div>
-                        <div style={{ color: "#475569", fontSize: 10, marginBottom: 5 }}>📍 {inc.location}</div>
-                        <div style={{ display: "flex", gap: 4, flexWrap: "wrap" }}>
-                          {inc.url || inc.youtube_url ? (
-                            <a href={inc.url || inc.youtube_url} target="_blank" rel="noreferrer" style={{ textDecoration: "none" }}>
-                              <span style={{ background: "rgba(30,41,59,0.8)", borderRadius: 4, padding: "1px 7px", fontSize: 9.5, color: "#93c5fd", border: "1px solid rgba(147,197,253,0.3)" }}>
-                                {si.icon} {si.label} ↗
-                              </span>
-                            </a>
-                          ) : (
-                            <span style={{ background: "rgba(30,41,59,0.8)", borderRadius: 4, padding: "1px 7px", fontSize: 9.5, color: "#4b5563" }}>
-                              {si.icon} {si.label}
+
+                        {/* Location */}
+                        <div style={{ color: "#475569", fontSize: 10.5, marginBottom: 8 }}>
+                          📍 {inc.location}
+                        </div>
+
+                        {/* Source badge row */}
+                        <div style={{ display: "flex", flexWrap: "wrap", gap: 5, marginBottom: ytId ? 8 : 0 }}>
+                          {/* Source tier badge */}
+                          <a 
+                            href={linkInfo.url} 
+                            target="_blank" 
+                            rel="noreferrer" 
+                            onClick={e => e.stopPropagation()} 
+                            style={{ textDecoration: "none" }}
+                          >
+                            <span style={{
+                              display: "inline-flex", alignItems: "center", gap: 4,
+                              background: srcTier.bg, border: `1px solid ${srcTier.color}${linkInfo.isDirect ? "44" : "33"}`,
+                              borderRadius: 6, padding: "3px 9px", fontSize: 10.5,
+                              color: srcTier.color, fontWeight: 600, cursor: "pointer",
+                            }}>
+                              {srcTier.icon} {srcTier.label} {linkInfo.isDirect ? "↗" : "· search ↗"}
                             </span>
+                          </a>
+
+                          {/* Scam tag */}
+                          {inc.is_scam && (
+                            <span style={{
+                              background: "rgba(239,68,68,0.10)", border: "1px solid rgba(239,68,68,0.20)",
+                              borderRadius: 6, padding: "3px 9px", fontSize: 10.5, color: "#f87171",
+                            }}>⚠ Confirmed Scam</span>
                           )}
-                          <span style={{
-                            background: inc.is_scam ? "rgba(239,68,68,0.10)" : "rgba(100,116,139,0.10)",
-                            borderRadius: 4, padding: "1px 7px", fontSize: 9.5,
-                            color: inc.is_scam ? "#f87171" : "#4b5563",
-                          }}>{inc.is_scam ? "⚠ Scam" : "Incident"}</span>
-                          <span style={{ background: "rgba(30,41,59,0.8)", borderRadius: 4, padding: "1px 7px", fontSize: 9.5, color: "#374151" }}>
-                            Sev {inc.severity || 1}/3
-                          </span>
+
+                          {/* Profile relevance */}
                           {isProfile && (
-                            <span style={{ background: "rgba(6,182,212,0.08)", borderRadius: 4, padding: "1px 7px", fontSize: 9.5, color: "#22d3ee" }}>
-                              ⚡ Your profile
-                            </span>
+                            <span style={{
+                              background: "rgba(6,182,212,0.08)", border: "1px solid rgba(6,182,212,0.20)",
+                              borderRadius: 6, padding: "3px 9px", fontSize: 10.5, color: "#22d3ee",
+                            }}>⚡ Affects you</span>
                           )}
-                          {inc.youtube_url && (
-                            <a href={inc.youtube_url} target="_blank" rel="noreferrer" style={{
-                              background: "rgba(239,68,68,0.10)", border: "1px solid rgba(239,68,68,0.22)",
-                              borderRadius: 4, padding: "1px 7px", fontSize: 9.5, color: "#f87171", textDecoration: "none",
-                            }}>▶ YouTube</a>
+
+                          {/* YouTube toggle button */}
+                          {ytId && (
+                            <button
+                              onClick={() => setExpandedYT(p => ({ ...p, [inc.id || i]: !p[inc.id || i] }))}
+                              style={{
+                                display: "inline-flex", alignItems: "center", gap: 4,
+                                background: ytExpanded ? "rgba(239,68,68,0.20)" : "rgba(239,68,68,0.10)",
+                                border: "1px solid rgba(239,68,68,0.30)",
+                                borderRadius: 6, padding: "3px 9px", fontSize: 10.5,
+                                color: "#fca5a5", cursor: "pointer", fontFamily: "inherit",
+                              }}>
+                              {ytExpanded ? "▼ Hide video" : "▶ Watch video"}
+                            </button>
                           )}
                         </div>
+
+                        {/* YouTube inline embed */}
+                        {ytId && ytExpanded && (
+                          <div style={{ borderRadius: 10, overflow: "hidden", marginTop: 4, border: "1px solid rgba(239,68,68,0.25)" }}>
+                            <iframe
+                              width="100%"
+                              height="180"
+                              src={`https://www.youtube.com/embed/${ytId}?rel=0&modestbranding=1`}
+                              title={inc.title}
+                              frameBorder="0"
+                              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                              allowFullScreen
+                              style={{ display: "block" }}
+                            />
+                            <a href={inc.youtube_url} target="_blank" rel="noreferrer" style={{
+                              display: "block", textAlign: "center", padding: "6px",
+                              background: "rgba(239,68,68,0.12)", color: "#f87171",
+                              fontSize: 10.5, textDecoration: "none",
+                            }}>🔗 Open on YouTube ↗</a>
+                          </div>
+                        )}
+
+                        {/* YouTube thumbnail preview (not expanded) */}
+                        {ytId && !ytExpanded && (
+                          <div
+                            onClick={() => setExpandedYT(p => ({ ...p, [inc.id || i]: true }))}
+                            style={{
+                              marginTop: 6, borderRadius: 8, overflow: "hidden", cursor: "pointer",
+                              position: "relative", border: "1px solid rgba(239,68,68,0.20)",
+                            }}>
+                            <img
+                              src={`https://img.youtube.com/vi/${ytId}/mqdefault.jpg`}
+                              alt="YouTube thumbnail"
+                              style={{ width: "100%", display: "block", opacity: 0.7 }}
+                            />
+                            <div style={{
+                              position: "absolute", inset: 0,
+                              display: "flex", alignItems: "center", justifyContent: "center",
+                              background: "rgba(0,0,0,0.35)",
+                            }}>
+                              <span style={{
+                                width: 44, height: 44, borderRadius: "50%",
+                                background: "rgba(239,68,68,0.90)",
+                                display: "flex", alignItems: "center", justifyContent: "center",
+                                fontSize: 18, color: "#fff",
+                              }}>▶</span>
+                            </div>
+                          </div>
+                        )}
                       </div>
                     );
                   })}
-
-                  {/* Source credibility table */}
-                  <div style={{
-                    marginTop: 12, background: "rgba(13,21,38,0.5)", border: "1px solid rgba(100,116,139,0.06)",
-                    borderRadius: 9, padding: "10px 12px",
-                  }}>
-                    <div style={{ color: "#1f2937", fontSize: 9.5, fontWeight: 700, marginBottom: 6 }}>Source credibility weights</div>
-                    {[
-                      ["🏛️ Official government / SLTDA", "0.97–1.00"],
-                      ["📰 SL certified news (TRCSL)", "0.79–0.88"],
-                      ["▶️ YouTube (verified SL news channels)", "0.72"],
-                      ["🟢 TripAdvisor / Google Maps", "0.60–0.68"],
-                      ["🟠 Reddit / forums / Quora", "0.35–0.42"],
-                    ].map(([l, w]) => (
-                      <div key={l} style={{ display: "flex", justifyContent: "space-between", fontSize: 9.5, color: "#374151", marginBottom: 2 }}>
-                        <span>{l}</span><span style={{ color: "#1e3a5f" }}>{w}</span>
-                      </div>
-                    ))}
-                  </div>
                 </div>
               )}
+
 
               {/* ── CITIES / AREAS TAB ── */}
               {panelTab === "cities" && (
@@ -1485,6 +1990,146 @@ Write a 3-sentence safety briefing for ${profile.name || "this traveler"} visiti
           </div>
         )}
       </div>
+
+      {/* ── REVIEW MODAL ── */}
+      {reviewModal && (() => {
+        const it        = INCIDENT_TYPES[reviewModal.type] || { emoji: "•", label: reviewModal.type };
+        const srcT      = getSourceTier(reviewModal.source);
+        const linkInfo  = getEffectiveSourceLink(reviewModal);
+        const body      = reviewModal.summary || reviewModal.content || reviewModal.description || REVIEW_BODIES[reviewModal.id] || ("This safety alert was recorded from " + (srcT.label || reviewModal.source) + ". Use the button below to search Google for the original publication.");
+        const srcInfo   = SOURCE_WEIGHTS[reviewModal.source];
+        return (
+          <div
+            onClick={() => setReviewModal(null)}
+            style={{
+              position: "fixed", inset: 0, zIndex: 9999,
+              background: "rgba(0,0,0,0.72)",
+              backdropFilter: "blur(6px)",
+              display: "flex", alignItems: "center", justifyContent: "center",
+              padding: 24,
+            }}
+          >
+            <div
+              onClick={e => e.stopPropagation()}
+              style={{
+                background: "linear-gradient(145deg,#0d1526,#111c30)",
+                border: "1px solid rgba(100,116,139,0.22)",
+                borderRadius: 18,
+                padding: "28px 30px",
+                maxWidth: 520,
+                width: "100%",
+                boxShadow: "0 24px 60px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.04)",
+                position: "relative",
+                maxHeight: "85vh",
+                overflowY: "auto",
+              }}
+            >
+              <button
+                onClick={() => setReviewModal(null)}
+                style={{
+                  position: "absolute", top: 14, right: 14,
+                  background: "rgba(100,116,139,0.12)", border: "none",
+                  borderRadius: "50%", width: 30, height: 30,
+                  color: "#94a3b8", fontSize: 16, cursor: "pointer",
+                  display: "flex", alignItems: "center", justifyContent: "center",
+                  fontFamily: "inherit",
+                }}
+              >✕</button>
+
+              <div style={{ marginBottom: 14 }}>
+                <span style={{
+                  display: "inline-flex", alignItems: "center", gap: 5,
+                  background: srcT.bg, border: `1px solid ${srcT.color}44`,
+                  borderRadius: 20, padding: "4px 12px",
+                  fontSize: 11, color: srcT.color, fontWeight: 700,
+                }}>
+                  {srcT.icon} {srcInfo?.label || reviewModal.source} · {srcT.label}
+                </span>
+              </div>
+
+              <div style={{ fontSize: 11, color: "#64748b", fontWeight: 600, letterSpacing: "0.06em", textTransform: "uppercase", marginBottom: 6 }}>
+                {it.emoji} {it.label}
+              </div>
+              <div style={{ color: "#e2e8f0", fontSize: 16, fontWeight: 700, lineHeight: 1.4, marginBottom: 6 }}>
+                {reviewModal.title}
+              </div>
+              <div style={{ color: "#475569", fontSize: 11, marginBottom: 18 }}>📍 {reviewModal.location}</div>
+
+              <div style={{ height: 1, background: "rgba(100,116,139,0.12)", marginBottom: 18 }} />
+
+              <div style={{
+                color: "#cbd5e1", fontSize: 13.5, lineHeight: 1.8,
+                fontStyle: "italic",
+                background: "rgba(13,21,38,0.5)",
+                border: "1px solid rgba(100,116,139,0.10)",
+                borderRadius: 10, padding: "14px 16px",
+                marginBottom: 18,
+              }}>
+                "{body}"
+              </div>
+
+              <div style={{ display: "flex", gap: 10, flexWrap: "wrap", alignItems: "center", marginBottom: 18 }}>
+                {reviewModal.is_scam && (
+                  <span style={{ background: "rgba(239,68,68,0.10)", border: "1px solid rgba(239,68,68,0.20)", borderRadius: 6, padding: "3px 10px", fontSize: 10.5, color: "#f87171" }}>⚠ Confirmed Scam</span>
+                )}
+                <span style={{ color: "#64748b", fontSize: 11 }}>{reviewModal.days_ago}d ago</span>
+                {renderHelpfulMetric(reviewModal) && (
+                  <span style={{ color: "#64748b", fontSize: 11 }}>{renderHelpfulMetric(reviewModal)}</span>
+                )}
+                <span style={{ marginLeft: "auto", color: "#64748b", fontSize: 10.5, fontStyle: "italic" }}>
+                  Credibility weight: {srcInfo ? srcInfo.w.toFixed(2) : "0.30"}
+                </span>
+              </div>
+
+              {/* Action buttons */}
+              <div style={{ display: "flex", gap: 10 }}>
+                {linkInfo.isDirect ? (
+                  <a
+                    href={linkInfo.url}
+                    target="_blank"
+                    rel="noreferrer"
+                    style={{
+                      flex: 1, textAlign: "center", textDecoration: "none",
+                      background: "linear-gradient(135deg, #2563eb, #1d4ed8)",
+                      border: "1px solid rgba(59,130,246,0.4)",
+                      borderRadius: 10, padding: "10px",
+                      color: "#ffffff", fontSize: 12.5, fontWeight: 700,
+                      boxShadow: "0 4px 12px rgba(37,99,235,0.25)",
+                    }}
+                  >
+                    ↗ Open External Source Article
+                  </a>
+                ) : (
+                  <a
+                    href={linkInfo.url}
+                    target="_blank"
+                    rel="noreferrer"
+                    style={{
+                      flex: 1, textAlign: "center", textDecoration: "none",
+                      background: "rgba(30,41,59,0.80)",
+                      border: "1px solid rgba(100,116,139,0.25)",
+                      borderRadius: 10, padding: "10px",
+                      color: "#38bdf8", fontSize: 12.5, fontWeight: 600,
+                    }}
+                  >
+                    🔍 Search Headline on Google ↗
+                  </a>
+                )}
+                <button
+                  onClick={() => setReviewModal(null)}
+                  style={{
+                    width: 90,
+                    background: "rgba(100,116,139,0.12)", border: "1px solid rgba(100,116,139,0.20)",
+                    borderRadius: 10, padding: "10px",
+                    color: "#94a3b8", fontSize: 12.5, fontWeight: 600,
+                    cursor: "pointer", fontFamily: "inherit",
+                  }}
+                >Close</button>
+              </div>
+            </div>
+          </div>
+        );
+      })()}
     </div>
   );
 }

@@ -51,6 +51,7 @@ class Report(Base):
     # Metadata
     demographic_target = Column(String, nullable=True)  # "solo_female", "family", etc.
     source_weight = Column(Float, default=0.35)          # 0.0-1.0 credibility score (see source_weights.py)
+    helpful_votes = Column(Integer, default=0, nullable=True)  # peer upvotes / TripAdvisor helpful count
     created_at = Column(DateTime(timezone=True), server_default=func.now())
 
 

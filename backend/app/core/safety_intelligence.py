@@ -516,7 +516,8 @@ class SafetyIntelligenceEngine:
         cur.execute("""
             SELECT id, source, source_weight, title, content, url,
                    latitude, longitude, location_name,
-                   scam_type, risk_level, is_scam, created_at
+                   scam_type, risk_level, is_scam, created_at,
+                   COALESCE(helpful_votes, 0) as helpful_votes
             FROM reports
             WHERE latitude BETWEEN ? AND ?
               AND longitude BETWEEN ? AND ?
@@ -550,6 +551,7 @@ class SafetyIntelligenceEngine:
                     "is_scam": bool(row["is_scam"]),
                     "created_at": row["created_at"],
                     "distance_km": round(dist, 2),
+                    "helpful_votes": row["helpful_votes"] or 0,
                 }
                 if not is_irrelevant_noise(item):
                     nearby.append(item)
@@ -789,6 +791,7 @@ class SafetyIntelligenceEngine:
                 "url": verified_url,
                 "content_snippet": snip,
                 "full_summary": full_sum,
+                "helpful_votes": r.get("helpful_votes", 0) or 0,
             })
 
         # ── Source Breakdown (User-Friendly Labels) ───────────────────────────

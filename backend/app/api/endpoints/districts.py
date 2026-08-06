@@ -93,3 +93,66 @@ def get_district_risk_map(db: Session = Depends(get_db)):
 @router.get("/methodology")
 def get_methodology():
     return methodology_report()
+
+
+@router.get("/{district_name}/reports")
+def get_district_reports(district_name: str, db: Session = Depends(get_db)):
+    from shapely.geometry import Point
+    idx = get_boundary_index()
+    d_clean = district_name.strip().lower()
+    
+    target_entry = None
+    for entry in idx._entries:
+        if entry["district"].lower() == d_clean:
+            target_entry = entry
+            break
+        for const in entry.get("constituents", []):
+            if const.lower() == d_clean:
+                target_entry = entry
+                break
+    
+    reports = db.query(Report).filter(Report.latitude.isnot(None), Report.longitude.isnot(None)).all()
+    matching = []
+    seen_ids = set()
+
+    for r in reports:
+        if r.id in seen_ids:
+            continue
+        pt = Point(r.longitude, r.latitude)
+        is_match = False
+        if target_entry and (target_entry["prepared"].contains(pt) or target_entry["geom"].touches(pt)):
+            is_match = True
+        elif r.location_name and d_clean in r.location_name.lower():
+            is_match = True
+        elif r.title and d_clean in r.title.lower():
+            is_match = True
+
+        if is_match:
+            seen_ids.add(r.id)
+            matching.append(r)
+
+    # Sort by risk level desc, helpful votes desc
+    matching.sort(key=lambda r: (-(r.risk_level or 1), -(r.helpful_votes or 0)))
+
+    return {
+        "district": district_name,
+        "total_reports": len(matching),
+        "reports": [
+            {
+                "id": r.id,
+                "title": (r.title or "").strip()[:180],
+                "scam_type": r.scam_type,
+                "risk_level": r.risk_level,
+                "is_scam": bool(r.is_scam),
+                "source": r.source,
+                "source_label": SOURCE_DISPLAY.get(r.source or "", r.source or "Unknown"),
+                "location": r.location_name or district_name,
+                "url": build_source_link(r.url, r.title, r.content, r.location_name, source=r.source),
+                "content": r.content or "",
+                "helpful_votes": getattr(r, "helpful_votes", 0) or 0,
+                "date": str(r.created_at.date()) if r.created_at else None,
+            }
+            for r in matching[:100]
+        ]
+    }
+

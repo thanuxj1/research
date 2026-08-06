@@ -215,6 +215,8 @@ def search_location(
             "is_verified": cred_score >= 0.80,
             "url": build_source_link(r.url, r.title, r.content, q.title(), source=r.source),
             "content_snippet": (r.content or "")[:200],
+            "content": (r.content or ""),
+            "helpful_votes": getattr(r, "helpful_votes", 0) or 0,
             "date": str(r.created_at.date()) if r.created_at else None,
         })
 
