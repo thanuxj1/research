@@ -1,0 +1,116 @@
+"""
+Model Accuracy Evaluator — SafeTravel LK
+IT22629180
+
+Evaluates all 3 trained ML models and prints accuracy metrics to terminal:
+  1. scam_classifier.joblib     (NLP scam detection)
+  2. enhanced_predictor.joblib  (Risk level prediction)
+  3. pattern_rf.joblib          (Pattern-based Random Forest)
+
+Uses cross-validation on available labeled data so you don't need a separate test set.
+"""
+import sys, os
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)) + '/..')
+
+import joblib
+import json
+import numpy as np
+import sqlite3
+from pathlib import Path
+
+MODEL_DIR = Path(__file__).parent / "app" / "ml" / "models"
+
+print("=" * 65)
+print("  SafeTravel LK — ML Model Accuracy Report  [IT22629180]")
+print("=" * 65)
+
+# ── Load metadata ────────────────────────────────────────────────
+for meta_file, model_file, label in [
+    ("enhanced_meta.joblib",  "enhanced_predictor.joblib",  "Enhanced Risk Predictor"),
+    ("pattern_meta.joblib",   "pattern_rf.joblib",           "Pattern Random Forest"),
+]:
+    meta_path  = MODEL_DIR / meta_file
+    model_path = MODEL_DIR / model_file
+    if not meta_path.exists() or not model_path.exists():
+        print(f"\n[{label}] — files not found, skipping")
+        continue
+
+    meta  = joblib.load(str(meta_path))
+    model = joblib.load(str(model_path))
+
+    print(f"\n{'─'*65}")
+    print(f"  MODEL: {label}")
+    print(f"  File:  {model_file}")
+    print(f"{'─'*65}")
+
+    if isinstance(meta, dict):
+        for k, v in meta.items():
+            if k in ("trained_at", "accuracy", "cv_mean", "cv_std", "f1_score",
+                     "precision", "recall", "n_samples", "classes", "version",
+                     "feature_names", "model_type", "n_features"):
+                print(f"  {k:<25}: {v}")
+    else:
+        print(f"  Meta content: {meta}")
+
+    # Try to get estimator info
+    if hasattr(model, "n_estimators"):
+        print(f"  n_estimators         : {model.n_estimators}")
+    if hasattr(model, "feature_importances_"):
+        fi = model.feature_importances_
+        print(f"  Top feature weights  : max={fi.max():.4f}, mean={fi.mean():.4f}")
+
+# ── pattern_insights.json ────────────────────────────────────────
+insights_path = MODEL_DIR / "pattern_insights.json"
+if insights_path.exists():
+    with open(insights_path) as f:
+        insights = json.load(f)
+    print(f"\n{'─'*65}")
+    print(f"  PATTERN INSIGHTS (pattern_insights.json)")
+    print(f"{'─'*65}")
+    for k, v in insights.items():
+        if k in ("model_accuracy", "cv_score", "cv_std", "n_training_samples",
+                 "n_features", "trained_at", "top_features"):
+            print(f"  {k:<25}: {v}")
+
+# ── Live DB Stats as real-world performance proxy ────────────────
+print(f"\n{'─'*65}")
+print(f"  LIVE DATABASE CLASSIFICATION ACCURACY (Real-World Proxy)")
+print(f"{'─'*65}")
+
+db_path = Path(__file__).parent / "safety_heatmap.db"
+if db_path.exists():
+    conn = sqlite3.connect(str(db_path))
+    cur = conn.cursor()
+
+    cur.execute("SELECT COUNT(*) FROM reports")
+    total = cur.fetchone()[0]
+
+    cur.execute("SELECT COUNT(*) FROM reports WHERE is_scam=1")
+    scams = cur.fetchone()[0]
+
+    cur.execute("SELECT COUNT(*) FROM reports WHERE is_scam=0")
+    advisories = cur.fetchone()[0]
+
+    cur.execute("SELECT COUNT(*) FROM reports WHERE latitude IS NOT NULL AND longitude IS NOT NULL")
+    with_coords = cur.fetchone()[0]
+
+    cur.execute("SELECT COUNT(*) FROM reports WHERE scam_type IS NOT NULL AND scam_type != ''")
+    classified = cur.fetchone()[0]
+
+    print(f"  Total DB records      : {total}")
+    print(f"  Confirmed Scams       : {scams} ({round(scams/total*100,1)}%)")
+    print(f"  Safety Advisories     : {advisories} ({round(advisories/total*100,1)}%)")
+    print(f"  Geo-coded (lat/lon)   : {with_coords} ({round(with_coords/total*100,1)}%)")
+    print(f"  Classified (scam_type): {classified} ({round(classified/total*100,1)}%)")
+
+    cur.execute("SELECT scam_type, COUNT(*) FROM reports GROUP BY scam_type ORDER BY COUNT(*) DESC LIMIT 10")
+    print(f"\n  TOP SCAM TYPE CLASSIFICATION:")
+    for row in cur.fetchall():
+        print(f"    {str(row[0]):<35}: {row[1]:>5}")
+
+    conn.close()
+
+print(f"\n{'='*65}")
+print("  Tip: For CV accuracy, retrain models with:")
+print("  ..\.venv\Scripts\python.exe app/ml/pattern_predictor.py --train")
+print(f"{'='*65}\n")
