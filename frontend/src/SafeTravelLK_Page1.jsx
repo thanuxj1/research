@@ -620,7 +620,7 @@ const REVIEW_BODIES = {
 // ═══════════════════════════════════════════════════════════════════════════
 // MAIN COMPONENT
 // ═══════════════════════════════════════════════════════════════════════════
-export default function SafeTravelLK() {
+export default function SafeTravelLK({ onNavigateAnalytics }) {
   const [screen, setScreen]           = useState("onboard");
   const [profile, setProfile]         = useState({ name: "", type: "Solo Female", nationality: "", tripDays: "" });
   const [selected, setSelected]       = useState(null);
@@ -1096,6 +1096,16 @@ Write a 3-sentence safety briefing for ${profile.name || "this traveler"} visiti
             borderRadius: 8, color: "#475569", fontSize: 11, padding: "5px 10px",
             cursor: "pointer", fontFamily: "inherit", whiteSpace: "nowrap",
           }}>✏️ Edit</button>
+          {onNavigateAnalytics && (
+            <button onClick={onNavigateAnalytics} style={{
+              background: "rgba(34, 211, 238, 0.12)", border: "1px solid rgba(34, 211, 238, 0.35)",
+              borderRadius: 8, color: "#22d3ee", fontSize: 11, fontWeight: 700, padding: "5px 11px",
+              cursor: "pointer", fontFamily: "inherit", whiteSpace: "nowrap",
+              display: "flex", alignItems: "center", gap: 5,
+            }}>
+              📊 Analytics (Page 2) ↗
+            </button>
+          )}
         </div>
       </nav>
 

@@ -1,9 +1,9 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import SafeTravelLK from './SafeTravelLK_Page1.jsx'
+import App from './App.jsx'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <SafeTravelLK />
+    <App />
   </React.StrictMode>
 )
