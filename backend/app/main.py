@@ -6,7 +6,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from apscheduler.schedulers.background import BackgroundScheduler
 from apscheduler.triggers.cron import CronTrigger
 from app.core.config import settings
-from app.api.endpoints import reports, safety, admin, pipeline, ml, advisor, chat, authority, districts
+from app.api.endpoints import reports, safety, admin, pipeline, ml, advisor, chat, authority, districts, analytics
 
 _scheduler = None
 _continuous_process = None
@@ -105,4 +105,5 @@ app.include_router(pipeline.router,  prefix=f"{PREFIX}/pipeline",  tags=["Data P
 app.include_router(ml.router,        prefix=f"{PREFIX}/ml",        tags=["ML Predictor"])
 app.include_router(advisor.router,   prefix=f"{PREFIX}/advisor",   tags=["AI Advisor"])
 app.include_router(authority.router, prefix=f"{PREFIX}/authority", tags=["Authority Security Dispatch"])
+app.include_router(analytics.router, prefix=f"{PREFIX}/analytics", tags=["Research Analytics"])
 app.include_router(chat.router,      prefix=f"{PREFIX}",           tags=["AI Chat"])
