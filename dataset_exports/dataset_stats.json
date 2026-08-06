@@ -1,0 +1,59 @@
+{
+  "exported_at": "2026-08-06T13:20:31.813092+00:00",
+  "total_records": 188,
+  "scam_reports": 107,
+  "advisory_reports": 81,
+  "records_with_url": 188,
+  "records_with_coords": 176,
+  "avg_content_words": 161.8,
+  "by_source": {
+    "tripadvisor_csv": 76,
+    "youtube": 40,
+    "dataset_csv": 32,
+    "google_news": 26,
+    "sunday_times": 7,
+    "newswire": 4,
+    "newswire_lk": 1,
+    "daily_mirror": 1,
+    "newsfirst": 1
+  },
+  "by_credibility_tier": {
+    "Tier-2 Community": 116,
+    "Tier-1 Curated": 32,
+    "Tier-2 Aggregator": 26,
+    "Tier-1 Press": 14
+  },
+  "by_scam_type": {
+    "Safety Advisory (Non-Incident)": 71,
+    "General Safety Incident": 34,
+    "Tuk-Tuk / Transport Scam": 28,
+    "Harassment / Assault": 15,
+    "Overcharging": 13,
+    "Theft / Robbery": 10,
+    "Physical Assault": 6,
+    "Gem / Jewellery Scam": 6,
+    "Accident / Hazard": 4,
+    "Accommodation Scam": 1
+  },
+  "by_district": {
+    "Colombo": 74,
+    "Kandy": 21,
+    "Nuwara Eliya": 20,
+    "Galle": 16,
+    "Monaragala": 11,
+    "Matale": 10,
+    "Kegalle": 6,
+    "Jaffna": 5,
+    "Polonnaruwa": 5,
+    "Sri Lanka": 4,
+    "Trincomalee": 3,
+    "Anuradhapura": 1
+  },
+  "by_data_quality": {
+    "HIGH": 109,
+    "MEDIUM": 73,
+    "LOW": 6
+  },
+  "csv_path": "E:\\research\\backend\\..\\dataset_exports\\safety_incidents_dataset.csv",
+  "jsonl_path": "E:\\research\\backend\\..\\dataset_exports\\safety_incidents_dataset.jsonl"
+}

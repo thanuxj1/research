@@ -59,6 +59,87 @@ SL_LOCATIONS = {
 }
 
 
+# ── Positive reassurance & pro-safety patterns
+POSITIVE_REASSURANCE = [
+    "i felt safe", "felt completely safe", "never felt unsafe", "not felt unsafe",
+    "have not felt unsafe", "i feel safe", "felt very safe", "actually safe",
+    "surprisingly safe", "safer than i expected", "perfectly safe", "totally safe",
+    "completely safe", "so safe", "quite safe", "very safe",
+    "amazing country", "beautiful people", "friendly locals", "everyone was so kind",
+    "don't be afraid", "don't worry", "nothing to worry", "myths about",
+    "debunking", "misconception", "travel advisory is wrong", "is it safe? yes",
+    "sri lanka is safe", "lanka is safe", "safe to visit", "safe country",
+    "if you're wondering if sri lanka", "afraid to come", "not as dangerous",
+    "unfounded fears", "travel alerts amplify", "damage our economy",
+    "revoke travel warning", "tighten security", "security measures tighten",
+]
+
+# ── General travel tips, itineraries, & educational overview patterns (NOT single incident reports)
+TIPS_AND_ADVISORIES = [
+    "things i wish i knew", "things you need to know", "things to know",
+    "things to avoid", "what to know", "how to avoid",
+    "common scams", "types of scams", "scams tourists face",
+    "travel guide", "itinerary", "dos and don'ts", "do's and don'ts",
+    "before you go", "before travelling", "before visiting",
+    "in 10 mins", "in 10 minutes", "honest review", "honest take",
+    "top 5 places", "top 10 places", "watch before", "watch before coming",
+]
+
+# ── Confirmed scam/incident signals — these must be present for is_scam=True
+CONFIRMED_SCAM_SIGNALS = [
+    "scammed", "got scammed", "i was scammed", "they scammed",
+    "ripped off", "ripped me off", "they ripped",
+    "overcharged", "charged me extra", "charged too much",
+    "fake guide", "fake monk", "fake ticket",
+    "tuk tuk scam", "gem scam", "gem shop scam",
+    "stolen", "my bag", "pickpocket", "robbed", "mugged",
+    "harassed me", "followed me", "groped",
+    "avoid this man", "avoid this guy", "don't trust this",
+    "tourist trap", "they will scam", "watch out for",
+    "beware of", "warning about",
+]
+
+# ── Direct first-person incident signals
+FIRST_PERSON_SIGNALS = [
+    "i got scammed", "we got scammed", "i was scammed", "we were scammed",
+    "scammed me", "robbed me", "attacked me", "stole my", "ripped me off",
+    "avoid this man", "avoid this guy", "caught on camera", "scammed 5 times",
+]
+
+
+def is_genuinely_negative(title: str, content: str) -> bool:
+    """
+    Returns True only if the video content contains confirmed scam/incident signals
+    AND is NOT primarily a positive-safety-reassurance or general travel tips video.
+    """
+    combined = (title + " " + content).lower()
+
+    # If it contains clear general travel tips/itinerary or pro-safety reassurance, exclude from scam rating
+    is_educational_or_tips = any(t in combined for t in TIPS_AND_ADVISORIES)
+    is_pro_safety = any(p in combined for p in POSITIVE_REASSURANCE)
+
+    # First-person incident signals override general tips
+    has_first_person = any(fp in combined for fp in FIRST_PERSON_SIGNALS)
+
+    if (is_educational_or_tips or is_pro_safety) and not has_first_person:
+        return False
+
+    # Count positive reassurance signals
+    positive_hits = sum(1 for p in POSITIVE_REASSURANCE if p in combined)
+
+    # Count confirmed scam signals
+    scam_hits = sum(1 for s in CONFIRMED_SCAM_SIGNALS if s in combined)
+
+    # If positive signals dominate, this is a reassurance video — exclude it
+    if positive_hits >= 2 and scam_hits == 0:
+        return False
+    if positive_hits > scam_hits and scam_hits < 2:
+        return False
+
+    # Must have at least one confirmed scam signal
+    return scam_hits >= 1
+
+
 def extract_location(text):
     text_l = text.lower()
     for loc, coords in SL_LOCATIONS.items():
@@ -69,19 +150,19 @@ def extract_location(text):
 
 def detect_scam_type(text):
     t = text.lower()
-    if "gem" in t:
+    if "gem" in t and ("scam" in t or "fake" in t or "shop" in t):
         return "Gem Scam"
     elif "tuk tuk" in t or "tuktuk" in t or "three wheeler" in t:
-        return "Tuk Tuk Scam"
-    elif "taxi" in t or "meter" in t or "uber" in t:
+        return "Tuk-Tuk Scam"
+    elif ("taxi" in t or "meter" in t) and ("scam" in t or "overcharge" in t or "refused" in t):
         return "Transport Fraud"
-    elif "guide" in t:
+    elif "fake guide" in t or "fake monk" in t or "fake ticket" in t:
         return "Fake Guide"
-    elif "overcharge" in t or "ripped off" in t or "rip off" in t or "expensive" in t:
+    elif "overcharge" in t or "ripped off" in t or "rip off" in t or "charged extra" in t:
         return "Overcharging"
-    elif "stolen" in t or "theft" in t or "robbed" in t or "pickpocket" in t:
+    elif "stolen" in t or "theft" in t or "robbed" in t or "pickpocket" in t or "mugged" in t:
         return "Theft / Robbery"
-    elif "harass" in t or "follow" in t or "touch" in t or "stalk" in t:
+    elif "harass" in t or "followed me" in t or "groped" in t:
         return "Harassment"
     return "Tourist Scam / Warning"
 
@@ -160,16 +241,26 @@ def run_fast_youtube_scraper():
 
         text_lower = f"{raw_title} {content}".lower()
 
-        # Relevance filter
+        # 1. Geographic gate — must mention Sri Lanka
         has_lanka = any(k in text_lower for k in ["sri lanka", "lankan", "colombo", "kandy", "galle", "ella", "sigiriya", "negombo", "mirissa"])
-        has_negative = any(k in text_lower for k in ["scam", "avoid", "warning", "overcharge", "danger", "worst", "cheat", "trap", "bad", "harass", "fake", "stolen", "robbed", "theft", "alert"])
-
-        if not (has_lanka and has_negative):
+        if not has_lanka:
             skipped_count += 1
             continue
 
+        # 2. Check if genuinely negative vs positive reassurance / travel discussion
+        is_neg = is_genuinely_negative(raw_title, content)
         loc_name, lat, lon = extract_location(text_lower)
-        scam_type = detect_scam_type(text_lower)
+
+        if is_neg:
+            is_scam_val = True
+            scam_type_val = detect_scam_type(text_lower)
+            risk_val = 2
+            sent_val = -0.6
+        else:
+            is_scam_val = False
+            scam_type_val = "Safety Advisory"
+            risk_val = 1
+            sent_val = 0.5
 
         try:
             report = Report(
@@ -179,10 +270,10 @@ def run_fast_youtube_scraper():
                 content=content[:3000],
                 latitude=lat,
                 longitude=lon,
-                is_scam=True,
-                scam_type=scam_type,
-                risk_level=2,
-                sentiment_score=-0.5,
+                is_scam=is_scam_val,
+                scam_type=scam_type_val,
+                risk_level=risk_val,
+                sentiment_score=sent_val,
                 location_name=loc_name,
                 demographic_target="Tourists / Travel Vloggers",
             )
@@ -190,7 +281,8 @@ def run_fast_youtube_scraper():
             db.commit()
             saved_count += 1
             safe_t = raw_title.encode('ascii', errors='replace').decode('ascii')
-            print(f"  [{saved_count}] [SAVED] {safe_t[:60]} ({loc_name})")
+            tag = "SCAM" if is_scam_val else "ADVISORY"
+            print(f"  [{saved_count}] [{tag}] {safe_t[:60]} ({loc_name})")
         except Exception as e:
             db.rollback()
             print(f"  [ERR] DB save failed for {vid}: {e}")

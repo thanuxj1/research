@@ -690,7 +690,7 @@ export default function SafeTravelLK() {
           id:           `db_${inc.id}`,
           type:         inc.scam_type || "general_safety",
           severity:     inc.risk_level || 1,
-          is_scam:      inc.is_scam != null ? inc.is_scam : (inc.scam_type != null),
+          is_scam:      (inc.is_scam === true || inc.is_scam === 1 || inc.is_scam === "true" || inc.is_scam === "1") && inc.scam_type !== "Safety Advisory" && inc.scam_type !== "Travel Advisory",
           days_ago:     inc.date ? Math.max(1, Math.round((Date.now() - new Date(inc.date).getTime()) / 86400000)) : 30,
           title:        inc.title || "Traveler Report",
           source:       inc.source || "tripadvisor_csv",
@@ -1670,12 +1670,17 @@ Write a 3-sentence safety briefing for ${profile.name || "this traveler"} visiti
                             </span>
                           </a>
 
-                          {/* Scam tag */}
-                          {inc.is_scam && (
+                          {/* Scam vs Advisory tag */}
+                          {inc.is_scam === true ? (
                             <span style={{
                               background: "rgba(239,68,68,0.10)", border: "1px solid rgba(239,68,68,0.20)",
                               borderRadius: 6, padding: "3px 9px", fontSize: 10.5, color: "#f87171",
                             }}>⚠ Confirmed Scam</span>
+                          ) : (
+                            <span style={{
+                              background: "rgba(34,197,94,0.10)", border: "1px solid rgba(34,197,94,0.20)",
+                              borderRadius: 6, padding: "3px 9px", fontSize: 10.5, color: "#4ade80",
+                            }}>✓ Safety Advisory</span>
                           )}
 
                           {/* Profile relevance */}
@@ -2069,8 +2074,10 @@ Write a 3-sentence safety briefing for ${profile.name || "this traveler"} visiti
               </div>
 
               <div style={{ display: "flex", gap: 10, flexWrap: "wrap", alignItems: "center", marginBottom: 18 }}>
-                {reviewModal.is_scam && (
+                {reviewModal.is_scam === true ? (
                   <span style={{ background: "rgba(239,68,68,0.10)", border: "1px solid rgba(239,68,68,0.20)", borderRadius: 6, padding: "3px 10px", fontSize: 10.5, color: "#f87171" }}>⚠ Confirmed Scam</span>
+                ) : (
+                  <span style={{ background: "rgba(34,197,94,0.10)", border: "1px solid rgba(34,197,94,0.20)", borderRadius: 6, padding: "3px 10px", fontSize: 10.5, color: "#4ade80" }}>✓ Safety Advisory / Reassurance</span>
                 )}
                 <span style={{ color: "#64748b", fontSize: 11 }}>{reviewModal.days_ago}d ago</span>
                 {renderHelpfulMetric(reviewModal) && (
