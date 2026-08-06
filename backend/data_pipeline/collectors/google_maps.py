@@ -19,6 +19,21 @@ KEYWORDS = [
     "cheat", "rip off", "mafia", "assault", "harassment", "overpriced", "tricking"
 ]
 
+# Sri Lanka bounding box — reviews from outside this box are rejected.
+# This prevents off-topic results returned by Google Maps for ambiguous queries.
+SL_LAT_MIN, SL_LAT_MAX = 5.7, 10.0
+SL_LON_MIN, SL_LON_MAX = 79.4, 82.1
+
+
+def _coords_in_sri_lanka(lat, lng) -> bool:
+    """Returns True only if the coordinates fall within Sri Lanka's bounding box."""
+    if lat is None or lng is None:
+        return False
+    try:
+        return SL_LAT_MIN <= float(lat) <= SL_LAT_MAX and SL_LON_MIN <= float(lng) <= SL_LON_MAX
+    except (TypeError, ValueError):
+        return False
+
 SEARCH_QUERIES = [
     "gem shop Colombo Kandy Galle",
     "jewelry store Sri Lanka tourist",
@@ -109,6 +124,11 @@ class GoogleMapsCollector:
                         reviews = result_item.get("reviews", [])
                         place_url = result_item.get("url", f"https://www.google.com/maps/place/?q=place_id:{place_id}")
 
+                        # Reject places outside Sri Lanka's bounding box
+                        if not _coords_in_sri_lanka(lat, lng):
+                            print(f"  [Google Places API] Skipping '{place_name}' — coordinates outside Sri Lanka ({lat}, {lng})")
+                            continue
+
                         for rev in reviews:
                             text = rev.get("text", "")
                             rating = rev.get("rating", 0)
@@ -165,6 +185,11 @@ class GoogleMapsCollector:
                 lat = item.get("location", {}).get("lat") or item.get("lat")
                 lng = item.get("location", {}).get("lng") or item.get("lng")
                 url = item.get("url")
+
+                # Reject places outside Sri Lanka's bounding box
+                if not _coords_in_sri_lanka(lat, lng):
+                    print(f"  [Apify] Skipping '{place_name}' — coordinates outside Sri Lanka ({lat}, {lng})")
+                    continue
 
                 for review in reviews:
                     text = review.get("text") or ""
