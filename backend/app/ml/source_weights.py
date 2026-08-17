@@ -290,7 +290,7 @@ SOURCE_ALIASES: dict[str, str] = {
 }
 
 
-def normalise_source_key(raw: str | None) -> str:
+def normalise_source_key(raw: "Optional[str]") -> str:
     """Collapse variant source spellings to the canonical key used in weight tables.
 
     Call this on every raw source string before creating a Report() object.
