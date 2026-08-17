@@ -370,7 +370,7 @@ def score_all_districts(reports: list) -> dict:
             final_risk_score = comp["base_risk"]
             final_severity = comp["severity"]
             final_scam_ratio = comp["scam_ratio"]
-            final_rate = comp["incident_rate_per_100k"]
+            final_rate = comp["incident_rate_per_100k_presences"]
 
         top_scam_types = sorted(a.scam_type_counts.items(), key=lambda kv: -kv[1])[:5]
 
