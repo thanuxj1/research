@@ -20,6 +20,24 @@ from typing import List, Dict
 import time
 import re
 from urllib.parse import urlencode, quote_plus
+from datetime import timezone
+try:
+    from dateutil import parser as dateutil_parser
+except ImportError:
+    dateutil_parser = None  # graceful degradation
+
+
+def _parse_rss_date(item) -> None:
+    """Extract pubDate from an RSS <item> and return a UTC-aware datetime, or None."""
+    if not dateutil_parser:
+        return None
+    pub = item.find("pubDate")
+    if pub and pub.get_text(strip=True):
+        try:
+            return dateutil_parser.parse(pub.get_text(strip=True)).replace(tzinfo=timezone.utc)
+        except Exception:
+            pass
+    return None
 
 
 class SocialCollector:
@@ -121,10 +139,11 @@ class SocialCollector:
                         continue
 
                     results.append({
-                        "source": "google_news",
-                        "title": title_text,
-                        "content": content,
-                        "url": link_text,
+                        "source":       "google_news",
+                        "title":        title_text,
+                        "content":      content,
+                        "url":          link_text,
+                        "published_at": _parse_rss_date(item),
                     })
 
                 time.sleep(0.8)

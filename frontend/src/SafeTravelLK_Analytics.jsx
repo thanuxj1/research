@@ -223,11 +223,17 @@ function DemographicPanel({ demographicData }) {
     <div>
       <SectionHeader label="02 — Demographic Targeting Classifier (Live DB)" badge="Dynamic DB Breakdown">
         Live distribution of demographic targets stored in backend SQLite DB and proposed 6-class taxonomy.
+        <span style={{ display: "block", marginTop: 6, color: "#f59e0b", fontSize: 11, fontWeight: 700 }}>
+          ⚠️ Risk multipliers (0.38–0.71) are illustrative estimates — not empirically derived.
+          No A/B testing or controlled survey has been conducted to validate these values.
+          Treat as a design scaffold pending empirical calibration.
+        </span>
       </SectionHeader>
 
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 20, marginBottom: 20 }}>
         <Card>
-          <div style={{ color: PALETTE.muted, fontSize: 11, fontFamily: "monospace", marginBottom: 12 }}>ESTIMATED RISK BY DEMOGRAPHIC</div>
+          <div style={{ color: PALETTE.muted, fontSize: 11, fontFamily: "monospace", marginBottom: 4 }}>ESTIMATED RISK BY DEMOGRAPHIC</div>
+          <div style={{ color: "#f59e0b", fontSize: 10, marginBottom: 12 }}>⚠️ Illustrative values only — no empirical derivation</div>
           <ResponsiveContainer width="100%" height={240}>
             <RadarChart data={radarData}>
               <PolarGrid stroke={PALETTE.border} />

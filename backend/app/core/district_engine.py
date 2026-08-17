@@ -115,6 +115,31 @@ def get_boundary_index() -> DistrictBoundaryIndex:
     return _boundary_index
 
 
+# Canonical district display names (from districts.py _DISTRICT_BOXES display_name column).
+# Used to assert that any district name coming from the GeoJSON boundary index is known.
+# Update this list if new districts are added.
+KNOWN_DISTRICTS: frozenset = frozenset({
+    "Colombo", "Gampaha", "Kalutara", "Kandy", "Matale", "Nuwara Eliya",
+    "Galle", "Matara", "Hambantota", "Jaffna", "Kilinochchi", "Mannar",
+    "Vavuniya", "Mullaitivu", "Batticaloa", "Ampara", "Trincomalee",
+    "Kurunegala", "Puttalam", "Anuradhapura", "Polonnaruwa",
+    "Badulla", "Monaragala", "Ratnapura", "Kegalle",
+})
+
+
+def assert_known_district(name: str) -> str:
+    """Raise ValueError if `name` is not a canonical district name. Returns name on success.
+    Call this anywhere a district name is first encountered (e.g. loaded from GeoJSON)
+    to catch misspellings (e.g. 'Moneragala' vs 'Monaragala') at startup, not silently.
+    """
+    if name not in KNOWN_DISTRICTS:
+        close = [k for k in KNOWN_DISTRICTS if k.lower().startswith(name.lower()[:4])]
+        hint = f" Did you mean: {close}?" if close else ""
+        raise ValueError(f"Unknown district name '{name}'.{hint} "
+                         f"Update KNOWN_DISTRICTS in district_engine.py if this is intentional.")
+    return name
+
+
 def _decay(report) -> float:
     """
     Temporal decay using published_at when available (article publish date),

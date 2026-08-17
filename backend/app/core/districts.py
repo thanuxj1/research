@@ -53,40 +53,26 @@ _DISTRICT_BOXES = [
     ("polonnaruwa", "Polonnaruwa",  7.70,  8.30,  80.90, 81.45),
     # Uva Province
     ("badulla",     "Badulla",      6.70,  7.20,  80.90, 81.45),
-    ("moneragala",  "Moneragala",   6.55,  7.05,  81.15, 81.80),
+    ("monaragala",  "Monaragala",   6.55,  7.05,  81.15, 81.80),
     # Sabaragamuwa Province
     ("ratnapura",   "Ratnapura",    6.45,  6.95,  80.30, 80.80),
     ("kegalle",     "Kegalle",      7.00,  7.40,  80.25, 80.65),
 ]
 
-# SLTDA 2024 Telecom Inbound Presence (Jan–Oct 2024) — from architecture doc
-# Districts not listed by SLTDA use conservative estimates from provincial share
+# SLTDA 2024 Telecom Inbound Presence — OFFICIAL figures only (Jan–Oct 2024)
+# Source: SLTDA statistical bulletin (8 published districts).
+# "Person-district-presences" — NOT unique visitors (same tourist counted per district visited).
+# For districts not listed: density-only scoring applies (no exposure normalisation).
+# See docs/projected_footfall.md for exploratory projections (not used in scoring).
 SLTDA_FOOTFALL_2024: dict[str, int] = {
-    "colombo":      4_193_342,
-    "galle":        2_671_580,
-    "gampaha":      2_100_780,
-    "kandy":        1_722_666,
-    "matale":       1_249_150,
-    "kalutara":     1_181_326,
-    "matara":       1_170_772,
-    "badulla":        818_133,
-    "nuwara_eliya":   752_301,
-    "anuradhapura":   735_481,
-    "kurunegala":     693_239,
-    "puttalam":       642_261,
-    "hambantota":     617_534,
-    "kegalle":        506_575,
-    "jaffna":         504_726,
-    "batticaloa":     461_090,
-    "ampara":         458_925,
-    "polonnaruwa":    411_028,
-    "trincomalee":    347_984,
-    "moneragala":     326_805,
-    "ratnapura":      292_939,
-    "vavuniya":       124_645,
-    "kilinochchi":     79_778,
-    "mannar":          78_172,
-    "mullaitivu":      76_132,
+    "colombo":   4_193_342,
+    "galle":     2_671_580,
+    "gampaha":   2_100_780,
+    "kandy":     1_722_666,
+    "matale":    1_249_150,
+    "kalutara":  1_181_326,
+    "matara":    1_170_772,
+    "badulla":     818_133,
 }
 
 PROVINCE_MAP: dict[str, str] = {
@@ -98,7 +84,7 @@ PROVINCE_MAP: dict[str, str] = {
     "batticaloa": "Eastern", "ampara": "Eastern", "trincomalee": "Eastern",
     "kurunegala": "North Western", "puttalam": "North Western",
     "anuradhapura": "North Central", "polonnaruwa": "North Central",
-    "badulla": "Uva", "moneragala": "Uva",
+    "badulla": "Uva", "monaragala": "Uva",
     "ratnapura": "Sabaragamuwa", "kegalle": "Sabaragamuwa",
 }
 

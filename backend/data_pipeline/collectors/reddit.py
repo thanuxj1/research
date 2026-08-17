@@ -10,6 +10,17 @@ Expected yield: 300–600+ unique posts per run.
 import requests
 from typing import List, Dict
 import time
+from datetime import datetime, timezone
+
+
+def _utc_to_dt(utc_ts):
+    """Convert a Unix timestamp (Reddit created_utc) to a UTC-aware datetime."""
+    if utc_ts is None:
+        return None
+    try:
+        return datetime.fromtimestamp(float(utc_ts), tz=timezone.utc)
+    except Exception:
+        return None
 
 
 class RedditCollector:
@@ -174,9 +185,11 @@ class RedditCollector:
                         "title":       title,
                         "content":     combined,
                         "created_utc": d.get("created_utc"),
+                        "published_at": _utc_to_dt(d.get("created_utc")),  # ISO datetime for published_at
                         "url":         f"{self.BASE_URL}{d.get('permalink', '')}",
                         "subreddit":   subreddit,
                         "score":       score,
+                        "helpful_votes": score,  # Reddit score = upvotes proxy for credibility
                         "num_comments": num_comments,
                     })
                 return posts

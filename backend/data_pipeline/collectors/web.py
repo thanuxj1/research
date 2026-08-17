@@ -1,7 +1,47 @@
 import requests
 from bs4 import BeautifulSoup
-from typing import List, Dict
+from typing import List, Dict, Optional
 import time
+from datetime import datetime, timezone
+from dateutil import parser as dateutil_parser
+
+
+def _parse_publish_date(soup: "BeautifulSoup") -> Optional[datetime]:
+    """
+    Extracts the article publish date from common HTML meta patterns.
+    Returns a UTC-aware datetime or None if no date found.
+
+    Checked patterns (in priority order):
+      1. <meta property="article:published_time">
+      2. <meta name="datePublished">
+      3. <time datetime="...">  (HTML5 element)
+      4. <meta property="og:article:published_time">
+      5. JSON-LD @type Article datePublished
+    """
+    # Meta property patterns
+    for attr, name in [
+        ("property", "article:published_time"),
+        ("name",     "datePublished"),
+        ("property", "og:article:published_time"),
+        ("name",     "article.published"),
+        ("itemprop", "datePublished"),
+    ]:
+        tag = soup.find("meta", {attr: name})
+        if tag and tag.get("content"):
+            try:
+                return dateutil_parser.parse(tag["content"]).replace(tzinfo=timezone.utc)
+            except Exception:
+                pass
+
+    # <time> element
+    time_el = soup.find("time", {"datetime": True})
+    if time_el:
+        try:
+            return dateutil_parser.parse(time_el["datetime"]).replace(tzinfo=timezone.utc)
+        except Exception:
+            pass
+
+    return None
 
 class WebCollector:
     def __init__(self):
@@ -59,13 +99,14 @@ class WebCollector:
                 if link and not link.startswith('http'):
                     link = 'https://www.dailymirror.lk' + link
 
-                content = self._fetch_article(link) if link else ''
+                content, pub_date = self._fetch_article(link) if link else ('', None)
 
                 results.append({
-                    "source":  "daily_mirror",
-                    "title":   title,
-                    "content": content or title,   # fallback to title
-                    "url":     link,
+                    "source":       "daily_mirror",
+                    "title":        title,
+                    "content":      content or title,   # fallback to title
+                    "url":          link,
+                    "published_at": pub_date,
                 })
                 time.sleep(0.5)  # be polite
 
@@ -74,18 +115,20 @@ class WebCollector:
 
         return results
 
-    def _fetch_article(self, url: str) -> str:
-        """Fetches and returns the main text body of a Daily Mirror article."""
+    def _fetch_article(self, url: str):
+        """Fetches the main text body AND publish date from a Daily Mirror article.
+        Returns (content_str, published_at_dt)."""
         try:
             resp = self.session.get(url, timeout=15)
             if resp.status_code == 200:
                 soup = BeautifulSoup(resp.text, 'html.parser')
                 body = soup.select_one('.inner-content')
-                if body:
-                    return body.get_text(separator=' ', strip=True)
+                text = body.get_text(separator=' ', strip=True) if body else ''
+                pub_date = _parse_publish_date(soup)
+                return text, pub_date
         except Exception as e:
             print(f"Error fetching article content from {url}: {e}")
-        return ''
+        return '', None
 
 
 
@@ -112,11 +155,13 @@ class WebCollector:
                     href = "https://www.adaderana.lk" + href
                 snippet_el = story.select_one("p, .story-text")
                 content = snippet_el.get_text(strip=True) if snippet_el else title
+                pub_date = _parse_publish_date(story)
                 results.append({
-                    "source": "adaderana",
-                    "title": title,
-                    "content": content if len(content) > 20 else title,
-                    "url": href,
+                    "source":       "adaderana",
+                    "title":        title,
+                    "content":      content if len(content) > 20 else title,
+                    "url":          href,
+                    "published_at": pub_date,
                 })
         except Exception as e:
             print(f"  Ada Derana error for '{keyword}': {e}")
@@ -140,12 +185,14 @@ class WebCollector:
                     continue
                 title = title_el.get_text(strip=True)
                 href = title_el.get("href", "")
+                pub_date = _parse_publish_date(a)
                 if title and len(title) > 15:
                     results.append({
-                        "source": "sundaytimes",
-                        "title": title,
-                        "content": title,
-                        "url": href,
+                        "source":       "sundaytimes",
+                        "title":        title,
+                        "content":      title,
+                        "url":          href,
+                        "published_at": pub_date,
                     })
         except Exception as e:
             print(f"  Sunday Times error for '{keyword}': {e}")
