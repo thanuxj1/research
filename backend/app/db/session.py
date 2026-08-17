@@ -20,6 +20,11 @@ def _get_engine():
         print("[DB] Connected to PostgreSQL")
         return engine
     except Exception as e:
+        if os.getenv("RESEARCH_MODE", "").lower() == "true":
+            raise RuntimeError(
+                f"RESEARCH_MODE: refusing to fall back to SQLite. "
+                f"PostgreSQL connection failed: {e}"
+            ) from e
         print(f"[DB] PostgreSQL unavailable ({e.__class__.__name__}): {e}")
         print("[DB] Falling back to SQLite: safety_heatmap.db")
         # SQLite fallback — stores in backend dir

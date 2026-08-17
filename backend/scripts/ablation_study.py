@@ -24,9 +24,21 @@ sys.path.insert(0, os.path.dirname(__file__) + "/..")
 import math
 from datetime import datetime, timezone
 from scipy.stats import spearmanr
-from app.db.database import SessionLocal
+from app.db.session import SessionLocal
 from app.db.models import Report
-from app.core.district_engine import DECAY_LAMBDA, SLTDA_DISTRICTS  # adjust imports as needed
+from app.core.district_engine import DECAY_LAMBDA, get_boundary_index
+
+
+def resolve_district(report) -> str | None:
+    """Map a report to its district using the same point-in-polygon path the
+    live scoring engine uses. Using location_name strings instead causes the
+    ablation to measure a different unit than the map (city names vs district
+    polygons), which invalidates the comparison."""
+    lat = getattr(report, "latitude", None)
+    lon = getattr(report, "longitude", None)
+    if lat is None or lon is None:
+        return None
+    return get_boundary_index().locate(lat, lon)
 
 # ── Constants ─────────────────────────────────────────────────────────────────
 SEVERITY_W = 0.70
@@ -53,9 +65,9 @@ def score_districts(reports, variant: str) -> dict[str, float]:
     """Returns {district: score} for the given variant."""
     aggregated: dict[str, dict] = {}
     for r in reports:
-        d = getattr(r, "location_name", None)
-        if not d:
-            continue
+        d = resolve_district(r)         # same point-in-polygon path district_engine uses
+        if not d or d.lower() in {"sri lanka", "national"}:
+            continue                    # national-scope records are not district evidence
         if d not in aggregated:
             aggregated[d] = {"count": 0, "w_evidence": 0.0, "w_sev_n": 0.0, "w_sev_d": 0.0, "scam_count": 0}
         a = aggregated[d]

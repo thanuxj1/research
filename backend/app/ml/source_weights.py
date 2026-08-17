@@ -248,3 +248,54 @@ def get_all_weights_table() -> list:
         key=lambda x: x["weight"],
         reverse=True,
     )
+
+
+# ─── P3: Source key normalisation (PATCHES.md §P3) ──────────────────────────
+# Multiple ingestion paths produce variant spellings for the same outlet, so
+# they fall through to DEFAULT_WEIGHT (0.30) instead of their actual tier.
+# Call normalise_source_key() on `source` at every Report() insert site.
+
+SOURCE_ALIASES: dict[str, str] = {
+    # Newswire variants
+    "newswire_lk":      "newswire_lk",
+    "newswire.lk":      "newswire_lk",
+    "newswire":         "newswire_lk",
+    # Ada Derana variants
+    "adaderana.lk":     "adaderana",
+    "ada_derana":       "adaderana",
+    # Daily Mirror variants
+    "daily_mirror_lk":  "daily_mirror_lk",
+    "dailymirror":      "daily_mirror_lk",
+    "dailymirror.lk":   "daily_mirror_lk",
+    "daily_mirror":     "daily_mirror_lk",
+    # Sunday Times variants
+    "sundaytimes.lk":   "sundaytimes_lk",
+    "sundaytimes":      "sundaytimes_lk",
+    "sunday_times_lk":  "sundaytimes_lk",
+    "sunday_times":     "sundaytimes_lk",
+    # Newsfirst variants
+    "newsfirst.lk":     "newsfirst",
+    "newsfirst_lk":     "newsfirst",
+    # TripAdvisor variants
+    "tripadvisor_csv":  "tripadvisor",
+    "dataset_csv":      "tripadvisor",
+    "reviews_csv":      "tripadvisor",
+    "tripadvisor_forum": "tripadvisor_forum",
+    # Reddit variants
+    "reddit_srilanka":  "reddit",
+    "reddit_travel":    "reddit",
+    # Google variants
+    "google_news_rss":  "google_news",
+    "googlenews":       "google_news",
+}
+
+
+def normalise_source_key(raw: str | None) -> str:
+    """Collapse variant source spellings to the canonical key used in weight tables.
+
+    Call this on every raw source string before creating a Report() object.
+    Without it, 'newswire_lk' and 'newswire.lk' are counted as two separate
+    outlets and both fall through to DEFAULT_WEIGHT (0.30).
+    """
+    k = (raw or "unknown").strip().lower()
+    return SOURCE_ALIASES.get(k, k)

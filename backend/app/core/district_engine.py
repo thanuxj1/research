@@ -55,6 +55,13 @@ SCAM_RATIO_WEIGHT = 0.30
 SEVERE_ABSOLUTE_FLOOR = 0.25             # a district must ALSO exceed this base_risk to be "severe"
                                           # prevents permanently-red map when all districts are objectively safe
 
+# P4 (PATCHES.md): undated records are NOT treated as maximally fresh.
+# 70/241 records share a bulk-ingestion timestamp, so decay=1.0 for them
+# would mean 29% of the corpus is scored as if it happened today.
+# UNDATED_DECAY = exp(-lambda * 90) ≈ 0.707 — the corpus-median equivalent
+# (90 days is the median incident age for a 180-day lookback window).
+UNDATED_DECAY = math.exp(-DECAY_LAMBDA * 90)  # ≈ 0.707
+
 
 @dataclass
 class DistrictAggregate:
@@ -66,6 +73,7 @@ class DistrictAggregate:
                                           # excludes body_mention-only geocoded records (national-scope)
     weighted_sev_numer: float = 0.0      # sum of decay*src_w*(risk/3) over SCAM reports (numerator for severity)
     weighted_sev_denom: float = 0.0      # sum of decay*src_w over SCAM reports (denominator for severity)
+    undated_count: int = 0               # records where has_publish_date=False — reported in methodology
     scam_type_counts: dict = field(default_factory=dict)
     recent_reports: list = field(default_factory=list)  # up to 8 most-recent, for the tooltip/panel
 
@@ -142,27 +150,42 @@ def assert_known_district(name: str) -> str:
 
 def _decay(report) -> float:
     """
-    Temporal decay using published_at when available (article publish date),
-    falling back to created_at (ingestion timestamp).
+    P4 (PATCHES.md): Temporal decay separates dated vs undated records.
 
-    Using created_at alone means decay measures scrape recency, not incident recency.
-    published_at fixes this for collectors that parse source dates.
-    Coverage: see has_publish_date field — report in thesis.
+    - Dated records (has_publish_date=True AND published_at set): use the actual
+      article publication date. This is the correct event date for news records.
+    - Undated records: assign UNDATED_DECAY (corpus-median equivalent ≈ 0.707)
+      instead of decay=1.0. Using ingestion time for these records would score
+      37% of the corpus (bulk-ingested) as maximally fresh, which is wrong.
+
+    Returns (decay_value, is_dated) tuple so the caller can track undated_count.
     """
-    dt = None
-    if hasattr(report, "published_at") and report.published_at:
-        dt = report.published_at
-    elif hasattr(report, "created_at") and report.created_at:
-        dt = report.created_at
-    elif isinstance(report, dict):
-        dt = report.get("published_at") or report.get("created_at")
+    has_pub = (getattr(report, "has_publish_date", None) if not isinstance(report, dict)
+               else report.get("has_publish_date"))
+    pub_at = (getattr(report, "published_at", None) if not isinstance(report, dict)
+              else report.get("published_at"))
 
-    if not dt:
-        return 1.0
-    if hasattr(dt, "tzinfo") and dt.tzinfo is None:
-        dt = dt.replace(tzinfo=timezone.utc)
-    days_ago = max(0, (datetime.now(timezone.utc) - dt).days)
-    return math.exp(-DECAY_LAMBDA * days_ago)
+    if has_pub and pub_at:
+        # Dated record: use actual publish date
+        dt = pub_at
+        if hasattr(dt, "tzinfo") and dt.tzinfo is None:
+            dt = dt.replace(tzinfo=timezone.utc)
+        days_ago = max(0, (datetime.now(timezone.utc) - dt).days)
+        return math.exp(-DECAY_LAMBDA * days_ago), True
+
+    # Fallback to created_at only for truly dated records (ingest_reviews_csv sets both)
+    created = (getattr(report, "created_at", None) if not isinstance(report, dict)
+               else report.get("created_at"))
+    if has_pub and created:
+        dt = created
+        if hasattr(dt, "tzinfo") and dt.tzinfo is None:
+            dt = dt.replace(tzinfo=timezone.utc)
+        days_ago = max(0, (datetime.now(timezone.utc) - dt).days)
+        return math.exp(-DECAY_LAMBDA * days_ago), True
+
+    # Undated: assign corpus-median decay, NOT 1.0 (maximally fresh)
+    return UNDATED_DECAY, False
+
 
 
 from app.core.safety_intelligence import is_irrelevant_noise, refine_scam_type
@@ -195,9 +218,11 @@ def aggregate_reports_by_district(reports: list) -> dict:
             continue
 
         a = agg[district]
-        decay_val = _decay(r)
+        decay_val, is_dated = _decay(r)   # P4: tuple (float, bool)
         src_w = (getattr(r, "source_weight", 0.35) if not isinstance(r, dict) else r.get("source_weight")) or 0.35
         weight = decay_val * src_w
+        if not is_dated:
+            a.undated_count += 1
         is_scam = bool(getattr(r, "is_scam", False) if not isinstance(r, dict) else r.get("is_scam", False))
         risk_level = (getattr(r, "risk_level", 1) if not isinstance(r, dict) else r.get("risk_level", 1)) or 1
         raw_st = getattr(r, "scam_type", None) if not isinstance(r, dict) else r.get("scam_type")
@@ -401,7 +426,13 @@ def methodology_report() -> dict:
     """Machine-readable summary of every constant/decision, for a /methodology endpoint or appendix."""
     return {
         "decay_half_life_days": 180,
-        "decay_date_field": "published_at when available, else created_at (ingestion timestamp) — check has_publish_date coverage",
+        "undated_decay_value": round(UNDATED_DECAY, 4),
+        "undated_decay_note": (
+            "Records without has_publish_date=True receive UNDATED_DECAY (~0.707, i.e. exp(-lambda*90)) "
+            "instead of 1.0. If undated_fraction > 0.30, temporal decay cannot be claimed as a "
+            "validated mechanism — state in Limitations."
+        ),
+        "decay_date_field": "published_at when has_publish_date=True, else UNDATED_DECAY (corpus-median)",
         "min_reports_insufficient_data": MIN_REPORTS_INSUFFICIENT,
         "min_reports_preliminary": MIN_REPORTS_PRELIMINARY,
         "severity_weight": SEVERITY_WEIGHT,
@@ -412,7 +443,7 @@ def methodology_report() -> dict:
         "footfall_caveat": "SLTDA figures are telecom inbound presence (person-district-presences), NOT unique visitors. Same tourist counted in each district they visit.",
         "geocode_bias_note": "Geocoding uses longest-match in title/first-500-chars. body_mention records excluded from E. Hand-audit of Colombo sample recommended.",
         "sample_size_caveat": "188 records, 4 districts at 'established' confidence. Corpus demonstrates the method; does not support conclusions about actual Sri Lankan district safety ordering.",
-        "demographic_multipliers_caveat": "Risk multipliers (1.2× Solo Female, etc.) are illustrative. No empirical derivation. Sensitivity analysis pending.",
-        "nrsi_definition": "NRSI (Normalised Risk-Severity Index) = weighted_sev_numer / (exposure_footfall / 100_000), where weighted_sev_numer = sum(decay × source_weight × risk_level/3) over scam reports",
+        "demographic_multipliers_caveat": "Risk multipliers (1.2x Solo Female, etc.) are illustrative. No empirical derivation. Sensitivity analysis pending.",
+        "nrsi_definition": "NRSI = weighted_sev_numer / (exposure_footfall / 100_000), where weighted_sev_numer = sum(decay x source_weight x risk_level/3) over scam reports",
         "exposure_baseline": coverage_summary(),
     }

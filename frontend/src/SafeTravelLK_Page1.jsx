@@ -33,14 +33,13 @@ const REVIEW_BODIES   = IS_DEMO_MODE ? DEMO_REVIEW_BODIES : {};
 // ✓ Demo mode: SEED fixtures load only behind ?demo=1 or VITE_DEMO_MODE=true
 // ═══════════════════════════════════════════════════════════════════════════
 
-// ─── Methodology Constants ────────────────────────────────────────────────
-const DECAY_LAMBDA         = Math.log(2) / 180;   // half-life 180 days
-const MIN_REPORTS_INSUFF   = 3;                    // below this → no score assigned
-const MIN_REPORTS_PRELIM   = 15;                   // MUST match backend MIN_REPORTS_PRELIMINARY = 15
-const SEVERITY_WEIGHT      = 0.70;
-const SCAM_RATIO_WEIGHT    = 0.30;
-const BAYESIAN_ALPHA       = 0.05;                 // shrinkage toward global prior
-const GLOBAL_PRIOR         = 0.30;                 // global mean risk (conservative)
+// ─── Methodology Display Constants (for tooltip labels only) ─────────────
+// NOTE: District risk scores and tiers come exclusively from the backend API
+// at /api/v1/districts/risk-map. The frontend performs NO arithmetic on risk.
+// These constants are retained only for individual-incident recency display.
+const DECAY_LAMBDA         = Math.log(2) / 180;   // half-life 180 days (display only)
+const MIN_REPORTS_INSUFF   = 3;                    // mirrors backend MIN_REPORTS_INSUFFICIENT
+const MIN_REPORTS_PRELIM   = 15;                   // mirrors backend MIN_REPORTS_PRELIMINARY
 
 // ─── Source Credibility Weights (from backend/app/ml/source_weights.py) ──
 const SOURCE_WEIGHTS = {
@@ -263,87 +262,11 @@ function decay(daysAgo) {
   return Math.exp(-DECAY_LAMBDA * daysAgo);
 }
 
-// ─── Core Scoring Engine ──────────────────────────────────────────────────
-function scoreDistrict(incidents, footfall = null) {
-  const n = incidents.length;
-  if (n < MIN_REPORTS_INSUFF) {
-    return { score: null, count: n, confidence: "insufficient_data", severity: 0, scamRatio: 0, incidentRate: null, wEvidence: 0 };
-  }
-
-  let wEvidence = 0, wScamNumer = 0, scamN = 0;
-
-  incidents.forEach(inc => {
-    const srcW   = getSourceInfo(inc.source).w;
-    const hvBonus = inc.helpful_votes >= 20 ? 0.15 : inc.helpful_votes >= 10 ? 0.10 : inc.helpful_votes >= 5 ? 0.07 : 0.03;
-    const w      = decay(inc.days_ago) * Math.min(srcW + hvBonus, 0.97);
-    wEvidence   += w;
-    if (inc.is_scam) {
-      scamN++;
-      const sev = inc.severity || 1;
-      wScamNumer += w * (sev / 3.0);
-    }
-  });
-
-  // Wilson-shrunk scam ratio: prevents sparse-data gaming
-  const adjustedScamRatio = wilsonLower(scamN, n);
-  const severity          = wEvidence > 0 ? (wScamNumer / Math.max(scamN, 1)) : 0;
-
-  // Bayesian shrinkage: pull score toward global prior when n is small
-  const baseRisk   = SEVERITY_WEIGHT * severity + SCAM_RATIO_WEIGHT * adjustedScamRatio;
-  const shrunkScore = (n * baseRisk + BAYESIAN_ALPHA * GLOBAL_PRIOR) / (n + BAYESIAN_ALPHA);
-
-  // Exposure-normalised rate (incidents per 100k visitors)
-  let incidentRate = null;
-  if (footfall && footfall > 0) {
-    incidentRate = (wScamNumer / footfall) * 100_000;
-  }
-
-  const confidence = n < MIN_REPORTS_PRELIM ? "preliminary" : "established";
-  return {
-    score: Math.min(shrunkScore, 1.0),
-    count: n, confidence, severity,
-    scamRatio: adjustedScamRatio,
-    incidentRate, wEvidence,
-    scamN,
-  };
-}
-
-function computeAllScores() {
-  const raw = {};
-  Object.keys(DISTRICTS).forEach(d => {
-    raw[d] = scoreDistrict(SEED_INCIDENTS[d] || [], SLTDA_FOOTFALL[d] || null);
-  });
-
-  // Quantile tiers computed only across districts with enough data (fair relative ranking)
-  const scoreable = Object.values(raw)
-    .filter(s => s.confidence !== "insufficient_data" && s.score !== null)
-    .map(s => s.score)
-    .sort((a, b) => a - b);
-
-  let q25 = 0, q50 = 0, q75 = 0;
-  if (scoreable.length >= 4) {
-    q25 = scoreable[Math.floor(scoreable.length * 0.25)];
-    q50 = scoreable[Math.floor(scoreable.length * 0.50)];
-    q75 = scoreable[Math.floor(scoreable.length * 0.75)];
-  } else if (scoreable.length > 0) {
-    const med = scoreable[Math.floor(scoreable.length / 2)];
-    q25 = med * 0.5; q50 = med; q75 = med * 1.5;
-  }
-
-  const result = {};
-  Object.keys(DISTRICTS).forEach(d => {
-    const r   = raw[d];
-    let tier  = "insufficient_data";
-    if (r.confidence !== "insufficient_data" && r.score !== null) {
-      if      (r.score <= q25) tier = "low";
-      else if (r.score <= q50) tier = "moderate";
-      else if (r.score <= q75) tier = "high";
-      else                     tier = "severe";
-    }
-    result[d] = { ...r, tier, q25, q50, q75, hasFootfall: !!SLTDA_FOOTFALL[d] };
-  });
-  return result;
-}
+// ─── NOTE: District scoring (tiers, risk_score_0_1, confidence) ───────────
+// All district risk computation is performed by the backend district_engine.py
+// and consumed from /api/v1/districts/risk-map. There is intentionally NO
+// client-side scoreDistrict(), wilsonLower(), or computeAllScores() here.
+// This ensures the map and the thesis methodology chapter describe the same model.
 
 const MONTH_NAMES = ["","Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
 

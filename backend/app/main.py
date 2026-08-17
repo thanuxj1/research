@@ -56,6 +56,13 @@ def start_automated_systems():
     """Initializes all automated safety intelligence systems on startup."""
     global _scheduler
 
+    # RESEARCH_MODE freezes the corpus so that reported results are reproducible.
+    # Set RESEARCH_MODE=true in .env for every evaluation run.
+    # Set to false (or remove) when you want the live pipeline to run again.
+    if os.getenv("RESEARCH_MODE", "").lower() == "true":
+        print("[RESEARCH_MODE] Automated collection disabled — corpus is frozen.")
+        return
+
     # 1. Start the Daily Deep Scraper (scheduled for 2:00 AM)
     if _scheduler is None:
         _scheduler = BackgroundScheduler()

@@ -29,7 +29,12 @@ class Settings(BaseSettings):
     # Google Maps API
     GOOGLE_MAPS_API_KEY: Optional[str] = None
 
+    # Research mode — freezes corpus for reproducible evaluation runs.
+    # Set to true in .env during evaluation; false for live pipeline.
+    RESEARCH_MODE: str = "false"
+
     class Config:
         env_file = ".env"
+        extra = "ignore"   # silently ignore any unknown .env keys (defensive)
 
 settings = Settings()

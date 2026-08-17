@@ -419,16 +419,3 @@ def _run_tests() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(_run_tests())
-
-
-# ─────────────────────────────────────────────────────────────────────────────
-# 8. Backward-compatibility shims for v1 call sites
-# ─────────────────────────────────────────────────────────────────────────────
-# v1 exported: passes_strict_filter(title, content) -> bool
-#              score_relevance(title, content) -> dict (different shape)
-# All existing ingestion scripts use these names. Do NOT remove until every
-# call site has been updated to pass `source=` and use FilterResult.
-
-def passes_strict_filter(title: str, content: str, source: str = "") -> bool:
-    """v1 name alias — prefer passes_filter() in new code."""
-    return passes_filter(title, content, source)
