@@ -157,6 +157,11 @@ def run_collection(full_reddit: bool = False, skip_maps: bool = False) -> dict:
             lat      = item.get("latitude")  or analysis.get("latitude")
             lon      = item.get("longitude") or analysis.get("longitude")
             loc_name = item.get("location")  or analysis.get("location_name")
+            geocode_conf = item.get("geocode_confidence") or analysis.get("geocode_confidence")
+
+            # published_at: prefer collector-parsed source date; fall back to None (created_at will be used)
+            published_at_raw = item.get("published_at")
+            has_pub_date = published_at_raw is not None
 
             # Override is_scam / scam_type if the source explicitly flags advisory
             item_is_scam   = item.get("is_scam")   # None means let NLP decide
@@ -178,6 +183,9 @@ def run_collection(full_reddit: bool = False, skip_maps: bool = False) -> dict:
                 sentiment_score=analysis.get("sentiment_score", 0.0),
                 location_name=loc_name,
                 demographic_target=item.get("demographic"),
+                published_at=published_at_raw,
+                has_publish_date=has_pub_date,
+                geocode_confidence=geocode_conf,
             )
             db.add(report)
             collected += 1

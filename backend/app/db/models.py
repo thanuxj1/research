@@ -52,7 +52,10 @@ class Report(Base):
     demographic_target = Column(String, nullable=True)  # "solo_female", "family", etc.
     source_weight = Column(Float, default=0.35)          # 0.0-1.0 credibility score (see source_weights.py)
     helpful_votes = Column(Integer, default=0, nullable=True)  # peer upvotes / TripAdvisor helpful count
-    created_at = Column(DateTime(timezone=True), server_default=func.now())
+    created_at = Column(DateTime(timezone=True), server_default=func.now())  # ingestion timestamp
+    published_at = Column(DateTime(timezone=True), nullable=True)             # article/post publish date — USE THIS for temporal decay when not null
+    has_publish_date = Column(Boolean, default=False)                          # True when published_at comes from the source, False when it falls back to created_at
+    geocode_confidence = Column(String, nullable=True)  # "title_match" | "first_200_words" | "body_mention" | None
 
 
 class RiskZone(Base):

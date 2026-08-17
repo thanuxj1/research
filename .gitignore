@@ -54,3 +54,7 @@ scratch/
 *.zip
 extracted_zip/
 
+# Session cookies & browser credentials (never commit)
+cookies.txt
+**/cookies.txt
+*.cookies

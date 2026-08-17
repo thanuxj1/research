@@ -143,14 +143,15 @@ def is_genuinely_negative(title: str, content: str) -> bool:
 def extract_location(text):
     text_l = text.lower()
     for loc, coords in SL_LOCATIONS.items():
-        if loc in text_l:
+        pattern = r'\b' + re.escape(loc) + r'\b'
+        if re.search(pattern, text_l):
             return loc.title(), coords[0], coords[1]
     return "Sri Lanka", 6.9271, 79.8612
 
 
 def detect_scam_type(text):
     t = text.lower()
-    if "gem" in t and ("scam" in t or "fake" in t or "shop" in t):
+    if re.search(r'\bgems?\b|\bgemstone\b', t) and re.search(r'\bscam\b|\bfake\b|\bshop\b', t):
         return "Gem Scam"
     elif "tuk tuk" in t or "tuktuk" in t or "three wheeler" in t:
         return "Tuk-Tuk Scam"
@@ -164,7 +165,7 @@ def detect_scam_type(text):
         return "Theft / Robbery"
     elif "harass" in t or "followed me" in t or "groped" in t:
         return "Harassment"
-    return "Tourist Scam / Warning"
+    return "Tourist Safety Advisory"
 
 
 def run_fast_youtube_scraper():

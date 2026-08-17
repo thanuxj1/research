@@ -49,9 +49,11 @@ _DATA_PATH = os.path.join(os.path.dirname(os.path.dirname(__file__)), "data", "s
 # ---------------------------------------------------------------------------
 DECAY_LAMBDA = math.log(2) / 180          # 180-day half-life, same convention as point-level scoring.py
 MIN_REPORTS_INSUFFICIENT = 3              # below this: cannot claim ANY risk level, insufficient_data
-MIN_REPORTS_PRELIMINARY = 15              # below this: risk shown but capped at "preliminary" confidence
+MIN_REPORTS_PRELIMINARY = 15             # below this: risk shown but capped at "preliminary" confidence
 SEVERITY_WEIGHT = 0.70
 SCAM_RATIO_WEIGHT = 0.30
+SEVERE_ABSOLUTE_FLOOR = 0.25             # a district must ALSO exceed this base_risk to be "severe"
+                                          # prevents permanently-red map when all districts are objectively safe
 
 
 @dataclass
@@ -60,8 +62,10 @@ class DistrictAggregate:
     constituent_admin_districts: list
     report_count: int = 0
     scam_count: int = 0
-    weighted_evidence: float = 0.0     # sum of decay*source_weight over ALL reports (denominator)
-    weighted_incidents: float = 0.0    # sum of decay*source_weight*severity over SCAM reports (numerator)
+    weighted_evidence: float = 0.0       # sum of decay*source_weight over ALL reports (denominator E)
+                                          # excludes body_mention-only geocoded records (national-scope)
+    weighted_sev_numer: float = 0.0      # sum of decay*src_w*(risk/3) over SCAM reports (numerator for severity)
+    weighted_sev_denom: float = 0.0      # sum of decay*src_w over SCAM reports (denominator for severity)
     scam_type_counts: dict = field(default_factory=dict)
     recent_reports: list = field(default_factory=list)  # up to 8 most-recent, for the tooltip/panel
 
@@ -111,12 +115,28 @@ def get_boundary_index() -> DistrictBoundaryIndex:
     return _boundary_index
 
 
-def _decay(created_at) -> float:
-    if not created_at:
+def _decay(report) -> float:
+    """
+    Temporal decay using published_at when available (article publish date),
+    falling back to created_at (ingestion timestamp).
+
+    Using created_at alone means decay measures scrape recency, not incident recency.
+    published_at fixes this for collectors that parse source dates.
+    Coverage: see has_publish_date field — report in thesis.
+    """
+    dt = None
+    if hasattr(report, "published_at") and report.published_at:
+        dt = report.published_at
+    elif hasattr(report, "created_at") and report.created_at:
+        dt = report.created_at
+    elif isinstance(report, dict):
+        dt = report.get("published_at") or report.get("created_at")
+
+    if not dt:
         return 1.0
-    if created_at.tzinfo is None:
-        created_at = created_at.replace(tzinfo=timezone.utc)
-    days_ago = max(0, (datetime.now(timezone.utc) - created_at).days)
+    if hasattr(dt, "tzinfo") and dt.tzinfo is None:
+        dt = dt.replace(tzinfo=timezone.utc)
+    days_ago = max(0, (datetime.now(timezone.utc) - dt).days)
     return math.exp(-DECAY_LAMBDA * days_ago)
 
 
@@ -150,13 +170,24 @@ def aggregate_reports_by_district(reports: list) -> dict:
             continue
 
         a = agg[district]
-        created_at = getattr(r, "created_at", None) if not isinstance(r, dict) else r.get("created_at")
-        decay = _decay(created_at)
+        decay_val = _decay(r)
         src_w = (getattr(r, "source_weight", 0.35) if not isinstance(r, dict) else r.get("source_weight")) or 0.35
-        weight = decay * src_w
+        weight = decay_val * src_w
         is_scam = bool(getattr(r, "is_scam", False) if not isinstance(r, dict) else r.get("is_scam", False))
         risk_level = (getattr(r, "risk_level", 1) if not isinstance(r, dict) else r.get("risk_level", 1)) or 1
         raw_st = getattr(r, "scam_type", None) if not isinstance(r, dict) else r.get("scam_type")
+        geo_conf = (getattr(r, "geocode_confidence", None) if not isinstance(r, dict) else r.get("geocode_confidence"))
+
+        # Drop national-scope geocodes: body_mention means the place appears deep in
+        # the text only, which is the primary source of Colombo over-attribution.
+        # These records still don't contribute to E or report_count.
+        if geo_conf == "body_mention":
+            continue
+
+        # Also drop records whose location_name is the entire country
+        loc_name = (getattr(r, "location_name", None) if not isinstance(r, dict) else r.get("location_name")) or ""
+        if loc_name.lower().strip() in ("sri lanka", "lanka", "ceylon"):
+            continue
 
         refined_st = "general_safety"
         if raw_st:
@@ -170,7 +201,8 @@ def aggregate_reports_by_district(reports: list) -> dict:
         a.weighted_evidence += weight
         if is_active_scam:
             a.scam_count += 1
-            a.weighted_incidents += weight * (risk_level / 3.0)
+            a.weighted_sev_numer += weight * (risk_level / 3.0)
+            a.weighted_sev_denom += weight
             if refined_st and refined_st not in ("general_safety", "safe"):
                 a.scam_type_counts[refined_st] = a.scam_type_counts.get(refined_st, 0) + 1
 
@@ -190,32 +222,52 @@ def _confidence_tier(report_count: int) -> str:
 
 def _raw_component_score(a: DistrictAggregate) -> dict:
     """
-    Returns the pre-tiering numeric building blocks. Kept separate from the
-    quantile step below so the *math* is independent of what other districts
-    currently look like (only the final tier label is relative).
+    Returns the pre-tiering numeric building blocks.
+
+    severity fix: previously used weighted_incidents / scam_count, which
+    normalised by the COUNT of scam reports instead of their total weight.
+    With mean source weight ~0.576, a district where every incident is max
+    severity (risk=3) scored ~0.58, not 1.0 — structurally capped and
+    source-mix dependent.  The correct denominator is the sum of weights:
+        severity = sum(w * sev/3) / sum(w)   over scam reports
+    This gives a true weighted-mean severity in [0, 1].
     """
     if a.weighted_evidence <= 0:
         return {"severity": 0.0, "scam_ratio": 0.0, "base_risk": 0.0,
-                "incident_rate_per_100k": None, "exposure_status": "unavailable"}
+                "incident_rate_per_100k_presences": None, "exposure_status": "unavailable",
+                "tiering_method": "density_only"}
 
-    scam_ratio = a.weighted_incidents / a.weighted_evidence  # already severity-weighted, bounded ~[0,1]
-    severity = min(1.0, a.weighted_incidents / max(a.scam_count, 1))
+    scam_ratio = a.weighted_sev_numer / a.weighted_evidence  # bounded ~[0,1]
+
+    # Genuine weighted-mean severity in [0,1] — denominator is weight sum, not count
+    severity = (a.weighted_sev_numer / max(a.weighted_sev_denom, 1e-9))
+
     base_risk = SEVERITY_WEIGHT * severity + SCAM_RATIO_WEIGHT * scam_ratio
 
     exposure = get_exposure(a.district)
     incident_rate = None
+    tiering_method = "density_only"
     if exposure.status == "official" and exposure.footfall:
-        incident_rate = (a.weighted_incidents / exposure.footfall) * 100_000
+        # incidents per 100k person-district-presences (telecom inbound — NOT unique visitors)
+        incident_rate = (a.weighted_sev_numer / exposure.footfall) * 100_000
+        # Fold exposure into base_risk as a multiplicative bonus (bounded, documented)
+        # Districts with high absolute incident rates relative to footfall get a small upward push.
+        # Max bonus capped at 20% to keep the scale commensurable with density-only districts.
+        rate_normalised = min(incident_rate / 10.0, 1.0)  # 10 incidents/100k = maximum bonus
+        exposure_multiplier = 1.0 + 0.20 * rate_normalised
+        base_risk = min(base_risk * exposure_multiplier, 1.0)
+        tiering_method = "exposure_adjusted"
 
     return {
         "severity": round(severity, 4),
         "scam_ratio": round(scam_ratio, 4),
         "base_risk": round(base_risk, 4),
-        "incident_rate_per_100k": round(incident_rate, 4) if incident_rate is not None else None,
+        "incident_rate_per_100k_presences": round(incident_rate, 4) if incident_rate is not None else None,
         "exposure_status": exposure.status,
         "exposure_footfall": exposure.footfall,
         "exposure_source": exposure.source,
         "exposure_period": exposure.period,
+        "tiering_method": tiering_method,
     }
 
 
@@ -283,8 +335,13 @@ def score_all_districts(reports: list) -> dict:
                 tier = "moderate"
             elif score <= q75:
                 tier = "high"
-            else:
+            elif score > SEVERE_ABSOLUTE_FLOOR:
+                # Hybrid: top-quartile AND above absolute floor → Severe
                 tier = "severe"
+            else:
+                # Top-quartile but objectively mild → cap at High
+                # Prevents permanently-red map when all districts are safe
+                tier = "high"
             final_risk_score = comp["base_risk"]
             final_severity = comp["severity"]
             final_scam_ratio = comp["scam_ratio"]
@@ -302,11 +359,12 @@ def score_all_districts(reports: list) -> dict:
             "risk_score_0_1": final_risk_score,
             "severity_component": final_severity,
             "scam_ratio_component": final_scam_ratio,
-            "incident_rate_per_100k_visitors": final_rate,
+            "incident_rate_per_100k_presences": final_rate,
             "exposure_status": comp["exposure_status"],
             "exposure_footfall": comp.get("exposure_footfall"),
             "exposure_source": comp.get("exposure_source"),
             "exposure_period": comp.get("exposure_period"),
+            "tiering_method": comp.get("tiering_method", "density_only"),
             "top_scam_types": [{"type": t, "count": c} for t, c in top_scam_types],
             "breakpoints_used": {"q25": round(q25, 4), "q50": round(q50, 4), "q75": round(q75, 4)},
             "recent_reports_raw": a.recent_reports,  # API layer formats these for the response
@@ -318,10 +376,18 @@ def methodology_report() -> dict:
     """Machine-readable summary of every constant/decision, for a /methodology endpoint or appendix."""
     return {
         "decay_half_life_days": 180,
+        "decay_date_field": "published_at when available, else created_at (ingestion timestamp) — check has_publish_date coverage",
         "min_reports_insufficient_data": MIN_REPORTS_INSUFFICIENT,
         "min_reports_preliminary": MIN_REPORTS_PRELIMINARY,
         "severity_weight": SEVERITY_WEIGHT,
         "scam_ratio_weight": SCAM_RATIO_WEIGHT,
-        "tiering_method": "quantile (data-relative), computed fresh per request over districts with confidence != insufficient_data",
+        "severe_absolute_floor": SEVERE_ABSOLUTE_FLOOR,
+        "tiering_method": "quantile (data-relative) with hybrid Severe gate: top-quartile AND base_risk > SEVERE_ABSOLUTE_FLOOR",
+        "exposure_method": "multiplicative adjustment to base_risk for 8 SLTDA-covered districts; density-only for remainder",
+        "footfall_caveat": "SLTDA figures are telecom inbound presence (person-district-presences), NOT unique visitors. Same tourist counted in each district they visit.",
+        "geocode_bias_note": "Geocoding uses longest-match in title/first-500-chars. body_mention records excluded from E. Hand-audit of Colombo sample recommended.",
+        "sample_size_caveat": "188 records, 4 districts at 'established' confidence. Corpus demonstrates the method; does not support conclusions about actual Sri Lankan district safety ordering.",
+        "demographic_multipliers_caveat": "Risk multipliers (1.2× Solo Female, etc.) are illustrative. No empirical derivation. Sensitivity analysis pending.",
+        "nrsi_definition": "NRSI (Normalised Risk-Severity Index) = weighted_sev_numer / (exposure_footfall / 100_000), where weighted_sev_numer = sum(decay × source_weight × risk_level/3) over scam reports",
         "exposure_baseline": coverage_summary(),
     }

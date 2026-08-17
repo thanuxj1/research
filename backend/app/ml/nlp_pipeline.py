@@ -210,18 +210,19 @@ class NLPPipeline:
             if not self._verify_scope_deep(text_clean):
                 return self._neutral_result()
 
-        # 7. Location extraction
-        lat, lon, location_name = self._extract_location(text_clean)
+        # 7. Location extraction (pass original title for title-match priority)
+        lat, lon, location_name, geocode_confidence = self._extract_location(text_clean, title=text)
 
         return {
-            "is_scam":         is_scam,
-            "scam_type":       scam_type,
-            "sentiment_score": round(sentiment_score, 4),
-            "risk_level":      risk_level,
-            "keywords":        matched_keywords,
-            "latitude":        lat,
-            "longitude":       lon,
-            "location_name":   location_name,
+            "is_scam":            is_scam,
+            "scam_type":          scam_type,
+            "sentiment_score":    round(sentiment_score, 4),
+            "risk_level":         risk_level,
+            "keywords":           matched_keywords,
+            "latitude":           lat,
+            "longitude":          lon,
+            "location_name":      location_name,
+            "geocode_confidence": geocode_confidence,
         }
 
     # ── Internal methods ────────────────────────────────────────────────────
@@ -355,23 +356,62 @@ class NLPPipeline:
         return round((pos - neg) / total, 2)
 
     @staticmethod
-    def _compute_risk(is_scam: bool, sentiment: float, scam_type: Optional[str]) -> int:
+    def _compute_risk(is_scam: bool, sentiment: float, scam_type) -> int:
         """1=Low, 2=Moderate, 3=High"""
         if not is_scam and sentiment >= 0:
             return 1
         if is_scam or sentiment < -0.5:
+            # canonical scam type keys (lowercase_underscore) — these match CANONICAL_SCAM_TYPES
             if sentiment < -0.7 or scam_type in ("harassment", "unsafe_area", "gem_scam"):
                 return 3
             return 2
         return 1
 
     @staticmethod
-    def _extract_location(text: str):
-        """Returns (lat, lon, name) or (None, None, None)"""
-        for place, coords in SL_LOCATIONS.items():
-            if place in text:
-                return coords[0], coords[1], place.title()
-        return None, None, None
+    def _extract_location(text: str, title: str = ""):
+        """
+        Returns (lat, lon, name, confidence) or (None, None, None, None).
+
+        Geocoding bias fix — three rules over the original first-substring-wins:
+          1. Prefer the LONGEST matching place name (avoids "Colombo" eating
+             "Colombo Fort" when both appear).
+          2. Require the match to appear in the title OR first ~500 chars of text
+             before falling back to body-only matches.  A national advisory that
+             mentions "Colombo" in paragraph 4 should not be pinned to Colombo.
+          3. Return a geocode_confidence field so false-attribution rate can be
+             quantified in the thesis rather than silently assumed away.
+
+        confidence levels:
+          "title_match"      — place found in the article title (highest quality)
+          "first_200_words"  — place found in first ~500 chars of content
+          "body_mention"     — place only found deeper in content (treat as national-scope;
+                               exclude from weighted_evidence in district scoring)
+        """
+        title_lower = (title or "").lower()
+        early_text  = text[:500].lower()
+        full_text   = text.lower()
+
+        best: dict | None = None
+
+        # Sort longest-name first so longer, more specific names win
+        for place, coords in sorted(SL_LOCATIONS.items(), key=lambda x: -len(x[0])):
+            if place in title_lower:
+                conf = "title_match"
+            elif place in early_text:
+                conf = "first_200_words"
+            elif place in full_text:
+                conf = "body_mention"
+            else:
+                continue
+
+            # Prefer shorter confidence (title > early > body); on tie prefer longer name (already sorted)
+            conf_rank = {"title_match": 0, "first_200_words": 1, "body_mention": 2}
+            if best is None or conf_rank[conf] < conf_rank[best["conf"]]:
+                best = {"lat": coords[0], "lon": coords[1], "name": place.title(), "conf": conf}
+
+        if best:
+            return best["lat"], best["lon"], best["name"], best["conf"]
+        return None, None, None, None
 
     @staticmethod
     def _neutral_result() -> Dict:

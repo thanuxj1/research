@@ -4,8 +4,7 @@ IT22629180
 
 Covers ALL sources:
   1. Reddit (25+ subreddits, full search)
-  2. Facebook (public travel groups via Apify)
-  3. YouTube (video transcripts via YouTube Data API)
+  2. YouTube (video transcripts via YouTube Data API)
   4. Google Maps (negative reviews via Apify)
   5. TikTok (hashtag search via Apify)
   6. Instagram (hashtag/location search via Apify)
@@ -24,7 +23,8 @@ sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 from apify_client import ApifyClient
 from data_pipeline.collectors.reddit import RedditCollector
 from data_pipeline.collectors.youtube import YouTubeCollector
-from data_pipeline.collectors.facebook import FacebookCollector
+# FacebookCollector excluded — ethics: no user consent for research scraping.
+# See EXCLUDED_SOURCES in source_weights.py and the methodology section.
 from data_pipeline.collectors.google_maps import GoogleMapsCollector
 from data_pipeline.collectors.social import SocialCollector
 from data_pipeline.strict_filter import passes_strict_filter
