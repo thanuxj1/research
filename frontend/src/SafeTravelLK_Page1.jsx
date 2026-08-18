@@ -341,7 +341,7 @@ function renderHelpfulMetric(inc) {
 // ═══════════════════════════════════════════════════════════════════════════
 // MAIN COMPONENT
 // ═══════════════════════════════════════════════════════════════════════════
-export default function SafeTravelLK({ onNavigateAnalytics }) {
+export default function SafeTravelLK({ onNavigateAnalytics, onNavigateComponent2 }) {
   const [screen, setScreen]           = useState("onboard");
   const [profile, setProfile]         = useState({ name: "", type: "Solo Female", nationality: "", tripDays: "", budget: "Mid-range", purpose: "Tourism", accommodation: "Hotel", experience: "First time", concerns: [] });
   const [onboardStep, setOnboardStep] = useState(1);
@@ -1086,23 +1086,43 @@ Write a 3-sentence safety briefing for ${profile.name || "this traveler"} visiti
           )}
         </div>
 
-        {/* Profile chip — tap to edit */}
-        <button
-          onClick={() => setScreen("onboard")}
-          title="Edit profile"
-          style={{
-            display: "flex", alignItems: "center", gap: 6, flexShrink: 0,
-            background: "transparent", border: "none",
-            padding: "4px 10px", borderRadius: 20, cursor: "pointer",
-            color: "#64748b", fontSize: 12, fontFamily: "inherit",
-            transition: "color 0.15s",
-          }}
-          onMouseEnter={e => e.currentTarget.style.color = "#94a3b8"}
-          onMouseLeave={e => e.currentTarget.style.color = "#64748b"}
-        >
-          <span style={{ fontSize: 15 }}>{profData.icon}</span>
-          <span style={{ whiteSpace: "nowrap", letterSpacing: "-0.01em" }}>{profile.name}</span>
-        </button>
+        <div style={{ display: "flex", alignItems: "center", gap: 8, flexShrink: 0 }}>
+          {onNavigateComponent2 && (
+            <button
+              onClick={onNavigateComponent2}
+              title="Navigate to Component 2"
+              style={{
+                display: "flex", alignItems: "center", gap: 6,
+                background: "rgba(6, 182, 212, 0.10)", border: "1px solid rgba(6, 182, 212, 0.25)",
+                padding: "5px 12px", borderRadius: 8, cursor: "pointer",
+                color: "#38bdf8", fontSize: 12, fontWeight: 600, fontFamily: "inherit",
+                transition: "all 0.15s ease",
+              }}
+              onMouseEnter={e => e.currentTarget.style.background = "rgba(6, 182, 212, 0.20)"}
+              onMouseLeave={e => e.currentTarget.style.background = "rgba(6, 182, 212, 0.10)"}
+            >
+              <span style={{ fontSize: 13 }}>📑</span> Component 2
+            </button>
+          )}
+
+          {/* Profile chip — tap to edit */}
+          <button
+            onClick={() => setScreen("onboard")}
+            title="Edit profile"
+            style={{
+              display: "flex", alignItems: "center", gap: 6,
+              background: "transparent", border: "none",
+              padding: "4px 10px", borderRadius: 20, cursor: "pointer",
+              color: "#64748b", fontSize: 12, fontFamily: "inherit",
+              transition: "color 0.15s",
+            }}
+            onMouseEnter={e => e.currentTarget.style.color = "#94a3b8"}
+            onMouseLeave={e => e.currentTarget.style.color = "#64748b"}
+          >
+            <span style={{ fontSize: 15 }}>{profData.icon}</span>
+            <span style={{ whiteSpace: "nowrap", letterSpacing: "-0.01em" }}>{profile.name}</span>
+          </button>
+        </div>
       </nav>
 
 
