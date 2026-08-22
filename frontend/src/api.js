@@ -300,36 +300,61 @@ export async function predictBudgetPlan(inputData = {}) {
 }
 
 function generateFallbackBudgetPrediction(input) {
-  const totalLkr = input.budget;
-  const days = input.days;
-  const dailyLkr = totalLkr / days;
+  const totalLkr = Number(input.budget) || 86450;
+  const days = Number(input.days) || 5;
+  const dailyLkr = Math.round(totalLkr / days);
 
-  // Category breakdowns
-  const hotelLkr = totalLkr * 0.45;
-  const fuelLkr = totalLkr * 0.18;
-  const foodLkr = totalLkr * 0.22;
-  const attractionLkr = totalLkr * 0.15;
+  // Category breakdowns matching reference design: 45%, 20%, 15%, 20%
+  const hotelLkr = Math.round(totalLkr * 0.45);
+  const fuelLkr = Math.round(totalLkr * 0.20);
+  const foodLkr = Math.round(totalLkr * 0.15);
+  const attractionLkr = Math.round(totalLkr * 0.20);
 
-  let route = 'Colombo -> Kandy -> Ella -> Colombo';
+  let route = 'Colombo -> Kandy -> Nuwara Eliya -> Ella -> Colombo';
   if (input.interest === 'beach') {
     route = 'Colombo -> Bentota -> Galle -> Mirissa -> Colombo';
   } else if (input.interest === 'culture') {
     route = 'Colombo -> Anuradhapura -> Sigiriya -> Kandy -> Colombo';
+  } else if (input.interest === 'adventure') {
+    route = 'Colombo -> Kitulgala -> Ella -> Adam\'s Peak -> Colombo';
   }
+
+  const hotels = [
+    {
+      place: 'Kandy',
+      hotel_name: 'Hotel Topaz',
+      price_lkr: 12000,
+      image: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=500&auto=format&fit=crop&q=80',
+    },
+    {
+      place: 'Nuwara Eliya',
+      hotel_name: 'Grand Villa',
+      price_lkr: 15000,
+      image: 'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=500&auto=format&fit=crop&q=80',
+    },
+    {
+      place: 'Ella',
+      hotel_name: 'Ella Flower Garden',
+      price_lkr: 10000,
+      image: 'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?w=500&auto=format&fit=crop&q=80',
+    },
+    {
+      place: 'Colombo',
+      hotel_name: 'City Hotel',
+      price_lkr: 8000,
+      image: 'https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=500&auto=format&fit=crop&q=80',
+    },
+  ];
 
   return {
     predicted_route: route,
-    estimated_total_budget_lkr: parseFloat(totalLkr.toFixed(2)),
-    estimated_daily_budget_lkr: parseFloat(dailyLkr.toFixed(2)),
-    estimated_hotel_cost_lkr: parseFloat(hotelLkr.toFixed(2)),
-    estimated_fuel_cost_lkr: parseFloat(fuelLkr.toFixed(2)),
-    estimated_food_cost_lkr: parseFloat(foodLkr.toFixed(2)),
-    estimated_attraction_cost_lkr: parseFloat(attractionLkr.toFixed(2)),
-    recommended_hotels: [
-      { place: 'Kandy', hotel_name: 'Earl’s Regency Hotel', price_lkr: 18000 },
-      { place: 'Ella', hotel_name: '98 Acres Resort & Spa', price_lkr: 22000 },
-      { place: 'Sigiriya', hotel_name: 'Aliya Resort & Spa', price_lkr: 16500 },
-    ],
+    estimated_total_budget_lkr: totalLkr,
+    estimated_daily_budget_lkr: dailyLkr,
+    estimated_hotel_cost_lkr: hotelLkr,
+    estimated_fuel_cost_lkr: fuelLkr,
+    estimated_food_cost_lkr: foodLkr,
+    estimated_attraction_cost_lkr: attractionLkr,
+    recommended_hotels: hotels,
   };
 }
 
@@ -444,4 +469,143 @@ function generateFallbackRecommendations(userText = '') {
   });
 
   return scored.sort((a, b) => b.score - a.score);
+}
+
+// ── Cultural Q&A / Intent Prediction Endpoint Service (/questions/predict) ──
+const QUESTIONS_ENDPOINTS = [
+  '/questions/predict',                      // Same-origin via Vite Proxy
+  'http://127.0.0.1:5000/questions/predict',  // Direct 127.0.0.1
+  'http://localhost:5000/questions/predict',  // Direct localhost
+];
+
+/**
+ * Sends a question request to /questions/predict
+ * @param {string} questionText - User's question string
+ * @returns {Promise<{ result: Object, isLive: boolean, rawJson: Object, requestPayload: Object }>}
+ */
+export async function askCulturalQuestion(questionText = '') {
+  const payload = {
+    question: questionText.trim() || 'What should I wear when visiting a temple?',
+  };
+
+  let lastError = null;
+
+  for (const url of QUESTIONS_ENDPOINTS) {
+    try {
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        if (data) {
+          return {
+            result: data,
+            isLive: true,
+            rawJson: data,
+            requestPayload: payload,
+          };
+        }
+      } else {
+        lastError = `HTTP ${response.status} ${response.statusText}`;
+      }
+    } catch (err) {
+      lastError = err.message || 'Network error';
+    }
+  }
+
+  console.warn('Questions API at http://127.0.0.1:5000/questions/predict unreachable. Using fallback:', lastError);
+
+  const fallbackData = generateFallbackQuestionResponse(payload.question);
+  return {
+    result: fallbackData,
+    isLive: false,
+    rawJson: fallbackData,
+    requestPayload: payload,
+  };
+}
+
+function generateFallbackQuestionResponse(questionStr = '') {
+  const q = questionStr.toLowerCase();
+
+  let intent = 'temple_rules_and_etiquette';
+  let title = 'Rules for Visiting Temples in Sri Lanka';
+  let description = `When visiting a temple in Sri Lanka, please follow these rules:
+
+1. Dress modestly – wear clothes that cover your shoulders and knees.
+2. Remove your shoes before entering the temple premises.
+3. Avoid wearing hats and sunglasses inside the temple.
+4. Do not point your feet towards the Buddha statue.
+5. Maintain silence and behave respectfully.
+6. Women should avoid touching monks.
+7. Photography may be restricted in some areas.
+
+Following these rules shows respect for our culture and traditions. 🙏`;
+  let confidence = 0.95;
+
+  if (q.includes('perahera') || q.includes('esala') || q.includes('festival')) {
+    intent = 'cultural_festival_perahera';
+    title = 'Kandy Esala Perahera Festival';
+    description = `The Kandy Esala Perahera is one of Sri Lanka's oldest and grandest Buddhist festivals held annually in July or August.
+
+Key highlights:
+1. Processions featuring traditional Kandyan dancers, drummers, whip-crackers, and fire-spinners.
+2. Lavishly decorated elephants carrying the sacred Tooth Relic casket.
+3. Held over 10 consecutive nights to honor the Sacred Tooth Relic of Buddha.`;
+    confidence = 0.96;
+  } else if (q.includes('food') || q.includes('eat') || q.includes('traditional food') || q.includes('dish')) {
+    intent = 'traditional_sri_lankan_food';
+    title = 'Traditional Sri Lankan Cuisine';
+    description = `Sri Lankan food is rich in spices, coconut milk, and unique tropical flavors.
+
+Popular must-try dishes:
+1. Rice and Curry – Fragrant rice with dhal, chicken/fish curry, and sambols.
+2. Kottu Roti – Chopped flatbread stir-fried with vegetables, eggs, spices, and meat.
+3. Hoppers (Appa) – Bowl-shaped crispy rice flour pancakes with soft center.
+4. Pol Sambol – Freshly grated coconut with chili, lime, and red onions.`;
+    confidence = 0.94;
+  } else if (q.includes('best time') || q.includes('season') || q.includes('weather') || q.includes('when to visit')) {
+    intent = 'best_travel_time';
+    title = 'Best Time to Visit Sri Lanka';
+    description = `Sri Lanka is a year-round destination with two distinct monsoon seasons.
+
+• West & South Coast (Galle, Mirissa, Colombo): Best from December to April.
+• East Coast (Arugam Bay, Trincomalee): Best from May to September.
+• Cultural Triangle & Hill Country (Kandy, Ella): Great year-round, best Jan to April.`;
+    confidence = 0.92;
+  } else if (q.includes('wear') || q.includes('clothes') || q.includes('attire') || q.includes('dress')) {
+    intent = 'clothing_and_attire';
+    title = 'What to Wear in Sri Lanka';
+    description = `Lightweight, breathable cotton clothes are ideal for Sri Lanka's tropical climate.
+
+• Coastal/Beaches: Casual resort wear and swimwear (restricted to beaches).
+• Cities & High Street: Casual shorts, t-shirts, and summer dresses.
+• Temples & Sacred Sites: White or light-colored attire covering shoulders and knees.`;
+    confidence = 0.93;
+  } else if (q.includes('etiquette') || q.includes('local') || q.includes('custom') || q.includes('respect')) {
+    intent = 'local_etiquette_and_customs';
+    title = 'Sri Lankan Local Etiquette & Courtesy';
+    description = `Sri Lankans are warm and hospitable. Following basic local customs ensures a pleasant stay:
+
+1. Greet locals with "Ayubowan" (placing palms together).
+2. Use your right hand for eating and passing items.
+3. Ask for permission before taking photographs of locals or monks.
+4. Avoid public displays of affection at religious sites.`;
+    confidence = 0.91;
+  }
+
+  return {
+    success: true,
+    question: questionStr,
+    predicted_intent: intent,
+    confidence: confidence,
+    response: {
+      title: title,
+      description: description,
+    },
+  };
 }

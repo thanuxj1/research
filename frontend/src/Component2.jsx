@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import DestinationRecommendations from './DestinationRecommendations.jsx';
 import BudgetPlanner from './BudgetPlanner.jsx';
+import CulturalAssistant from './CulturalAssistant.jsx';
 
 export default function Component2({ onNavigateMap }) {
-  // Page view state: 'home' | 'explore_destinations' | 'budget_planner'
+  // Page view state: 'home' | 'explore_destinations' | 'budget_planner' | 'cultural_assistant'
   const [subView, setSubView] = useState('home');
 
   // Selected item / Filter states
@@ -80,6 +81,11 @@ export default function Component2({ onNavigateMap }) {
   // Page 3: Intelligent Budget Planner Page
   if (subView === 'budget_planner') {
     return <BudgetPlanner onBack={() => setSubView('home')} />;
+  }
+
+  // Page 4: Cultural Q&A Assistant Page
+  if (subView === 'cultural_assistant') {
+    return <CulturalAssistant onBack={() => setSubView('home')} />;
   }
 
   // ═══════════════════════════════════════════════════════════════════════════
@@ -198,7 +204,7 @@ export default function Component2({ onNavigateMap }) {
               Ask anything about Sri Lankan culture, traditions, places and get instant AI-powered answers.
             </p>
             <button
-              onClick={() => setSubView('explore_destinations')}
+              onClick={() => setSubView('cultural_assistant')}
               style={{ ...styles.cardButton, background: '#8b5cf6' }}
             >
               Ask a Question
