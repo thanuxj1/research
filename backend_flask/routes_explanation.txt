@@ -1,0 +1,114 @@
+Sri Lanka AI Tourism API (Combined)
+
+How to run
+- python app.py
+- Server: http://127.0.0.1:5000
+
+Root
+- GET /
+  Returns a small JSON index with the mounted route prefixes.
+
+1) Assistance (destination recommendation)
+Base prefix: /assistance
+
+- POST /assistance/recommend
+- POST /assistance/predict  (alias of /assistance/recommend)
+
+Request JSON (example)
+{
+  "user_text": "I want low crowd places",
+  "weather": {
+    "rainfall_mm": 2,
+    "temperature_c": 29
+  },
+  "crowd": {
+    "month": 7,
+    "day_of_week": 2,
+    "is_weekend": 0,
+    "lag_1": 100,
+    "lag_2": 100,
+    "lag_3": 100
+  }
+}
+
+Response JSON (shape)
+{
+  "recommendations": [
+    {
+      "place": "Ella",
+      "crowd": 123.45,
+      "weather": "Moderate",
+      "score": 60
+    }
+  ]
+}
+
+Notes
+- The service fetches live weather from Open-Meteo by default.
+- The request "weather" object can override live weather values.
+
+2) Budget Planner (route + budget estimate)
+Base prefix: /budget_planner
+
+- GET /budget_planner/
+  Simple health/info JSON.
+
+- POST /budget_planner/predict
+
+Request JSON (example)
+{
+  "budget": 120000,
+  "days": 5,
+  "interest": "nature",
+  "travel_type": "family",
+  "transport_mode": "car"
+}
+
+Response JSON (shape)
+{
+  "success": true,
+  "input": { ... },
+  "prediction": {
+    "predicted_route": "Colombo -> Kandy -> Ella -> Colombo",
+    "estimated_total_budget_lkr": 123456.78,
+    "estimated_daily_budget_lkr": 24691.36,
+    "estimated_hotel_cost_lkr": 55555.55,
+    "estimated_fuel_cost_lkr": 22222.22,
+    "estimated_food_cost_lkr": 16666.66,
+    "estimated_attraction_cost_lkr": 22222.22,
+    "recommended_hotels": [
+      {"place": "Kandy", "hotel_name": "...", "price_lkr": 18000}
+    ]
+  }
+}
+
+3) Questions (cultural intelligence / Q&A intent)
+Base prefix: /questions
+
+- GET /questions/
+  Home/info JSON.
+
+- GET /questions/health
+  Health JSON.
+
+- POST /questions/predict
+
+Request JSON (example)
+{
+  "question": "What should I wear when visiting a temple?"
+}
+
+Response JSON (shape)
+{
+  "success": true,
+  "question": "...",
+  "predicted_intent": "...",
+  "confidence": 0.93,
+  "response": {
+    "title": "...",
+    "description": "..."
+  }
+}
+
+Important integration note
+- Each component loads its model/data files relative to its own folder, so running from the combined root app works correctly.
