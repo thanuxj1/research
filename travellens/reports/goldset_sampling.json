@@ -1,0 +1,32 @@
+{
+  "random_seed": 42,
+  "total_segments_sampled": 600,
+  "quota_per_aspect": 60,
+  "quota_unmatched": 120,
+  "quota_contrast": 60,
+  "overlap_for_agreement": 150,
+  "by_reason": {
+    "unmatched": 120,
+    "aspect:facilities": 60,
+    "aspect:scenery": 60,
+    "aspect:safety": 60,
+    "aspect:price_value": 60,
+    "aspect:roads_access": 60,
+    "contrast": 60,
+    "aspect:crowd": 60,
+    "aspect:cleanliness": 60
+  },
+  "distinct_destinations": 157,
+  "distinct_districts": 12,
+  "truncated_in_sample": 152,
+  "label_key": {
+    "N": "Negative -- the visitor is complaining about this aspect",
+    "P": "Positive -- the visitor is praising this aspect",
+    "X": "Neutral  -- aspect mentioned as fact only, no opinion",
+    "-": "Not mentioned (leave blank; blank is read as '-')"
+  },
+  "files": {
+    "annotator1": "E:\\research\\travellens\\reports\\goldset_annotator1.csv",
+    "annotator2": "E:\\research\\travellens\\reports\\goldset_annotator2.csv"
+  }
+}

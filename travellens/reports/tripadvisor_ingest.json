@@ -1,0 +1,39 @@
+{
+  "source_file": "E:\\research\\dataset\\Reviews.csv",
+  "rows_in": 16156,
+  "dropped_missing": 0,
+  "dropped_too_short": 4,
+  "unmapped_cities": [],
+  "dropped_unmapped": 0,
+  "dropped_duplicates": 3,
+  "rows_out": 16149,
+  "destinations": 76,
+  "districts": [
+    "Ampara",
+    "Anuradhapura",
+    "Badulla",
+    "Batticaloa",
+    "Colombo",
+    "Galle",
+    "Gampaha",
+    "Hambantota",
+    "Jaffna",
+    "Kalutara",
+    "Kandy",
+    "Kegalle",
+    "Matale",
+    "Matara",
+    "Nuwara Eliya",
+    "Polonnaruwa",
+    "Ratnapura",
+    "Trincomalee"
+  ],
+  "rating_distribution": {
+    "1": 487,
+    "2": 658,
+    "3": 2165,
+    "4": 5192,
+    "5": 7647
+  },
+  "median_words": 56.0
+}

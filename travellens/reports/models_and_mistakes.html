@@ -1,0 +1,366 @@
+<meta charset="utf-8">
+<title>Models and Mistakes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+
+<style>
+:root {
+  --ground:#F2F4F3; --surface:#FFFFFF; --surface-2:#E8ECEA;
+  --line:#D2DAD7; --line-soft:#E2E8E6;
+  --ink:#16211F; --ink-muted:#5C6B68; --ink-faint:#8A9894;
+  --accent:#0F6C6A; --accent-soft:#DCEAE8;
+  --critical:#A8412C; --critical-soft:#F4E3DD;
+  --good:#4A7A54; --good-soft:#DFEAE0;
+  --warn:#B4761F; --warn-soft:#F7EBD5;
+  --f-display:"Archivo",system-ui,sans-serif;
+  --f-body:"IBM Plex Sans",system-ui,sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --ground:#0E1614; --surface:#16211F; --surface-2:#1E2C29;
+    --line:#2C3D39; --line-soft:#223330;
+    --ink:#E4EAE7; --ink-muted:#9AAAA6; --ink-faint:#6B7C78;
+    --accent:#4DBDB0; --accent-soft:#143430;
+    --critical:#E0785C; --critical-soft:#33201A;
+    --good:#7CB388; --good-soft:#1B2C1F;
+    --warn:#DFA455; --warn-soft:#332811;
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#0E1614; --surface:#16211F; --surface-2:#1E2C29;
+  --line:#2C3D39; --line-soft:#223330;
+  --ink:#E4EAE7; --ink-muted:#9AAAA6; --ink-faint:#6B7C78;
+  --accent:#4DBDB0; --accent-soft:#143430;
+  --critical:#E0785C; --critical-soft:#33201A;
+  --good:#7CB388; --good-soft:#1B2C1F;
+  --warn:#DFA455; --warn-soft:#332811;
+}
+
+*{box-sizing:border-box}
+body{margin:0;background:var(--ground);color:var(--ink);
+  font-family:var(--f-body);font-size:16px;line-height:1.65;-webkit-font-smoothing:antialiased}
+.wrap{max-width:790px;margin:0 auto;padding:0 26px 100px}
+
+header.top{border-bottom:1px solid var(--line);background:var(--surface);
+  padding:46px 0 38px;margin-bottom:46px}
+header.top .inner{max-width:790px;margin:0 auto;padding:0 26px}
+h1{font-family:var(--f-display);font-weight:700;font-size:38px;line-height:1.1;
+  letter-spacing:-.025em;margin:0 0 12px;text-wrap:balance}
+.standfirst{font-size:17px;color:var(--ink-muted);margin:0;max-width:60ch}
+.meta{font-family:var(--f-mono);font-size:11.5px;color:var(--ink-faint);
+  margin-top:18px;letter-spacing:.02em}
+
+h2{font-family:var(--f-display);font-weight:700;font-size:15px;text-transform:uppercase;
+  letter-spacing:.1em;color:var(--accent);margin:60px 0 6px;padding-bottom:9px;
+  border-bottom:2px solid var(--accent-soft)}
+h2 .num{color:var(--ink-faint);margin-right:10px;font-variant-numeric:tabular-nums}
+h3{font-family:var(--f-display);font-weight:600;font-size:21px;letter-spacing:-.01em;
+  margin:34px 0 8px;text-wrap:balance}
+p{margin:0 0 15px}
+.lead{font-size:17px}
+strong{font-weight:600}
+em.term{font-style:normal;font-family:var(--f-mono);font-size:.9em;
+  background:var(--surface-2);padding:1px 5px;border-radius:2px}
+
+.analogy{background:var(--accent-soft);border-radius:4px;padding:16px 20px;margin:18px 0;
+  font-size:15.5px}
+.analogy b{display:block;font-family:var(--f-display);font-size:12px;text-transform:uppercase;
+  letter-spacing:.08em;color:var(--accent);margin-bottom:6px}
+
+table{width:100%;border-collapse:collapse;font-size:14.5px;margin:18px 0}
+th{font-family:var(--f-display);font-size:10.5px;text-transform:uppercase;letter-spacing:.08em;
+  color:var(--ink-muted);font-weight:600;text-align:left;padding:9px 12px;
+  border-bottom:2px solid var(--line)}
+td{padding:10px 12px;border-bottom:1px solid var(--line-soft);vertical-align:top}
+th.num,td.num{text-align:right;font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+tr.winner td{background:var(--good-soft);font-weight:600}
+tr.loser td{color:var(--ink-muted)}
+.tscroll{overflow-x:auto;background:var(--surface);border:1px solid var(--line-soft);
+  border-radius:4px;padding:2px 6px}
+
+.ex{background:var(--surface);border:1px solid var(--line-soft);border-left:3px solid var(--line);
+  border-radius:0 4px 4px 0;padding:13px 17px;margin:14px 0;font-size:14.5px}
+.ex.bad{border-left-color:var(--critical)}
+.ex.good{border-left-color:var(--good)}
+.ex q{font-family:var(--f-mono);font-size:13px;display:block;margin-bottom:5px}
+.ex q:before{content:'"'} .ex q:after{content:'"'}
+.ex .arrow{color:var(--ink-muted);font-size:13px}
+.ex .tag{font-family:var(--f-mono);font-weight:600;font-size:13px}
+.ex .tag.n{color:var(--critical)} .ex .tag.p{color:var(--good)} .ex .tag.x{color:var(--warn)}
+
+.prob{background:var(--surface);border:1px solid var(--line-soft);border-radius:5px;
+  padding:22px 24px;margin:20px 0}
+.prob-head{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:4px}
+.prob-head h3{margin:0;font-size:19px;flex:1;min-width:14ch}
+.chip{font-family:var(--f-mono);font-size:9.5px;font-weight:600;text-transform:uppercase;
+  letter-spacing:.07em;padding:3px 8px;border-radius:3px;white-space:nowrap}
+.chip.solved{background:var(--good-soft);color:var(--good)}
+.chip.partly{background:var(--warn-soft);color:var(--warn)}
+.chip.open{background:var(--critical-soft);color:var(--critical)}
+.prob .label{font-family:var(--f-display);font-size:10.5px;text-transform:uppercase;
+  letter-spacing:.08em;color:var(--ink-faint);margin:16px 0 4px}
+.prob p{margin:0 0 10px;font-size:15px}
+
+ul{margin:0 0 16px;padding-left:22px}
+li{margin-bottom:7px}
+
+.callout{border-left:3px solid var(--warn);background:var(--warn-soft);
+  padding:15px 20px;border-radius:0 4px 4px 0;margin:22px 0;font-size:15px}
+.callout b{font-family:var(--f-display)}
+
+.viva{background:var(--surface);border:1px dashed var(--accent);border-radius:4px;
+  padding:15px 20px;margin:18px 0;font-size:15px}
+.viva b{display:block;font-family:var(--f-display);font-size:11px;text-transform:uppercase;
+  letter-spacing:.08em;color:var(--accent);margin-bottom:6px}
+
+footer{border-top:1px solid var(--line);margin-top:70px;padding-top:22px;
+  font-size:13px;color:var(--ink-faint);line-height:1.7}
+@media(max-width:640px){h1{font-size:29px}.wrap{padding:0 18px 70px}}
+</style>
+
+<header class="top"><div class="inner">
+  <h1>Models and Mistakes</h1>
+  <p class="standfirst">Every model we tried, what it scored, every problem we hit, how each was fixed &mdash; and the four that are still open. Written to be understood without a background in machine learning.</p>
+  <p class="meta">TravelLens LK &middot; 46,854 reviews &middot; 307 destinations &middot; 19 districts &middot; 6 methods tested</p>
+</div></header>
+
+<main class="wrap">
+
+<h2><span class="num">01</span>What the system does</h2>
+
+<p class="lead">It reads tourist reviews and answers one question: <strong>what do visitors complain about, and where?</strong></p>
+
+<p>Every review is cut into single-opinion pieces, each piece is sorted into a topic (roads, toilets, safety, litter, price, crowds, scenery), and each piece is judged as a <em class="term">complaint</em>, <em class="term">praise</em>, or a <em class="term">plain fact</em>. The results stack up into a drill-down: Sri&nbsp;Lanka &rarr; district &rarr; destination &rarr; topic &rarr; the actual sentences people wrote.</p>
+
+<div class="analogy"><b>The one-sentence version</b>
+A star rating tells you people liked a place. It never tells you the road was broken, the toilets were locked, or the swimming spot was dangerous. This system reads the words instead of the stars.</div>
+
+<h2><span class="num">02</span>The six methods, in plain words</h2>
+
+<p>Six different ways of deciding "is this a complaint or praise?". We built all six <strong>on purpose</strong>, because you cannot claim a method is good unless you have something to compare it against.</p>
+
+<h3>A &mdash; Counting good and bad words</h3>
+<p>A list of happy words and sad words. Count them up. More sad than happy means complaint. Written by hand, no learning.</p>
+<p>It has one clever part: when it sees <em class="term">not</em>, it flips the meaning of the next three words. Without that, "the road is not good" would be read as praise, because it contains the happy word "good".</p>
+
+<h3>B &mdash; A model trained on film reviews</h3>
+<p><em class="term">distilbert-sst2</em>. Somebody else trained it by showing it millions of movie reviews. We borrowed it. It understands English properly &mdash; word order, sarcasm, negation &mdash; but it learned that language from film critics.</p>
+
+<h3>C &mdash; B, with a patch I wrote by hand</h3>
+<p>B had a specific problem (see Problem&nbsp;4). C is B with a rule glued on top to correct it.</p>
+
+<h3>D &mdash; A model trained on tweets</h3>
+<p><em class="term">twitter-roberta</em>. Also borrowed, but trained on tweets: short, informal, often ungrammatical text written by people all over the world. Much closer to a Google review than a film critic's paragraph. It also has a real <strong>"neither"</strong> option, which B did not.</p>
+
+<h3>E &mdash; D, with two hand-written rules</h3>
+<p>D plus a rule for polite complaints and a rule for hedged safety warnings. <strong>This is what the dashboard actually runs on today.</strong></p>
+
+<h3>F &mdash; A model we trained ourselves</h3>
+<p>We took D and continued its training on 727 Sri Lankan tourism examples, labelled automatically from TripAdvisor star ratings. <strong>This one scored highest and we refuse to use it.</strong> Problem&nbsp;10 explains why.</p>
+
+<h2><span class="num">03</span>The scoreboard</h2>
+
+<p>All six judged on the same held-out test set of 158 examples. The score is <strong>macro-F1</strong>, which means "how well does it do across all three answers", not just the common one.</p>
+
+<div class="analogy"><b>Why not plain accuracy?</b>
+Imagine 70% of reviews are praise. A lazy system that answers "praise" every single time scores 70% accuracy while being completely useless. Macro-F1 averages the score across complaint, praise and fact separately &mdash; so ignoring the rare one destroys your score.</div>
+
+<div class="tscroll"><table>
+<thead><tr><th>Method</th><th>What it is</th><th class="num">Macro-F1</th><th class="num">Probe</th></tr></thead>
+<tbody>
+<tr class="loser"><td>B &mdash; film model</td><td>borrowed, film reviews</td><td class="num">0.491</td><td class="num">&mdash;</td></tr>
+<tr class="loser"><td>C &mdash; B + patch</td><td>borrowed + hand rule</td><td class="num">0.491</td><td class="num">&mdash;</td></tr>
+<tr><td>A &mdash; word counting</td><td>hand-written rules</td><td class="num">0.587</td><td class="num">&mdash;</td></tr>
+<tr><td>E &mdash; deployed</td><td>tweets + 2 hand rules</td><td class="num">0.691</td><td class="num">12/14</td></tr>
+<tr><td>D &mdash; tweet model</td><td>borrowed, tweets</td><td class="num">0.692</td><td class="num">&mdash;</td></tr>
+<tr class="winner"><td>F &mdash; trained by us</td><td>trained on 727 examples</td><td class="num">0.797</td><td class="num">14/14</td></tr>
+</tbody></table></div>
+
+<p><strong>Notice B and C score below plain word-counting.</strong> The film-trained model is actively worse than counting happy and sad words. That is not a small curiosity &mdash; it is the clearest possible evidence that borrowing a model from the wrong domain can hurt you.</p>
+
+<div class="callout"><b>The number that is not what it looks like.</b> F's 0.797 is <strong>not accuracy</strong>. Its training labels and its test labels came from the same source: TripAdvisor star ratings. So it measures "how well does it agree with star ratings", not "how often is it right". A real accuracy figure needs human-checked answers, which do not exist yet. This caveat is stored inside the report file so it cannot be quoted loose.</div>
+
+<h2><span class="num">04</span>Problems &mdash; solved</h2>
+
+<div class="prob">
+<div class="prob-head"><h3>1. The cleaned file had destroyed the meaning</h3><span class="chip solved">Solved</span></div>
+<p>The dataset came with a "cleaned" version where common words had been stripped out to save space. The word <strong>not</strong> is one of those common words.</p>
+<div class="ex bad"><q>the road is not good</q><span class="arrow">after their cleaning &rarr;</span> <q>road good</q></div>
+<p class="label">The fix</p>
+<p>Use the raw file. Keep every word, every capital letter, every full stop. We kept their version only as a comparison baseline, and said so deliberately.</p>
+</div>
+
+<div class="prob">
+<div class="prob-head"><h3>2. Most reviews say two things at once</h3><span class="chip solved">Solved</span></div>
+<p>Ask a computer whether this is happy or sad and it counts one happy word and one sad word and shrugs:</p>
+<div class="ex bad"><q>Nice location but bathing is dangerous here</q><span class="arrow">judged as one block &rarr;</span> <span class="tag x">roughly neutral</span></div>
+<p>The drowning warning disappears.</p>
+<p class="label">The fix</p>
+<p>Cut the review into pieces <em>before</em> judging &mdash; at full stops, and also at the word "but", which is a flag meaning "the opposite is coming".</p>
+<div class="ex good"><q>Nice location</q><span class="arrow">&rarr;</span> <span class="tag p">praise</span><br><q>but bathing is dangerous here</q><span class="arrow">&rarr;</span> <span class="tag n">complaint</span></div>
+<p><strong>65% of reviews contained more than one opinion.</strong> Before this step we were throwing away most of what people said.</p>
+</div>
+
+<div class="prob">
+<div class="prob-head"><h3>3. Keywords cannot tell praise from complaint</h3><span class="chip solved">Solved</span></div>
+<p>Sorting pieces into topics by keyword works fine. But the same keyword appears on both sides:</p>
+<div class="ex bad"><q>everything is clean</q> <span class="tag p">praise</span> &nbsp;&middot;&nbsp; <q>need to clean the pond</q> <span class="tag n">complaint</span></div>
+<p>Six of eight pieces in our "cleanliness" bucket were <em>praise</em>. No amount of extra keywords can fix this, because the information is not in the words &mdash; it is in how they are arranged.</p>
+<p class="label">The fix</p>
+<p>Two separate stages. Keywords decide <strong>what the piece is about</strong>. A language model decides <strong>whether the visitor is happy</strong>. This is the reason the project needs a model at all.</p>
+</div>
+
+<div class="prob">
+<div class="prob-head"><h3>4. The film model thinks "quiet" is an insult</h3><span class="chip solved">Solved</span></div>
+<p>The biggest discovery of the build. Model B was trained on film reviews &mdash; and in a film review, "slow", "calm" and "quiet" mean <strong>boring</strong>.</p>
+<div class="ex bad">
+<q>a slow walk</q> <span class="tag n">NEGATIVE 99.3%</span><br>
+<q>a slow movie</q> <span class="tag n">NEGATIVE 100%</span><span class="arrow"> &nbsp;&larr; identical reading</span><br>
+<q>uncrowded</q> <span class="tag n">NEGATIVE 99.6%</span><span class="arrow"> &nbsp;&larr; the highest praise in tourism</span>
+</div>
+<p>Those paired lines are the proof. The model gives a <em>walk</em> and a <em>film</em> the same verdict, because a film is the only thing it was ever taught about. <strong>458 pieces affected.</strong></p>
+<p class="label">The fix</p>
+<p>Two things. Short term, a hand-written correction (Method C). Properly, switching to the tweet-trained model (D), which reads these correctly on its own with no rule.</p>
+<div class="viva"><b>Say this in the viva</b>"Applying a film-domain sentiment model to tourism text inverted polarity on a specific vocabulary class &mdash; calm, quiet, slow, uncrowded &mdash; affecting 458 segments. The paired film/tourism comparison isolates the cause."</div>
+</div>
+
+<div class="prob">
+<div class="prob-head"><h3>5. The film model could not say "neither"</h3><span class="chip solved">Solved</span></div>
+<p>Model B only knew two answers: happy or sad. But roughly a third of what people write is neither:</p>
+<div class="ex bad"><q>Entrance fee for one local is 150 LKR</q><span class="arrow">forced to pick &rarr;</span> <span class="tag n">COMPLAINT, 100% confident</span></div>
+<p>We tried a workaround &mdash; treat low confidence as "neither". It failed, because the model was almost never unsure: <strong>75.7% of its answers were above 99% confidence</strong>. Only 987 of 27,000 pieces were ever called neutral.</p>
+<p class="label">The fix</p>
+<p>Switch to the tweet model, which has a genuine third option built in. It found <strong>8,711 factual statements</strong> where B found 987.</p>
+<p><strong>The cost, stated honestly:</strong> being truthful about facts meant 18% fewer scorecards to display, because a fact is no longer counted as an opinion. Narrower coverage of defensible claims beat broader coverage of unreliable ones.</p>
+</div>
+
+<div class="prob">
+<div class="prob-head"><h3>6. The same review would be counted twice on every update</h3><span class="chip solved">Solved</span></div>
+<p>Each review gets a fingerprint so we recognise ones we already have. The fingerprint included the review's <strong>age</strong> &mdash; and age is relative:</p>
+<div class="ex bad">Today: <q>Nice place</q> + "2 years ago" &rarr; fingerprint A<br>Next year: <q>Nice place</q> + "3 years ago" &rarr; fingerprint B</div>
+<p>Same review, different fingerprint, counted twice. Complaint counts would have crept upward forever and nobody would have noticed, because the numbers would still look plausible.</p>
+<p class="label">The fix</p>
+<p>Build the fingerprint only from things that never change: the place and the words. Then verified by ingesting the same batch twice &mdash; run one added 2 reviews, run two added <strong>0</strong>.</p>
+</div>
+
+<div class="prob">
+<div class="prob-head"><h3>7. The biggest destination was split in two</h3><span class="chip solved">Solved</span></div>
+<p>Found by testing what a fresh scrape would do:</p>
+<div class="ex bad"><q>Horton plains national park</q> &mdash; 1,007 reviews (Google spelling)<br><q>Horton Plains National Park</q> &mdash; 193 reviews (TripAdvisor spelling)</div>
+<p>One park, two entries, reviews divided, both scorecards understated. And every future scrape would have added more variants.</p>
+<p class="label">The fix</p>
+<p>Reduce each name to a key &mdash; lowercase, no punctuation, filler words removed &mdash; and treat matching keys as one place. Applied when reviews arrive, so scraped data lands correctly from the start.</p>
+<p><strong>Deliberately not fuzzy matching.</strong> "Galle Fort" and "Galle Fort Clock Tower" are different places; "Jungle Beach" and "Jungle Beach, Unawatuna" are the same one. No loose rule can separate those, so we merge only on exact key matches. Under-merging loses a little data; over-merging invents a place that does not exist.</p>
+</div>
+
+<div class="prob">
+<div class="prob-head"><h3>8. The map said "no complaints" when it meant "never looked"</h3><span class="chip solved">Solved</span></div>
+<p>The heat map shaded districts by complaint rate. Districts with no data were drawn the same pale colour as districts with few complaints. A reader would see Jaffna as problem-free when the truth was that we had never looked at Jaffna.</p>
+<p class="label">The fix</p>
+<p>Three visually distinct states, not two: <strong>shaded</strong> (measured), <strong>hatched</strong> (no reviews collected), <strong>plain grey</strong> (reviews exist but fewer than five opinions &mdash; too few to report). Collapsing the middle one into either neighbour would make a claim the data cannot support.</p>
+</div>
+
+<div class="prob">
+<div class="prob-head"><h3>9. Training would have secretly cheated</h3><span class="chip solved">Solved</span></div>
+<p>The training script pre-trained on a batch of examples that <em>included the test set</em>. The reported score would have been inflated &mdash; and inflated in the flattering direction, which is the dangerous one, because nobody questions a good result.</p>
+<p class="label">The fix</p>
+<p>Caught by reading the code before trusting the output. The test set is now split off first and touched exactly once, at the very end.</p>
+</div>
+
+<div class="prob">
+<div class="prob-head"><h3>10. The trained model calls danger "praise"</h3><span class="chip solved">Solved by not using it</span></div>
+<p>The most important result in the project. Model F scored best on every aggregate measure. Then we tested it on safety:</p>
+<div class="ex bad">
+<q>but don't bath in beach because it's dangerous</q> &rarr; <span class="tag p">PRAISE</span><br>
+<q>need to build a safety fence on the walking path</q> &rarr; <span class="tag p">PRAISE</span><br>
+<q>A bit risky, especially if someone accidentally falls</q> &rarr; <span class="tag p">PRAISE</span>
+</div>
+<p><strong>It flipped 167 of 302 safety complaints &mdash; 55% &mdash; into praise.</strong></p>
+<p class="label">Why</p>
+<p>Its training labels came from star ratings, and <strong>a star rates the whole review, not the topic</strong>. A visitor writes "Stunning waterfall, worth it &mdash; but be careful, the rocks are slippery" and gives it five stars. They loved it <em>and</em> warned you. The star says positive. Every safety warning inside every enthusiastic review got labelled praise, and the model learned exactly that.</p>
+<p class="label">The proof it is structural, not a bug</p>
+<div class="tscroll"><table>
+<thead><tr><th>Topic</th><th class="num">Complaints flipped to praise</th></tr></thead>
+<tbody>
+<tr><td>Cleanliness</td><td class="num">0.8%</td></tr>
+<tr><td>Roads &amp; access</td><td class="num">21.2%</td></tr>
+<tr><td>Safety</td><td class="num">55.3%</td></tr>
+</tbody></table></div>
+<p>The damage scales with how often a topic is criticised <em>inside an otherwise-positive review</em>. Litter complaints appear in reviews already rated low, so cleanliness barely moved. Safety warnings appear overwhelmingly in reviews rated <em>high</em>, so safety collapsed.</p>
+<p class="label">The fix</p>
+<p>The model is kept for comparison and locked out of the dashboard behind a flag, with the reason written into the code. Deploying it would have shown a better score while quietly breaking the signal the project exists to surface.</p>
+<div class="viva"><b>Say this in the viva</b>"Weak supervision from star ratings improved aggregate macro-F1 from 0.691 to 0.797 while inverting 55% of safety complaints, because a review-level rating cannot supervise topic-level judgement. The degradation scaled with how often a topic is criticised inside positive reviews: cleanliness 0.8%, roads 21.2%, safety 55.3%. The aggregate metric concealed a safety-critical regression."</div>
+</div>
+
+<div class="prob">
+<div class="prob-head"><h3>11. Hedged safety warnings were being dropped</h3><span class="chip solved">Solved</span></div>
+<div class="ex bad"><q>maybe a bit dangerous for small children</q> &rarr; <span class="tag x">neutral &mdash; lost</span><br><q>might be slippery when it rains</q> &rarr; <span class="tag x">neutral &mdash; lost</span></div>
+<p class="label">The fix</p>
+<p>A deliberately one-sided rule, applied to safety only: if a piece is about safety, the model said "neither", and a real hazard word is present, it becomes a complaint &mdash; unless the word-counter independently reads it as positive, which protects "perfectly safe" and "not dangerous at all".</p>
+<p><strong>214 warnings recovered.</strong> The justification is the asymmetry: showing a mild warning costs a reader almost nothing; hiding a real one can cost a great deal. No other topic gets this treatment.</p>
+</div>
+
+<div class="prob">
+<div class="prob-head"><h3>12. Two suspicions that turned out to be wrong</h3><span class="chip solved">Tested</span></div>
+<p><strong>Incomplete reviews.</strong> 17.85% of reviews are cut off mid-sentence by Google's "read more". We expected this to hide complaints, since reviews often run "praise&hellip; but complaint" and the end gets cut. Tested it: the gaps go in <em>both</em> directions and the overall difference is under 1 percentage point. Not a bias.</p>
+<p><strong>Foreign visitors and price.</strong> We noticed foreigners paying &euro;35 where locals pay 150 rupees, and expected international reviewers to complain about price more. Tested it: not significant (p&nbsp;=&nbsp;0.31). <strong>The hypothesis was not supported.</strong></p>
+<p>Both belong in the thesis exactly as they are. A tested guess that turned out wrong is worth more than an untested one that sounds right.</p>
+</div>
+
+<h2><span class="num">05</span>Problems &mdash; still open</h2>
+
+<div class="prob">
+<div class="prob-head"><h3>A. Nobody has checked the answers</h3><span class="chip open">Open</span></div>
+<p><strong>This is the big one.</strong> Every number in this document rests on labels that no human has verified. If a panel member asks "how accurate is your system?", the honest answer today is <em>"I don't know."</em></p>
+<p class="label">What fixes it</p>
+<p>200 rows, four topics, about 46 minutes of reading and typing N / P / X. The sheet is built, the sampling is designed, the checker is written. Only the reading is missing.</p>
+<p>Doing it turns every claim from an assertion into a measurement, and it is the only artifact in this project a model cannot produce.</p>
+</div>
+
+<div class="prob">
+<div class="prob-head"><h3>B. Three rules are my judgement, unmeasured</h3><span class="chip open">Open</span></div>
+<p>The deployed system contains three hand-written rules: the domain patch, the polite-complaint rule, and the safety recall rule. Each was written because we saw it fail on examples. <strong>None has been measured.</strong></p>
+<p>They might be helping. One might be hurting. There is currently no way to tell &mdash; and the honest position is that none of them gets to stand unmeasured. They are documented in the code with their reasoning so each can be evaluated and, if it fails, removed.</p>
+</div>
+
+<div class="prob">
+<div class="prob-head"><h3>C. The trained model cannot tell topics apart</h3><span class="chip open">Open</span></div>
+<p>The whole point of "aspect-based" is that one sentence can get different answers for different topics:</p>
+<div class="ex bad"><q>the road was terrible but the waterfall is stunning</q><br>roads &rarr; <span class="tag n">complaint</span> &nbsp;&middot;&nbsp; scenery &rarr; <span class="tag p">praise</span> &nbsp;<span class="arrow">&larr; what it should do</span></div>
+<p>Model F gives the <em>same</em> answer for both. It ignores the topic entirely &mdash; because its star-derived training labels were review-level, so it never saw a sentence carrying two different answers. There was nothing to learn from.</p>
+<p><strong>Only human topic-level labels can teach this.</strong> It is the second thing the 46 minutes buys, and arguably the more important one.</p>
+</div>
+
+<div class="prob">
+<div class="prob-head"><h3>D. Three districts have no data, and one source is unverified</h3><span class="chip partly">Partly</span></div>
+<p>Monaragala, Puttalam and the Vanni appear in neither corpus. They are drawn hatched, so the map does not pretend otherwise &mdash; but the gap is real and must be stated.</p>
+<p>Separately: the TripAdvisor dataset's origin could not be traced. No source URL was recorded anywhere. It is marked UNCONFIRMED rather than cited, because an invented citation is misconduct while an admitted gap is only a limitation.</p>
+</div>
+
+<h2><span class="num">06</span>Two things every reader should know</h2>
+
+<h3>Complaint rate is not risk</h3>
+<p>If a place shows "roads 74% complaints", that does <strong>not</strong> mean three-quarters of visitors had a bad journey. People do not write reviews praising a road that simply worked. A topic only gets mentioned when something is notable about it &mdash; usually a problem.</p>
+<p>So these rates must be read <strong>comparatively between places</strong>, never as an absolute chance of a bad time. Both places were measured the same biased way, so the bias cancels out when you compare them.</p>
+
+<h3>Google Maps versus TripAdvisor, not local versus foreign</h3>
+<p>Of 16,156 TripAdvisor reviewers, exactly <strong>one</strong> lists Sri Lanka as home. The Google corpus skews local. That is a real difference &mdash; but the Google data contains <em>no</em> reviewer-origin field at all.</p>
+<p>So the defensible claim is about <strong>platforms</strong>. The domestic-versus-international reading is an interpretation, supported by TripAdvisor's own user data and unverifiable on the Google side. Say it that way and it survives questioning.</p>
+
+<h2><span class="num">07</span>What to do next</h2>
+<ul>
+<li><strong>Label the 200 rows.</strong> ~46 minutes. Unblocks the accuracy figure, the rule validation, and a retrain that can actually tell topics apart.</li>
+<li><strong>Have a second person label 60 of them</strong> independently, so you can report agreement. Aim for a kappa of 0.6 or above.</li>
+<li><strong>Retrain on the human labels</strong> and check whether the safety inversion disappears. If it does, that is your headline result.</li>
+<li><strong>Scrape only through Google's official API.</strong> ~5 reviews per place, so go wide across many places rather than deep on a few. Legal, no terms violated, and every review comes with a star rating.</li>
+<li><strong>Fix the row-count error</strong> in the parent project's documentation before submission.</li>
+</ul>
+
+<footer>
+<p>All figures generated by the pipeline in <code>travellens/</code> and stored in <code>reports/</code>. Method scores come from <code>finetune_report.json</code>; the Method&nbsp;F audit from <code>method_f_safety_audit.json</code>; data provenance from <code>data/raw/SOURCES.md</code>.</p>
+<p>Two models are borrowed and must be cited: <code>distilbert-base-uncased-finetuned-sst-2-english</code> and <code>cardiffnlp/twitter-roberta-base-sentiment-latest</code>. District boundaries are CC-BY from thejeshgn/srilanka, derived from GADM 2.7 &mdash; attribution required.</p>
+</footer>
+
+</main>

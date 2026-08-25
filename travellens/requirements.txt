@@ -1,0 +1,9 @@
+# TravelLens LK -- runtime dependencies
+pandas>=1.5
+numpy>=1.23
+scipy>=1.9
+scikit-learn>=1.1
+transformers>=4.40
+torch>=2.0
+sentence-transformers>=2.2
+requests>=2.28

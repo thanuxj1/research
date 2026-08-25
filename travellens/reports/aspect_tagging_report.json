@@ -1,0 +1,51 @@
+{
+  "segments_total": 177840,
+  "segments_usable": 162367,
+  "segments_with_aspect": 66334,
+  "coverage_pct": 40.85,
+  "multi_aspect_segments": 10467,
+  "per_aspect": {
+    "roads_access": {
+      "label": "Roads & Access",
+      "segments": 14044,
+      "destinations": 282,
+      "districts": 19
+    },
+    "facilities": {
+      "label": "Facilities",
+      "segments": 8945,
+      "destinations": 260,
+      "districts": 19
+    },
+    "cleanliness": {
+      "label": "Cleanliness",
+      "segments": 5079,
+      "destinations": 269,
+      "districts": 19
+    },
+    "safety": {
+      "label": "Safety",
+      "segments": 4240,
+      "destinations": 246,
+      "districts": 19
+    },
+    "price_value": {
+      "label": "Price & Value",
+      "segments": 9409,
+      "destinations": 247,
+      "districts": 19
+    },
+    "crowd": {
+      "label": "Crowding & Noise",
+      "segments": 5830,
+      "destinations": 271,
+      "districts": 19
+    },
+    "scenery": {
+      "label": "Scenery & Nature",
+      "segments": 30209,
+      "destinations": 303,
+      "districts": 19
+    }
+  }
+}

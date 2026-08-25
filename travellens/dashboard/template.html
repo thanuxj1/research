@@ -1,0 +1,1370 @@
+<meta charset="utf-8">
+<title>TravelLens LK</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+
+<style>
+/* ---------------------------------------------------------------- tokens */
+:root {
+  --ground:      #F2F4F3;
+  --surface:     #FFFFFF;
+  --surface-2:   #E8ECEA;
+  --line:        #D2DAD7;
+  --line-soft:   #E2E8E6;
+  --ink:         #16211F;
+  --ink-muted:   #5C6B68;
+  --ink-faint:   #8A9894;
+  --accent:      #0F6C6A;
+  --accent-soft: #DCEAE8;
+  --critical:    #A8412C;
+  --critical-soft:#F0DCD6;
+  --good:        #4A7A54;
+  --good-soft:   #DDE8DE;
+  --warn:        #B4761F;
+  --warn-soft:   #F5E7CE;
+  --shadow:      0 1px 2px rgba(22,33,31,.06), 0 4px 16px rgba(22,33,31,.05);
+
+  --f-display: "Archivo", system-ui, sans-serif;
+  --f-body:    "IBM Plex Sans", system-ui, sans-serif;
+  --f-mono:    "IBM Plex Mono", ui-monospace, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --ground:      #0E1614;
+    --surface:     #16211F;
+    --surface-2:   #1E2C29;
+    --line:        #2C3D39;
+    --line-soft:   #223330;
+    --ink:         #E4EAE7;
+    --ink-muted:   #9AAAA6;
+    --ink-faint:   #6B7C78;
+    --accent:      #4DBDB0;
+    --accent-soft: #143430;
+    --critical:    #E0785C;
+    --critical-soft:#3A211B;
+    --good:        #7CB388;
+    --good-soft:   #1C2E20;
+    --warn:        #DFA455;
+    --warn-soft:   #33280F;
+    --shadow:      0 1px 2px rgba(0,0,0,.3), 0 4px 16px rgba(0,0,0,.25);
+  }
+}
+:root[data-theme="dark"] {
+  --ground:      #0E1614;
+  --surface:     #16211F;
+  --surface-2:   #1E2C29;
+  --line:        #2C3D39;
+  --line-soft:   #223330;
+  --ink:         #E4EAE7;
+  --ink-muted:   #9AAAA6;
+  --ink-faint:   #6B7C78;
+  --accent:      #4DBDB0;
+  --accent-soft: #143430;
+  --critical:    #E0785C;
+  --critical-soft:#3A211B;
+  --good:        #7CB388;
+  --good-soft:   #1C2E20;
+  --warn:        #DFA455;
+  --warn-soft:   #33280F;
+  --shadow:      0 1px 2px rgba(0,0,0,.3), 0 4px 16px rgba(0,0,0,.25);
+}
+
+/* ---------------------------------------------------------------- base */
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--ground);
+  color: var(--ink);
+  font-family: var(--f-body);
+  font-size: 15px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+.wrap { max-width: 1140px; margin: 0 auto; padding: 0 24px 80px; }
+
+/* ---------------------------------------------------------------- header */
+.masthead {
+  border-bottom: 1px solid var(--line);
+  background: var(--surface);
+  padding: 22px 0 20px;
+  margin-bottom: 28px;
+}
+.masthead-inner {
+  max-width: 1140px; margin: 0 auto; padding: 0 24px;
+  display: flex; align-items: baseline; gap: 16px; flex-wrap: wrap;
+}
+.brand {
+  font-family: var(--f-display); font-weight: 700; font-size: 20px;
+  letter-spacing: -.01em; margin: 0;
+}
+.brand span { color: var(--accent); }
+.tagline { color: var(--ink-muted); font-size: 13.5px; margin: 0; }
+.corpus-note {
+  margin-left: auto; font-family: var(--f-mono); font-size: 11.5px;
+  color: var(--ink-faint); letter-spacing: .02em;
+}
+
+/* ---------------------------------------------------------------- breadcrumb */
+.crumbs {
+  display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+  font-family: var(--f-mono); font-size: 12.5px;
+  margin-bottom: 22px;
+}
+.crumb {
+  background: none; border: 0; padding: 3px 0; cursor: pointer;
+  font: inherit; color: var(--accent); text-decoration: none;
+  border-bottom: 1px solid transparent;
+}
+.crumb:hover { border-bottom-color: var(--accent); }
+.crumb:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+.crumb[aria-current="page"] { color: var(--ink); cursor: default; }
+.crumb-sep { color: var(--ink-faint); }
+
+/* ---------------------------------------------------------------- headings */
+.view-head { margin-bottom: 20px; }
+h2.view-title {
+  font-family: var(--f-display); font-weight: 600; font-size: 27px;
+  letter-spacing: -.015em; margin: 0 0 5px; text-wrap: balance;
+}
+.view-meta {
+  font-family: var(--f-mono); font-size: 12.5px; color: var(--ink-muted);
+  display: flex; gap: 14px; flex-wrap: wrap;
+}
+h3.section-title {
+  font-family: var(--f-display); font-weight: 600; font-size: 12px;
+  text-transform: uppercase; letter-spacing: .09em; color: var(--ink-muted);
+  margin: 0 0 12px;
+}
+.section { margin-bottom: 34px; }
+
+/* ---------------------------------------------------------------- aspect rows */
+.aspects { display: flex; flex-direction: column; gap: 2px; }
+.aspect-row {
+  display: grid;
+  grid-template-columns: 168px 1fr 62px 74px 96px;
+  align-items: center; gap: 14px;
+  padding: 11px 14px;
+  background: var(--surface);
+  border: 1px solid var(--line-soft);
+  border-radius: 3px;
+  text-align: left; width: 100%; font: inherit; color: inherit;
+  cursor: pointer;
+}
+.aspect-row:hover { border-color: var(--accent); }
+.aspect-row:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.aspect-row.is-static { cursor: default; }
+.aspect-row.is-static:hover { border-color: var(--line-soft); }
+.aspect-name { font-weight: 500; font-size: 14px; display: flex; align-items: center; gap: 7px; }
+
+.bar-track { height: 22px; display: flex; border-radius: 2px; overflow: hidden; background: var(--surface-2); }
+.bar-neg { background: var(--critical); }
+.bar-pos { background: var(--good); }
+
+.rate {
+  font-family: var(--f-mono); font-size: 15px; font-weight: 600;
+  font-variant-numeric: tabular-nums; text-align: right;
+}
+.counts {
+  font-family: var(--f-mono); font-size: 11.5px; color: var(--ink-muted);
+  font-variant-numeric: tabular-nums; text-align: right; white-space: nowrap;
+}
+
+.chip {
+  font-family: var(--f-mono); font-size: 9.5px; font-weight: 600;
+  text-transform: uppercase; letter-spacing: .06em;
+  padding: 2px 5px; border-radius: 2px; white-space: nowrap;
+}
+.chip-low  { background: var(--warn-soft); color: var(--warn); }
+.chip-ctrl { background: var(--accent-soft); color: var(--accent); }
+/* Timeline sparkline. Dot AREA is proportional to the number of opinions
+   behind each point, so a rate resting on 3 reviews reads as a small dot
+   and one resting on 60 reads as a large one. The uncertainty sits in the
+   mark itself rather than in a footnote. */
+.spark { display: block; overflow: visible; }
+.spark-line { fill: none; stroke: var(--ink-faint); stroke-width: 1.4; }
+.spark-dot { stroke: var(--surface); stroke-width: 1.2; }
+.spark-axis { stroke: var(--line); stroke-width: 1; stroke-dasharray: 2 3; }
+.tl-table { width: 100%; border-collapse: collapse; font-size: 12.5px; margin: 6px 0 2px; }
+.tl-table th, .tl-table td { padding: 4px 9px; text-align: right;
+  font-family: var(--f-mono); font-variant-numeric: tabular-nums;
+  border-bottom: 1px solid var(--line-soft); }
+.tl-table th:first-child, .tl-table td:first-child { text-align: left; }
+.tl-table th { font-size: 10px; text-transform: uppercase; letter-spacing: .06em;
+  color: var(--ink-muted); font-weight: 600; }
+
+/* ---------------------------------------------------------------- ranked lists */
+.rank-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(258px, 1fr)); gap: 12px; }
+.rank-card {
+  background: var(--surface); border: 1px solid var(--line-soft);
+  border-radius: 3px; padding: 14px 16px;
+}
+.rank-card h4 {
+  font-family: var(--f-display); font-size: 13px; font-weight: 600;
+  margin: 0 0 10px; display: flex; justify-content: space-between; gap: 10px;
+}
+.rank-card h4 em { font-style: normal; font-family: var(--f-mono); font-size: 11px; color: var(--ink-muted); font-weight: 400; }
+.rank-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 5px; }
+.rank-item { display: flex; align-items: center; gap: 9px; font-size: 13px; }
+.rank-item button {
+  background: none; border: 0; padding: 0; font: inherit; color: var(--accent);
+  cursor: pointer; text-align: left; flex: 1; min-width: 0;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.rank-item button:hover { text-decoration: underline; }
+.rank-item span.plain { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.rank-n {
+  font-family: var(--f-mono); font-size: 12px; font-variant-numeric: tabular-nums;
+  color: var(--critical); font-weight: 600; min-width: 34px; text-align: right;
+}
+
+/* ---------------------------------------------------------------- destination table */
+.dest-table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+.dest-table th {
+  font-family: var(--f-display); font-size: 10.5px; text-transform: uppercase;
+  letter-spacing: .07em; color: var(--ink-muted); font-weight: 600;
+  text-align: left; padding: 8px 12px; border-bottom: 1px solid var(--line);
+}
+.dest-table th.num, .dest-table td.num { text-align: right; font-family: var(--f-mono); font-variant-numeric: tabular-nums; }
+.dest-table td { padding: 9px 12px; border-bottom: 1px solid var(--line-soft); }
+.dest-table tbody tr:hover { background: var(--surface); }
+.dest-table button {
+  background: none; border: 0; padding: 0; font: inherit; color: var(--accent);
+  cursor: pointer; text-align: left;
+}
+.dest-table button:hover { text-decoration: underline; }
+.table-scroll { overflow-x: auto; background: var(--surface); border: 1px solid var(--line-soft); border-radius: 3px; }
+
+/* ---------------------------------------------------------- source links */
+.srclinks {
+  display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+  font-family: var(--f-mono); font-size: 11.5px; color: var(--ink-muted);
+  margin: -8px 0 20px;
+}
+.srclinks a { color: var(--accent); text-decoration: none; border-bottom: 1px solid transparent; }
+.srclinks a:hover { border-bottom-color: var(--accent); }
+.srclinks a:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+.srclinks .warn { color: var(--ink-faint); }
+
+/* ------------------------------------------------------- storyboard media */
+.story-note {
+  border-left: 3px solid var(--accent); background: var(--accent-soft);
+  padding: 11px 16px; border-radius: 0 3px 3px 0; margin-bottom: 14px;
+  font-size: 13px; color: var(--ink);
+}
+.story-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(272px, 1fr)); gap: 12px; }
+.story-card {
+  background: var(--surface); border: 1px solid var(--line-soft);
+  border-radius: 4px; padding: 13px 15px; display: flex; flex-direction: column; gap: 7px;
+}
+.story-card a.story-title {
+  font-weight: 600; font-size: 14px; color: var(--ink); text-decoration: none;
+  line-height: 1.4;
+}
+.story-card a.story-title:hover { color: var(--accent); text-decoration: underline; }
+.story-card a.story-title:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.story-head { display: flex; align-items: center; gap: 7px; flex-wrap: wrap; }
+.story-kind {
+  font-family: var(--f-mono); font-size: 9.5px; font-weight: 600; text-transform: uppercase;
+  letter-spacing: .06em; padding: 2px 6px; border-radius: 2px;
+}
+.story-kind.youtube { background: var(--critical-soft); color: var(--critical); }
+.story-kind.reddit  { background: var(--warn-soft);     color: var(--warn); }
+.story-kind.news    { background: var(--accent-soft);   color: var(--accent); }
+.story-src { font-family: var(--f-mono); font-size: 11px; color: var(--ink-muted); }
+.story-snip { font-size: 12.5px; color: var(--ink-muted); line-height: 1.5; }
+.story-foot {
+  font-family: var(--f-mono); font-size: 10.5px; color: var(--ink-faint);
+  display: flex; gap: 9px; flex-wrap: wrap; margin-top: auto; padding-top: 4px;
+}
+
+/* ---------------------------------------------------------------- quotes */
+.quotes { display: flex; flex-direction: column; gap: 10px; }
+.quote {
+  background: var(--surface); border: 1px solid var(--line-soft);
+  border-left: 3px solid var(--critical);
+  border-radius: 0 3px 3px 0; padding: 11px 15px;
+  font-size: 13.5px; line-height: 1.6;
+}
+.quote-controls {
+  display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+  margin: 0 0 12px; font-family: var(--f-mono); font-size: 11px;
+  color: var(--ink-muted);
+}
+.quote-controls button {
+  font: inherit; padding: 3px 9px; border-radius: 2px; cursor: pointer;
+  background: var(--surface); color: var(--ink-muted);
+  border: 1px solid var(--line);
+}
+.quote-controls button:hover { border-color: var(--accent); color: var(--ink); }
+.quote-controls button[aria-pressed="true"] {
+  background: var(--accent); border-color: var(--accent); color: var(--surface);
+}
+:root[data-theme="dark"] .quote-controls button[aria-pressed="true"],
+:root:not([data-theme="light"]) .quote-controls button[aria-pressed="true"] { color: var(--ground); }
+.quote-controls .sep { color: var(--ink-faint); padding: 0 2px; }
+.quote-band {
+  font-family: var(--f-mono); font-size: 10px; color: var(--ink-faint);
+  border: 1px solid var(--line-soft); border-radius: 2px; padding: 1px 5px;
+  margin-right: 7px;
+}
+.quote-meta {
+  font-family: var(--f-mono); font-size: 10.5px; color: var(--ink-faint);
+  margin-top: 6px; letter-spacing: .02em;
+}
+.quote-panel { margin-top: 14px; }
+
+/* ---------------------------------------------------------------- notices */
+.notice {
+  background: var(--surface); border: 1px solid var(--line-soft);
+  border-left: 3px solid var(--warn);
+  padding: 12px 16px; border-radius: 0 3px 3px 0;
+  font-size: 13px; color: var(--ink-muted); margin-bottom: 24px;
+}
+.notice strong { color: var(--ink); font-weight: 600; }
+.empty { color: var(--ink-muted); font-size: 13.5px; font-style: italic; padding: 10px 0; }
+
+.legend {
+  display: flex; gap: 18px; flex-wrap: wrap; align-items: center;
+  font-family: var(--f-mono); font-size: 11px; color: var(--ink-muted);
+  margin-bottom: 12px;
+}
+
+/* ---------------------------------------------------------------- map */
+.map-shell {
+  display: grid; grid-template-columns: minmax(0, 300px) 1fr; gap: 20px;
+  background: var(--surface); border: 1px solid var(--line-soft);
+  border-radius: 3px; padding: 18px 20px;
+}
+/* Fixed height with preserveAspectRatio letterboxing: Sri Lanka's 1:1.7
+   footprint would otherwise force an 800px-tall column. */
+.map-svg { width: 100%; height: 500px; display: block; }
+.map-region {
+  stroke: var(--surface); stroke-width: .9; cursor: pointer;
+  transition: fill-opacity .12s ease;
+}
+.map-region:hover { stroke: var(--ink); stroke-width: 1.6; }
+.map-region:focus-visible { outline: 2px solid var(--accent); }
+.map-region.no-data { cursor: not-allowed; }
+.map-side { display: flex; flex-direction: column; gap: 14px; min-width: 0; }
+.aspect-picker { display: flex; flex-wrap: wrap; gap: 5px; }
+.aspect-picker button {
+  font-family: var(--f-mono); font-size: 11px; padding: 4px 9px;
+  background: var(--surface); color: var(--ink-muted);
+  border: 1px solid var(--line); border-radius: 2px; cursor: pointer;
+}
+.aspect-picker button:hover { border-color: var(--accent); color: var(--ink); }
+.aspect-picker button[aria-pressed="true"] {
+  background: var(--accent); border-color: var(--accent); color: var(--surface);
+}
+:root[data-theme="dark"] .aspect-picker button[aria-pressed="true"],
+:root:not([data-theme="light"]) .aspect-picker button[aria-pressed="true"] { color: var(--ground); }
+.scale-bar { display: flex; height: 9px; border-radius: 2px; overflow: hidden; }
+.scale-bar i { flex: 1; }
+.scale-ends {
+  display: flex; justify-content: space-between;
+  font-family: var(--f-mono); font-size: 10.5px; color: var(--ink-faint); margin-top: 4px;
+}
+.map-readout {
+  border-top: 1px solid var(--line-soft); padding-top: 12px; min-height: 92px;
+}
+.map-readout h4 {
+  font-family: var(--f-display); font-size: 15px; margin: 0 0 4px; font-weight: 600;
+}
+.map-readout dl {
+  margin: 0; display: grid; grid-template-columns: auto 1fr; gap: 2px 12px;
+  font-size: 12.5px;
+}
+.map-readout dt { color: var(--ink-muted); }
+.map-readout dd {
+  margin: 0; font-family: var(--f-mono); font-variant-numeric: tabular-nums; text-align: right;
+}
+.nodata-note {
+  font-size: 11.5px; color: var(--ink-faint); line-height: 1.5;
+  display: flex; gap: 7px; align-items: flex-start;
+}
+.nodata-swatch {
+  width: 16px; height: 16px; flex: none; border: 1px solid var(--line);
+  border-radius: 2px; margin-top: 1px;
+}
+.hatch-swatch {
+  background: repeating-linear-gradient(45deg,
+    var(--surface-2) 0 2px, var(--line) 2px 3px, var(--surface-2) 3px 5px);
+}
+.map-region.below-threshold { stroke: var(--line); stroke-dasharray: 2 2; }
+
+/* Selection. The clicked district keeps a visible outline and everything else
+   fades back, so the map answers "where am I" while the panels below answer
+   "what is here". Without this the map simply disappeared on navigation and
+   the spatial context went with it. */
+.map-region.is-selected, .map3d-ground.is-selected {
+  stroke: var(--ink); stroke-width: 2.2; }
+.map-region.is-dimmed, .map3d-ground.is-dimmed { opacity: .32; }
+.map-pin.is-dimmed, .map3d-col-cap.is-dimmed, .map3d-col-side.is-dimmed { opacity: .22; }
+.map-selected-note {
+  font-family: var(--f-mono); font-size: 11px; color: var(--ink-muted);
+  display: flex; align-items: center; gap: 8px; margin-bottom: 10px;
+}
+.map-selected-note button {
+  font: inherit; padding: 3px 9px; border-radius: 2px; cursor: pointer;
+  background: var(--surface); color: var(--accent); border: 1px solid var(--line);
+}
+.map-selected-note button:hover { border-color: var(--accent); }
+
+/* Destination pins. Radius scales with the square root of the review count so
+   AREA reflects sample size; fill shows the complaint rate for the aspect the
+   map is coloured by. Only destinations with coordinates appear -- neither
+   review corpus carried any, so these come from OpenStreetMap and cover a
+   subset. The legend says so, because an absent pin must not read as an
+   absent problem. */
+.map-pin { stroke: var(--surface); stroke-width: .8; cursor: pointer; }
+.map-pin:hover { stroke: var(--ink); stroke-width: 1.6; }
+.map-pin:focus-visible { outline: 2px solid var(--accent); }
+.pin-toggle { margin-left: auto; }
+
+/* ---------------------------------------------------------------- 3D map */
+.map3d-ground {
+  stroke: var(--surface); stroke-width: .6; cursor: pointer;
+  transition: fill-opacity .12s ease;
+}
+.map3d-ground:hover { stroke: var(--ink); stroke-width: 1.5; }
+.map3d-ground:focus-visible { outline: 2px solid var(--accent); }
+.map3d-ground.no-data { cursor: not-allowed; }
+.map3d-ground.no-data:hover { stroke: var(--surface); stroke-width: .6; }
+.map3d-col-side { stroke: none; }
+.map3d-col-cap { stroke: var(--surface); stroke-width: .6; cursor: pointer; }
+.map3d-col-cap:hover { stroke: var(--ink); stroke-width: 1.4; }
+.map3d-col-cap:focus-visible { outline: 2px solid var(--accent); }
+.view-switch { display: flex; gap: 5px; }
+.view-switch button {
+  font-family: var(--f-mono); font-size: 11px; padding: 4px 10px;
+  background: var(--surface); color: var(--ink-muted);
+  border: 1px solid var(--line); border-radius: 2px; cursor: pointer;
+}
+.view-switch button[aria-pressed="true"] {
+  background: var(--accent); border-color: var(--accent); color: var(--surface);
+}
+:root[data-theme="dark"] .view-switch button[aria-pressed="true"],
+:root:not([data-theme="light"]) .view-switch button[aria-pressed="true"] { color: var(--ground); }
+@media (prefers-reduced-motion: reduce) { .map3d-rotating { animation: none !important; } }
+@media (max-width: 780px) {
+  .map-shell { grid-template-columns: 1fr; }
+}
+.legend i { display: inline-block; width: 9px; height: 9px; border-radius: 1px; margin-right: 5px; vertical-align: baseline; }
+
+footer.foot {
+  border-top: 1px solid var(--line); margin-top: 46px; padding-top: 18px;
+  font-size: 12px; color: var(--ink-faint); line-height: 1.7;
+}
+footer.foot code { font-family: var(--f-mono); font-size: 11px; }
+
+@media (max-width: 720px) {
+  .aspect-row { grid-template-columns: 116px 1fr 52px; }
+  .aspect-row .spark-cell { display: none; }
+  .aspect-row .counts { display: none; }
+  h2.view-title { font-size: 22px; }
+}
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+</style>
+
+<header class="masthead">
+  <div class="masthead-inner">
+    <h1 class="brand">TravelLens<span>LK</span></h1>
+    <p class="tagline">What visitors complain about, and where</p>
+    <p class="corpus-note" id="corpus-note"></p>
+  </div>
+</header>
+
+<main class="wrap">
+  <nav class="crumbs" id="crumbs" aria-label="Breadcrumb"></nav>
+  <div id="view"></div>
+
+  <footer class="foot">
+    <p><strong>How to read this.</strong> Bar length shows how much visitors discussed an aspect; the red share shows how much of that discussion was negative. Aspects with fewer than 5 opinions are not shown at all — three complaints is an anecdote, not a finding. Aspects with 5–14 opinions carry a <span class="chip chip-low">low</span> flag.</p>
+    <p><strong>Important limitation.</strong> Complaint rate is the share of <em>expressed opinions</em> that are negative — not the share of visitors who had a problem. People rarely write reviews praising a road that simply worked, so every aspect is biased toward complaint once mentioned. Read these rates <em>comparatively between destinations</em>, never as an absolute risk.</p>
+    <p><strong>Two corpora, two audiences.</strong> <code>30,705</code> Google Maps reviews (collected March 2024; 236 destinations; predominantly local reviewers; no star ratings; relative timestamps only) and <code>16,149</code> TripAdvisor reviews (2011–2023; 76 locations; overwhelmingly international reviewers — UK, Australia and India account for most of them; star-rated; absolute dates). <strong>46,854 reviews in total.</strong> The two populations are kept separable, because what local and international visitors complain about is a question this data can answer rather than something to average away.</p>
+
+    <p><strong>Coverage.</strong> 19 of 22 districts. Monaragala, Puttalam and the Vanni have no reviews in either corpus and are drawn hatched — that means <em>not measured</em>, never <em>no complaints</em>.</p>
+
+    <p><strong>Change over time.</strong> A complaint stays in the data long after the problem is fixed &mdash; a road repaired in 2022 is still described as broken by every review written before it. The small chart on each row shows the complaint rate in four periods &mdash; up to 2018, 2019&ndash;20, 2021&ndash;22 and 2023&ndash;24 &mdash; oldest on the left, and the size of each dot shows how many opinions that point rests on. A dramatic-looking swing built on four reviews therefore <em>looks</em> like four reviews. Click any aspect for the same figures as a table.</p>
+
+    <p>We also tested whether old reviews should simply be given less weight, and concluded they should not. The correlation between a destination&rsquo;s historical complaint rate and its current one is about 0.6 and <em>flat</em> from one year out to seven &mdash; a 2017 rate predicts the 2024 rate as well as a 2023 rate does. Age alone does not make a review less informative here, so down-weighting it would discard valid evidence. No decay is applied and no verdict is issued; the rates are shown and the reader judges.</p>
+
+    <p><strong>Method.</strong> Reviews are split into single-opinion segments, tagged by aspect, then classified as complaint / praise / factual by a three-class transformer with a documented domain correction. Aspect and polarity labels are generated automatically and carry error; accuracy is measured against a human-annotated gold set of 200 segments covering roads, cleanliness, facilities and safety. Price, crowding and scenery are reported descriptively and are outside that measured scope.</p>
+  </footer>
+</main>
+
+<script type="application/json" id="tree-data">__DATA__</script>
+<script type="application/json" id="geo-data">__GEO__</script>
+<script type="application/json" id="media-data">__MEDIA__</script>
+<script type="application/json" id="links-data">__LINKS__</script>
+<script type="application/json" id="coords-data">__COORDS__</script>
+<script>
+(function () {
+  "use strict";
+  var TREE = JSON.parse(document.getElementById("tree-data").textContent);
+  var GEO = JSON.parse(document.getElementById("geo-data").textContent);
+  var MEDIA = JSON.parse(document.getElementById("media-data").textContent);
+  var LINKS = JSON.parse(document.getElementById("links-data").textContent);
+  var COORDS = JSON.parse(document.getElementById("coords-data").textContent);
+  var view = document.getElementById("view");
+  var crumbs = document.getElementById("crumbs");
+  var state = { district: null, destination: null, openAspect: null };
+
+  var COMPLAINT_ORDER = ["roads_access","price_value","safety","facilities","cleanliness","crowd","scenery"];
+
+  function esc(s) {
+    return String(s == null ? "" : s)
+      .replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+  }
+  function pct(r) { return r == null ? "--" : Math.round(r * 1000) / 10 + "%"; }
+  function titleCase(s) { return s.replace(/\b\w/g, function (c) { return c.toUpperCase(); }); }
+
+  function sortAspects(obj) {
+    return Object.keys(obj).sort(function (a, b) {
+      var ia = COMPLAINT_ORDER.indexOf(a), ib = COMPLAINT_ORDER.indexOf(b);
+      if (ia !== ib) return (ia < 0 ? 99 : ia) - (ib < 0 ? 99 : ib);
+      return b.localeCompare(a);
+    });
+  }
+
+  /* An aspect row encodes both required numbers in one mark:
+     bar WIDTH  = volume of discussion (relative to the busiest aspect here)
+     red SHARE  = how negative that discussion was                         */
+  function aspectRow(a, maxOpinions, clickable) {
+    var total = a.n_opinions || 1;
+    var width = Math.max(4, Math.round(100 * total / (maxOpinions || 1)));
+    var negShare = Math.round(100 * a.n_negative / total);
+    var chip = a.confidence === "low"
+      ? ' <span class="chip chip-low" title="5-14 opinions only">low</span>' : "";
+    if (a.aspect === "scenery") {
+      chip += ' <span class="chip chip-ctrl" title="Positive control aspect: verifies the model is not labelling everything negative">control</span>';
+    }
+    return '<button class="aspect-row' + (clickable ? "" : " is-static") + '"' +
+        (clickable ? ' data-aspect="' + esc(a.aspect) + '"' : ' disabled') + '>' +
+      '<span class="aspect-name">' + esc(a.label) + chip + '</span>' +
+      '<span class="bar-track" style="width:' + width + '%" ' +
+        'title="' + a.n_negative + ' complaints, ' + a.n_positive + ' praise">' +
+        '<span class="bar-neg" style="width:' + negShare + '%"></span>' +
+        '<span class="bar-pos" style="width:' + (100 - negShare) + '%"></span>' +
+      '</span>' +
+      '<span class="rate">' + pct(a.complaint_rate) + '</span>' +
+      '<span class="counts">' + a.n_negative + ' / ' + a.n_positive + '</span>' +
+      '<span class="spark-cell">' + sparkline(a.timeline) + '</span>' +
+    '</button>';
+  }
+
+
+  /* Year labels derived from the data rather than assumed. Each corpus stores
+     review age relative to its own collection date (Google March 2024,
+     TripAdvisor May 2023); converting back gives the spans below, which fall on
+     clean year boundaries. Approximate, because Google records age in coarse
+     steps ("4 years ago") rather than as a date. */
+  var BAND_LABEL = {"5y+": "up to 2018", "3-5y": "2019–2020",
+                    "1-3y": "2021–2022", "0-1y": "2023–2024"};
+
+  /* Complaint rate across the four periods, oldest on the left.
+     Dot radius scales with the SQUARE ROOT of the opinion count so that area,
+     not radius, is proportional to sample size -- the standard convention, and
+     the one that stops a big dot from overstating its weight. Bands with no
+     opinions are absent; nothing is interpolated across a gap. */
+  function sparkline(tl) {
+    if (!tl || !tl.length) return "";
+    var pts = tl.filter(function (t) { return t.n_opinions > 0 && t.rate !== null; });
+    if (pts.length < 2) return '<svg class="spark" width="88" height="26"></svg>';
+    var W = 88, H = 26, PAD = 6;
+    var maxN = Math.max.apply(null, pts.map(function (p) { return p.n_opinions; }));
+    var xs = {}, order = ["5y+", "3-5y", "1-3y", "0-1y"];
+    order.forEach(function (b, i) { xs[b] = PAD + i * (W - 2 * PAD) / 3; });
+    var y = function (r) { return H - PAD - r * (H - 2 * PAD); };
+    var d = pts.map(function (p, i) {
+      return (i ? "L" : "M") + xs[p.band].toFixed(1) + " " + y(p.rate).toFixed(1);
+    }).join("");
+    var dots = pts.map(function (p) {
+      var r = 1.6 + 3.4 * Math.sqrt(p.n_opinions / maxN);
+      var col = p.rate >= 0.5 ? "var(--critical)" : "var(--good)";
+      return '<circle class="spark-dot" cx="' + xs[p.band].toFixed(1) + '" cy="' +
+        y(p.rate).toFixed(1) + '" r="' + r.toFixed(1) + '" fill="' + col + '"></circle>';
+    }).join("");
+    var title = pts.map(function (p) {
+      return (BAND_LABEL[p.band] || p.band) + ": " + Math.round(100 * p.rate) +
+        "% of " + p.n_opinions + " opinions";
+    }).join(" \u2014 ");
+    return '<svg class="spark" width="' + W + '" height="' + H + '" role="img" ' +
+      'aria-label="complaint rate over time">' +
+      '<title>' + esc(title) + ' (oldest left, newest right; dot size = number of opinions)</title>' +
+      '<line class="spark-axis" x1="0" y1="' + y(0.5).toFixed(1) + '" x2="' + W +
+      '" y2="' + y(0.5).toFixed(1) + '"></line>' +
+      '<path class="spark-line" d="' + d + '"></path>' + dots + '</svg>';
+  }
+
+  /* The same timeline as a table, shown in the evidence panel. The chart gives
+     the shape; the table gives the actual counts, so nobody has to estimate a
+     value off a 26-pixel graphic. */
+
+  function timelineTable(tl) {
+    if (!tl) return "";
+    var rows = tl.filter(function (t) { return t.n_opinions > 0; });
+    if (rows.length < 2) return "";
+    return '<table class="tl-table"><thead><tr><th>Years</th>' +
+      '<th>Complaints</th><th>Praise</th><th>Complaint rate</th></tr></thead><tbody>' +
+      rows.map(function (t) {
+        return '<tr><td>' + (BAND_LABEL[t.band] || t.band) + '</td><td>' +
+          t.n_negative + '</td><td>' + t.n_positive + '</td><td>' +
+          Math.round(100 * t.rate) + '%</td></tr>';
+      }).join("") + '</tbody></table>' +
+      '<p style="font-size:12px;color:var(--ink-muted);margin:4px 0 0">Oldest first. Years are ' +
+      'approximate &mdash; Google records review age in coarse steps rather than as a date. ' +
+      'Read the rate, not the counts &mdash; a later row can show more complaints ' +
+      'simply because more people wrote reviews that year.</p>';
+  }
+
+  function aspectBlock(aspects, clickable) {
+    var keys = sortAspects(aspects);
+    if (!keys.length) return '<p class="empty">No aspect reached the 5-opinion threshold here.</p>';
+    var max = 0;
+    keys.forEach(function (k) { max = Math.max(max, aspects[k].n_opinions || 0); });
+    return '<div class="legend">' +
+        '<span><i style="background:var(--critical)"></i>complaints</span>' +
+        '<span><i style="background:var(--good)"></i>praise</span>' +
+        '<span>bar length = volume of discussion</span>' +
+        '<span>right column = complaints / praise</span>' +
+        '<span>far right = rate over time, oldest left, dot size = sample</span>' +
+      '</div><div class="aspects">' +
+      keys.map(function (k) { return aspectRow(aspects[k], max, clickable); }).join("") +
+      '</div>';
+  }
+
+  /* Evidence quotes, sortable and filterable by the reader.
+     Sorting is done here rather than server-side so the whole retained set stays
+     available -- a reader looking for RECENT complaints should not be shown only
+     the longest ones and told that is what people said. */
+  var QUOTE_STATE = { sort: "newest", band: "all" };
+  var BAND_ORDER = { "5y+": 0, "3-5y": 1, "1-3y": 2, "0-1y": 3 };
+
+  function sortQuotes(quotes) {
+    var q = quotes.slice();
+    if (QUOTE_STATE.band !== "all") {
+      q = q.filter(function (x) { return x.band === QUOTE_STATE.band; });
+    }
+    var by = QUOTE_STATE.sort;
+    q.sort(function (a, b) {
+      if (by === "newest") return (BAND_ORDER[b.band] || 0) - (BAND_ORDER[a.band] || 0);
+      if (by === "oldest") return (BAND_ORDER[a.band] || 0) - (BAND_ORDER[b.band] || 0);
+      if (by === "strongest") return (b.conf || 0) - (a.conf || 0);
+      return (b.len || 0) - (a.len || 0);   /* most detailed */
+    });
+    return q;
+  }
+
+  function quoteControls(a) {
+    var bands = {};
+    (a.quotes || []).forEach(function (q) { if (q.band) bands[q.band] = (bands[q.band] || 0) + 1; });
+    var sorts = [["newest", "Newest first"], ["oldest", "Oldest first"],
+                 ["strongest", "Most clearly negative"], ["detailed", "Most detailed"]];
+    var html = '<div class="quote-controls"><span>Sort</span>' +
+      sorts.map(function (p) {
+        return '<button data-qsort="' + p[0] + '" aria-pressed="' +
+          (QUOTE_STATE.sort === p[0]) + '">' + p[1] + '</button>';
+      }).join("");
+    var order = ["0-1y", "1-3y", "3-5y", "5y+"].filter(function (b) { return bands[b]; });
+    if (order.length > 1) {
+      html += '<span class="sep">|</span><span>Period</span>' +
+        '<button data-qband="all" aria-pressed="' + (QUOTE_STATE.band === "all") + '">All</button>' +
+        order.map(function (b) {
+          return '<button data-qband="' + b + '" aria-pressed="' +
+            (QUOTE_STATE.band === b) + '">' + (BAND_LABEL[b] || b) +
+            ' (' + bands[b] + ')</button>';
+        }).join("");
+    }
+    return html + '</div>';
+  }
+
+  function quoteBlock(a) {
+    if (!a.quotes || !a.quotes.length) {
+      return '<p class="empty">No complaint quotes stored for this aspect.</p>';
+    }
+    var q = sortQuotes(a.quotes);
+    var body = q.length
+      ? q.map(function (x) {
+          return '<blockquote class="quote">' +
+            (x.band ? '<span class="quote-band">' + esc(BAND_LABEL[x.band] || x.band) + '</span>' : "") +
+            esc(x.text) +
+            '<div class="quote-meta">' + esc(x.destination) + ' &middot; review ' +
+            esc(x.review_id) + (x.conf ? ' &middot; classifier confidence ' +
+            Math.round(100 * x.conf) + '%' : "") + '</div></blockquote>';
+        }).join("")
+      : '<p class="empty">No complaints stored from that period.</p>';
+    return quoteControls(a) + '<div class="quotes">' + body + '</div>';
+  }
+
+  /* ------------------------------------------------------------ map
+     Equirectangular projection, drawn as inline SVG. Sri Lanka spans about
+     4 degrees of latitude, so a plain lon/lat projection with a cos(lat)
+     width correction is accurate enough at this scale and needs no library.
+
+     Districts we have no reviews for are hatched, NEVER shaded pale. Pale
+     would read as "few complaints"; the truth is "never measured".         */
+  var MAP_ASPECT = "roads_access";
+  var PROJ = null;
+
+  function project() {
+    if (PROJ) return PROJ;
+    var minLon = 180, maxLon = -180, minLat = 90, maxLat = -90;
+    GEO.features.forEach(function (f) {
+      eachRing(f, function (ring) {
+        ring.forEach(function (p) {
+          if (p[0] < minLon) minLon = p[0];
+          if (p[0] > maxLon) maxLon = p[0];
+          if (p[1] < minLat) minLat = p[1];
+          if (p[1] > maxLat) maxLat = p[1];
+        });
+      });
+    });
+    var W = 420;
+    var kx = Math.cos((minLat + maxLat) / 2 * Math.PI / 180);
+    var H = W * ((maxLat - minLat) / ((maxLon - minLon) * kx));
+    PROJ = {
+      W: W, H: H,
+      x: function (lon) { return (lon - minLon) / (maxLon - minLon) * W; },
+      y: function (lat) { return (maxLat - lat) / (maxLat - minLat) * H; }
+    };
+    return PROJ;
+  }
+
+  function eachRing(feature, fn) {
+    var g = feature.geometry;
+    if (g.type === "Polygon") g.coordinates.forEach(fn);
+    else if (g.type === "MultiPolygon") g.coordinates.forEach(function (poly) { poly.forEach(fn); });
+  }
+
+  function featurePath(feature) {
+    var p = project(), d = "";
+    eachRing(feature, function (ring) {
+      ring.forEach(function (pt, i) {
+        d += (i ? "L" : "M") + p.x(pt[0]).toFixed(1) + " " + p.y(pt[1]).toFixed(1);
+      });
+      d += "Z";
+    });
+    return d;
+  }
+
+  function mapValues(aspectKey) {
+    var vals = {};
+    Object.keys(TREE.districts).forEach(function (name) {
+      var a = TREE.districts[name].aspects[aspectKey];
+      if (a && a.complaint_rate != null) {
+        vals[name] = { rate: a.complaint_rate, neg: a.n_negative, pos: a.n_positive,
+                       conf: a.confidence, label: a.label };
+      }
+    });
+    return vals;
+  }
+
+
+  /* Look up one aspect's stats for a destination, wherever it sits in the tree. */
+  function destAspect(dest, aspectKey) {
+    var names = Object.keys(TREE.districts);
+    for (var i = 0; i < names.length; i++) {
+      var d = TREE.districts[names[i]].destinations[dest];
+      if (d && d.aspects && d.aspects[aspectKey]) return d.aspects[aspectKey];
+    }
+    return null;
+  }
+
+  /* Which district a destination sits in. The coordinates file carries one,
+     but the tree is authoritative -- OSM sometimes files a place under a
+     different district than the corpus does (Sembuwatta: Kandy vs Matale). */
+  function destDistrict(dest) {
+    var names = Object.keys(TREE.districts);
+    for (var i = 0; i < names.length; i++) {
+      if (TREE.districts[names[i]].destinations[dest]) return names[i];
+    }
+    return null;
+  }
+
+  var SHOW_PINS = true;
+
+
+  /* ----------------------------------------------------------------- 3D map
+     Hand-rolled isometric projection. No library: the published page blocks
+     third-party scripts, and this needs about sixty lines anyway.
+
+       1. rotate the ground plane about its centre by `angle`
+       2. project isometrically -- screenX = (x-y)*cos30, screenY = (x+y)*sin30
+       3. lift each destination into a column whose HEIGHT is its complaint
+          count and whose COLOUR is its complaint rate
+       4. draw far-to-near so nearer columns occlude farther ones
+
+     Honest caveat, stated in the interface too: 3D is worse than the flat map
+     for reading values. Perspective shrinks distant columns and near ones hide
+     far ones, so two heights cannot be compared reliably across depth. It is
+     offered for presentation; the flat view remains the one to read numbers
+     from, and both are driven by identical data. */
+  var MAP_MODE = "flat";        // "flat" | "iso"
+  var SELECTED_DISTRICT = null; // drives the map highlight
+  var ISO_ANGLE = 0.6;          // radians, animated
+  var ISO_SPIN = null;
+
+  var COS30 = Math.cos(Math.PI / 6), SIN30 = Math.sin(Math.PI / 6);
+
+  function isoProject(x, y, z, cx, cy, angle) {
+    var dx = x - cx, dy = y - cy;
+    var rx = dx * Math.cos(angle) - dy * Math.sin(angle);
+    var ry = dx * Math.sin(angle) + dy * Math.cos(angle);
+    return [(rx - ry) * COS30, (rx + ry) * SIN30 - z];
+  }
+
+  function renderMap3D() {
+    var host = document.getElementById("map-svg-host");
+    if (!host) return;
+    var p = project();
+    var vals = mapValues(MAP_ASPECT);
+    var cx = p.W / 2, cy = p.H / 2, a = ISO_ANGLE;
+
+    // Ground: district outlines, flattened onto the plane.
+    var ground = GEO.features.map(function (f) {
+      var name = f.properties.district;
+      var v = vals[name];
+      var d = "";
+      eachRing(f, function (ring) {
+        ring.forEach(function (pt, i) {
+          var q = isoProject(p.x(pt[0]), p.y(pt[1]), 0, cx, cy, a);
+          d += (i ? "L" : "M") + q[0].toFixed(1) + " " + q[1].toFixed(1);
+        });
+        d += "Z";
+      });
+      var fill = v ? "var(--critical)" : "var(--surface-2)";
+      var op = v ? (0.10 + 0.28 * v.rate).toFixed(3) : "1";
+      // Districts stay selectable here exactly as they are on the flat map --
+      // the two views must behave the same, or switching to 3D quietly removes
+      // a way of navigating the data.
+      if (!v) {
+        return '<path class="map3d-ground no-data" d="' + d + '" fill="' + fill +
+          '" fill-opacity="' + op + '" tabindex="-1"><title>' + esc(name) +
+          ' — no reviews collected</title></path>';
+      }
+      var gcls = "map3d-ground" + (SELECTED_DISTRICT
+        ? (name === SELECTED_DISTRICT ? " is-selected" : " is-dimmed") : "");
+      return '<path class="' + gcls + '" d="' + d + '" fill="' + fill +
+        '" fill-opacity="' + op + '" data-district="' + esc(name) + '" ' +
+        'data-map-hover="' + esc(name) + '" tabindex="0" role="button">' +
+        '<title>' + esc(name) + ': ' + pct(v.rate) + ' complaint rate (' +
+        v.neg + ' complaints, ' + v.pos + ' praise) — click to open</title></path>';
+    }).join("");
+
+    // Columns: one per destination that has coordinates and data.
+    var cols = [];
+    var maxN = 1;
+    Object.keys(COORDS).forEach(function (dest) {
+      var rec = destAspect(dest, MAP_ASPECT);
+      if (rec && rec.n_negative) maxN = Math.max(maxN, rec.n_negative);
+    });
+    Object.keys(COORDS).forEach(function (dest) {
+      var rec = destAspect(dest, MAP_ASPECT);
+      if (!rec || !rec.n_negative || rec.complaint_rate === null) return;
+      var c = COORDS[dest];
+      var bx = p.x(c.lon), by = p.y(c.lat);
+      // Height on a square-root scale: linear height would let one busy place
+      // tower over everything and hide the rest behind it.
+      var h = 6 + 120 * Math.sqrt(rec.n_negative / maxN);
+      var base = isoProject(bx, by, 0, cx, cy, a);
+      var top = isoProject(bx, by, h, cx, cy, a);
+      cols.push({ base: base, top: top, dest: dest, rec: rec,
+                  depth: base[1] });          // larger screenY = nearer
+    });
+    cols.sort(function (u, v2) { return u.depth - v2.depth; });
+
+    var colSvg = cols.map(function (c) {
+      var op = (0.45 + 0.5 * c.rec.complaint_rate).toFixed(2);
+      var w = 2.2;
+      var dim = SELECTED_DISTRICT && destDistrict(c.dest) !== SELECTED_DISTRICT
+        ? " is-dimmed" : "";
+      return '<path class="map3d-col-side' + dim + '" d="M' +
+          (c.base[0] - w).toFixed(1) + ' ' + c.base[1].toFixed(1) +
+          'L' + (c.top[0] - w).toFixed(1) + ' ' + c.top[1].toFixed(1) +
+          'L' + (c.top[0] + w).toFixed(1) + ' ' + c.top[1].toFixed(1) +
+          'L' + (c.base[0] + w).toFixed(1) + ' ' + c.base[1].toFixed(1) + 'Z" ' +
+          'fill="var(--critical)" fill-opacity="' + (op * 0.55).toFixed(2) + '"></path>' +
+        '<circle class="map3d-col-cap' + dim + '" cx="' + c.top[0].toFixed(1) + '" cy="' +
+          c.top[1].toFixed(1) + '" r="' + (2.6 + 2.2 * c.rec.complaint_rate).toFixed(1) +
+          '" fill="var(--critical)" fill-opacity="' + op + '" ' +
+          'data-destination="' + esc(c.dest) + '" tabindex="0" role="button">' +
+          '<title>' + esc(c.dest) + ': ' + c.rec.n_negative + ' complaints, ' +
+          pct(c.rec.complaint_rate) + ' rate</title></circle>';
+    }).join("");
+
+    // The rotated projection needs a viewBox wide enough for any angle.
+    var R = Math.sqrt(cx * cx + cy * cy) * 1.15;
+    var vb = [-R * COS30 * 1.1, -R * SIN30 - 140,
+              2 * R * COS30 * 1.1, 2 * R * SIN30 + 190];
+    host.innerHTML = '<svg class="map-svg" viewBox="' + vb.join(" ") + '" ' +
+      'role="img" aria-label="Three-dimensional view of complaints by destination">' +
+      ground + colSvg + '</svg>';
+
+    var sc = document.getElementById("scale-ends");
+    if (sc) sc.innerHTML = '<span>column height = complaints</span>' +
+                           '<span>shade = rate</span>';
+    document.querySelectorAll(".aspect-picker button[data-map-aspect]").forEach(function (b) {
+      b.setAttribute("aria-pressed", b.dataset.mapAspect === MAP_ASPECT ? "true" : "false");
+    });
+    setReadout(null);
+  }
+
+  function startSpin() {
+    if (ISO_SPIN) return;
+    if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    ISO_SPIN = setInterval(function () {
+      if (MAP_MODE !== "iso") return;
+      ISO_ANGLE += 0.012;
+      renderMap3D();
+    }, 90);
+  }
+
+  function stopSpin() {
+    if (ISO_SPIN) { clearInterval(ISO_SPIN); ISO_SPIN = null; }
+  }
+
+  function renderMapAny() {
+    if (MAP_MODE === "iso") { renderMap3D(); startSpin(); }
+    else { stopSpin(); renderMap(); }
+  }
+
+  function renderMap() {
+    var host = document.getElementById("map-svg-host");
+    if (!host) return;
+    var p = project();
+    var vals = mapValues(MAP_ASPECT);
+    var rates = Object.keys(vals).map(function (k) { return vals[k].rate; });
+    var lo = rates.length ? Math.min.apply(null, rates) : 0;
+    var hi = rates.length ? Math.max.apply(null, rates) : 1;
+    var span = (hi - lo) || 1;
+
+    var paths = GEO.features.map(function (f) {
+      var name = f.properties.district;
+      var v = vals[name];
+      var d = featurePath(f);
+      var known = TREE.districts[name];
+
+      /* Three states, deliberately distinct. Collapsing the middle one into
+         either neighbour would misinform: "we never looked" and "we looked
+         and found too little to report" are different claims. */
+      if (!known) {
+        return '<path class="map-region no-data" d="' + d + '" fill="url(#hatch)" ' +
+          'tabindex="-1"><title>' + esc(name) + ' — no reviews collected</title></path>';
+      }
+      if (!v) {
+        return '<path class="map-region below-threshold" d="' + d + '" ' +
+          'fill="var(--surface-2)" data-district="' + esc(name) + '" ' +
+          'data-map-hover="' + esc(name) + '" tabindex="0" role="button">' +
+          '<title>' + esc(name) + ' — ' + known.n_reviews + ' reviews collected, but fewer than ' +
+          TREE.thresholds.suppress_below + ' opinions about this aspect</title></path>';
+      }
+      var op = (0.14 + 0.78 * (v.rate - lo) / span).toFixed(3);
+      var cls = "map-region" + (SELECTED_DISTRICT
+        ? (name === SELECTED_DISTRICT ? " is-selected" : " is-dimmed") : "");
+      return '<path class="' + cls + '" d="' + d + '" fill="var(--critical)" ' +
+        'fill-opacity="' + op + '" data-district="' + esc(name) + '" ' +
+        'data-map-hover="' + esc(name) + '" tabindex="0" role="button">' +
+        '<title>' + esc(name) + ': ' + pct(v.rate) + ' complaint rate (' +
+        v.neg + ' complaints, ' + v.pos + ' praise)</title></path>';
+    }).join("");
+
+    // Destination pins for the aspect currently colouring the map.
+    var pins = "";
+    if (SHOW_PINS) {
+      var withCoords = Object.keys(COORDS).filter(function (d) {
+        var rec = destAspect(d, MAP_ASPECT);
+        return rec && rec.complaint_rate !== null;
+      });
+      var maxRev = 1;
+      withCoords.forEach(function (d) {
+        var rec = destAspect(d, MAP_ASPECT);
+        maxRev = Math.max(maxRev, rec.n_opinions || 1);
+      });
+      pins = withCoords.map(function (d) {
+        var c = COORDS[d], rec = destAspect(d, MAP_ASPECT);
+        var cx = p.x(c.lon), cy = p.y(c.lat);
+        var r = 1.8 + 4.2 * Math.sqrt((rec.n_opinions || 1) / maxRev);
+        var op = (0.35 + 0.6 * rec.complaint_rate).toFixed(2);
+        var pinCls = "map-pin" + (SELECTED_DISTRICT &&
+          (COORDS[d].district || destDistrict(d)) !== SELECTED_DISTRICT ? " is-dimmed" : "");
+        return '<circle class="' + pinCls + '" cx="' + cx.toFixed(1) + '" cy="' + cy.toFixed(1) +
+          '" r="' + r.toFixed(1) + '" fill="var(--critical)" fill-opacity="' + op + '" ' +
+          'data-destination="' + esc(d) + '" tabindex="0" role="button">' +
+          '<title>' + esc(d) + ': ' + pct(rec.complaint_rate) + ' of ' +
+          rec.n_opinions + ' opinions</title></circle>';
+      }).join("");
+    }
+
+    host.innerHTML =
+      '<svg class="map-svg" viewBox="0 0 ' + p.W + ' ' + Math.round(p.H) + '" ' +
+        'role="img" aria-label="Complaint rate by district">' +
+        '<defs><pattern id="hatch" width="5" height="5" patternUnits="userSpaceOnUse" ' +
+          'patternTransform="rotate(45)">' +
+          '<rect width="5" height="5" fill="var(--surface-2)"></rect>' +
+          '<line x1="0" y1="0" x2="0" y2="5" stroke="var(--line)" stroke-width="1.6"></line>' +
+        '</pattern></defs>' + paths + pins + '</svg>';
+
+    var sc = document.getElementById("scale-ends");
+    if (sc) sc.innerHTML = '<span>' + pct(lo) + '</span><span>' + pct(hi) + '</span>';
+
+    document.querySelectorAll(".aspect-picker button").forEach(function (b) {
+      b.setAttribute("aria-pressed", b.dataset.mapAspect === MAP_ASPECT ? "true" : "false");
+    });
+    setReadout(null);
+  }
+
+  function setReadout(name) {
+    var box = document.getElementById("map-readout");
+    if (!box) return;
+    var vals = mapValues(MAP_ASPECT);
+    if (!name || !vals[name]) {
+      var withData = Object.keys(vals).length;
+      box.innerHTML = '<h4>' + esc(C_LABEL(MAP_ASPECT)) + '</h4>' +
+        '<p style="margin:0;font-size:12.5px;color:var(--ink-muted)">Hover or tap a district. ' +
+        withData + ' of ' + GEO.features.length + ' districts have review data.</p>';
+      return;
+    }
+    var v = vals[name];
+    var d = TREE.districts[name];
+    box.innerHTML = '<h4>' + esc(name) + '</h4><dl>' +
+      '<dt>Complaint rate</dt><dd>' + pct(v.rate) + '</dd>' +
+      '<dt>Complaints</dt><dd>' + v.neg + '</dd>' +
+      '<dt>Praise</dt><dd>' + v.pos + '</dd>' +
+      '<dt>Destinations</dt><dd>' + d.n_destinations + '</dd>' +
+      '<dt>Reviews</dt><dd>' + d.n_reviews.toLocaleString() + '</dd></dl>';
+  }
+
+  function C_LABEL(key) {
+    return (TREE.aspects[key] || {}).label || key;
+  }
+
+  function mapBlock() {
+    var picker = COMPLAINT_ORDER.filter(function (k) { return TREE.aspects[k]; })
+      .map(function (k) {
+        return '<button data-map-aspect="' + esc(k) + '" aria-pressed="false">' +
+          esc(C_LABEL(k)) + '</button>';
+      }).join("");
+    return '<div class="map-shell">' +
+      '<div class="map-side">' +
+        '<div><h3 class="section-title" style="margin-bottom:7px">View</h3>' +
+        '<div class="view-switch" style="margin-bottom:12px">' +
+          '<button data-map-mode="flat" aria-pressed="' + (MAP_MODE === "flat") + '">Flat map</button>' +
+          '<button data-map-mode="iso" aria-pressed="' + (MAP_MODE === "iso") + '">3D, rotating</button>' +
+        '</div>' +
+        '<div><h3 class="section-title" style="margin-bottom:7px">Colour the map by</h3>' +
+        '<div class="aspect-picker" style="margin-bottom:8px">' +
+          '<button data-pin-toggle aria-pressed="' + SHOW_PINS + '">' +
+          (SHOW_PINS ? 'Hide destinations' : 'Show destinations') + '</button></div>' +
+        '<div class="aspect-picker">' + picker + '</div></div>' +
+        '<div><div class="scale-bar">' +
+          '<i style="background:var(--critical);opacity:.14"></i>' +
+          '<i style="background:var(--critical);opacity:.33"></i>' +
+          '<i style="background:var(--critical);opacity:.52"></i>' +
+          '<i style="background:var(--critical);opacity:.72"></i>' +
+          '<i style="background:var(--critical);opacity:.92"></i></div>' +
+          '<div class="scale-ends" id="scale-ends"></div></div>' +
+        '<div class="nodata-note"><span class="nodata-swatch hatch-swatch"></span>' +
+        '<span><strong>Hatched: no reviews collected.</strong> Not zero complaints. ' +
+        'Monaragala, Puttalam and the Vanni are absent from both corpora.</span></div>' +
+        '<div class="nodata-note"><span class="nodata-swatch" style="background:var(--accent-soft);border-color:var(--accent)"></span>' +
+        '<span><strong>Reading values?</strong> Use the flat map. In the 3D view ' +
+        'perspective shrinks distant columns and near ones hide far ones, so two ' +
+        'heights cannot be compared reliably. Both views show identical data.</span></div>' +
+        '<div class="nodata-note"><span class="nodata-swatch" style="background:var(--critical);opacity:.6;border-radius:50%"></span>' +
+        '<span><strong>Dots are destinations.</strong> Size = number of opinions, ' +
+        'shade = complaint rate for the selected topic. Only places with known ' +
+        'coordinates appear; neither review dataset recorded any, so these come ' +
+        'from OpenStreetMap and cover part of the corpus. A missing dot means ' +
+        'no coordinates, not no problem.</span></div>' +
+        '<div class="nodata-note"><span class="nodata-swatch" style="background:var(--surface-2)"></span>' +
+        '<span><strong>Plain grey: below threshold.</strong> Reviews exist, but fewer than ' +
+        TREE.thresholds.suppress_below + ' opinions about this aspect — too few to report.</span></div>' +
+        '<div class="map-readout" id="map-readout"></div>' +
+      '</div></div>' +
+      '<div id="map-svg-host"></div>' +
+    '</div>';
+  }
+
+  /* ------------------------------------------------------------ views */
+  function renderCountry() {
+    var c = TREE.coverage;
+    var districts = Object.keys(TREE.districts).sort(function (a, b) {
+      return TREE.districts[b].n_reviews - TREE.districts[a].n_reviews;
+    });
+    var html =
+      '<div class="view-head"><h2 class="view-title">Sri Lanka</h2>' +
+      '<div class="view-meta"><span>' + c.n_districts + ' districts</span>' +
+      '<span>' + c.n_destinations + ' destinations</span>' +
+      '<span>' + c.n_reviews.toLocaleString() + ' reviews</span>' +
+      '<span>' + c.n_aspect_mentions.toLocaleString() + ' aspect mentions</span></div></div>' +
+
+      '<div class="notice"><strong>Roads and access is the country’s largest complaint category</strong> ' +
+      'by volume, and safety carries the highest complaint rate of any aspect. Scenery is included as a ' +
+      'positive control — its low complaint rate confirms the classifier is not simply labelling everything negative.</div>' +
+
+      '<div class="section"><h3 class="section-title">Where complaints concentrate</h3>' +
+      mapBlock() + '</div>' +
+
+      '<div class="section"><h3 class="section-title">National picture &mdash; select an aspect to see which districts drive it</h3>' +
+      aspectBlock(TREE.aspects, true) + '<div id="quote-panel" class="quote-panel"></div></div>' +
+
+      '<div class="section"><h3 class="section-title">Districts</h3><div class="table-scroll"><table class="dest-table">' +
+      '<thead><tr><th>District</th><th class="num">Destinations</th><th class="num">Reviews</th><th>Top complaint</th></tr></thead><tbody>' +
+      districts.map(function (d) {
+        var n = TREE.districts[d];
+        var top = n.top_complaint ? (n.aspects[n.top_complaint] || {}).label : "—";
+        return '<tr><td><button data-district="' + esc(d) + '">' + esc(d) + '</button></td>' +
+          '<td class="num">' + n.n_destinations + '</td>' +
+          '<td class="num">' + n.n_reviews.toLocaleString() + '</td>' +
+          '<td>' + esc(top || "—") + '</td></tr>';
+      }).join("") + '</tbody></table></div></div>';
+    view.innerHTML = html;
+  }
+
+  function renderDistrict(name) {
+    var d = TREE.districts[name];
+    var dests = Object.keys(d.destinations).sort(function (a, b) {
+      return d.destinations[b].top_complaint_n - d.destinations[a].top_complaint_n;
+    });
+    var cards = sortAspects(d.aspects).filter(function (k) {
+      return k !== "scenery" && (d.aspects[k].worst_destinations || []).length;
+    }).slice(0, 4).map(function (k) {
+      var a = d.aspects[k];
+      return '<div class="rank-card"><h4>' + esc(a.label) + ' <em>worst places</em></h4><ul class="rank-list">' +
+        a.worst_destinations.map(function (w) {
+          return '<li class="rank-item"><span class="rank-n">' + w.n_negative + '</span>' +
+            '<button data-destination="' + esc(w.destination) + '">' + esc(w.destination) + '</button></li>';
+        }).join("") + '</ul></div>';
+    }).join("");
+
+    view.innerHTML =
+      '<div class="view-head"><h2 class="view-title">' + esc(name) + '</h2>' +
+      '<div class="view-meta"><span>' + d.n_destinations + ' destinations</span>' +
+      '<span>' + d.n_reviews.toLocaleString() + ' reviews</span></div></div>' +
+
+      '<div class="section"><div class="map-selected-note">' +
+        '<span>Showing <strong>' + esc(name) + '</strong> on the map</span>' +
+        '<button data-nav="country">Back to all districts</button></div>' +
+        mapBlock() + '</div>' +
+
+      '<div class="section"><h3 class="section-title">Aspect profile</h3>' +
+      aspectBlock(d.aspects, true) + '<div id="quote-panel" class="quote-panel"></div></div>' +
+
+      (cards ? '<div class="section"><h3 class="section-title">Where the complaints concentrate</h3>' +
+        '<div class="rank-grid">' + cards + '</div></div>' : "") +
+
+      '<div class="section"><h3 class="section-title">All destinations</h3><div class="table-scroll"><table class="dest-table">' +
+      '<thead><tr><th>Destination</th><th class="num">Reviews</th><th>Top complaint</th><th class="num">Complaints</th></tr></thead><tbody>' +
+      dests.map(function (x) {
+        var n = d.destinations[x];
+        var top = n.top_complaint ? (n.aspects[n.top_complaint] || {}).label : "—";
+        return '<tr><td><button data-destination="' + esc(x) + '">' + esc(x) + '</button></td>' +
+          '<td class="num">' + n.n_reviews + '</td><td>' + esc(top || "—") + '</td>' +
+          '<td class="num">' + (n.top_complaint_n || 0) + '</td></tr>';
+      }).join("") + '</tbody></table></div></div>';
+  }
+
+
+  /* Storyboard: videos, threads and news articles about this destination.
+     Rendered in its own panel, from its own data file, and NEVER counted --
+     see media.py for why. A YouTube title is written to attract clicks, a
+     Reddit thread is one person, and a news article covers the unusual by
+     definition. None of those is a measurement of what a visit is like.
+
+     Note on previews: the published page runs under a strict content policy
+     that blocks third-party images and embedded players, so these are text
+     cards linking out rather than thumbnails or inline video. */
+  var KIND_LABEL = { youtube: "Video", reddit: "Discussion", news: "News" };
+
+  function storyboard(dest) {
+    var items = (MEDIA[dest] || []);
+    if (!items.length) return "";
+    var order = { news: 0, youtube: 1, reddit: 2 };
+    items = items.slice().sort(function (a, b) {
+      var k = (order[a.kind] || 9) - (order[b.kind] || 9);
+      return k !== 0 ? k : String(b.published || "").localeCompare(String(a.published || ""));
+    });
+    var cards = items.map(function (m) {
+      var asp = (m.aspects || "").split("|").filter(Boolean).map(function (a) {
+        return (TREE.aspects[a] || {}).label || a;
+      });
+      return '<div class="story-card">' +
+        '<div class="story-head">' +
+          '<span class="story-kind ' + esc(m.kind) + '">' + esc(KIND_LABEL[m.kind] || m.kind) + '</span>' +
+          '<span class="story-src">' + esc(m.source_name || "") + '</span>' +
+        '</div>' +
+        '<a class="story-title" href="' + esc(m.url) + '" target="_blank" rel="noopener noreferrer">' +
+          esc(m.title) + '</a>' +
+        (m.snippet ? '<p class="story-snip">' + esc(String(m.snippet).slice(0, 180)) +
+          (String(m.snippet).length > 180 ? '&hellip;' : '') + '</p>' : "") +
+        '<div class="story-foot">' +
+          (m.published ? '<span>' + esc(m.published) + '</span>' : "") +
+          (asp.length ? '<span>' + esc(asp.join(", ")) + '</span>' : "") +
+        '</div>' +
+      '</div>';
+    }).join("");
+    return '<div class="section"><h3 class="section-title">What people are saying elsewhere</h3>' +
+      '<div class="story-note"><strong>Context only &mdash; none of this is counted.</strong> ' +
+      'These items are linked, not analysed. They do not affect any complaint rate, ' +
+      'count or ranking on this page. A video title is written to attract viewers, a ' +
+      'forum thread is one traveller, and a news report covers the unusual by definition &mdash; ' +
+      'none of which measures what an ordinary visit is like. News is restricted to ' +
+      'established Sri Lankan outlets; anything from an unverified source is not shown.</div>' +
+      '<div class="story-grid">' + cards + '</div></div>';
+  }
+
+
+  /* Source links for a destination.
+     These reach the PLACE, not the individual review. Neither source dataset
+     preserved a review URL, and a Google Maps review permalink cannot be
+     reconstructed without a place id and a review id -- so a per-quote link
+     would have to be invented. The wording says which guarantee is on offer,
+     because "source" implying a permalink when it is a search would be worse
+     than offering nothing. */
+  function sourceLinks(dest) {
+    var rec = LINKS[dest];
+    if (!rec || !rec.links) return "";
+    var keys = Object.keys(rec.links);
+    if (!keys.length) return "";
+    return '<div class="srclinks"><span>Find this place on</span>' +
+      keys.map(function (k) {
+        return '<a href="' + esc(rec.links[k].url) + '" target="_blank" ' +
+          'rel="noopener noreferrer">' + esc(rec.links[k].label) + '</a>';
+      }).join('<span class="warn">&middot;</span>') +
+      '<span class="warn">&mdash; links to the destination, not to individual ' +
+      'reviews: the source datasets did not preserve review URLs</span></div>';
+  }
+
+  function renderDestination(district, name) {
+    var n = TREE.districts[district].destinations[name];
+    view.innerHTML =
+      '<div class="view-head"><h2 class="view-title">' + esc(name) + '</h2>' +
+      '<div class="view-meta"><span>' + esc(district) + '</span>' +
+      '<span>' + n.n_reviews.toLocaleString() + ' reviews</span>' +
+      '<span>' + n.aspects_shown + ' aspects above threshold</span></div></div>' +
+      sourceLinks(name) +
+      '<div class="section"><h3 class="section-title">Select an aspect to read the evidence</h3>' +
+      aspectBlock(n.aspects, true) + '<div id="quote-panel" class="quote-panel"></div></div>' +
+      storyboard(name);
+  }
+
+  /* ------------------------------------------------------------ aspect drill */
+  var LAST_ASPECT = null;
+
+  function showAspect(key) {
+    LAST_ASPECT = key;
+    var panel = document.getElementById("quote-panel");
+    if (!panel) return;
+    var a;
+    if (state.destination) a = TREE.districts[state.district].destinations[state.destination].aspects[key];
+    else if (state.district) a = TREE.districts[state.district].aspects[key];
+    else a = TREE.aspects[key];
+    if (!a) return;
+
+    var extra = "";
+    if (a.worst_districts) {
+      extra = '<div class="rank-card" style="margin-bottom:12px"><h4>Districts driving this <em>complaint count</em></h4><ul class="rank-list">' +
+        a.worst_districts.slice(0, 6).map(function (w) {
+          return '<li class="rank-item"><span class="rank-n">' + w.n_negative + '</span>' +
+            '<button data-district="' + esc(w.district) + '">' + esc(w.district) + '</button></li>';
+        }).join("") + '</ul></div>';
+    } else if (a.worst_destinations) {
+      extra = '<div class="rank-card" style="margin-bottom:12px"><h4>Places driving this <em>complaint count</em></h4><ul class="rank-list">' +
+        a.worst_destinations.slice(0, 6).map(function (w) {
+          return '<li class="rank-item"><span class="rank-n">' + w.n_negative + '</span>' +
+            '<button data-destination="' + esc(w.destination) + '">' + esc(w.destination) + '</button></li>';
+        }).join("") + '</ul></div>';
+    }
+
+    panel.innerHTML =
+      '<h3 class="section-title" style="margin-top:22px">' + esc(a.label) +
+      ' &mdash; ' + a.n_negative + ' complaints, ' + a.n_positive + ' praise, rate ' + pct(a.complaint_rate) + '</h3>' +
+      timelineTable(a.timeline) + extra + quoteBlock(a);
+    panel.scrollIntoView({ behavior: "smooth", block: "nearest" });
+  }
+
+  /* ------------------------------------------------------------ routing */
+  function renderCrumbs() {
+    var parts = ['<button class="crumb"' + (state.district ? "" : ' aria-current="page"') + ' data-nav="country">Sri Lanka</button>'];
+    if (state.district) {
+      parts.push('<span class="crumb-sep">&rsaquo;</span>');
+      parts.push('<button class="crumb"' + (state.destination ? "" : ' aria-current="page"') +
+        ' data-nav="district" data-district="' + esc(state.district) + '">' + esc(state.district) + '</button>');
+    }
+    if (state.destination) {
+      parts.push('<span class="crumb-sep">&rsaquo;</span>');
+      parts.push('<button class="crumb" aria-current="page">' + esc(state.destination) + '</button>');
+    }
+    crumbs.innerHTML = parts.join(" ");
+  }
+
+  function render() {
+    renderCrumbs();
+    SELECTED_DISTRICT = state.district || null;
+    if (state.destination) renderDestination(state.district, state.destination);
+    else if (state.district) { renderDistrict(state.district); renderMapAny(); }
+    else { renderCountry(); renderMapAny(); }
+    window.scrollTo({ top: 0, behavior: "auto" });
+  }
+
+  function findDistrictOf(dest) {
+    var names = Object.keys(TREE.districts);
+    for (var i = 0; i < names.length; i++) {
+      if (TREE.districts[names[i]].destinations[dest]) return names[i];
+    }
+    return null;
+  }
+
+  document.addEventListener("mouseover", function (ev) {
+    var t = ev.target.closest("[data-map-hover]");
+    if (t) setReadout(t.dataset.mapHover);
+  });
+
+  document.addEventListener("click", function (ev) {
+    var qs = ev.target.closest("[data-qsort],[data-qband]");
+    if (qs) {
+      if (qs.dataset.qsort) QUOTE_STATE.sort = qs.dataset.qsort;
+      if (qs.dataset.qband) QUOTE_STATE.band = qs.dataset.qband;
+      if (LAST_ASPECT) showAspect(LAST_ASPECT);
+      return;
+    }
+    var modeBtn = ev.target.closest("[data-map-mode]");
+    if (modeBtn) {
+      MAP_MODE = modeBtn.dataset.mapMode;
+      renderCountry();
+      return renderMapAny();
+    }
+    if (ev.target.closest("[data-pin-toggle]")) {
+      SHOW_PINS = !SHOW_PINS;
+      renderCountry();
+      return renderMapAny();
+    }
+    var picker = ev.target.closest("[data-map-aspect]");
+    if (picker) { MAP_ASPECT = picker.dataset.mapAspect; return renderMap(); }
+
+    var t = ev.target.closest("[data-nav],[data-district],[data-destination],[data-aspect]");
+    if (!t) return;
+    if (t.dataset.nav === "country") { state = { district: null, destination: null }; return render(); }
+    if (t.dataset.destination) {
+      var dist = state.district || findDistrictOf(t.dataset.destination);
+      if (!dist) return;
+      state.district = dist; state.destination = t.dataset.destination;
+      return render();
+    }
+    if (t.dataset.district) {
+      state.district = t.dataset.district; state.destination = null;
+      return render();
+    }
+    if (t.dataset.aspect) return showAspect(t.dataset.aspect);
+  });
+
+  document.getElementById("corpus-note").textContent =
+    TREE.coverage.n_reviews.toLocaleString() + " reviews · " +
+    TREE.coverage.n_destinations + " destinations · " +
+    TREE.coverage.n_districts + " districts";
+
+  render();
+})();
+</script>

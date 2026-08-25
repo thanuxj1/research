@@ -1,0 +1,342 @@
+{
+  "raw": [
+    {
+      "aspect": "Crowding & Noise",
+      "google_n": 208,
+      "google_rate": 9.9,
+      "tripadvisor_n": 393,
+      "tripadvisor_rate": 20.3,
+      "gap_pp": 10.4
+    },
+    {
+      "aspect": "Scenery & Nature",
+      "google_n": 449,
+      "google_rate": 4.0,
+      "tripadvisor_n": 413,
+      "tripadvisor_rate": 4.9,
+      "gap_pp": 0.9
+    },
+    {
+      "aspect": "Cleanliness",
+      "google_n": 564,
+      "google_rate": 46.9,
+      "tripadvisor_n": 875,
+      "tripadvisor_rate": 47.7,
+      "gap_pp": 0.8
+    },
+    {
+      "aspect": "Price & Value",
+      "google_n": 523,
+      "google_rate": 44.2,
+      "tripadvisor_n": 1337,
+      "tripadvisor_rate": 40.5,
+      "gap_pp": -3.7
+    },
+    {
+      "aspect": "Facilities",
+      "google_n": 375,
+      "google_rate": 27.6,
+      "tripadvisor_n": 925,
+      "tripadvisor_rate": 23.6,
+      "gap_pp": -4.0
+    },
+    {
+      "aspect": "Roads & Access",
+      "google_n": 981,
+      "google_rate": 31.8,
+      "tripadvisor_n": 919,
+      "tripadvisor_rate": 26.5,
+      "gap_pp": -5.3
+    },
+    {
+      "aspect": "Safety",
+      "google_n": 604,
+      "google_rate": 64.6,
+      "tripadvisor_n": 450,
+      "tripadvisor_rate": 43.2,
+      "gap_pp": -21.4
+    }
+  ],
+  "stratified": {
+    "safety": {
+      "Waterfalls": {
+        "google": {
+          "complaints": 272,
+          "praise": 47,
+          "rate": 85.3
+        },
+        "tripadvisor": {
+          "complaints": 43,
+          "praise": 22,
+          "rate": 66.2
+        },
+        "gap_pp": -19.1,
+        "underpowered": false,
+        "chi2": 12.12,
+        "p_value": 0.000499750637828396,
+        "significant_p05": true
+      },
+      "Religious sites": {
+        "google": {
+          "complaints": 15,
+          "praise": 4,
+          "rate": 78.9
+        },
+        "tripadvisor": {
+          "complaints": 44,
+          "praise": 48,
+          "rate": 47.8
+        },
+        "gap_pp": -31.1,
+        "underpowered": false,
+        "chi2": 4.94,
+        "p_value": 0.02625440670143757,
+        "significant_p05": true
+      },
+      "Beaches": {
+        "google": {
+          "complaints": 51,
+          "praise": 9,
+          "rate": 85.0
+        },
+        "tripadvisor": {
+          "complaints": 101,
+          "praise": 46,
+          "rate": 68.7
+        },
+        "gap_pp": -16.3,
+        "underpowered": false,
+        "chi2": 4.99,
+        "p_value": 0.02546358527705629,
+        "significant_p05": true
+      },
+      "Parks & gardens": {
+        "google": {
+          "complaints": 33,
+          "praise": 21,
+          "rate": 61.1
+        },
+        "tripadvisor": {
+          "complaints": 15,
+          "praise": 54,
+          "rate": 21.7
+        },
+        "gap_pp": -39.4,
+        "underpowered": false,
+        "chi2": 18.11,
+        "p_value": 2.080336580327594e-05,
+        "significant_p05": true
+      }
+    },
+    "cleanliness": {
+      "Waterfalls": {
+        "google": {
+          "complaints": 106,
+          "praise": 77,
+          "rate": 57.9
+        },
+        "tripadvisor": {
+          "complaints": 17,
+          "praise": 9,
+          "rate": 65.4
+        },
+        "gap_pp": 7.5,
+        "underpowered": false,
+        "chi2": 0.26,
+        "p_value": 0.6097249855808471,
+        "significant_p05": false
+      },
+      "Religious sites": {
+        "google": {
+          "complaints": 18,
+          "praise": 55,
+          "rate": 24.7
+        },
+        "tripadvisor": {
+          "complaints": 58,
+          "praise": 56,
+          "rate": 50.9
+        },
+        "gap_pp": 26.2,
+        "underpowered": false,
+        "chi2": 11.62,
+        "p_value": 0.0006530259176816852,
+        "significant_p05": true
+      },
+      "Beaches": {
+        "google": {
+          "complaints": 142,
+          "praise": 161,
+          "rate": 46.9
+        },
+        "tripadvisor": {
+          "complaints": 419,
+          "praise": 556,
+          "rate": 43.0
+        },
+        "gap_pp": -3.9,
+        "underpowered": false,
+        "chi2": 1.27,
+        "p_value": 0.26032770211066886,
+        "significant_p05": false
+      },
+      "Parks & gardens": {
+        "google": {
+          "complaints": 167,
+          "praise": 154,
+          "rate": 52.0
+        },
+        "tripadvisor": {
+          "complaints": 52,
+          "praise": 63,
+          "rate": 45.2
+        },
+        "gap_pp": -6.8,
+        "underpowered": false,
+        "chi2": 1.31,
+        "p_value": 0.2525727859894998,
+        "significant_p05": false
+      }
+    },
+    "crowd": {
+      "Waterfalls": {
+        "google": {
+          "complaints": 26,
+          "praise": 143,
+          "rate": 15.4
+        },
+        "tripadvisor": {
+          "complaints": 15,
+          "praise": 34,
+          "rate": 30.6
+        },
+        "gap_pp": 15.2,
+        "underpowered": false,
+        "chi2": 4.81,
+        "p_value": 0.028226640071161643,
+        "significant_p05": true
+      },
+      "Religious sites": {
+        "google": {
+          "complaints": 19,
+          "praise": 434,
+          "rate": 4.2
+        },
+        "tripadvisor": {
+          "complaints": 54,
+          "praise": 409,
+          "rate": 11.7
+        },
+        "gap_pp": 7.5,
+        "underpowered": false,
+        "chi2": 16.41,
+        "p_value": 5.097028969348625e-05,
+        "significant_p05": true
+      },
+      "Beaches": {
+        "google": {
+          "complaints": 34,
+          "praise": 185,
+          "rate": 15.5
+        },
+        "tripadvisor": {
+          "complaints": 94,
+          "praise": 348,
+          "rate": 21.3
+        },
+        "gap_pp": 5.8,
+        "underpowered": false,
+        "chi2": 2.74,
+        "p_value": 0.0981604146378079,
+        "significant_p05": false
+      },
+      "Parks & gardens": {
+        "google": {
+          "complaints": 38,
+          "praise": 293,
+          "rate": 11.5
+        },
+        "tripadvisor": {
+          "complaints": 10,
+          "praise": 165,
+          "rate": 5.7
+        },
+        "gap_pp": -5.8,
+        "underpowered": false,
+        "chi2": 3.79,
+        "p_value": 0.05166406627961588,
+        "significant_p05": false
+      }
+    },
+    "price_value": {
+      "Waterfalls": {
+        "google": {
+          "complaints": 23,
+          "praise": 107,
+          "rate": 17.7
+        },
+        "tripadvisor": {
+          "complaints": 24,
+          "praise": 132,
+          "rate": 15.4
+        },
+        "gap_pp": -2.3,
+        "underpowered": false,
+        "chi2": 0.13,
+        "p_value": 0.7157433666411291,
+        "significant_p05": false
+      },
+      "Religious sites": {
+        "google": {
+          "complaints": 40,
+          "praise": 34,
+          "rate": 54.1
+        },
+        "tripadvisor": {
+          "complaints": 164,
+          "praise": 313,
+          "rate": 34.4
+        },
+        "gap_pp": -19.7,
+        "underpowered": false,
+        "chi2": 9.81,
+        "p_value": 0.0017393001478911323,
+        "significant_p05": true
+      },
+      "Beaches": {
+        "google": {
+          "complaints": 23,
+          "praise": 46,
+          "rate": 33.3
+        },
+        "tripadvisor": {
+          "complaints": 107,
+          "praise": 135,
+          "rate": 44.2
+        },
+        "gap_pp": 10.9,
+        "underpowered": false,
+        "chi2": 2.19,
+        "p_value": 0.1393504740515497,
+        "significant_p05": false
+      },
+      "Parks & gardens": {
+        "google": {
+          "complaints": 156,
+          "praise": 141,
+          "rate": 52.5
+        },
+        "tripadvisor": {
+          "complaints": 223,
+          "praise": 167,
+          "rate": 57.2
+        },
+        "gap_pp": 4.7,
+        "underpowered": false,
+        "chi2": 1.29,
+        "p_value": 0.2552223056051276,
+        "significant_p05": false
+      }
+    }
+  }
+}

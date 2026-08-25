@@ -1,0 +1,1151 @@
+district,destination,aspect,aspect_label,n_negative,n_positive,n_neutral,n_opinions,complaint_rate,confidence,destination_reviews
+Ampara,Arugam Bay,cleanliness,Cleanliness,14,24,11,38,0.368,ok,153
+Ampara,Arugam Bay,crowd,Crowding & Noise,11,26,21,37,0.297,ok,153
+Ampara,Arugam Bay,facilities,Facilities,28,98,41,126,0.222,ok,153
+Ampara,Arugam Bay,price_value,Price & Value,35,32,20,67,0.522,ok,153
+Ampara,Arugam Bay,roads_access,Roads & Access,25,35,41,60,0.417,ok,153
+Ampara,Arugam Bay,safety,Safety,10,4,10,14,0.714,low,153
+Ampara,Arugam Bay,scenery,Scenery & Nature,4,91,6,95,0.042,ok,153
+Ampara,Kumana National Park,crowd,Crowding & Noise,0,6,2,6,0.0,low,33
+Ampara,Kumana National Park,facilities,Facilities,3,8,8,11,0.273,low,33
+Ampara,Kumana National Park,price_value,Price & Value,1,4,9,5,0.2,low,33
+Ampara,Kumana National Park,roads_access,Roads & Access,6,13,16,19,0.316,ok,33
+Ampara,Kumana National Park,scenery,Scenery & Nature,1,36,7,37,0.027,ok,33
+Ampara,Maruthamunai beach,crowd,Crowding & Noise,0,5,0,5,0.0,low,27
+Ampara,Maruthamunai beach,scenery,Scenery & Nature,0,18,0,18,0.0,ok,27
+Anuradhapura,Abhayagiri Dagaba,crowd,Crowding & Noise,1,11,3,12,0.083,low,48
+Anuradhapura,Abhayagiri Dagaba,facilities,Facilities,4,3,6,7,0.571,low,48
+Anuradhapura,Abhayagiri Dagaba,price_value,Price & Value,7,2,5,9,0.778,low,48
+Anuradhapura,Abhayagiri Dagaba,roads_access,Roads & Access,3,4,15,7,0.429,low,48
+Anuradhapura,Abhayagiri Dagaba,scenery,Scenery & Nature,1,28,1,29,0.034,ok,48
+Anuradhapura,Dagoba of Thuparama,crowd,Crowding & Noise,0,6,2,6,0.0,low,35
+Anuradhapura,Dagoba of Thuparama,price_value,Price & Value,4,1,8,5,0.8,low,35
+Anuradhapura,Dagoba of Thuparama,roads_access,Roads & Access,2,3,5,5,0.4,low,35
+Anuradhapura,Dagoba of Thuparama,scenery,Scenery & Nature,1,18,4,19,0.053,ok,35
+Anuradhapura,Dambulla Cave Temple,cleanliness,Cleanliness,3,11,5,14,0.214,low,289
+Anuradhapura,Dambulla Cave Temple,crowd,Crowding & Noise,4,22,14,26,0.154,ok,289
+Anuradhapura,Dambulla Cave Temple,facilities,Facilities,28,42,82,70,0.4,ok,289
+Anuradhapura,Dambulla Cave Temple,price_value,Price & Value,26,14,63,40,0.65,ok,289
+Anuradhapura,Dambulla Cave Temple,roads_access,Roads & Access,34,124,182,158,0.215,ok,289
+Anuradhapura,Dambulla Cave Temple,safety,Safety,15,5,20,20,0.75,ok,289
+Anuradhapura,Dambulla Cave Temple,scenery,Scenery & Nature,6,214,15,220,0.027,ok,289
+Anuradhapura,Isurumuniya Temple,cleanliness,Cleanliness,2,3,3,5,0.4,low,125
+Anuradhapura,Isurumuniya Temple,crowd,Crowding & Noise,3,16,11,19,0.158,ok,125
+Anuradhapura,Isurumuniya Temple,facilities,Facilities,7,9,19,16,0.438,ok,125
+Anuradhapura,Isurumuniya Temple,price_value,Price & Value,5,7,34,12,0.417,low,125
+Anuradhapura,Isurumuniya Temple,roads_access,Roads & Access,6,33,44,39,0.154,ok,125
+Anuradhapura,Isurumuniya Temple,safety,Safety,5,0,3,5,1.0,low,125
+Anuradhapura,Isurumuniya Temple,scenery,Scenery & Nature,3,90,13,93,0.032,ok,125
+Anuradhapura,Jaya Sri Maha Bodhi,cleanliness,Cleanliness,7,1,0,8,0.875,low,134
+Anuradhapura,Jaya Sri Maha Bodhi,crowd,Crowding & Noise,5,43,25,48,0.104,ok,134
+Anuradhapura,Jaya Sri Maha Bodhi,facilities,Facilities,9,13,25,22,0.409,ok,134
+Anuradhapura,Jaya Sri Maha Bodhi,price_value,Price & Value,11,9,26,20,0.55,ok,134
+Anuradhapura,Jaya Sri Maha Bodhi,roads_access,Roads & Access,6,11,20,17,0.353,ok,134
+Anuradhapura,Jaya Sri Maha Bodhi,safety,Safety,4,1,0,5,0.8,low,134
+Anuradhapura,Jaya Sri Maha Bodhi,scenery,Scenery & Nature,8,55,18,63,0.127,ok,134
+Anuradhapura,Jethawanaramaya Stupa,cleanliness,Cleanliness,5,4,1,9,0.556,low,94
+Anuradhapura,Jethawanaramaya Stupa,crowd,Crowding & Noise,0,15,10,15,0.0,ok,94
+Anuradhapura,Jethawanaramaya Stupa,facilities,Facilities,7,5,14,12,0.583,low,94
+Anuradhapura,Jethawanaramaya Stupa,price_value,Price & Value,24,6,19,30,0.8,ok,94
+Anuradhapura,Jethawanaramaya Stupa,roads_access,Roads & Access,6,15,13,21,0.286,ok,94
+Anuradhapura,Jethawanaramaya Stupa,scenery,Scenery & Nature,3,49,7,52,0.058,ok,94
+Anuradhapura,Kaudulla National Park,cleanliness,Cleanliness,6,0,2,6,1.0,low,168
+Anuradhapura,Kaudulla National Park,crowd,Crowding & Noise,7,14,23,21,0.333,ok,168
+Anuradhapura,Kaudulla National Park,facilities,Facilities,2,28,38,30,0.067,ok,168
+Anuradhapura,Kaudulla National Park,price_value,Price & Value,10,12,31,22,0.455,ok,168
+Anuradhapura,Kaudulla National Park,roads_access,Roads & Access,34,57,114,91,0.374,ok,168
+Anuradhapura,Kaudulla National Park,safety,Safety,12,4,14,16,0.75,ok,168
+Anuradhapura,Kaudulla National Park,scenery,Scenery & Nature,11,111,27,122,0.09,ok,168
+Anuradhapura,Mihintale,crowd,Crowding & Noise,4,37,17,41,0.098,ok,259
+Anuradhapura,Mihintale,facilities,Facilities,13,34,55,47,0.277,ok,259
+Anuradhapura,Mihintale,price_value,Price & Value,7,13,46,20,0.35,ok,259
+Anuradhapura,Mihintale,roads_access,Roads & Access,46,148,214,194,0.237,ok,259
+Anuradhapura,Mihintale,safety,Safety,27,6,27,33,0.818,ok,259
+Anuradhapura,Mihintale,scenery,Scenery & Nature,7,262,44,269,0.026,ok,259
+Anuradhapura,Minneriya National Park,cleanliness,Cleanliness,10,5,3,15,0.667,ok,193
+Anuradhapura,Minneriya National Park,crowd,Crowding & Noise,16,15,22,31,0.516,ok,193
+Anuradhapura,Minneriya National Park,facilities,Facilities,11,33,50,44,0.25,ok,193
+Anuradhapura,Minneriya National Park,price_value,Price & Value,15,11,36,26,0.577,ok,193
+Anuradhapura,Minneriya National Park,roads_access,Roads & Access,40,81,146,121,0.331,ok,193
+Anuradhapura,Minneriya National Park,safety,Safety,14,8,12,22,0.636,ok,193
+Anuradhapura,Minneriya National Park,scenery,Scenery & Nature,9,144,32,153,0.059,ok,193
+Anuradhapura,Ritigala Forest Monastery,crowd,Crowding & Noise,1,27,12,28,0.036,ok,122
+Anuradhapura,Ritigala Forest Monastery,facilities,Facilities,17,34,42,51,0.333,ok,122
+Anuradhapura,Ritigala Forest Monastery,price_value,Price & Value,10,7,36,17,0.588,ok,122
+Anuradhapura,Ritigala Forest Monastery,roads_access,Roads & Access,31,77,89,108,0.287,ok,122
+Anuradhapura,Ritigala Forest Monastery,safety,Safety,9,7,8,16,0.562,ok,122
+Anuradhapura,Ritigala Forest Monastery,scenery,Scenery & Nature,7,77,20,84,0.083,ok,122
+Anuradhapura,Ruwanwelisaya,cleanliness,Cleanliness,1,7,1,8,0.125,low,138
+Anuradhapura,Ruwanwelisaya,crowd,Crowding & Noise,2,34,23,36,0.056,ok,138
+Anuradhapura,Ruwanwelisaya,facilities,Facilities,13,17,29,30,0.433,ok,138
+Anuradhapura,Ruwanwelisaya,price_value,Price & Value,14,5,18,19,0.737,ok,138
+Anuradhapura,Ruwanwelisaya,roads_access,Roads & Access,9,8,37,17,0.529,ok,138
+Anuradhapura,Ruwanwelisaya,safety,Safety,5,1,4,6,0.833,low,138
+Anuradhapura,Ruwanwelisaya,scenery,Scenery & Nature,2,79,11,81,0.025,ok,138
+Anuradhapura,Samadhi Statue,crowd,Crowding & Noise,0,18,2,18,0.0,ok,47
+Anuradhapura,Samadhi Statue,price_value,Price & Value,5,0,8,5,1.0,low,47
+Anuradhapura,Samadhi Statue,scenery,Scenery & Nature,1,29,2,30,0.033,ok,47
+Anuradhapura,Twin Baths (Kuttam Pokuna),cleanliness,Cleanliness,16,6,7,22,0.727,ok,93
+Anuradhapura,Twin Baths (Kuttam Pokuna),crowd,Crowding & Noise,0,12,2,12,0.0,low,93
+Anuradhapura,Twin Baths (Kuttam Pokuna),facilities,Facilities,12,11,26,23,0.522,ok,93
+Anuradhapura,Twin Baths (Kuttam Pokuna),price_value,Price & Value,8,4,13,12,0.667,low,93
+Anuradhapura,Twin Baths (Kuttam Pokuna),roads_access,Roads & Access,4,8,12,12,0.333,low,93
+Anuradhapura,Twin Baths (Kuttam Pokuna),scenery,Scenery & Nature,4,43,6,47,0.085,ok,93
+Anuradhapura,Wilpattu National Park,cleanliness,Cleanliness,17,8,6,25,0.68,ok,276
+Anuradhapura,Wilpattu National Park,crowd,Crowding & Noise,10,34,25,44,0.227,ok,276
+Anuradhapura,Wilpattu National Park,facilities,Facilities,50,64,92,114,0.439,ok,276
+Anuradhapura,Wilpattu National Park,price_value,Price & Value,45,9,42,54,0.833,ok,276
+Anuradhapura,Wilpattu National Park,roads_access,Roads & Access,61,97,157,158,0.386,ok,276
+Anuradhapura,Wilpattu National Park,safety,Safety,21,5,19,26,0.808,ok,276
+Anuradhapura,Wilpattu National Park,scenery,Scenery & Nature,21,217,75,238,0.088,ok,276
+Badulla,Aradunu Falls,scenery,Scenery & Nature,1,11,5,12,0.083,low,21
+Badulla,Badulla Alugolla Samadhi Buddha,scenery,Scenery & Nature,1,11,1,12,0.083,low,13
+Badulla,Badulla Dutch Fort,scenery,Scenery & Nature,1,5,0,6,0.167,low,9
+Badulla,Blackpool,scenery,Scenery & Nature,0,7,1,7,0.0,low,14
+Badulla,Bomburu Ella Waterfall,cleanliness,Cleanliness,4,3,2,7,0.571,low,164
+Badulla,Bomburu Ella Waterfall,crowd,Crowding & Noise,1,5,2,6,0.167,low,164
+Badulla,Bomburu Ella Waterfall,facilities,Facilities,2,6,13,8,0.25,low,164
+Badulla,Bomburu Ella Waterfall,roads_access,Roads & Access,18,37,63,55,0.327,ok,164
+Badulla,Bomburu Ella Waterfall,safety,Safety,10,2,4,12,0.833,low,164
+Badulla,Bomburu Ella Waterfall,scenery,Scenery & Nature,6,159,36,165,0.036,ok,164
+Badulla,Dambatenne Tea Factory,cleanliness,Cleanliness,18,10,9,28,0.643,ok,141
+Badulla,Dambatenne Tea Factory,crowd,Crowding & Noise,7,0,8,7,1.0,low,141
+Badulla,Dambatenne Tea Factory,facilities,Facilities,60,64,85,124,0.484,ok,141
+Badulla,Dambatenne Tea Factory,price_value,Price & Value,34,11,53,45,0.756,ok,141
+Badulla,Dambatenne Tea Factory,roads_access,Roads & Access,18,43,44,61,0.295,ok,141
+Badulla,Dambatenne Tea Factory,safety,Safety,3,2,2,5,0.6,low,141
+Badulla,Dambatenne Tea Factory,scenery,Scenery & Nature,10,49,6,59,0.169,ok,141
+Badulla,Diyaluma Falls,cleanliness,Cleanliness,9,4,1,13,0.692,low,342
+Badulla,Diyaluma Falls,crowd,Crowding & Noise,1,7,4,8,0.125,low,342
+Badulla,Diyaluma Falls,facilities,Facilities,20,37,81,57,0.351,ok,342
+Badulla,Diyaluma Falls,price_value,Price & Value,8,6,23,14,0.571,low,342
+Badulla,Diyaluma Falls,roads_access,Roads & Access,56,142,236,198,0.283,ok,342
+Badulla,Diyaluma Falls,safety,Safety,33,7,21,40,0.825,ok,342
+Badulla,Diyaluma Falls,scenery,Scenery & Nature,24,331,135,355,0.068,ok,342
+Badulla,Dunhida Waterfall access point,facilities,Facilities,3,7,13,10,0.3,low,75
+Badulla,Dunhida Waterfall access point,roads_access,Roads & Access,13,16,27,29,0.448,ok,75
+Badulla,Dunhida Waterfall access point,safety,Safety,6,0,3,6,1.0,low,75
+Badulla,Dunhida Waterfall access point,scenery,Scenery & Nature,4,55,20,59,0.068,ok,75
+Badulla,Dunhinda Waterfall,roads_access,Roads & Access,8,25,34,33,0.242,ok,96
+Badulla,Dunhinda Waterfall,safety,Safety,5,0,3,5,1.0,low,96
+Badulla,Dunhinda Waterfall,scenery,Scenery & Nature,5,93,16,98,0.051,ok,96
+Badulla,Halpewatte Tea Factory Tour,cleanliness,Cleanliness,2,11,5,13,0.154,low,221
+Badulla,Halpewatte Tea Factory Tour,crowd,Crowding & Noise,4,6,6,10,0.4,low,221
+Badulla,Halpewatte Tea Factory Tour,facilities,Facilities,16,187,87,203,0.079,ok,221
+Badulla,Halpewatte Tea Factory Tour,price_value,Price & Value,21,47,52,68,0.309,ok,221
+Badulla,Halpewatte Tea Factory Tour,roads_access,Roads & Access,19,44,85,63,0.302,ok,221
+Badulla,Halpewatte Tea Factory Tour,scenery,Scenery & Nature,2,97,5,99,0.02,ok,221
+Badulla,Kombukara Nature Pool and Secre,cleanliness,Cleanliness,6,2,1,8,0.75,low,60
+Badulla,Kombukara Nature Pool and Secre,crowd,Crowding & Noise,0,5,2,5,0.0,low,60
+Badulla,Kombukara Nature Pool and Secre,roads_access,Roads & Access,2,12,19,14,0.143,low,60
+Badulla,Kombukara Nature Pool and Secre,safety,Safety,3,2,2,5,0.6,low,60
+Badulla,Kombukara Nature Pool and Secre,scenery,Scenery & Nature,3,42,16,45,0.067,ok,60
+Badulla,Kurundu Oya Ella Falls,roads_access,Roads & Access,6,8,12,14,0.429,low,32
+Badulla,Kurundu Oya Ella Falls,scenery,Scenery & Nature,2,25,10,27,0.074,ok,32
+Badulla,Lanka Ella - Waterfall,roads_access,Roads & Access,3,24,61,27,0.111,ok,97
+Badulla,Lanka Ella - Waterfall,safety,Safety,11,1,7,12,0.917,low,97
+Badulla,Lanka Ella - Waterfall,scenery,Scenery & Nature,6,71,54,77,0.078,ok,97
+Badulla,Lipton�s Seat,cleanliness,Cleanliness,6,0,0,6,1.0,low,233
+Badulla,Lipton�s Seat,crowd,Crowding & Noise,1,10,4,11,0.091,low,233
+Badulla,Lipton�s Seat,facilities,Facilities,20,102,133,122,0.164,ok,233
+Badulla,Lipton�s Seat,price_value,Price & Value,17,24,48,41,0.415,ok,233
+Badulla,Lipton�s Seat,roads_access,Roads & Access,37,206,236,243,0.152,ok,233
+Badulla,Lipton�s Seat,safety,Safety,15,4,13,19,0.789,ok,233
+Badulla,Lipton�s Seat,scenery,Scenery & Nature,22,342,81,364,0.06,ok,233
+Badulla,Muthiyangana Raja Maha Vihara,crowd,Crowding & Noise,2,55,18,57,0.035,ok,102
+Badulla,Muthiyangana Raja Maha Vihara,roads_access,Roads & Access,1,7,17,8,0.125,low,102
+Badulla,Muthiyangana Raja Maha Vihara,scenery,Scenery & Nature,0,28,0,28,0.0,ok,102
+Badulla,Narangala Hill,roads_access,Roads & Access,4,21,26,25,0.16,ok,52
+Badulla,Narangala Hill,scenery,Scenery & Nature,0,24,4,24,0.0,ok,52
+Badulla,Narangala Mountain,roads_access,Roads & Access,5,54,37,59,0.085,ok,96
+Badulla,Narangala Mountain,safety,Safety,3,3,4,6,0.5,low,96
+Badulla,Narangala Mountain,scenery,Scenery & Nature,0,70,2,70,0.0,ok,96
+Badulla,Pallewela Waterfall,crowd,Crowding & Noise,0,7,0,7,0.0,low,26
+Badulla,Pallewela Waterfall,roads_access,Roads & Access,2,9,10,11,0.182,low,26
+Badulla,Pallewela Waterfall,scenery,Scenery & Nature,1,18,9,19,0.053,ok,26
+Badulla,Pareiyan Ella Falls,roads_access,Roads & Access,4,3,20,7,0.571,low,32
+Badulla,Pareiyan Ella Falls,safety,Safety,9,0,3,9,1.0,low,32
+Badulla,Pareiyan Ella Falls,scenery,Scenery & Nature,2,15,9,17,0.118,ok,32
+Badulla,Porawagala Viewpoint,cleanliness,Cleanliness,1,4,0,5,0.2,low,52
+Badulla,Porawagala Viewpoint,roads_access,Roads & Access,6,14,15,20,0.3,ok,52
+Badulla,Porawagala Viewpoint,scenery,Scenery & Nature,2,37,14,39,0.051,ok,52
+Badulla,Prabhawa Mountain Day Viewpoint,roads_access,Roads & Access,1,5,4,6,0.167,low,11
+Badulla,Prabhawa Mountain Day Viewpoint,scenery,Scenery & Nature,0,9,0,9,0.0,low,11
+Badulla,Ravan Ella Waterfall,roads_access,Roads & Access,2,5,4,7,0.286,low,33
+Badulla,Ravan Ella Waterfall,scenery,Scenery & Nature,8,28,5,36,0.222,ok,33
+Badulla,Ravana Ella Falls,cleanliness,Cleanliness,5,2,3,7,0.714,low,183
+Badulla,Ravana Ella Falls,crowd,Crowding & Noise,12,6,30,18,0.667,ok,183
+Badulla,Ravana Ella Falls,facilities,Facilities,14,19,24,33,0.424,ok,183
+Badulla,Ravana Ella Falls,price_value,Price & Value,6,6,12,12,0.5,low,183
+Badulla,Ravana Ella Falls,roads_access,Roads & Access,30,69,85,99,0.303,ok,183
+Badulla,Ravana Ella Falls,safety,Safety,37,11,14,48,0.771,ok,183
+Badulla,Ravana Ella Falls,scenery,Scenery & Nature,25,142,50,167,0.15,ok,183
+Badulla,Ravana Waterfall,crowd,Crowding & Noise,5,3,13,8,0.625,low,182
+Badulla,Ravana Waterfall,facilities,Facilities,4,10,8,14,0.286,low,182
+Badulla,Ravana Waterfall,price_value,Price & Value,4,3,5,7,0.571,low,182
+Badulla,Ravana Waterfall,roads_access,Roads & Access,11,52,62,63,0.175,ok,182
+Badulla,Ravana Waterfall,safety,Safety,26,5,14,31,0.839,ok,182
+Badulla,Ravana Waterfall,scenery,Scenery & Nature,6,155,52,161,0.037,ok,182
+Badulla,Ravana's Cave,cleanliness,Cleanliness,8,5,4,13,0.615,low,218
+Badulla,Ravana's Cave,facilities,Facilities,8,14,26,22,0.364,ok,218
+Badulla,Ravana's Cave,price_value,Price & Value,16,3,27,19,0.842,ok,218
+Badulla,Ravana's Cave,roads_access,Roads & Access,35,84,113,119,0.294,ok,218
+Badulla,Ravana's Cave,safety,Safety,17,9,8,26,0.654,ok,218
+Badulla,Ravana's Cave,scenery,Scenery & Nature,2,73,7,75,0.027,ok,218
+Badulla,Upper Rawana,roads_access,Roads & Access,1,4,3,5,0.2,low,16
+Badulla,Upper Rawana,scenery,Scenery & Nature,0,11,3,11,0.0,low,16
+Badulla,Uva Halpewatte Tea Factory Tour,cleanliness,Cleanliness,1,9,1,10,0.1,low,150
+Badulla,Uva Halpewatte Tea Factory Tour,facilities,Facilities,11,90,20,101,0.109,ok,150
+Badulla,Uva Halpewatte Tea Factory Tour,price_value,Price & Value,8,17,23,25,0.32,ok,150
+Badulla,Uva Halpewatte Tea Factory Tour,roads_access,Roads & Access,5,11,12,16,0.312,ok,150
+Badulla,Uva Halpewatte Tea Factory Tour,scenery,Scenery & Nature,0,47,1,47,0.0,ok,150
+Batticaloa,Passikudah Beach,cleanliness,Cleanliness,21,53,4,74,0.284,ok,132
+Batticaloa,Passikudah Beach,crowd,Crowding & Noise,2,50,25,52,0.038,ok,132
+Batticaloa,Passikudah Beach,facilities,Facilities,14,17,20,31,0.452,ok,132
+Batticaloa,Passikudah Beach,price_value,Price & Value,8,2,6,10,0.8,low,132
+Batticaloa,Passikudah Beach,roads_access,Roads & Access,5,6,8,11,0.455,low,132
+Batticaloa,Passikudah Beach,safety,Safety,4,6,3,10,0.4,low,132
+Batticaloa,Passikudah Beach,scenery,Scenery & Nature,3,82,3,85,0.035,ok,132
+Colombo,Attidiya Bird Sanctuary,cleanliness,Cleanliness,14,6,4,20,0.7,ok,111
+Colombo,Attidiya Bird Sanctuary,crowd,Crowding & Noise,0,15,12,15,0.0,ok,111
+Colombo,Attidiya Bird Sanctuary,facilities,Facilities,2,11,20,13,0.154,low,111
+Colombo,Attidiya Bird Sanctuary,roads_access,Roads & Access,1,16,22,17,0.059,ok,111
+Colombo,Attidiya Bird Sanctuary,scenery,Scenery & Nature,4,38,12,42,0.095,ok,111
+Colombo,Beddagana Wetland Park,cleanliness,Cleanliness,11,7,0,18,0.611,ok,163
+Colombo,Beddagana Wetland Park,crowd,Crowding & Noise,1,57,9,58,0.017,ok,163
+Colombo,Beddagana Wetland Park,facilities,Facilities,10,7,16,17,0.588,ok,163
+Colombo,Beddagana Wetland Park,price_value,Price & Value,6,6,22,12,0.5,low,163
+Colombo,Beddagana Wetland Park,roads_access,Roads & Access,6,25,34,31,0.194,ok,163
+Colombo,Beddagana Wetland Park,scenery,Scenery & Nature,4,146,13,150,0.027,ok,163
+Colombo,Bellagio Colombo,cleanliness,Cleanliness,0,5,0,5,0.0,low,80
+Colombo,Bellagio Colombo,crowd,Crowding & Noise,2,12,5,14,0.143,low,80
+Colombo,Bellagio Colombo,facilities,Facilities,7,36,6,43,0.163,ok,80
+Colombo,Bellagio Colombo,price_value,Price & Value,4,14,7,18,0.222,ok,80
+Colombo,Bellagio Colombo,scenery,Scenery & Nature,0,7,0,7,0.0,low,80
+Colombo,Casino Marina Colombo,cleanliness,Cleanliness,5,2,2,7,0.714,low,75
+Colombo,Casino Marina Colombo,crowd,Crowding & Noise,8,3,3,11,0.727,low,75
+Colombo,Casino Marina Colombo,facilities,Facilities,11,16,6,27,0.407,ok,75
+Colombo,Casino Marina Colombo,price_value,Price & Value,16,10,11,26,0.615,ok,75
+Colombo,Casino Marina Colombo,scenery,Scenery & Nature,0,9,1,9,0.0,low,75
+Colombo,Colombo Natational Museum,crowd,Crowding & Noise,2,5,5,7,0.286,low,74
+Colombo,Colombo Natational Museum,facilities,Facilities,4,7,5,11,0.364,low,74
+Colombo,Colombo Natational Museum,price_value,Price & Value,8,6,16,14,0.571,low,74
+Colombo,Colombo Natational Museum,scenery,Scenery & Nature,3,23,16,26,0.115,ok,74
+Colombo,Colombo National Museum,cleanliness,Cleanliness,3,10,1,13,0.231,low,172
+Colombo,Colombo National Museum,crowd,Crowding & Noise,2,7,8,9,0.222,low,172
+Colombo,Colombo National Museum,facilities,Facilities,21,42,41,63,0.333,ok,172
+Colombo,Colombo National Museum,price_value,Price & Value,24,25,38,49,0.49,ok,172
+Colombo,Colombo National Museum,roads_access,Roads & Access,4,10,20,14,0.286,low,172
+Colombo,Colombo National Museum,scenery,Scenery & Nature,12,91,17,103,0.117,ok,172
+Colombo,Colombo Port Old Lighthouse,cleanliness,Cleanliness,0,6,2,6,0.0,low,96
+Colombo,Colombo Port Old Lighthouse,crowd,Crowding & Noise,1,12,5,13,0.077,low,96
+Colombo,Colombo Port Old Lighthouse,facilities,Facilities,0,5,5,5,0.0,low,96
+Colombo,Colombo Port Old Lighthouse,scenery,Scenery & Nature,9,58,16,67,0.134,ok,96
+Colombo,Crow Island Beach Park,cleanliness,Cleanliness,49,14,9,63,0.778,ok,140
+Colombo,Crow Island Beach Park,crowd,Crowding & Noise,2,17,11,19,0.105,ok,140
+Colombo,Crow Island Beach Park,facilities,Facilities,9,23,33,32,0.281,ok,140
+Colombo,Crow Island Beach Park,roads_access,Roads & Access,4,8,25,12,0.333,low,140
+Colombo,Crow Island Beach Park,safety,Safety,7,0,0,7,1.0,low,140
+Colombo,Crow Island Beach Park,scenery,Scenery & Nature,1,45,4,46,0.022,ok,140
+Colombo,Dehiwala Zoological Gardens,cleanliness,Cleanliness,7,12,3,19,0.368,ok,98
+Colombo,Dehiwala Zoological Gardens,facilities,Facilities,8,20,21,28,0.286,ok,98
+Colombo,Dehiwala Zoological Gardens,price_value,Price & Value,3,9,16,12,0.25,low,98
+Colombo,Dehiwala Zoological Gardens,roads_access,Roads & Access,3,6,9,9,0.333,low,98
+Colombo,Dehiwala Zoological Gardens,scenery,Scenery & Nature,3,29,3,32,0.094,ok,98
+Colombo,Diyatha Uyana,cleanliness,Cleanliness,3,15,3,18,0.167,ok,161
+Colombo,Diyatha Uyana,crowd,Crowding & Noise,2,28,19,30,0.067,ok,161
+Colombo,Diyatha Uyana,facilities,Facilities,15,56,82,71,0.211,ok,161
+Colombo,Diyatha Uyana,price_value,Price & Value,6,14,18,20,0.3,ok,161
+Colombo,Diyatha Uyana,roads_access,Roads & Access,3,27,40,30,0.1,ok,161
+Colombo,Diyatha Uyana,scenery,Scenery & Nature,3,55,20,58,0.052,ok,161
+Colombo,Dutch Museum,scenery,Scenery & Nature,0,5,1,5,0.0,low,18
+Colombo,Excel World Entertainment Park,cleanliness,Cleanliness,6,5,1,11,0.545,low,119
+Colombo,Excel World Entertainment Park,crowd,Crowding & Noise,4,1,9,5,0.8,low,119
+Colombo,Excel World Entertainment Park,facilities,Facilities,20,41,27,61,0.328,ok,119
+Colombo,Excel World Entertainment Park,price_value,Price & Value,13,13,15,26,0.5,ok,119
+Colombo,Excel World Entertainment Park,roads_access,Roads & Access,1,6,16,7,0.143,low,119
+Colombo,Excel World Entertainment Park,scenery,Scenery & Nature,0,13,0,13,0.0,low,119
+Colombo,Galle Face Green,cleanliness,Cleanliness,7,16,3,23,0.304,ok,140
+Colombo,Galle Face Green,crowd,Crowding & Noise,5,22,13,27,0.185,ok,140
+Colombo,Galle Face Green,facilities,Facilities,7,45,26,52,0.135,ok,140
+Colombo,Galle Face Green,price_value,Price & Value,0,9,3,9,0.0,low,140
+Colombo,Galle Face Green,roads_access,Roads & Access,3,14,13,17,0.176,ok,140
+Colombo,Galle Face Green,scenery,Scenery & Nature,1,87,6,88,0.011,ok,140
+Colombo,Galle Face park & Beach,cleanliness,Cleanliness,7,8,0,15,0.467,ok,60
+Colombo,Galle Face park & Beach,crowd,Crowding & Noise,2,6,9,8,0.25,low,60
+Colombo,Galle Face park & Beach,facilities,Facilities,6,14,12,20,0.3,ok,60
+Colombo,Galle Face park & Beach,roads_access,Roads & Access,1,6,11,7,0.143,low,60
+Colombo,Galle Face park & Beach,scenery,Scenery & Nature,3,27,2,30,0.1,ok,60
+Colombo,Gangarama Sima Malaka,cleanliness,Cleanliness,3,2,1,5,0.6,low,122
+Colombo,Gangarama Sima Malaka,crowd,Crowding & Noise,0,45,10,45,0.0,ok,122
+Colombo,Gangarama Sima Malaka,facilities,Facilities,5,1,3,6,0.833,low,122
+Colombo,Gangarama Sima Malaka,price_value,Price & Value,6,3,15,9,0.667,low,122
+Colombo,Gangarama Sima Malaka,roads_access,Roads & Access,1,4,4,5,0.2,low,122
+Colombo,Gangarama Sima Malaka,scenery,Scenery & Nature,2,71,3,73,0.027,ok,122
+Colombo,Gangarama Temple,cleanliness,Cleanliness,2,5,1,7,0.286,low,109
+Colombo,Gangarama Temple,crowd,Crowding & Noise,0,26,5,26,0.0,ok,109
+Colombo,Gangarama Temple,price_value,Price & Value,4,7,23,11,0.364,low,109
+Colombo,Gangarama Temple,scenery,Scenery & Nature,1,70,1,71,0.014,ok,109
+Colombo,Gangaramaya (Vihara) Buddhist Temple,cleanliness,Cleanliness,16,9,4,25,0.64,ok,194
+Colombo,Gangaramaya (Vihara) Buddhist Temple,crowd,Crowding & Noise,1,56,9,57,0.018,ok,194
+Colombo,Gangaramaya (Vihara) Buddhist Temple,facilities,Facilities,5,19,17,24,0.208,ok,194
+Colombo,Gangaramaya (Vihara) Buddhist Temple,price_value,Price & Value,14,15,46,29,0.483,ok,194
+Colombo,Gangaramaya (Vihara) Buddhist Temple,roads_access,Roads & Access,9,17,25,26,0.346,ok,194
+Colombo,Gangaramaya (Vihara) Buddhist Temple,scenery,Scenery & Nature,3,109,4,112,0.027,ok,194
+Colombo,Hamilton Canal Park,scenery,Scenery & Nature,1,11,0,12,0.083,low,18
+Colombo,Independence Square,cleanliness,Cleanliness,1,11,1,12,0.083,low,99
+Colombo,Independence Square,crowd,Crowding & Noise,0,38,17,38,0.0,ok,99
+Colombo,Independence Square,facilities,Facilities,4,9,13,13,0.308,low,99
+Colombo,Independence Square,roads_access,Roads & Access,2,17,13,19,0.105,ok,99
+Colombo,Independence Square,scenery,Scenery & Nature,0,34,1,34,0.0,ok,99
+Colombo,Kathiresan Pillayar kovil,crowd,Crowding & Noise,0,20,6,20,0.0,ok,39
+Colombo,Kathiresan Pillayar kovil,roads_access,Roads & Access,0,7,6,7,0.0,low,39
+Colombo,Kathiresan Pillayar kovil,scenery,Scenery & Nature,0,11,0,11,0.0,low,39
+Colombo,Kelaniya Raja Maha Vihara,cleanliness,Cleanliness,5,6,5,11,0.455,low,112
+Colombo,Kelaniya Raja Maha Vihara,crowd,Crowding & Noise,3,58,19,61,0.049,ok,112
+Colombo,Kelaniya Raja Maha Vihara,facilities,Facilities,2,8,13,10,0.2,low,112
+Colombo,Kelaniya Raja Maha Vihara,price_value,Price & Value,2,3,13,5,0.4,low,112
+Colombo,Kelaniya Raja Maha Vihara,roads_access,Roads & Access,2,5,20,7,0.286,low,112
+Colombo,Kelaniya Raja Maha Vihara,scenery,Scenery & Nature,0,61,5,61,0.0,ok,112
+Colombo,Kelaniya Raja Maha Viharaya,crowd,Crowding & Noise,6,40,22,46,0.13,ok,75
+Colombo,Kelaniya Raja Maha Viharaya,price_value,Price & Value,2,4,2,6,0.333,low,75
+Colombo,Kelaniya Raja Maha Viharaya,scenery,Scenery & Nature,1,18,1,19,0.053,ok,75
+Colombo,Mount Lavania Beach,cleanliness,Cleanliness,14,40,6,54,0.259,ok,146
+Colombo,Mount Lavania Beach,crowd,Crowding & Noise,8,24,17,32,0.25,ok,146
+Colombo,Mount Lavania Beach,facilities,Facilities,4,22,22,26,0.154,ok,146
+Colombo,Mount Lavania Beach,roads_access,Roads & Access,14,15,18,29,0.483,ok,146
+Colombo,Mount Lavania Beach,safety,Safety,5,8,4,13,0.385,low,146
+Colombo,Mount Lavania Beach,scenery,Scenery & Nature,1,69,4,70,0.014,ok,146
+Colombo,Mount Lavinia Beach,cleanliness,Cleanliness,40,37,8,77,0.519,ok,158
+Colombo,Mount Lavinia Beach,crowd,Crowding & Noise,6,15,22,21,0.286,ok,158
+Colombo,Mount Lavinia Beach,facilities,Facilities,16,102,38,118,0.136,ok,158
+Colombo,Mount Lavinia Beach,price_value,Price & Value,2,6,10,8,0.25,low,158
+Colombo,Mount Lavinia Beach,roads_access,Roads & Access,2,22,31,24,0.083,ok,158
+Colombo,Mount Lavinia Beach,safety,Safety,9,2,4,11,0.818,low,158
+Colombo,Mount Lavinia Beach,scenery,Scenery & Nature,6,90,6,96,0.062,ok,158
+Colombo,National Zoological Gardens of Sri Lanka,cleanliness,Cleanliness,38,18,7,56,0.679,ok,154
+Colombo,National Zoological Gardens of Sri Lanka,crowd,Crowding & Noise,8,11,12,19,0.421,ok,154
+Colombo,National Zoological Gardens of Sri Lanka,facilities,Facilities,36,33,22,69,0.522,ok,154
+Colombo,National Zoological Gardens of Sri Lanka,price_value,Price & Value,66,20,54,86,0.767,ok,154
+Colombo,National Zoological Gardens of Sri Lanka,roads_access,Roads & Access,9,12,16,21,0.429,ok,154
+Colombo,National Zoological Gardens of Sri Lanka,safety,Safety,24,1,2,25,0.96,ok,154
+Colombo,National Zoological Gardens of Sri Lanka,scenery,Scenery & Nature,7,51,12,58,0.121,ok,154
+Colombo,Old Parliament Building,scenery,Scenery & Nature,0,5,1,5,0.0,low,8
+Colombo,Pettah Floating Market,cleanliness,Cleanliness,29,10,6,39,0.744,ok,151
+Colombo,Pettah Floating Market,crowd,Crowding & Noise,5,14,11,19,0.263,ok,151
+Colombo,Pettah Floating Market,facilities,Facilities,39,33,79,72,0.542,ok,151
+Colombo,Pettah Floating Market,price_value,Price & Value,4,10,7,14,0.286,low,151
+Colombo,Pettah Floating Market,roads_access,Roads & Access,4,7,13,11,0.364,low,151
+Colombo,Pettah Floating Market,scenery,Scenery & Nature,0,38,0,38,0.0,ok,151
+Colombo,Sambodhi Pagoda,crowd,Crowding & Noise,0,10,3,10,0.0,low,76
+Colombo,Sambodhi Pagoda,roads_access,Roads & Access,1,5,11,6,0.167,low,76
+Colombo,Sambodhi Pagoda,scenery,Scenery & Nature,0,61,7,61,0.0,ok,76
+Colombo,Sathutu Uyana,price_value,Price & Value,0,9,4,9,0.0,low,29
+Colombo,Sathutu Uyana,roads_access,Roads & Access,5,0,3,5,1.0,low,29
+Colombo,Sathutu Uyana,scenery,Scenery & Nature,1,4,0,5,0.2,low,29
+Colombo,Sri Kailawasanathan Swami Devasthanam Kovil,crowd,Crowding & Noise,0,7,1,7,0.0,low,35
+Colombo,Sri Kailawasanathan Swami Devasthanam Kovil,scenery,Scenery & Nature,0,22,0,22,0.0,ok,35
+Colombo,Sri Lanka Planetarium,crowd,Crowding & Noise,2,5,6,7,0.286,low,43
+Colombo,Sri Lanka Planetarium,facilities,Facilities,7,1,12,8,0.875,low,43
+Colombo,Sri Lanka Planetarium,price_value,Price & Value,4,2,7,6,0.667,low,43
+Colombo,Sri Lanka Planetarium,scenery,Scenery & Nature,2,11,1,13,0.154,low,43
+Colombo,"St. Anthony's Shrine, Kochchikade",crowd,Crowding & Noise,2,25,9,27,0.074,ok,70
+Colombo,"St. Anthony's Shrine, Kochchikade",roads_access,Roads & Access,2,3,8,5,0.4,low,70
+Colombo,"St. Anthony's Shrine, Kochchikade",safety,Safety,4,2,1,6,0.667,low,70
+Colombo,"St. Anthony's Shrine, Kochchikade",scenery,Scenery & Nature,1,26,0,27,0.037,ok,70
+Colombo,St. Lucia's Cathedral,crowd,Crowding & Noise,0,13,4,13,0.0,low,49
+Colombo,St. Lucia's Cathedral,scenery,Scenery & Nature,0,26,0,26,0.0,ok,49
+Colombo,Thalangama Lake,cleanliness,Cleanliness,6,4,5,10,0.6,low,89
+Colombo,Thalangama Lake,crowd,Crowding & Noise,1,27,8,28,0.036,ok,89
+Colombo,Thalangama Lake,scenery,Scenery & Nature,1,48,5,49,0.02,ok,89
+Colombo,Torington park,cleanliness,Cleanliness,0,6,1,6,0.0,low,20
+Colombo,Torington park,roads_access,Roads & Access,0,5,3,5,0.0,low,20
+Colombo,Viharamahadevi Park,cleanliness,Cleanliness,1,32,1,33,0.03,ok,128
+Colombo,Viharamahadevi Park,crowd,Crowding & Noise,2,38,11,40,0.05,ok,128
+Colombo,Viharamahadevi Park,facilities,Facilities,2,17,17,19,0.105,ok,128
+Colombo,Viharamahadevi Park,price_value,Price & Value,2,5,11,7,0.286,low,128
+Colombo,Viharamahadevi Park,roads_access,Roads & Access,1,20,17,21,0.048,ok,128
+Colombo,Viharamahadevi Park,scenery,Scenery & Nature,0,53,5,53,0.0,ok,128
+Galle,Ariyapala Mask Museum,facilities,Facilities,16,37,42,53,0.302,ok,60
+Galle,Ariyapala Mask Museum,price_value,Price & Value,17,20,24,37,0.459,ok,60
+Galle,Ariyapala Mask Museum,roads_access,Roads & Access,2,3,8,5,0.4,low,60
+Galle,Ariyapala Mask Museum,scenery,Scenery & Nature,1,14,1,15,0.067,ok,60
+Galle,Bentota Beach,cleanliness,Cleanliness,12,105,11,117,0.103,ok,203
+Galle,Bentota Beach,crowd,Crowding & Noise,0,59,18,59,0.0,ok,203
+Galle,Bentota Beach,facilities,Facilities,9,43,18,52,0.173,ok,203
+Galle,Bentota Beach,price_value,Price & Value,5,6,13,11,0.455,low,203
+Galle,Bentota Beach,roads_access,Roads & Access,4,23,15,27,0.148,ok,203
+Galle,Bentota Beach,safety,Safety,6,5,10,11,0.545,low,203
+Galle,Bentota Beach,scenery,Scenery & Nature,4,153,9,157,0.025,ok,203
+Galle,Black Galle Fort,scenery,Scenery & Nature,0,6,0,6,0.0,low,10
+Galle,Community Tsunami Museum,crowd,Crowding & Noise,2,3,1,5,0.4,low,143
+Galle,Community Tsunami Museum,facilities,Facilities,6,18,19,24,0.25,ok,143
+Galle,Community Tsunami Museum,price_value,Price & Value,10,9,31,19,0.526,ok,143
+Galle,Community Tsunami Museum,roads_access,Roads & Access,11,4,36,15,0.733,ok,143
+Galle,Community Tsunami Museum,safety,Safety,30,3,17,33,0.909,ok,143
+Galle,Community Tsunami Museum,scenery,Scenery & Nature,15,35,19,50,0.3,ok,143
+Galle,Dutch Reformed Church,scenery,Scenery & Nature,0,19,1,19,0.0,ok,29
+Galle,Galle Dutch Fort,cleanliness,Cleanliness,4,6,1,10,0.4,low,137
+Galle,Galle Dutch Fort,crowd,Crowding & Noise,3,11,4,14,0.214,low,137
+Galle,Galle Dutch Fort,facilities,Facilities,3,34,23,37,0.081,ok,137
+Galle,Galle Dutch Fort,price_value,Price & Value,2,9,12,11,0.182,low,137
+Galle,Galle Dutch Fort,roads_access,Roads & Access,2,9,11,11,0.182,low,137
+Galle,Galle Dutch Fort,scenery,Scenery & Nature,4,114,3,118,0.034,ok,137
+Galle,Galle Fort,cleanliness,Cleanliness,5,11,4,16,0.312,ok,247
+Galle,Galle Fort,crowd,Crowding & Noise,0,12,12,12,0.0,low,247
+Galle,Galle Fort,facilities,Facilities,8,109,83,117,0.068,ok,247
+Galle,Galle Fort,price_value,Price & Value,19,27,34,46,0.413,ok,247
+Galle,Galle Fort,roads_access,Roads & Access,6,50,45,56,0.107,ok,247
+Galle,Galle Fort,safety,Safety,6,6,7,12,0.5,low,247
+Galle,Galle Fort,scenery,Scenery & Nature,1,186,22,187,0.005,ok,247
+Galle,Galle Fort Attractions and Jumpers Sri Lanka,cleanliness,Cleanliness,0,6,0,6,0.0,low,104
+Galle,Galle Fort Attractions and Jumpers Sri Lanka,crowd,Crowding & Noise,0,11,2,11,0.0,low,104
+Galle,Galle Fort Attractions and Jumpers Sri Lanka,facilities,Facilities,3,19,13,22,0.136,ok,104
+Galle,Galle Fort Attractions and Jumpers Sri Lanka,price_value,Price & Value,1,5,9,6,0.167,low,104
+Galle,Galle Fort Attractions and Jumpers Sri Lanka,roads_access,Roads & Access,0,8,4,8,0.0,low,104
+Galle,Galle Fort Attractions and Jumpers Sri Lanka,scenery,Scenery & Nature,0,84,1,84,0.0,ok,104
+Galle,Galle Fort Clock Tower,cleanliness,Cleanliness,1,4,0,5,0.2,low,105
+Galle,Galle Fort Clock Tower,crowd,Crowding & Noise,1,6,1,7,0.143,low,105
+Galle,Galle Fort Clock Tower,facilities,Facilities,1,12,4,13,0.077,low,105
+Galle,Galle Fort Clock Tower,price_value,Price & Value,2,5,5,7,0.286,low,105
+Galle,Galle Fort Clock Tower,roads_access,Roads & Access,0,6,6,6,0.0,low,105
+Galle,Galle Fort Clock Tower,scenery,Scenery & Nature,0,97,3,97,0.0,ok,105
+Galle,Handunugoda Tea Estate,cleanliness,Cleanliness,2,5,8,7,0.286,low,242
+Galle,Handunugoda Tea Estate,crowd,Crowding & Noise,3,14,7,17,0.176,ok,242
+Galle,Handunugoda Tea Estate,facilities,Facilities,20,167,113,187,0.107,ok,242
+Galle,Handunugoda Tea Estate,price_value,Price & Value,24,54,65,78,0.308,ok,242
+Galle,Handunugoda Tea Estate,roads_access,Roads & Access,4,41,45,45,0.089,ok,242
+Galle,Handunugoda Tea Estate,safety,Safety,3,2,3,5,0.6,low,242
+Galle,Handunugoda Tea Estate,scenery,Scenery & Nature,2,112,22,114,0.018,ok,242
+Galle,Hikkaduwa Beach,cleanliness,Cleanliness,20,50,4,70,0.286,ok,175
+Galle,Hikkaduwa Beach,crowd,Crowding & Noise,20,20,32,40,0.5,ok,175
+Galle,Hikkaduwa Beach,facilities,Facilities,11,57,40,68,0.162,ok,175
+Galle,Hikkaduwa Beach,price_value,Price & Value,10,15,20,25,0.4,ok,175
+Galle,Hikkaduwa Beach,roads_access,Roads & Access,9,19,16,28,0.321,ok,175
+Galle,Hikkaduwa Beach,safety,Safety,18,9,12,27,0.667,ok,175
+Galle,Hikkaduwa Beach,scenery,Scenery & Nature,6,80,4,86,0.07,ok,175
+Galle,Historical Mansion Meseum,price_value,Price & Value,1,4,10,5,0.2,low,22
+Galle,Historical Mansion Meseum,scenery,Scenery & Nature,0,5,0,5,0.0,low,22
+Galle,Japanese Peace Pagoda - Rumassala,cleanliness,Cleanliness,0,9,1,9,0.0,low,202
+Galle,Japanese Peace Pagoda - Rumassala,crowd,Crowding & Noise,0,85,9,85,0.0,ok,202
+Galle,Japanese Peace Pagoda - Rumassala,roads_access,Roads & Access,3,20,31,23,0.13,ok,202
+Galle,Japanese Peace Pagoda - Rumassala,scenery,Scenery & Nature,0,181,18,181,0.0,ok,202
+Galle,Jungle Beach,cleanliness,Cleanliness,85,16,11,101,0.842,ok,171
+Galle,Jungle Beach,crowd,Crowding & Noise,19,34,29,53,0.358,ok,171
+Galle,Jungle Beach,facilities,Facilities,26,19,21,45,0.578,ok,171
+Galle,Jungle Beach,price_value,Price & Value,4,5,7,9,0.444,low,171
+Galle,Jungle Beach,roads_access,Roads & Access,38,48,61,86,0.442,ok,171
+Galle,Jungle Beach,safety,Safety,19,5,6,24,0.792,ok,171
+Galle,Jungle Beach,scenery,Scenery & Nature,14,59,11,73,0.192,ok,171
+Galle,"Jungle Beach, Unawatuna",cleanliness,Cleanliness,36,16,3,52,0.692,ok,186
+Galle,"Jungle Beach, Unawatuna",crowd,Crowding & Noise,10,30,19,40,0.25,ok,186
+Galle,"Jungle Beach, Unawatuna",facilities,Facilities,7,6,27,13,0.538,low,186
+Galle,"Jungle Beach, Unawatuna",price_value,Price & Value,4,4,7,8,0.5,low,186
+Galle,"Jungle Beach, Unawatuna",roads_access,Roads & Access,20,23,51,43,0.465,ok,186
+Galle,"Jungle Beach, Unawatuna",safety,Safety,11,3,3,14,0.786,low,186
+Galle,"Jungle Beach, Unawatuna",scenery,Scenery & Nature,5,123,6,128,0.039,ok,186
+Galle,Lighthouse - Galle,cleanliness,Cleanliness,1,4,1,5,0.2,low,107
+Galle,Lighthouse - Galle,crowd,Crowding & Noise,1,8,6,9,0.111,low,107
+Galle,Lighthouse - Galle,facilities,Facilities,0,15,10,15,0.0,ok,107
+Galle,Lighthouse - Galle,roads_access,Roads & Access,1,5,14,6,0.167,low,107
+Galle,Lighthouse - Galle,scenery,Scenery & Nature,0,100,2,100,0.0,ok,107
+Galle,Mahamodara Beach Park & Marine Walk,cleanliness,Cleanliness,4,5,0,9,0.444,low,42
+Galle,Mahamodara Beach Park & Marine Walk,crowd,Crowding & Noise,0,8,4,8,0.0,low,42
+Galle,Mahamodara Beach Park & Marine Walk,roads_access,Roads & Access,1,6,8,7,0.143,low,42
+Galle,Mahamodara Beach Park & Marine Walk,scenery,Scenery & Nature,0,22,1,22,0.0,ok,42
+Galle,Maritime Museum,price_value,Price & Value,4,8,16,12,0.333,low,45
+Galle,Maritime Museum,scenery,Scenery & Nature,0,10,3,10,0.0,low,45
+Galle,Martin Wickramasinghe Folk Museum Complex,crowd,Crowding & Noise,0,7,1,7,0.0,low,45
+Galle,Martin Wickramasinghe Folk Museum Complex,facilities,Facilities,6,13,11,19,0.316,ok,45
+Galle,Martin Wickramasinghe Folk Museum Complex,price_value,Price & Value,1,6,7,7,0.143,low,45
+Galle,Martin Wickramasinghe Folk Museum Complex,scenery,Scenery & Nature,1,15,3,16,0.062,ok,45
+Galle,"Meeran Mosque, Galle Fort",cleanliness,Cleanliness,0,7,0,7,0.0,low,52
+Galle,"Meeran Mosque, Galle Fort",crowd,Crowding & Noise,0,10,2,10,0.0,low,52
+Galle,"Meeran Mosque, Galle Fort",scenery,Scenery & Nature,0,37,1,37,0.0,ok,52
+Galle,Rumassala Sanctuary,cleanliness,Cleanliness,4,4,0,8,0.5,low,41
+Galle,Rumassala Sanctuary,roads_access,Roads & Access,2,4,9,6,0.333,low,41
+Galle,Rumassala Sanctuary,scenery,Scenery & Nature,0,28,2,28,0.0,ok,41
+Galle,Rumassala South Beach,safety,Safety,4,1,1,5,0.8,low,29
+Galle,Rumassala South Beach,scenery,Scenery & Nature,0,20,1,20,0.0,ok,29
+Galle,Sea Turtle Farm Galle Mahamodara,cleanliness,Cleanliness,7,4,4,11,0.636,low,94
+Galle,Sea Turtle Farm Galle Mahamodara,facilities,Facilities,11,17,14,28,0.393,ok,94
+Galle,Sea Turtle Farm Galle Mahamodara,price_value,Price & Value,21,8,32,29,0.724,ok,94
+Galle,Sea Turtle Farm Galle Mahamodara,roads_access,Roads & Access,4,12,22,16,0.25,ok,94
+Galle,Sea Turtle Farm Galle Mahamodara,safety,Safety,16,10,16,26,0.615,ok,94
+Galle,Sea Turtle Farm Galle Mahamodara,scenery,Scenery & Nature,3,37,3,40,0.075,ok,94
+Galle,Sri Sudharmalaya Buddhist Temple,crowd,Crowding & Noise,0,14,4,14,0.0,low,31
+Galle,Sri Sudharmalaya Buddhist Temple,scenery,Scenery & Nature,0,12,1,12,0.0,low,31
+Galle,St. Mary's Cathedral,crowd,Crowding & Noise,0,7,1,7,0.0,low,33
+Galle,St. Mary's Cathedral,scenery,Scenery & Nature,0,30,0,30,0.0,ok,33
+Galle,Yatagala Raja Maha Viharaya,crowd,Crowding & Noise,1,52,7,53,0.019,ok,93
+Galle,Yatagala Raja Maha Viharaya,scenery,Scenery & Nature,0,43,2,43,0.0,ok,93
+Gampaha,Asgiriya Raja Maha Viharaya,crowd,Crowding & Noise,0,17,4,17,0.0,ok,61
+Gampaha,Asgiriya Raja Maha Viharaya,roads_access,Roads & Access,0,6,14,6,0.0,low,61
+Gampaha,Asgiriya Raja Maha Viharaya,scenery,Scenery & Nature,1,44,0,45,0.022,ok,61
+Gampaha,Bopagama Ella,cleanliness,Cleanliness,3,4,5,7,0.429,low,51
+Gampaha,Bopagama Ella,crowd,Crowding & Noise,0,7,2,7,0.0,low,51
+Gampaha,Bopagama Ella,facilities,Facilities,2,3,2,5,0.4,low,51
+Gampaha,Bopagama Ella,roads_access,Roads & Access,3,3,29,6,0.5,low,51
+Gampaha,Bopagama Ella,scenery,Scenery & Nature,1,28,15,29,0.034,ok,51
+Gampaha,Gampaha Botanical Garden,cleanliness,Cleanliness,2,10,0,12,0.167,low,126
+Gampaha,Gampaha Botanical Garden,crowd,Crowding & Noise,0,37,11,37,0.0,ok,126
+Gampaha,Gampaha Botanical Garden,facilities,Facilities,2,11,14,13,0.154,low,126
+Gampaha,Gampaha Botanical Garden,price_value,Price & Value,2,4,17,6,0.333,low,126
+Gampaha,Gampaha Botanical Garden,roads_access,Roads & Access,4,14,21,18,0.222,ok,126
+Gampaha,Gampaha Botanical Garden,scenery,Scenery & Nature,1,73,4,74,0.014,ok,126
+Gampaha,Goraka Ella,crowd,Crowding & Noise,3,2,3,5,0.6,low,26
+Gampaha,Goraka Ella,roads_access,Roads & Access,1,6,6,7,0.143,low,26
+Gampaha,Goraka Ella,scenery,Scenery & Nature,0,20,4,20,0.0,ok,26
+Gampaha,Guruge Park,cleanliness,Cleanliness,28,6,3,34,0.824,ok,108
+Gampaha,Guruge Park,crowd,Crowding & Noise,5,3,4,8,0.625,low,108
+Gampaha,Guruge Park,facilities,Facilities,15,7,14,22,0.682,ok,108
+Gampaha,Guruge Park,price_value,Price & Value,32,10,16,42,0.762,ok,108
+Gampaha,Guruge Park,roads_access,Roads & Access,5,2,11,7,0.714,low,108
+Gampaha,Guruge Park,safety,Safety,9,0,0,9,1.0,low,108
+Gampaha,Guruge Park,scenery,Scenery & Nature,9,23,12,32,0.281,ok,108
+Gampaha,Horagolla National Park,crowd,Crowding & Noise,0,17,2,17,0.0,ok,64
+Gampaha,Horagolla National Park,facilities,Facilities,6,2,9,8,0.75,low,64
+Gampaha,Horagolla National Park,roads_access,Roads & Access,14,7,16,21,0.667,ok,64
+Gampaha,Horagolla National Park,scenery,Scenery & Nature,3,32,8,35,0.086,ok,64
+Gampaha,Mayan Water Park,cleanliness,Cleanliness,7,6,0,13,0.538,low,49
+Gampaha,Mayan Water Park,facilities,Facilities,4,6,4,10,0.4,low,49
+Gampaha,Mayan Water Park,price_value,Price & Value,11,6,8,17,0.647,ok,49
+Gampaha,Mayan Water Park,scenery,Scenery & Nature,1,12,1,13,0.077,low,49
+Gampaha,Negombo Beach,cleanliness,Cleanliness,115,43,23,158,0.728,ok,178
+Gampaha,Negombo Beach,crowd,Crowding & Noise,1,17,9,18,0.056,ok,178
+Gampaha,Negombo Beach,facilities,Facilities,33,36,22,69,0.478,ok,178
+Gampaha,Negombo Beach,price_value,Price & Value,7,7,6,14,0.5,low,178
+Gampaha,Negombo Beach,roads_access,Roads & Access,7,8,7,15,0.467,ok,178
+Gampaha,Negombo Beach,safety,Safety,18,1,2,19,0.947,ok,178
+Gampaha,Negombo Beach,scenery,Scenery & Nature,12,59,4,71,0.169,ok,178
+Gampaha,Rukmani Devi Park,cleanliness,Cleanliness,0,19,2,19,0.0,ok,73
+Gampaha,Rukmani Devi Park,crowd,Crowding & Noise,1,24,8,25,0.04,ok,73
+Gampaha,Rukmani Devi Park,facilities,Facilities,2,11,10,13,0.154,low,73
+Gampaha,Rukmani Devi Park,price_value,Price & Value,2,6,5,8,0.25,low,73
+Gampaha,Rukmani Devi Park,roads_access,Roads & Access,0,12,3,12,0.0,low,73
+Gampaha,Rukmani Devi Park,scenery,Scenery & Nature,0,27,0,27,0.0,ok,73
+Gampaha,Saniro Dream Paradise,cleanliness,Cleanliness,4,1,1,5,0.8,low,80
+Gampaha,Saniro Dream Paradise,crowd,Crowding & Noise,5,7,3,12,0.417,low,80
+Gampaha,Saniro Dream Paradise,facilities,Facilities,6,4,15,10,0.6,low,80
+Gampaha,Saniro Dream Paradise,price_value,Price & Value,13,7,18,20,0.65,ok,80
+Gampaha,Saniro Dream Paradise,roads_access,Roads & Access,4,1,10,5,0.8,low,80
+Gampaha,Saniro Dream Paradise,safety,Safety,18,2,1,20,0.9,ok,80
+Hambantota,Bataatha Agro Technology and Tourism Park,cleanliness,Cleanliness,1,5,0,6,0.167,low,87
+Hambantota,Bataatha Agro Technology and Tourism Park,crowd,Crowding & Noise,0,5,1,5,0.0,low,87
+Hambantota,Bataatha Agro Technology and Tourism Park,facilities,Facilities,1,46,11,47,0.021,ok,87
+Hambantota,Bataatha Agro Technology and Tourism Park,price_value,Price & Value,0,13,6,13,0.0,low,87
+Hambantota,Bataatha Agro Technology and Tourism Park,scenery,Scenery & Nature,1,31,2,32,0.031,ok,87
+Hambantota,Birds Research Center Hambantota,cleanliness,Cleanliness,4,23,1,27,0.148,ok,165
+Hambantota,Birds Research Center Hambantota,crowd,Crowding & Noise,3,6,3,9,0.333,low,165
+Hambantota,Birds Research Center Hambantota,facilities,Facilities,15,24,27,39,0.385,ok,165
+Hambantota,Birds Research Center Hambantota,price_value,Price & Value,53,14,51,67,0.791,ok,165
+Hambantota,Birds Research Center Hambantota,roads_access,Roads & Access,19,17,26,36,0.528,ok,165
+Hambantota,Birds Research Center Hambantota,safety,Safety,4,3,1,7,0.571,low,165
+Hambantota,Birds Research Center Hambantota,scenery,Scenery & Nature,16,52,24,68,0.235,ok,165
+Hambantota,Bundala National Park,cleanliness,Cleanliness,2,3,1,5,0.4,low,231
+Hambantota,Bundala National Park,crowd,Crowding & Noise,5,50,14,55,0.091,ok,231
+Hambantota,Bundala National Park,facilities,Facilities,10,132,44,142,0.07,ok,231
+Hambantota,Bundala National Park,price_value,Price & Value,4,23,17,27,0.148,ok,231
+Hambantota,Bundala National Park,roads_access,Roads & Access,10,78,74,88,0.114,ok,231
+Hambantota,Bundala National Park,safety,Safety,3,7,6,10,0.3,low,231
+Hambantota,Bundala National Park,scenery,Scenery & Nature,3,241,52,244,0.012,ok,231
+Hambantota,Bundala Safari with Srimal,facilities,Facilities,0,15,2,15,0.0,ok,26
+Hambantota,Bundala Safari with Srimal,scenery,Scenery & Nature,0,22,7,22,0.0,ok,26
+Hambantota,"Dry Zone Botanic Gardens, Hambantota",cleanliness,Cleanliness,1,13,2,14,0.071,low,145
+Hambantota,"Dry Zone Botanic Gardens, Hambantota",crowd,Crowding & Noise,2,8,1,10,0.2,low,145
+Hambantota,"Dry Zone Botanic Gardens, Hambantota",facilities,Facilities,5,26,31,31,0.161,ok,145
+Hambantota,"Dry Zone Botanic Gardens, Hambantota",price_value,Price & Value,3,9,23,12,0.25,low,145
+Hambantota,"Dry Zone Botanic Gardens, Hambantota",roads_access,Roads & Access,2,17,28,19,0.105,ok,145
+Hambantota,"Dry Zone Botanic Gardens, Hambantota",scenery,Scenery & Nature,2,76,6,78,0.026,ok,145
+Hambantota,Hambantota Beach,cleanliness,Cleanliness,2,3,0,5,0.4,low,16
+Hambantota,Hambantota Beach,scenery,Scenery & Nature,0,8,0,8,0.0,low,16
+Hambantota,Kalametiya Eco Bird Watching,crowd,Crowding & Noise,1,45,2,46,0.022,ok,121
+Hambantota,Kalametiya Eco Bird Watching,facilities,Facilities,0,92,11,92,0.0,ok,121
+Hambantota,Kalametiya Eco Bird Watching,price_value,Price & Value,0,6,1,6,0.0,low,121
+Hambantota,Kalametiya Eco Bird Watching,roads_access,Roads & Access,0,28,15,28,0.0,ok,121
+Hambantota,Kalametiya Eco Bird Watching,scenery,Scenery & Nature,2,199,19,201,0.01,ok,121
+Hambantota,Kirinda Beach,cleanliness,Cleanliness,6,4,1,10,0.6,low,87
+Hambantota,Kirinda Beach,crowd,Crowding & Noise,2,9,3,11,0.182,low,87
+Hambantota,Kirinda Beach,facilities,Facilities,10,7,6,17,0.588,ok,87
+Hambantota,Kirinda Beach,safety,Safety,16,4,6,20,0.8,ok,87
+Hambantota,Kirinda Beach,scenery,Scenery & Nature,0,51,2,51,0.0,ok,87
+Hambantota,Madunagala Hot Water Spring,cleanliness,Cleanliness,5,16,4,21,0.238,ok,106
+Hambantota,Madunagala Hot Water Spring,facilities,Facilities,6,14,21,20,0.3,ok,106
+Hambantota,Madunagala Hot Water Spring,price_value,Price & Value,4,1,21,5,0.8,low,106
+Hambantota,Madunagala Hot Water Spring,roads_access,Roads & Access,2,5,9,7,0.286,low,106
+Hambantota,Madunagala Hot Water Spring,scenery,Scenery & Nature,2,32,20,34,0.059,ok,106
+Hambantota,Rekawa Turtle Beach,scenery,Scenery & Nature,0,7,1,7,0.0,low,18
+Hambantota,Ridiyagama Safari Park,cleanliness,Cleanliness,3,5,4,8,0.375,low,226
+Hambantota,Ridiyagama Safari Park,crowd,Crowding & Noise,4,4,11,8,0.5,low,226
+Hambantota,Ridiyagama Safari Park,facilities,Facilities,6,39,71,45,0.133,ok,226
+Hambantota,Ridiyagama Safari Park,price_value,Price & Value,5,24,63,29,0.172,ok,226
+Hambantota,Ridiyagama Safari Park,roads_access,Roads & Access,10,35,133,45,0.222,ok,226
+Hambantota,Ridiyagama Safari Park,scenery,Scenery & Nature,3,38,15,41,0.073,ok,226
+Hambantota,"Sam Tours and Taxi, Hambantota, Sri Lanka",facilities,Facilities,0,5,1,5,0.0,low,10
+Hambantota,Tissa Wewa,cleanliness,Cleanliness,0,6,1,6,0.0,low,69
+Hambantota,Tissa Wewa,crowd,Crowding & Noise,1,11,0,12,0.083,low,69
+Hambantota,Tissa Wewa,facilities,Facilities,1,9,2,10,0.1,low,69
+Hambantota,Tissa Wewa,price_value,Price & Value,0,5,3,5,0.0,low,69
+Hambantota,Tissa Wewa,roads_access,Roads & Access,3,9,9,12,0.25,low,69
+Hambantota,Tissa Wewa,scenery,Scenery & Nature,1,81,10,82,0.012,ok,69
+Hambantota,Wirawila Tissa Sanctuary,crowd,Crowding & Noise,0,8,1,8,0.0,low,36
+Hambantota,Wirawila Tissa Sanctuary,facilities,Facilities,0,5,0,5,0.0,low,36
+Hambantota,Wirawila Tissa Sanctuary,scenery,Scenery & Nature,0,24,1,24,0.0,ok,36
+Hambantota,Yatala Dalada Wehera,crowd,Crowding & Noise,0,6,4,6,0.0,low,23
+Hambantota,Yatala Dalada Wehera,scenery,Scenery & Nature,0,11,1,11,0.0,low,23
+Jaffna,Jaffna Fort,cleanliness,Cleanliness,18,5,4,23,0.783,ok,146
+Jaffna,Jaffna Fort,crowd,Crowding & Noise,1,4,1,5,0.2,low,146
+Jaffna,Jaffna Fort,facilities,Facilities,8,13,20,21,0.381,ok,146
+Jaffna,Jaffna Fort,price_value,Price & Value,2,6,6,8,0.25,low,146
+Jaffna,Jaffna Fort,roads_access,Roads & Access,5,15,16,20,0.25,ok,146
+Jaffna,Jaffna Fort,safety,Safety,4,2,1,6,0.667,low,146
+Jaffna,Jaffna Fort,scenery,Scenery & Nature,6,103,10,109,0.055,ok,146
+Jaffna,Nallur Kovil,cleanliness,Cleanliness,1,14,0,15,0.067,ok,144
+Jaffna,Nallur Kovil,crowd,Crowding & Noise,3,28,21,31,0.097,ok,144
+Jaffna,Nallur Kovil,facilities,Facilities,2,10,14,12,0.167,low,144
+Jaffna,Nallur Kovil,roads_access,Roads & Access,3,9,17,12,0.25,low,144
+Jaffna,Nallur Kovil,scenery,Scenery & Nature,0,112,5,112,0.0,ok,144
+Kalutara,Barberyn Island,price_value,Price & Value,2,3,9,5,0.4,low,26
+Kalutara,Barberyn Island,roads_access,Roads & Access,2,3,5,5,0.4,low,26
+Kalutara,Barberyn Island,scenery,Scenery & Nature,1,17,0,18,0.056,ok,26
+Kalutara,Brief Garden - Bevis Bawa,cleanliness,Cleanliness,4,12,5,16,0.25,ok,220
+Kalutara,Brief Garden - Bevis Bawa,crowd,Crowding & Noise,1,32,3,33,0.03,ok,220
+Kalutara,Brief Garden - Bevis Bawa,facilities,Facilities,18,46,26,64,0.281,ok,220
+Kalutara,Brief Garden - Bevis Bawa,price_value,Price & Value,24,23,44,47,0.511,ok,220
+Kalutara,Brief Garden - Bevis Bawa,roads_access,Roads & Access,29,46,58,75,0.387,ok,220
+Kalutara,Brief Garden - Bevis Bawa,safety,Safety,9,5,6,14,0.643,low,220
+Kalutara,Brief Garden - Bevis Bawa,scenery,Scenery & Nature,1,179,15,180,0.006,ok,220
+Kalutara,Kalutara Beach,cleanliness,Cleanliness,54,58,11,112,0.482,ok,168
+Kalutara,Kalutara Beach,crowd,Crowding & Noise,2,18,6,20,0.1,ok,168
+Kalutara,Kalutara Beach,facilities,Facilities,13,32,19,45,0.289,ok,168
+Kalutara,Kalutara Beach,price_value,Price & Value,3,4,3,7,0.429,low,168
+Kalutara,Kalutara Beach,roads_access,Roads & Access,8,11,8,19,0.421,ok,168
+Kalutara,Kalutara Beach,safety,Safety,37,9,8,46,0.804,ok,168
+Kalutara,Kalutara Beach,scenery,Scenery & Nature,4,70,4,74,0.054,ok,168
+Kalutara,Kalutara Bodhiya,cleanliness,Cleanliness,0,7,1,7,0.0,low,141
+Kalutara,Kalutara Bodhiya,crowd,Crowding & Noise,5,55,11,60,0.083,ok,141
+Kalutara,Kalutara Bodhiya,facilities,Facilities,1,5,6,6,0.167,low,141
+Kalutara,Kalutara Bodhiya,price_value,Price & Value,1,4,1,5,0.2,low,141
+Kalutara,Kalutara Bodhiya,roads_access,Roads & Access,1,23,26,24,0.042,ok,141
+Kalutara,Kalutara Bodhiya,scenery,Scenery & Nature,0,63,6,63,0.0,ok,141
+Kalutara,Richmond Castle,crowd,Crowding & Noise,0,10,1,10,0.0,low,103
+Kalutara,Richmond Castle,facilities,Facilities,1,21,31,22,0.045,ok,103
+Kalutara,Richmond Castle,price_value,Price & Value,1,5,14,6,0.167,low,103
+Kalutara,Richmond Castle,scenery,Scenery & Nature,1,46,6,47,0.021,ok,103
+Kalutara,kalido beach kalutara,scenery,Scenery & Nature,0,6,0,6,0.0,low,7
+Kandy,Ceylon Tea Museum,cleanliness,Cleanliness,3,9,1,12,0.25,low,207
+Kandy,Ceylon Tea Museum,crowd,Crowding & Noise,2,6,16,8,0.25,low,207
+Kandy,Ceylon Tea Museum,facilities,Facilities,19,112,82,131,0.145,ok,207
+Kandy,Ceylon Tea Museum,price_value,Price & Value,12,42,57,54,0.222,ok,207
+Kandy,Ceylon Tea Museum,roads_access,Roads & Access,16,28,58,44,0.364,ok,207
+Kandy,Ceylon Tea Museum,scenery,Scenery & Nature,2,47,6,49,0.041,ok,207
+Kandy,Glenloch Tea Factory,cleanliness,Cleanliness,10,16,4,26,0.385,ok,257
+Kandy,Glenloch Tea Factory,crowd,Crowding & Noise,11,8,15,19,0.579,ok,257
+Kandy,Glenloch Tea Factory,facilities,Facilities,63,179,125,242,0.26,ok,257
+Kandy,Glenloch Tea Factory,price_value,Price & Value,41,49,63,90,0.456,ok,257
+Kandy,Glenloch Tea Factory,roads_access,Roads & Access,7,33,34,40,0.175,ok,257
+Kandy,Glenloch Tea Factory,safety,Safety,6,2,4,8,0.75,low,257
+Kandy,Glenloch Tea Factory,scenery,Scenery & Nature,4,107,12,111,0.036,ok,257
+Kandy,Kandy Lake,cleanliness,Cleanliness,21,23,10,44,0.477,ok,230
+Kandy,Kandy Lake,crowd,Crowding & Noise,25,45,26,70,0.357,ok,230
+Kandy,Kandy Lake,facilities,Facilities,3,25,23,28,0.107,ok,230
+Kandy,Kandy Lake,price_value,Price & Value,3,5,7,8,0.375,low,230
+Kandy,Kandy Lake,roads_access,Roads & Access,21,51,56,72,0.292,ok,230
+Kandy,Kandy Lake,scenery,Scenery & Nature,4,182,21,186,0.022,ok,230
+Kandy,New Ranweli Spice Garden,cleanliness,Cleanliness,5,14,6,19,0.263,ok,176
+Kandy,New Ranweli Spice Garden,crowd,Crowding & Noise,3,4,3,7,0.429,low,176
+Kandy,New Ranweli Spice Garden,facilities,Facilities,22,108,93,130,0.169,ok,176
+Kandy,New Ranweli Spice Garden,price_value,Price & Value,70,24,46,94,0.745,ok,176
+Kandy,New Ranweli Spice Garden,roads_access,Roads & Access,10,17,30,27,0.37,ok,176
+Kandy,New Ranweli Spice Garden,safety,Safety,10,5,8,15,0.667,ok,176
+Kandy,New Ranweli Spice Garden,scenery,Scenery & Nature,1,49,17,50,0.02,ok,176
+Kandy,Ramboda Waterfall,crowd,Crowding & Noise,3,9,6,12,0.25,low,205
+Kandy,Ramboda Waterfall,facilities,Facilities,13,48,43,61,0.213,ok,205
+Kandy,Ramboda Waterfall,price_value,Price & Value,2,14,24,16,0.125,ok,205
+Kandy,Ramboda Waterfall,roads_access,Roads & Access,31,109,140,140,0.221,ok,205
+Kandy,Ramboda Waterfall,safety,Safety,22,5,8,27,0.815,ok,205
+Kandy,Ramboda Waterfall,scenery,Scenery & Nature,26,246,79,272,0.096,ok,205
+Kandy,Royal Botanical Gardens,cleanliness,Cleanliness,4,36,3,40,0.1,ok,281
+Kandy,Royal Botanical Gardens,crowd,Crowding & Noise,3,71,15,74,0.041,ok,281
+Kandy,Royal Botanical Gardens,facilities,Facilities,13,74,47,87,0.149,ok,281
+Kandy,Royal Botanical Gardens,price_value,Price & Value,31,35,49,66,0.47,ok,281
+Kandy,Royal Botanical Gardens,roads_access,Roads & Access,7,27,39,34,0.206,ok,281
+Kandy,Royal Botanical Gardens,safety,Safety,4,2,5,6,0.667,low,281
+Kandy,Royal Botanical Gardens,scenery,Scenery & Nature,7,283,20,290,0.024,ok,281
+Kandy,Temple of the Sacred Tooth Relic,cleanliness,Cleanliness,6,6,1,12,0.5,low,219
+Kandy,Temple of the Sacred Tooth Relic,crowd,Crowding & Noise,27,39,67,66,0.409,ok,219
+Kandy,Temple of the Sacred Tooth Relic,facilities,Facilities,25,34,52,59,0.424,ok,219
+Kandy,Temple of the Sacred Tooth Relic,price_value,Price & Value,38,8,61,46,0.826,ok,219
+Kandy,Temple of the Sacred Tooth Relic,roads_access,Roads & Access,10,17,24,27,0.37,ok,219
+Kandy,Temple of the Sacred Tooth Relic,safety,Safety,8,3,10,11,0.727,low,219
+Kandy,Temple of the Sacred Tooth Relic,scenery,Scenery & Nature,8,114,12,122,0.066,ok,219
+Kandy,Udawattekele Sanctuary,cleanliness,Cleanliness,7,17,8,24,0.292,ok,208
+Kandy,Udawattekele Sanctuary,crowd,Crowding & Noise,7,94,31,101,0.069,ok,208
+Kandy,Udawattekele Sanctuary,facilities,Facilities,25,18,41,43,0.581,ok,208
+Kandy,Udawattekele Sanctuary,price_value,Price & Value,26,26,48,52,0.5,ok,208
+Kandy,Udawattekele Sanctuary,roads_access,Roads & Access,26,95,92,121,0.215,ok,208
+Kandy,Udawattekele Sanctuary,safety,Safety,32,13,30,45,0.711,ok,208
+Kandy,Udawattekele Sanctuary,scenery,Scenery & Nature,12,192,67,204,0.059,ok,208
+Kandy,World Buddhist Museum,crowd,Crowding & Noise,1,4,5,5,0.2,low,49
+Kandy,World Buddhist Museum,facilities,Facilities,5,15,5,20,0.25,ok,49
+Kandy,World Buddhist Museum,price_value,Price & Value,3,9,16,12,0.25,low,49
+Kandy,World Buddhist Museum,scenery,Scenery & Nature,0,12,1,12,0.0,low,49
+Kegalle,Pinnawala Elephant Orphanage,cleanliness,Cleanliness,13,16,14,29,0.448,ok,250
+Kegalle,Pinnawala Elephant Orphanage,crowd,Crowding & Noise,4,6,14,10,0.4,low,250
+Kegalle,Pinnawala Elephant Orphanage,facilities,Facilities,26,56,93,82,0.317,ok,250
+Kegalle,Pinnawala Elephant Orphanage,price_value,Price & Value,78,25,89,103,0.757,ok,250
+Kegalle,Pinnawala Elephant Orphanage,roads_access,Roads & Access,17,35,72,52,0.327,ok,250
+Kegalle,Pinnawala Elephant Orphanage,safety,Safety,33,14,34,47,0.702,ok,250
+Kegalle,Pinnawala Elephant Orphanage,scenery,Scenery & Nature,16,82,30,98,0.163,ok,250
+Kurunegala,Arankele archaeological site,crowd,Crowding & Noise,0,6,2,6,0.0,low,16
+Kurunegala,Arankele archaeological site,scenery,Scenery & Nature,0,7,0,7,0.0,low,16
+Kurunegala,Athkanda raja maha viharaya,crowd,Crowding & Noise,0,8,3,8,0.0,low,20
+Kurunegala,Athkanda raja maha viharaya,scenery,Scenery & Nature,0,5,1,5,0.0,low,20
+Kurunegala,Athugala viharaya,crowd,Crowding & Noise,0,21,6,21,0.0,ok,123
+Kurunegala,Athugala viharaya,roads_access,Roads & Access,4,17,31,21,0.19,ok,123
+Kurunegala,Athugala viharaya,scenery,Scenery & Nature,0,99,14,99,0.0,ok,123
+Kurunegala,Children park - lakeround,cleanliness,Cleanliness,6,8,3,14,0.429,low,62
+Kurunegala,Children park - lakeround,crowd,Crowding & Noise,1,8,9,9,0.111,low,62
+Kurunegala,Children park - lakeround,facilities,Facilities,8,3,8,11,0.727,low,62
+Kurunegala,Children park - lakeround,scenery,Scenery & Nature,1,27,0,28,0.036,ok,62
+Kurunegala,Deduru oya resovir park,scenery,Scenery & Nature,0,6,1,6,0.0,low,9
+Kurunegala,Dolukanda rajamaha viharaya,crowd,Crowding & Noise,0,5,1,5,0.0,low,26
+Kurunegala,Dolukanda rajamaha viharaya,roads_access,Roads & Access,2,13,11,15,0.133,ok,26
+Kurunegala,Dolukanda rajamaha viharaya,scenery,Scenery & Nature,0,10,0,10,0.0,low,26
+Kurunegala,Galhinna big rock,scenery,Scenery & Nature,0,17,0,17,0.0,ok,16
+Kurunegala,Hulangala mini world end entrance,roads_access,Roads & Access,9,4,15,13,0.692,low,28
+Kurunegala,Hulangala mini world end entrance,scenery,Scenery & Nature,0,12,4,12,0.0,low,28
+Kurunegala,Ibbagala rajamaha viharaya,scenery,Scenery & Nature,0,6,0,6,0.0,low,7
+Kurunegala,Kurunagela clock tower,crowd,Crowding & Noise,5,1,5,6,0.833,low,102
+Kurunegala,Kurunagela clock tower,roads_access,Roads & Access,3,7,23,10,0.3,low,102
+Kurunegala,Kurunagela clock tower,safety,Safety,26,0,0,26,1.0,ok,102
+Kurunegala,Kurunagela clock tower,scenery,Scenery & Nature,1,38,1,39,0.026,ok,102
+Kurunegala,Kurunagela lake jogging path,scenery,Scenery & Nature,0,7,0,7,0.0,low,10
+Kurunegala,Lake round kurunagela,cleanliness,Cleanliness,0,10,1,10,0.0,low,118
+Kurunegala,Lake round kurunagela,crowd,Crowding & Noise,1,28,2,29,0.034,ok,118
+Kurunegala,Lake round kurunagela,facilities,Facilities,1,11,14,12,0.083,low,118
+Kurunegala,Lake round kurunagela,price_value,Price & Value,0,6,3,6,0.0,low,118
+Kurunegala,Lake round kurunagela,roads_access,Roads & Access,0,18,17,18,0.0,ok,118
+Kurunegala,Lake round kurunagela,scenery,Scenery & Nature,1,77,2,78,0.013,ok,118
+Kurunegala,Maraluwawa raja maha viharaya,crowd,Crowding & Noise,1,10,2,11,0.091,low,33
+Kurunegala,Maraluwawa raja maha viharaya,roads_access,Roads & Access,1,5,8,6,0.167,low,33
+Kurunegala,Maraluwawa raja maha viharaya,scenery,Scenery & Nature,0,25,2,25,0.0,ok,33
+Kurunegala,Siri Gautama Sambuddharaja maligawa,crowd,Crowding & Noise,0,10,0,10,0.0,low,18
+Kurunegala,Siri Gautama Sambuddharaja maligawa,scenery,Scenery & Nature,0,5,0,5,0.0,low,18
+Kurunegala,Wadakada ella falls,scenery,Scenery & Nature,2,13,5,15,0.133,ok,19
+Kurunegala,Yakdessagala mountain,roads_access,Roads & Access,3,29,19,32,0.094,ok,40
+Kurunegala,Yakdessagala mountain,scenery,Scenery & Nature,1,28,3,29,0.034,ok,40
+Kurunegala,Yapahuwa rock fortress,crowd,Crowding & Noise,1,14,9,15,0.067,ok,263
+Kurunegala,Yapahuwa rock fortress,facilities,Facilities,3,2,10,5,0.6,low,263
+Kurunegala,Yapahuwa rock fortress,roads_access,Roads & Access,8,87,81,95,0.084,ok,263
+Kurunegala,Yapahuwa rock fortress,safety,Safety,7,0,8,7,1.0,low,263
+Kurunegala,Yapahuwa rock fortress,scenery,Scenery & Nature,3,159,19,162,0.019,ok,263
+Matale,Balakaduwa ella waterfall,scenery,Scenery & Nature,2,6,0,8,0.25,low,6
+Matale,Bambarakiri ella,cleanliness,Cleanliness,16,19,5,35,0.457,ok,439
+Matale,Bambarakiri ella,crowd,Crowding & Noise,2,17,11,19,0.105,ok,439
+Matale,Bambarakiri ella,facilities,Facilities,10,12,15,22,0.455,ok,439
+Matale,Bambarakiri ella,price_value,Price & Value,2,7,8,9,0.222,low,439
+Matale,Bambarakiri ella,roads_access,Roads & Access,23,71,111,94,0.245,ok,439
+Matale,Bambarakiri ella,safety,Safety,53,17,29,70,0.757,ok,439
+Matale,Bambarakiri ella,scenery,Scenery & Nature,20,347,87,367,0.054,ok,439
+Matale,Dumbara ella waterfalls,roads_access,Roads & Access,5,14,20,19,0.263,ok,47
+Matale,Dumbara ella waterfalls,safety,Safety,4,2,4,6,0.667,low,47
+Matale,Dumbara ella waterfalls,scenery,Scenery & Nature,2,35,18,37,0.054,ok,47
+Matale,Hulangala mini world's end view,facilities,Facilities,2,5,8,7,0.286,low,128
+Matale,Hulangala mini world's end view,roads_access,Roads & Access,36,34,65,70,0.514,ok,128
+Matale,Hulangala mini world's end view,safety,Safety,6,1,6,7,0.857,low,128
+Matale,Hulangala mini world's end view,scenery,Scenery & Nature,2,78,9,80,0.025,ok,128
+Matale,Hunnasgiriya water falls,crowd,Crowding & Noise,0,10,2,10,0.0,low,201
+Matale,Hunnasgiriya water falls,facilities,Facilities,6,9,20,15,0.4,ok,201
+Matale,Hunnasgiriya water falls,price_value,Price & Value,5,6,25,11,0.455,low,201
+Matale,Hunnasgiriya water falls,roads_access,Roads & Access,22,24,48,46,0.478,ok,201
+Matale,Hunnasgiriya water falls,safety,Safety,9,4,6,13,0.692,low,201
+Matale,Hunnasgiriya water falls,scenery,Scenery & Nature,11,131,54,142,0.077,ok,201
+Matale,Jodu ella water falls,roads_access,Roads & Access,3,4,29,7,0.429,low,50
+Matale,Jodu ella water falls,safety,Safety,4,2,0,6,0.667,low,50
+Matale,Jodu ella water falls,scenery,Scenery & Nature,2,30,20,32,0.062,ok,50
+Matale,Kiddies paradise children's park,crowd,Crowding & Noise,2,3,1,5,0.4,low,12
+Matale,Lucky land spice garden,scenery,Scenery & Nature,0,5,0,5,0.0,low,7
+Matale,Minneriya Tusker Safaris,cleanliness,Cleanliness,4,1,5,5,0.8,low,133
+Matale,Minneriya Tusker Safaris,crowd,Crowding & Noise,6,3,10,9,0.667,low,133
+Matale,Minneriya Tusker Safaris,facilities,Facilities,7,12,17,19,0.368,ok,133
+Matale,Minneriya Tusker Safaris,price_value,Price & Value,12,10,23,22,0.545,ok,133
+Matale,Minneriya Tusker Safaris,roads_access,Roads & Access,20,42,67,62,0.323,ok,133
+Matale,Minneriya Tusker Safaris,safety,Safety,11,5,14,16,0.688,ok,133
+Matale,Minneriya Tusker Safaris,scenery,Scenery & Nature,1,72,27,73,0.014,ok,133
+Matale,Nalanda gedige,cleanliness,Cleanliness,0,6,0,6,0.0,low,134
+Matale,Nalanda gedige,crowd,Crowding & Noise,0,43,6,43,0.0,ok,134
+Matale,Nalanda gedige,facilities,Facilities,6,10,8,16,0.375,ok,134
+Matale,Nalanda gedige,price_value,Price & Value,2,9,4,11,0.182,low,134
+Matale,Nalanda gedige,roads_access,Roads & Access,5,19,25,24,0.208,ok,134
+Matale,Nalanda gedige,scenery,Scenery & Nature,1,55,2,56,0.018,ok,134
+Matale,National spice garden of sri lanka,facilities,Facilities,2,12,2,14,0.143,low,28
+Matale,National spice garden of sri lanka,scenery,Scenery & Nature,1,15,0,16,0.062,ok,28
+Matale,Padiwita ambalama,scenery,Scenery & Nature,0,13,0,13,0.0,low,15
+Matale,"Pitawala pathana , riverston",cleanliness,Cleanliness,5,2,3,7,0.714,low,302
+Matale,"Pitawala pathana , riverston",crowd,Crowding & Noise,1,12,5,13,0.077,low,302
+Matale,"Pitawala pathana , riverston",facilities,Facilities,10,3,17,13,0.769,low,302
+Matale,"Pitawala pathana , riverston",price_value,Price & Value,2,4,7,6,0.333,low,302
+Matale,"Pitawala pathana , riverston",roads_access,Roads & Access,18,43,67,61,0.295,ok,302
+Matale,"Pitawala pathana , riverston",safety,Safety,11,3,10,14,0.786,low,302
+Matale,"Pitawala pathana , riverston",scenery,Scenery & Nature,7,240,21,247,0.028,ok,302
+Matale,Puwakpitiya Oya,scenery,Scenery & Nature,1,5,1,6,0.167,low,8
+Matale,Rahas ella waterfalls,roads_access,Roads & Access,2,3,10,5,0.4,low,25
+Matale,Rahas ella waterfalls,safety,Safety,11,0,1,11,1.0,low,25
+Matale,Rahas ella waterfalls,scenery,Scenery & Nature,4,12,5,16,0.25,ok,25
+Matale,Rangala natural pool,cleanliness,Cleanliness,11,6,2,17,0.647,ok,168
+Matale,Rangala natural pool,crowd,Crowding & Noise,2,13,4,15,0.133,ok,168
+Matale,Rangala natural pool,roads_access,Roads & Access,5,14,33,19,0.263,ok,168
+Matale,Rangala natural pool,safety,Safety,50,7,19,57,0.877,ok,168
+Matale,Rangala natural pool,scenery,Scenery & Nature,8,121,15,129,0.062,ok,168
+Matale,Riverston,cleanliness,Cleanliness,14,5,6,19,0.737,ok,439
+Matale,Riverston,crowd,Crowding & Noise,3,18,6,21,0.143,ok,439
+Matale,Riverston,facilities,Facilities,6,9,11,15,0.4,ok,439
+Matale,Riverston,price_value,Price & Value,2,5,3,7,0.286,low,439
+Matale,Riverston,roads_access,Roads & Access,34,109,98,143,0.238,ok,439
+Matale,Riverston,safety,Safety,11,6,8,17,0.647,ok,439
+Matale,Riverston,scenery,Scenery & Nature,12,350,56,362,0.033,ok,439
+Matale,Sembuwatta lake,cleanliness,Cleanliness,14,10,1,24,0.583,ok,405
+Matale,Sembuwatta lake,crowd,Crowding & Noise,8,24,10,32,0.25,ok,405
+Matale,Sembuwatta lake,facilities,Facilities,17,21,15,38,0.447,ok,405
+Matale,Sembuwatta lake,price_value,Price & Value,22,9,30,31,0.71,ok,405
+Matale,Sembuwatta lake,roads_access,Roads & Access,110,36,59,146,0.753,ok,405
+Matale,Sembuwatta lake,safety,Safety,23,3,5,26,0.885,ok,405
+Matale,Sembuwatta lake,scenery,Scenery & Nature,9,282,23,291,0.031,ok,405
+Matale,Sera ella water falls,cleanliness,Cleanliness,3,3,7,6,0.5,low,335
+Matale,Sera ella water falls,crowd,Crowding & Noise,1,12,3,13,0.077,low,335
+Matale,Sera ella water falls,roads_access,Roads & Access,43,37,89,80,0.537,ok,335
+Matale,Sera ella water falls,safety,Safety,31,9,15,40,0.775,ok,335
+Matale,Sera ella water falls,scenery,Scenery & Nature,17,273,84,290,0.059,ok,335
+Matale,Sigiriya Museum,cleanliness,Cleanliness,13,4,4,17,0.765,ok,212
+Matale,Sigiriya Museum,crowd,Crowding & Noise,1,5,6,6,0.167,low,212
+Matale,Sigiriya Museum,facilities,Facilities,19,29,46,48,0.396,ok,212
+Matale,Sigiriya Museum,price_value,Price & Value,13,32,47,45,0.289,ok,212
+Matale,Sigiriya Museum,roads_access,Roads & Access,10,65,87,75,0.133,ok,212
+Matale,Sigiriya Museum,safety,Safety,1,7,8,8,0.125,low,212
+Matale,Sigiriya Museum,scenery,Scenery & Nature,6,41,13,47,0.128,ok,212
+Matale,Sigiriya The Ancient Rock Fortress,cleanliness,Cleanliness,4,8,11,12,0.333,low,274
+Matale,Sigiriya The Ancient Rock Fortress,crowd,Crowding & Noise,20,24,44,44,0.455,ok,274
+Matale,Sigiriya The Ancient Rock Fortress,facilities,Facilities,30,38,93,68,0.441,ok,274
+Matale,Sigiriya The Ancient Rock Fortress,price_value,Price & Value,38,26,71,64,0.594,ok,274
+Matale,Sigiriya The Ancient Rock Fortress,roads_access,Roads & Access,76,215,245,291,0.261,ok,274
+Matale,Sigiriya The Ancient Rock Fortress,safety,Safety,35,16,32,51,0.686,ok,274
+Matale,Sigiriya The Ancient Rock Fortress,scenery,Scenery & Nature,8,307,24,315,0.025,ok,274
+Matale,Sri muththumari amman kovil,cleanliness,Cleanliness,4,4,1,8,0.5,low,159
+Matale,Sri muththumari amman kovil,crowd,Crowding & Noise,2,20,5,22,0.091,ok,159
+Matale,Sri muththumari amman kovil,facilities,Facilities,6,1,4,7,0.857,low,159
+Matale,Sri muththumari amman kovil,price_value,Price & Value,13,6,18,19,0.684,ok,159
+Matale,Sri muththumari amman kovil,roads_access,Roads & Access,5,9,16,14,0.357,low,159
+Matale,Sri muththumari amman kovil,scenery,Scenery & Nature,3,97,1,100,0.03,ok,159
+Matale,V.T. Nanayakkara park,scenery,Scenery & Nature,2,5,1,7,0.286,low,18
+Matara,Atha Mala Ella,roads_access,Roads & Access,2,7,16,9,0.222,low,40
+Matara,Atha Mala Ella,safety,Safety,8,1,3,9,0.889,low,40
+Matara,Atha Mala Ella,scenery,Scenery & Nature,3,36,16,39,0.077,ok,40
+Matara,Biso Ella Waterfall,roads_access,Roads & Access,1,4,14,5,0.2,low,30
+Matara,Biso Ella Waterfall,scenery,Scenery & Nature,1,16,14,17,0.059,ok,30
+Matara,Coconut Tree Hill,cleanliness,Cleanliness,6,3,1,9,0.667,low,238
+Matara,Coconut Tree Hill,crowd,Crowding & Noise,10,18,24,28,0.357,ok,238
+Matara,Coconut Tree Hill,facilities,Facilities,5,6,7,11,0.455,low,238
+Matara,Coconut Tree Hill,roads_access,Roads & Access,23,37,61,60,0.383,ok,238
+Matara,Coconut Tree Hill,safety,Safety,8,0,4,8,1.0,low,238
+Matara,Coconut Tree Hill,scenery,Scenery & Nature,8,239,26,247,0.032,ok,238
+Matara,Dandeniya Wewa,scenery,Scenery & Nature,0,5,0,5,0.0,low,8
+Matara,Dondra Head,crowd,Crowding & Noise,0,20,7,20,0.0,ok,123
+Matara,Dondra Head,price_value,Price & Value,1,10,2,11,0.091,low,123
+Matara,Dondra Head,roads_access,Roads & Access,6,5,26,11,0.545,low,123
+Matara,Dondra Head,scenery,Scenery & Nature,2,97,5,99,0.02,ok,123
+Matara,Hiriketiya Beach,cleanliness,Cleanliness,4,13,2,17,0.235,ok,137
+Matara,Hiriketiya Beach,crowd,Crowding & Noise,6,15,30,21,0.286,ok,137
+Matara,Hiriketiya Beach,facilities,Facilities,6,23,20,29,0.207,ok,137
+Matara,Hiriketiya Beach,price_value,Price & Value,6,7,13,13,0.462,low,137
+Matara,Hiriketiya Beach,roads_access,Roads & Access,3,7,7,10,0.3,low,137
+Matara,Hiriketiya Beach,scenery,Scenery & Nature,1,81,5,82,0.012,ok,137
+Matara,Hummanaya Blow Hole,cleanliness,Cleanliness,3,3,3,6,0.5,low,165
+Matara,Hummanaya Blow Hole,crowd,Crowding & Noise,2,6,9,8,0.25,low,165
+Matara,Hummanaya Blow Hole,facilities,Facilities,7,5,19,12,0.583,low,165
+Matara,Hummanaya Blow Hole,price_value,Price & Value,13,2,31,15,0.867,ok,165
+Matara,Hummanaya Blow Hole,roads_access,Roads & Access,14,12,28,26,0.538,ok,165
+Matara,Hummanaya Blow Hole,safety,Safety,5,0,3,5,1.0,low,165
+Matara,Hummanaya Blow Hole,scenery,Scenery & Nature,5,105,22,110,0.045,ok,165
+Matara,Kirala Kele Sanctuary,scenery,Scenery & Nature,0,9,0,9,0.0,low,11
+Matara,Madiha Beach,cleanliness,Cleanliness,2,12,1,14,0.143,low,73
+Matara,Madiha Beach,crowd,Crowding & Noise,1,20,8,21,0.048,ok,73
+Matara,Madiha Beach,facilities,Facilities,2,13,8,15,0.133,ok,73
+Matara,Madiha Beach,price_value,Price & Value,1,4,4,5,0.2,low,73
+Matara,Madiha Beach,safety,Safety,7,2,3,9,0.778,low,73
+Matara,Madiha Beach,scenery,Scenery & Nature,2,42,1,44,0.045,ok,73
+Matara,Matara Beach Park,cleanliness,Cleanliness,3,4,1,7,0.429,low,49
+Matara,Matara Beach Park,crowd,Crowding & Noise,0,6,7,6,0.0,low,49
+Matara,Matara Beach Park,facilities,Facilities,0,7,3,7,0.0,low,49
+Matara,Matara Beach Park,scenery,Scenery & Nature,0,30,1,30,0.0,ok,49
+Matara,Matara Bodhiya,crowd,Crowding & Noise,0,31,11,31,0.0,ok,58
+Matara,Matara Bodhiya,scenery,Scenery & Nature,0,7,0,7,0.0,low,58
+Matara,Matara Fort,scenery,Scenery & Nature,1,16,1,17,0.059,ok,31
+Matara,Matara Paravi Duwa Beach,crowd,Crowding & Noise,1,7,0,8,0.125,low,33
+Matara,Matara Paravi Duwa Beach,roads_access,Roads & Access,1,7,6,8,0.125,low,33
+Matara,Matara Paravi Duwa Beach,scenery,Scenery & Nature,0,26,2,26,0.0,ok,33
+Matara,Mirissa Beach,cleanliness,Cleanliness,18,98,2,116,0.155,ok,356
+Matara,Mirissa Beach,crowd,Crowding & Noise,24,41,40,65,0.369,ok,356
+Matara,Mirissa Beach,facilities,Facilities,25,150,59,175,0.143,ok,356
+Matara,Mirissa Beach,price_value,Price & Value,20,35,18,55,0.364,ok,356
+Matara,Mirissa Beach,roads_access,Roads & Access,11,27,20,38,0.289,ok,356
+Matara,Mirissa Beach,safety,Safety,14,12,10,26,0.538,ok,356
+Matara,Mirissa Beach,scenery,Scenery & Nature,2,258,11,260,0.008,ok,356
+Matara,Nilwala Crocodile Safari,facilities,Facilities,0,5,0,5,0.0,low,20
+Matara,Nilwala Crocodile Safari,roads_access,Roads & Access,0,5,1,5,0.0,low,20
+Matara,Nilwala Crocodile Safari,scenery,Scenery & Nature,0,11,2,11,0.0,low,20
+Matara,Parewi Duwa Temple,crowd,Crowding & Noise,0,19,5,19,0.0,ok,143
+Matara,Parewi Duwa Temple,price_value,Price & Value,8,3,2,11,0.727,low,143
+Matara,Parewi Duwa Temple,roads_access,Roads & Access,3,6,27,9,0.333,low,143
+Matara,Parewi Duwa Temple,safety,Safety,11,0,2,11,1.0,low,143
+Matara,Parewi Duwa Temple,scenery,Scenery & Nature,0,108,1,108,0.0,ok,143
+Matara,Parrot Rock,crowd,Crowding & Noise,2,4,2,6,0.333,low,152
+Matara,Parrot Rock,facilities,Facilities,2,6,1,8,0.25,low,152
+Matara,Parrot Rock,roads_access,Roads & Access,21,39,25,60,0.35,ok,152
+Matara,Parrot Rock,safety,Safety,18,4,16,22,0.818,ok,152
+Matara,Parrot Rock,scenery,Scenery & Nature,3,140,6,143,0.021,ok,152
+Matara,Raja & the Whales,cleanliness,Cleanliness,3,2,0,5,0.6,low,101
+Matara,Raja & the Whales,facilities,Facilities,2,39,8,41,0.049,ok,101
+Matara,Raja & the Whales,price_value,Price & Value,1,10,7,11,0.091,low,101
+Matara,Raja & the Whales,scenery,Scenery & Nature,1,54,3,55,0.018,ok,101
+Matara,Sinharaja Forest Reserve,cleanliness,Cleanliness,4,6,10,10,0.4,low,186
+Matara,Sinharaja Forest Reserve,crowd,Crowding & Noise,3,11,12,14,0.214,low,186
+Matara,Sinharaja Forest Reserve,facilities,Facilities,50,110,151,160,0.312,ok,186
+Matara,Sinharaja Forest Reserve,price_value,Price & Value,22,15,40,37,0.595,ok,186
+Matara,Sinharaja Forest Reserve,roads_access,Roads & Access,45,108,174,153,0.294,ok,186
+Matara,Sinharaja Forest Reserve,safety,Safety,35,18,38,53,0.66,ok,186
+Matara,Sinharaja Forest Reserve,scenery,Scenery & Nature,15,221,108,236,0.064,ok,186
+Matara,Sk Town Beach,crowd,Crowding & Noise,0,5,0,5,0.0,low,13
+Matara,Sk Town Beach,scenery,Scenery & Nature,0,10,0,10,0.0,low,13
+Matara,Snake Farm Weligama (Traditional Farm),facilities,Facilities,2,28,10,30,0.067,ok,122
+Matara,Snake Farm Weligama (Traditional Farm),price_value,Price & Value,7,2,13,9,0.778,low,122
+Matara,Snake Farm Weligama (Traditional Farm),roads_access,Roads & Access,4,14,9,18,0.222,ok,122
+Matara,Snake Farm Weligama (Traditional Farm),safety,Safety,15,21,18,36,0.417,ok,122
+Matara,Snake Farm Weligama (Traditional Farm),scenery,Scenery & Nature,5,50,4,55,0.091,ok,122
+Matara,Star Fort Matara,scenery,Scenery & Nature,0,8,0,8,0.0,low,28
+Matara,"TURTLE POINT BATHEEGAMA, DiCKWELLA.",scenery,Scenery & Nature,0,12,2,12,0.0,low,16
+Matara,The Palm Rope Swing,price_value,Price & Value,4,2,16,6,0.667,low,24
+Matara,The Palm Rope Swing,scenery,Scenery & Nature,0,7,3,7,0.0,low,24
+Matara,The Shrine of Our Lady of Matara,crowd,Crowding & Noise,0,26,1,26,0.0,ok,63
+Matara,The Shrine of Our Lady of Matara,scenery,Scenery & Nature,0,36,0,36,0.0,ok,63
+Matara,Turtle Bay Activity Center,cleanliness,Cleanliness,3,6,1,9,0.333,low,40
+Matara,Turtle Bay Activity Center,facilities,Facilities,1,7,2,8,0.125,low,40
+Matara,Turtle Bay Activity Center,price_value,Price & Value,2,3,1,5,0.4,low,40
+Matara,Turtle Bay Activity Center,scenery,Scenery & Nature,1,20,0,21,0.048,ok,40
+Matara,Weherahena Poorwarama Rajamaha Viharaya,crowd,Crowding & Noise,1,28,4,29,0.034,ok,86
+Matara,Weherahena Poorwarama Rajamaha Viharaya,roads_access,Roads & Access,0,11,12,11,0.0,low,86
+Matara,Weherahena Poorwarama Rajamaha Viharaya,scenery,Scenery & Nature,1,48,0,49,0.02,ok,86
+Matara,Weligama Beach (surf spot),cleanliness,Cleanliness,7,2,0,9,0.778,low,54
+Matara,Weligama Beach (surf spot),crowd,Crowding & Noise,1,4,3,5,0.2,low,54
+Matara,Weligama Beach (surf spot),facilities,Facilities,0,10,6,10,0.0,low,54
+Matara,Weligama Beach (surf spot),scenery,Scenery & Nature,0,23,1,23,0.0,ok,54
+Matara,Wewurukannala Buduraja Maha Viharaya,cleanliness,Cleanliness,6,0,1,6,1.0,low,87
+Matara,Wewurukannala Buduraja Maha Viharaya,crowd,Crowding & Noise,1,17,6,18,0.056,ok,87
+Matara,Wewurukannala Buduraja Maha Viharaya,facilities,Facilities,7,4,5,11,0.636,low,87
+Matara,Wewurukannala Buduraja Maha Viharaya,price_value,Price & Value,12,3,14,15,0.8,ok,87
+Matara,Wewurukannala Buduraja Maha Viharaya,roads_access,Roads & Access,1,4,10,5,0.2,low,87
+Matara,Wewurukannala Buduraja Maha Viharaya,safety,Safety,5,0,2,5,1.0,low,87
+Matara,Wewurukannala Buduraja Maha Viharaya,scenery,Scenery & Nature,4,43,3,47,0.085,ok,87
+Nuwara Eliya,Ambewela Farms,cleanliness,Cleanliness,17,7,3,24,0.708,ok,99
+Nuwara Eliya,Ambewela Farms,facilities,Facilities,15,13,19,28,0.536,ok,99
+Nuwara Eliya,Ambewela Farms,price_value,Price & Value,18,7,15,25,0.72,ok,99
+Nuwara Eliya,Ambewela Farms,roads_access,Roads & Access,7,21,10,28,0.25,ok,99
+Nuwara Eliya,Ambewela Farms,scenery,Scenery & Nature,1,84,8,85,0.012,ok,99
+Nuwara Eliya,Baker's Falls,price_value,Price & Value,3,2,7,5,0.6,low,68
+Nuwara Eliya,Baker's Falls,roads_access,Roads & Access,6,34,46,40,0.15,ok,68
+Nuwara Eliya,Baker's Falls,safety,Safety,3,4,1,7,0.429,low,68
+Nuwara Eliya,Baker's Falls,scenery,Scenery & Nature,4,70,26,74,0.054,ok,68
+Nuwara Eliya,Bluefield Tea Gardens,cleanliness,Cleanliness,0,22,2,22,0.0,ok,253
+Nuwara Eliya,Bluefield Tea Gardens,crowd,Crowding & Noise,2,8,8,10,0.2,low,253
+Nuwara Eliya,Bluefield Tea Gardens,facilities,Facilities,23,206,137,229,0.1,ok,253
+Nuwara Eliya,Bluefield Tea Gardens,price_value,Price & Value,29,73,72,102,0.284,ok,253
+Nuwara Eliya,Bluefield Tea Gardens,roads_access,Roads & Access,2,27,23,29,0.069,ok,253
+Nuwara Eliya,Bluefield Tea Gardens,scenery,Scenery & Nature,5,65,11,70,0.071,ok,253
+Nuwara Eliya,"Christ Church Warleigh, Dickoya",scenery,Scenery & Nature,0,5,0,5,0.0,low,6
+Nuwara Eliya,Damro Labookellie Tea Centre and Tea Garden,cleanliness,Cleanliness,4,4,1,8,0.5,low,72
+Nuwara Eliya,Damro Labookellie Tea Centre and Tea Garden,crowd,Crowding & Noise,5,0,4,5,1.0,low,72
+Nuwara Eliya,Damro Labookellie Tea Centre and Tea Garden,facilities,Facilities,9,42,26,51,0.176,ok,72
+Nuwara Eliya,Damro Labookellie Tea Centre and Tea Garden,price_value,Price & Value,12,19,28,31,0.387,ok,72
+Nuwara Eliya,Damro Labookellie Tea Centre and Tea Garden,roads_access,Roads & Access,0,6,17,6,0.0,low,72
+Nuwara Eliya,Damro Labookellie Tea Centre and Tea Garden,scenery,Scenery & Nature,0,38,3,38,0.0,ok,72
+Nuwara Eliya,Devon Falls,facilities,Facilities,1,4,13,5,0.2,low,193
+Nuwara Eliya,Devon Falls,roads_access,Roads & Access,7,42,73,49,0.143,ok,193
+Nuwara Eliya,Devon Falls,safety,Safety,5,3,6,8,0.625,low,193
+Nuwara Eliya,Devon Falls,scenery,Scenery & Nature,5,154,82,159,0.031,ok,193
+Nuwara Eliya,Devon Waterfall view point,roads_access,Roads & Access,2,18,19,20,0.1,ok,98
+Nuwara Eliya,Devon Waterfall view point,scenery,Scenery & Nature,5,80,24,85,0.059,ok,98
+Nuwara Eliya,Galpotha Natural water slide,scenery,Scenery & Nature,0,6,1,6,0.0,low,6
+Nuwara Eliya,Gartmore Falls,cleanliness,Cleanliness,3,4,2,7,0.429,low,142
+Nuwara Eliya,Gartmore Falls,crowd,Crowding & Noise,1,7,2,8,0.125,low,142
+Nuwara Eliya,Gartmore Falls,roads_access,Roads & Access,12,20,47,32,0.375,ok,142
+Nuwara Eliya,Gartmore Falls,scenery,Scenery & Nature,5,116,45,121,0.041,ok,142
+Nuwara Eliya,Gregory Lake,cleanliness,Cleanliness,33,35,5,68,0.485,ok,216
+Nuwara Eliya,Gregory Lake,crowd,Crowding & Noise,6,15,15,21,0.286,ok,216
+Nuwara Eliya,Gregory Lake,facilities,Facilities,11,35,37,46,0.239,ok,216
+Nuwara Eliya,Gregory Lake,price_value,Price & Value,35,24,78,59,0.593,ok,216
+Nuwara Eliya,Gregory Lake,roads_access,Roads & Access,10,29,59,39,0.256,ok,216
+Nuwara Eliya,Gregory Lake,safety,Safety,7,0,2,7,1.0,low,216
+Nuwara Eliya,Gregory Lake,scenery,Scenery & Nature,4,147,9,151,0.026,ok,216
+Nuwara Eliya,Hakgala Botanic Gardens,cleanliness,Cleanliness,20,16,9,36,0.556,ok,199
+Nuwara Eliya,Hakgala Botanic Gardens,crowd,Crowding & Noise,3,27,10,30,0.1,ok,199
+Nuwara Eliya,Hakgala Botanic Gardens,facilities,Facilities,20,16,32,36,0.556,ok,199
+Nuwara Eliya,Hakgala Botanic Gardens,price_value,Price & Value,50,16,71,66,0.758,ok,199
+Nuwara Eliya,Hakgala Botanic Gardens,roads_access,Roads & Access,11,25,42,36,0.306,ok,199
+Nuwara Eliya,Hakgala Botanic Gardens,safety,Safety,6,2,10,8,0.75,low,199
+Nuwara Eliya,Hakgala Botanic Gardens,scenery,Scenery & Nature,4,164,16,168,0.024,ok,199
+Nuwara Eliya,Hatton Siripada view point,scenery,Scenery & Nature,0,5,2,5,0.0,low,7
+Nuwara Eliya,Horton Plains National Park,cleanliness,Cleanliness,51,46,65,97,0.526,ok,930
+Nuwara Eliya,Horton Plains National Park,crowd,Crowding & Noise,17,51,44,68,0.25,ok,930
+Nuwara Eliya,Horton Plains National Park,facilities,Facilities,54,40,122,94,0.574,ok,930
+Nuwara Eliya,Horton Plains National Park,price_value,Price & Value,101,31,93,132,0.765,ok,930
+Nuwara Eliya,Horton Plains National Park,roads_access,Roads & Access,100,403,382,503,0.199,ok,930
+Nuwara Eliya,Horton Plains National Park,safety,Safety,39,15,30,54,0.722,ok,930
+Nuwara Eliya,Horton Plains National Park,scenery,Scenery & Nature,45,808,159,853,0.053,ok,930
+Nuwara Eliya,Kadiyanlena eco resort,cleanliness,Cleanliness,18,12,5,30,0.6,ok,246
+Nuwara Eliya,Kadiyanlena eco resort,crowd,Crowding & Noise,0,16,3,16,0.0,ok,246
+Nuwara Eliya,Kadiyanlena eco resort,facilities,Facilities,4,8,3,12,0.333,low,246
+Nuwara Eliya,Kadiyanlena eco resort,roads_access,Roads & Access,10,86,77,96,0.104,ok,246
+Nuwara Eliya,Kadiyanlena eco resort,safety,Safety,20,4,6,24,0.833,ok,246
+Nuwara Eliya,Kadiyanlena eco resort,scenery,Scenery & Nature,8,201,47,209,0.038,ok,246
+Nuwara Eliya,Kolapathana waterfall,cleanliness,Cleanliness,8,5,7,13,0.615,low,160
+Nuwara Eliya,Kolapathana waterfall,crowd,Crowding & Noise,1,5,3,6,0.167,low,160
+Nuwara Eliya,Kolapathana waterfall,facilities,Facilities,3,4,9,7,0.429,low,160
+Nuwara Eliya,Kolapathana waterfall,roads_access,Roads & Access,6,47,54,53,0.113,ok,160
+Nuwara Eliya,Kolapathana waterfall,scenery,Scenery & Nature,11,133,43,144,0.076,ok,160
+Nuwara Eliya,Laxapana waterfall,cleanliness,Cleanliness,1,10,1,11,0.091,low,278
+Nuwara Eliya,Laxapana waterfall,crowd,Crowding & Noise,0,6,3,6,0.0,low,278
+Nuwara Eliya,Laxapana waterfall,facilities,Facilities,3,2,5,5,0.6,low,278
+Nuwara Eliya,Laxapana waterfall,roads_access,Roads & Access,32,48,112,80,0.4,ok,278
+Nuwara Eliya,Laxapana waterfall,safety,Safety,38,1,13,39,0.974,ok,278
+Nuwara Eliya,Laxapana waterfall,scenery,Scenery & Nature,16,240,70,256,0.062,ok,278
+Nuwara Eliya,Lover's Leap Falls,cleanliness,Cleanliness,3,3,6,6,0.5,low,179
+Nuwara Eliya,Lover's Leap Falls,crowd,Crowding & Noise,0,13,6,13,0.0,low,179
+Nuwara Eliya,Lover's Leap Falls,facilities,Facilities,6,10,24,16,0.375,ok,179
+Nuwara Eliya,Lover's Leap Falls,price_value,Price & Value,4,9,17,13,0.308,low,179
+Nuwara Eliya,Lover's Leap Falls,roads_access,Roads & Access,40,124,167,164,0.244,ok,179
+Nuwara Eliya,Lover's Leap Falls,safety,Safety,18,3,11,21,0.857,ok,179
+Nuwara Eliya,Lover's Leap Falls,scenery,Scenery & Nature,31,209,72,240,0.129,ok,179
+Nuwara Eliya,Lover's leap waterfall,roads_access,Roads & Access,28,72,95,100,0.28,ok,198
+Nuwara Eliya,Lover's leap waterfall,safety,Safety,15,2,8,17,0.882,ok,198
+Nuwara Eliya,Lover's leap waterfall,scenery,Scenery & Nature,16,147,58,163,0.098,ok,198
+Nuwara Eliya,Mohini Falls,roads_access,Roads & Access,6,17,34,23,0.261,ok,64
+Nuwara Eliya,Mohini Falls,scenery,Scenery & Nature,4,39,25,43,0.093,ok,64
+Nuwara Eliya,Moon plains,crowd,Crowding & Noise,3,7,10,10,0.3,low,506
+Nuwara Eliya,Moon plains,facilities,Facilities,14,11,28,25,0.56,ok,506
+Nuwara Eliya,Moon plains,price_value,Price & Value,33,25,67,58,0.569,ok,506
+Nuwara Eliya,Moon plains,roads_access,Roads & Access,71,84,160,155,0.458,ok,506
+Nuwara Eliya,Moon plains,safety,Safety,13,1,6,14,0.929,low,506
+Nuwara Eliya,Moon plains,scenery,Scenery & Nature,14,368,95,382,0.037,ok,506
+Nuwara Eliya,Mooray falls,roads_access,Roads & Access,8,1,8,9,0.889,low,29
+Nuwara Eliya,Mooray falls,scenery,Scenery & Nature,2,19,14,21,0.095,ok,29
+Nuwara Eliya,Mount vernon waterfall,roads_access,Roads & Access,4,1,2,5,0.8,low,12
+Nuwara Eliya,Mount vernon waterfall,scenery,Scenery & Nature,3,7,3,10,0.3,low,12
+Nuwara Eliya,Pedro Tea Factory,cleanliness,Cleanliness,12,9,1,21,0.571,ok,221
+Nuwara Eliya,Pedro Tea Factory,crowd,Crowding & Noise,5,2,5,7,0.714,low,221
+Nuwara Eliya,Pedro Tea Factory,facilities,Facilities,48,93,66,141,0.34,ok,221
+Nuwara Eliya,Pedro Tea Factory,price_value,Price & Value,18,32,56,50,0.36,ok,221
+Nuwara Eliya,Pedro Tea Factory,roads_access,Roads & Access,18,26,38,44,0.409,ok,221
+Nuwara Eliya,Pedro Tea Factory,scenery,Scenery & Nature,4,121,7,125,0.032,ok,221
+Nuwara Eliya,Shanthipura view point,cleanliness,Cleanliness,6,1,1,7,0.857,low,162
+Nuwara Eliya,Shanthipura view point,crowd,Crowding & Noise,1,4,1,5,0.2,low,162
+Nuwara Eliya,Shanthipura view point,facilities,Facilities,6,3,14,9,0.667,low,162
+Nuwara Eliya,Shanthipura view point,price_value,Price & Value,9,1,19,10,0.9,low,162
+Nuwara Eliya,Shanthipura view point,roads_access,Roads & Access,7,10,41,17,0.412,ok,162
+Nuwara Eliya,Shanthipura view point,scenery,Scenery & Nature,22,83,58,105,0.21,ok,162
+Nuwara Eliya,Single tree hill,crowd,Crowding & Noise,0,11,0,11,0.0,low,174
+Nuwara Eliya,Single tree hill,roads_access,Roads & Access,16,65,64,81,0.198,ok,174
+Nuwara Eliya,Single tree hill,scenery,Scenery & Nature,9,136,27,145,0.062,ok,174
+Nuwara Eliya,St Clair's Falls,facilities,Facilities,3,14,10,17,0.176,ok,139
+Nuwara Eliya,St Clair's Falls,price_value,Price & Value,1,4,1,5,0.2,low,139
+Nuwara Eliya,St Clair's Falls,roads_access,Roads & Access,6,65,51,71,0.085,ok,139
+Nuwara Eliya,St Clair's Falls,scenery,Scenery & Nature,12,177,48,189,0.063,ok,139
+Nuwara Eliya,Swarnagiri maha viharaya,crowd,Crowding & Noise,1,8,0,9,0.111,low,61
+Nuwara Eliya,Swarnagiri maha viharaya,roads_access,Roads & Access,1,6,8,7,0.143,low,61
+Nuwara Eliya,Swarnagiri maha viharaya,scenery,Scenery & Nature,1,49,13,50,0.02,ok,61
+Nuwara Eliya,Victoria Park of Nuwara Eliya,cleanliness,Cleanliness,30,26,10,56,0.536,ok,180
+Nuwara Eliya,Victoria Park of Nuwara Eliya,crowd,Crowding & Noise,0,31,11,31,0.0,ok,180
+Nuwara Eliya,Victoria Park of Nuwara Eliya,facilities,Facilities,9,16,18,25,0.36,ok,180
+Nuwara Eliya,Victoria Park of Nuwara Eliya,price_value,Price & Value,41,23,64,64,0.641,ok,180
+Nuwara Eliya,Victoria Park of Nuwara Eliya,roads_access,Roads & Access,5,23,20,28,0.179,ok,180
+Nuwara Eliya,Victoria Park of Nuwara Eliya,safety,Safety,4,2,0,6,0.667,low,180
+Nuwara Eliya,Victoria Park of Nuwara Eliya,scenery,Scenery & Nature,4,78,8,82,0.049,ok,180
+Polonnaruwa,Polonnaruwa,cleanliness,Cleanliness,6,8,3,14,0.429,low,257
+Polonnaruwa,Polonnaruwa,crowd,Crowding & Noise,6,19,11,25,0.24,ok,257
+Polonnaruwa,Polonnaruwa,facilities,Facilities,25,106,107,131,0.191,ok,257
+Polonnaruwa,Polonnaruwa,price_value,Price & Value,35,14,59,49,0.714,ok,257
+Polonnaruwa,Polonnaruwa,roads_access,Roads & Access,25,47,105,72,0.347,ok,257
+Polonnaruwa,Polonnaruwa,safety,Safety,11,4,12,15,0.733,ok,257
+Polonnaruwa,Polonnaruwa,scenery,Scenery & Nature,5,112,8,117,0.043,ok,257
+Ratnapura,Batadobalena,roads_access,Roads & Access,6,9,18,15,0.4,ok,37
+Ratnapura,Batadobalena,scenery,Scenery & Nature,0,13,2,13,0.0,low,37
+Ratnapura,Bopath Falls,cleanliness,Cleanliness,17,11,8,28,0.607,ok,267
+Ratnapura,Bopath Falls,crowd,Crowding & Noise,7,15,14,22,0.318,ok,267
+Ratnapura,Bopath Falls,facilities,Facilities,8,16,25,24,0.333,ok,267
+Ratnapura,Bopath Falls,price_value,Price & Value,2,5,24,7,0.286,low,267
+Ratnapura,Bopath Falls,roads_access,Roads & Access,22,21,56,43,0.512,ok,267
+Ratnapura,Bopath Falls,safety,Safety,31,7,14,38,0.816,ok,267
+Ratnapura,Bopath Falls,scenery,Scenery & Nature,18,192,58,210,0.086,ok,267
+Ratnapura,Dehena Ella,roads_access,Roads & Access,2,27,29,29,0.069,ok,56
+Ratnapura,Dehena Ella,scenery,Scenery & Nature,2,38,16,40,0.05,ok,56
+Ratnapura,Delgamuwa Rajamaha Viharaya,crowd,Crowding & Noise,0,9,2,9,0.0,low,13
+Ratnapura,Diva Guhawa,scenery,Scenery & Nature,2,6,2,8,0.25,low,20
+Ratnapura,Katugas Ella Waterfall,cleanliness,Cleanliness,7,2,3,9,0.778,low,58
+Ratnapura,Katugas Ella Waterfall,crowd,Crowding & Noise,0,9,5,9,0.0,low,58
+Ratnapura,Katugas Ella Waterfall,roads_access,Roads & Access,3,9,13,12,0.25,low,58
+Ratnapura,Katugas Ella Waterfall,safety,Safety,3,3,1,6,0.5,low,58
+Ratnapura,Katugas Ella Waterfall,scenery,Scenery & Nature,4,37,12,41,0.098,ok,58
+Ratnapura,Kirindi Ella Waterfall,cleanliness,Cleanliness,4,3,1,7,0.571,low,93
+Ratnapura,Kirindi Ella Waterfall,roads_access,Roads & Access,12,15,51,27,0.444,ok,93
+Ratnapura,Kirindi Ella Waterfall,safety,Safety,7,1,3,8,0.875,low,93
+Ratnapura,Kirindi Ella Waterfall,scenery,Scenery & Nature,8,67,42,75,0.107,ok,93
+Ratnapura,Mapalana Ella Falls,roads_access,Roads & Access,4,9,10,13,0.308,low,54
+Ratnapura,Mapalana Ella Falls,safety,Safety,3,3,1,6,0.5,low,54
+Ratnapura,Mapalana Ella Falls,scenery,Scenery & Nature,1,36,15,37,0.027,ok,54
+Ratnapura,Marakkala Ella,scenery,Scenery & Nature,1,6,1,7,0.143,low,8
+Ratnapura,Minee Ella,roads_access,Roads & Access,2,10,8,12,0.167,low,29
+Ratnapura,Minee Ella,scenery,Scenery & Nature,1,27,5,28,0.036,ok,29
+Ratnapura,Pothgul Vihara,scenery,Scenery & Nature,0,6,0,6,0.0,low,12
+Ratnapura,Rajanawa Waterfall,roads_access,Roads & Access,1,7,8,8,0.125,low,23
+Ratnapura,Rajanawa Waterfall,scenery,Scenery & Nature,0,14,9,14,0.0,low,23
+Ratnapura,Rathnapura National Museum,scenery,Scenery & Nature,0,7,0,7,0.0,low,8
+Ratnapura,Sri Maha Viharaya,crowd,Crowding & Noise,0,5,0,5,0.0,low,16
+Ratnapura,Sri Maha Viharaya,scenery,Scenery & Nature,0,7,0,7,0.0,low,16
+Ratnapura,Sri Sumana Saman Devalaya,crowd,Crowding & Noise,1,23,7,24,0.042,ok,57
+Ratnapura,Sri Sumana Saman Devalaya,scenery,Scenery & Nature,0,8,2,8,0.0,low,57
+Ratnapura,Thepulangoda Waterfall,scenery,Scenery & Nature,0,6,1,6,0.0,low,12
+Ratnapura,Udawalawe National Park,cleanliness,Cleanliness,6,5,2,11,0.545,low,136
+Ratnapura,Udawalawe National Park,crowd,Crowding & Noise,1,15,11,16,0.062,ok,136
+Ratnapura,Udawalawe National Park,facilities,Facilities,9,98,50,107,0.084,ok,136
+Ratnapura,Udawalawe National Park,price_value,Price & Value,15,22,24,37,0.405,ok,136
+Ratnapura,Udawalawe National Park,roads_access,Roads & Access,18,72,72,90,0.2,ok,136
+Ratnapura,Udawalawe National Park,safety,Safety,5,2,8,7,0.714,low,136
+Ratnapura,Udawalawe National Park,scenery,Scenery & Nature,3,149,28,152,0.02,ok,136
+Ratnapura,Waranagala waterfall,scenery,Scenery & Nature,0,8,2,8,0.0,low,11
+Trincomalee,Koneswaram Temple,cleanliness,Cleanliness,6,10,4,16,0.375,ok,206
+Trincomalee,Koneswaram Temple,crowd,Crowding & Noise,1,26,7,27,0.037,ok,206
+Trincomalee,Koneswaram Temple,facilities,Facilities,10,21,40,31,0.323,ok,206
+Trincomalee,Koneswaram Temple,price_value,Price & Value,6,10,14,16,0.375,ok,206
+Trincomalee,Koneswaram Temple,roads_access,Roads & Access,7,31,55,38,0.184,ok,206
+Trincomalee,Koneswaram Temple,safety,Safety,1,4,2,5,0.2,low,206
+Trincomalee,Koneswaram Temple,scenery,Scenery & Nature,5,237,12,242,0.021,ok,206
+Trincomalee,Marble Beach,cleanliness,Cleanliness,12,49,6,61,0.197,ok,127
+Trincomalee,Marble Beach,crowd,Crowding & Noise,8,34,23,42,0.19,ok,127
+Trincomalee,Marble Beach,facilities,Facilities,27,49,29,76,0.355,ok,127
+Trincomalee,Marble Beach,price_value,Price & Value,7,17,34,24,0.292,ok,127
+Trincomalee,Marble Beach,roads_access,Roads & Access,9,18,26,27,0.333,ok,127
+Trincomalee,Marble Beach,safety,Safety,1,7,1,8,0.125,low,127
+Trincomalee,Marble Beach,scenery,Scenery & Nature,2,48,5,50,0.04,ok,127
+Trincomalee,Nilaveli Beach,cleanliness,Cleanliness,35,70,15,105,0.333,ok,147
+Trincomalee,Nilaveli Beach,crowd,Crowding & Noise,2,51,17,53,0.038,ok,147
+Trincomalee,Nilaveli Beach,facilities,Facilities,14,23,29,37,0.378,ok,147
+Trincomalee,Nilaveli Beach,price_value,Price & Value,2,5,10,7,0.286,low,147
+Trincomalee,Nilaveli Beach,roads_access,Roads & Access,3,8,17,11,0.273,low,147
+Trincomalee,Nilaveli Beach,safety,Safety,6,12,4,18,0.333,ok,147
+Trincomalee,Nilaveli Beach,scenery,Scenery & Nature,5,92,5,97,0.052,ok,147
+Trincomalee,Pigeon Island National Park,cleanliness,Cleanliness,22,12,3,34,0.647,ok,169
+Trincomalee,Pigeon Island National Park,crowd,Crowding & Noise,32,18,45,50,0.64,ok,169
+Trincomalee,Pigeon Island National Park,facilities,Facilities,25,21,34,46,0.543,ok,169
+Trincomalee,Pigeon Island National Park,price_value,Price & Value,33,15,47,48,0.688,ok,169
+Trincomalee,Pigeon Island National Park,roads_access,Roads & Access,14,11,21,25,0.56,ok,169
+Trincomalee,Pigeon Island National Park,safety,Safety,31,8,11,39,0.795,ok,169
+Trincomalee,Pigeon Island National Park,scenery,Scenery & Nature,15,96,5,111,0.135,ok,169

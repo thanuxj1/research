@@ -1,0 +1,484 @@
+{
+  "base_model": "cardiffnlp/twitter-roberta-base-sentiment-latest",
+  "epochs": 4,
+  "batch_size": 16,
+  "learning_rate": 2e-05,
+  "seed": 42,
+  "weak_pretraining_examples": 0,
+  "n_train": 727,
+  "n_val": 155,
+  "n_test": 158,
+  "mode": "weak_only",
+  "evaluation_caveat": "Test labels are star-derived, from the same weak source as the training labels. This score measures AGREEMENT WITH STAR RATINGS, not accuracy. Report it as such.",
+  "trained": {
+    "per_class": {
+      "N": {
+        "precision": 0.77,
+        "recall": 0.783,
+        "f1": 0.777
+      },
+      "X": {
+        "precision": 0.814,
+        "recall": 0.897,
+        "f1": 0.854
+      },
+      "P": {
+        "precision": 0.796,
+        "recall": 0.729,
+        "f1": 0.761
+      }
+    },
+    "support": {
+      "N": 60,
+      "X": 39,
+      "P": 59
+    },
+    "macro_f1": 0.797,
+    "accuracy": 0.791,
+    "confusion": {
+      "N": {
+        "N": 47,
+        "X": 4,
+        "P": 9
+      },
+      "X": {
+        "N": 2,
+        "X": 35,
+        "P": 2
+      },
+      "P": {
+        "N": 12,
+        "X": 4,
+        "P": 43
+      }
+    }
+  },
+  "baselines_on_same_test_split": {
+    "A_lexicon": {
+      "per_class": {
+        "N": {
+          "precision": 0.833,
+          "recall": 0.417,
+          "f1": 0.556
+        },
+        "X": {
+          "precision": 0.429,
+          "recall": 1.0,
+          "f1": 0.6
+        },
+        "P": {
+          "precision": 0.784,
+          "recall": 0.492,
+          "f1": 0.604
+        }
+      },
+      "support": {
+        "N": 60,
+        "X": 39,
+        "P": 59
+      },
+      "macro_f1": 0.587,
+      "accuracy": 0.589,
+      "confusion": {
+        "N": {
+          "N": 25,
+          "X": 27,
+          "P": 8
+        },
+        "X": {
+          "N": 0,
+          "X": 39,
+          "P": 0
+        },
+        "P": {
+          "N": 5,
+          "X": 25,
+          "P": 29
+        }
+      }
+    },
+    "B_sst2": {
+      "per_class": {
+        "N": {
+          "precision": 0.539,
+          "recall": 0.683,
+          "f1": 0.603
+        },
+        "X": {
+          "precision": 0.5,
+          "recall": 0.154,
+          "f1": 0.235
+        },
+        "P": {
+          "precision": 0.586,
+          "recall": 0.695,
+          "f1": 0.636
+        }
+      },
+      "support": {
+        "N": 60,
+        "X": 39,
+        "P": 59
+      },
+      "macro_f1": 0.491,
+      "accuracy": 0.557,
+      "confusion": {
+        "N": {
+          "N": 41,
+          "X": 2,
+          "P": 17
+        },
+        "X": {
+          "N": 21,
+          "X": 6,
+          "P": 12
+        },
+        "P": {
+          "N": 14,
+          "X": 4,
+          "P": 41
+        }
+      }
+    },
+    "C_sst2_patched": {
+      "per_class": {
+        "N": {
+          "precision": 0.539,
+          "recall": 0.683,
+          "f1": 0.603
+        },
+        "X": {
+          "precision": 0.5,
+          "recall": 0.154,
+          "f1": 0.235
+        },
+        "P": {
+          "precision": 0.586,
+          "recall": 0.695,
+          "f1": 0.636
+        }
+      },
+      "support": {
+        "N": 60,
+        "X": 39,
+        "P": 59
+      },
+      "macro_f1": 0.491,
+      "accuracy": 0.557,
+      "confusion": {
+        "N": {
+          "N": 41,
+          "X": 2,
+          "P": 17
+        },
+        "X": {
+          "N": 21,
+          "X": 6,
+          "P": 12
+        },
+        "P": {
+          "N": 14,
+          "X": 4,
+          "P": 41
+        }
+      }
+    },
+    "D_roberta": {
+      "per_class": {
+        "N": {
+          "precision": 0.905,
+          "recall": 0.633,
+          "f1": 0.745
+        },
+        "X": {
+          "precision": 0.486,
+          "recall": 0.897,
+          "f1": 0.631
+        },
+        "P": {
+          "precision": 0.818,
+          "recall": 0.61,
+          "f1": 0.699
+        }
+      },
+      "support": {
+        "N": 60,
+        "X": 39,
+        "P": 59
+      },
+      "macro_f1": 0.692,
+      "accuracy": 0.69,
+      "confusion": {
+        "N": {
+          "N": 38,
+          "X": 16,
+          "P": 6
+        },
+        "X": {
+          "N": 2,
+          "X": 35,
+          "P": 2
+        },
+        "P": {
+          "N": 2,
+          "X": 21,
+          "P": 36
+        }
+      }
+    },
+    "E_deployed": {
+      "per_class": {
+        "N": {
+          "precision": 0.884,
+          "recall": 0.633,
+          "f1": 0.738
+        },
+        "X": {
+          "precision": 0.493,
+          "recall": 0.897,
+          "f1": 0.636
+        },
+        "P": {
+          "precision": 0.818,
+          "recall": 0.61,
+          "f1": 0.699
+        }
+      },
+      "support": {
+        "N": 60,
+        "X": 39,
+        "P": 59
+      },
+      "macro_f1": 0.691,
+      "accuracy": 0.69,
+      "confusion": {
+        "N": {
+          "N": 38,
+          "X": 16,
+          "P": 6
+        },
+        "X": {
+          "N": 2,
+          "X": 35,
+          "P": 2
+        },
+        "P": {
+          "N": 3,
+          "X": 20,
+          "P": 36
+        }
+      }
+    }
+  },
+  "probe_zeroshot": {
+    "n": 14,
+    "correct": 12,
+    "score": 0.857,
+    "rows": [
+      {
+        "text": "This is very calm place to visit",
+        "aspect": "crowd",
+        "expected": "P",
+        "got": "P",
+        "correct": true
+      },
+      {
+        "text": "Very quiet beach, not as touristy as some other areas.",
+        "aspect": "crowd",
+        "expected": "P",
+        "got": "P",
+        "correct": true
+      },
+      {
+        "text": "The place was uncrowded and peaceful",
+        "aspect": "crowd",
+        "expected": "P",
+        "got": "P",
+        "correct": true
+      },
+      {
+        "text": "A slow walk through the tea estate",
+        "aspect": "roads_access",
+        "expected": "P",
+        "got": "X",
+        "correct": false
+      },
+      {
+        "text": "it is very quiet.",
+        "aspect": "crowd",
+        "expected": "P",
+        "got": "X",
+        "correct": false
+      },
+      {
+        "text": "The road is very bad and full of potholes",
+        "aspect": "roads_access",
+        "expected": "N",
+        "got": "N",
+        "correct": true
+      },
+      {
+        "text": "Dirty, noisy and expensive.",
+        "aspect": "cleanliness",
+        "expected": "N",
+        "got": "N",
+        "correct": true
+      },
+      {
+        "text": "quiet but the toilets are dirty",
+        "aspect": "facilities",
+        "expected": "N",
+        "got": "N",
+        "correct": true
+      },
+      {
+        "text": "but need to clean the pond area",
+        "aspect": "cleanliness",
+        "expected": "N",
+        "got": "N",
+        "correct": true
+      },
+      {
+        "text": "Too risky to go with kids",
+        "aspect": "safety",
+        "expected": "N",
+        "got": "N",
+        "correct": true
+      },
+      {
+        "text": "Entrance fee for one local is 150 LKR.",
+        "aspect": "price_value",
+        "expected": "X",
+        "got": "X",
+        "correct": true
+      },
+      {
+        "text": "It is an 8 km walk to the viewpoint",
+        "aspect": "roads_access",
+        "expected": "X",
+        "got": "X",
+        "correct": true
+      },
+      {
+        "text": "The park closes at 2pm",
+        "aspect": "facilities",
+        "expected": "X",
+        "got": "X",
+        "correct": true
+      },
+      {
+        "text": "There is a car park near the entrance",
+        "aspect": "roads_access",
+        "expected": "X",
+        "got": "X",
+        "correct": true
+      }
+    ]
+  },
+  "probe_trained": {
+    "n": 14,
+    "correct": 14,
+    "score": 1.0,
+    "rows": [
+      {
+        "text": "This is very calm place to visit",
+        "aspect": "crowd",
+        "expected": "P",
+        "got": "P",
+        "correct": true
+      },
+      {
+        "text": "Very quiet beach, not as touristy as some other areas.",
+        "aspect": "crowd",
+        "expected": "P",
+        "got": "P",
+        "correct": true
+      },
+      {
+        "text": "The place was uncrowded and peaceful",
+        "aspect": "crowd",
+        "expected": "P",
+        "got": "P",
+        "correct": true
+      },
+      {
+        "text": "A slow walk through the tea estate",
+        "aspect": "roads_access",
+        "expected": "P",
+        "got": "P",
+        "correct": true
+      },
+      {
+        "text": "it is very quiet.",
+        "aspect": "crowd",
+        "expected": "P",
+        "got": "P",
+        "correct": true
+      },
+      {
+        "text": "The road is very bad and full of potholes",
+        "aspect": "roads_access",
+        "expected": "N",
+        "got": "N",
+        "correct": true
+      },
+      {
+        "text": "Dirty, noisy and expensive.",
+        "aspect": "cleanliness",
+        "expected": "N",
+        "got": "N",
+        "correct": true
+      },
+      {
+        "text": "quiet but the toilets are dirty",
+        "aspect": "facilities",
+        "expected": "N",
+        "got": "N",
+        "correct": true
+      },
+      {
+        "text": "but need to clean the pond area",
+        "aspect": "cleanliness",
+        "expected": "N",
+        "got": "N",
+        "correct": true
+      },
+      {
+        "text": "Too risky to go with kids",
+        "aspect": "safety",
+        "expected": "N",
+        "got": "N",
+        "correct": true
+      },
+      {
+        "text": "Entrance fee for one local is 150 LKR.",
+        "aspect": "price_value",
+        "expected": "X",
+        "got": "X",
+        "correct": true
+      },
+      {
+        "text": "It is an 8 km walk to the viewpoint",
+        "aspect": "roads_access",
+        "expected": "X",
+        "got": "X",
+        "correct": true
+      },
+      {
+        "text": "The park closes at 2pm",
+        "aspect": "facilities",
+        "expected": "X",
+        "got": "X",
+        "correct": true
+      },
+      {
+        "text": "There is a car park near the entrance",
+        "aspect": "roads_access",
+        "expected": "X",
+        "got": "X",
+        "correct": true
+      }
+    ]
+  },
+  "model_dir": "E:\\research\\travellens\\models\\travellens-polarity"
+}

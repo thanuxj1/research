@@ -1,0 +1,65 @@
+{
+  "source_file": "E:\\research\\travellens\\data\\raw\\reviews_raw.csv",
+  "stages": [
+    {
+      "stage": "0_loaded",
+      "rows_after": 37415,
+      "rows_removed": 0,
+      "note": ""
+    },
+    {
+      "stage": "1_drop_missing_fields",
+      "rows_after": 37326,
+      "rows_removed": 89,
+      "note": "null Review/Destination/District"
+    },
+    {
+      "stage": "2_drop_empty_after_norm",
+      "rows_after": 37288,
+      "rows_removed": 38,
+      "note": "review was only noise characters"
+    },
+    {
+      "stage": "3_drop_too_short",
+      "rows_after": 31012,
+      "rows_removed": 6276,
+      "note": "fewer than 4 words -- no recoverable opinion"
+    },
+    {
+      "stage": "4_drop_duplicates",
+      "rows_after": 30705,
+      "rows_removed": 307,
+      "note": "same text at same destination"
+    }
+  ],
+  "columns": [
+    "Destination",
+    "District",
+    "Timespan",
+    "Review"
+  ],
+  "rows_with_encoding_damage": 1445,
+  "rows_truncated": 6663,
+  "pct_truncated": 17.85,
+  "top_dropped_short": {
+    "nice place": 278,
+    "good": 237,
+    "beautiful place": 195,
+    "nice": 125,
+    "good place": 110,
+    "beautiful": 101,
+    "nice view": 54,
+    "👍 …": 48,
+    "lovely place": 48,
+    "very beautiful place": 47
+  },
+  "unparsed_timespan": 11,
+  "final": {
+    "reviews": 30705,
+    "destinations": 236,
+    "districts": 12,
+    "median_words": 18.0,
+    "mean_words": 22.19,
+    "retention_pct": 82.07
+  }
+}
