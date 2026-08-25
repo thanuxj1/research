@@ -41,7 +41,7 @@ import pandas as pd
 
 from . import config as C
 
-TRIPADVISOR_CSV = C.ROOT.parent / "dataset" / "Reviews.csv"
+TRIPADVISOR_CSV = C.DATA_RAW / "tripadvisor_reviews.csv"
 
 # Place-type strata present in both corpora. The Google corpus has no type
 # field, so its membership is matched on destination name.

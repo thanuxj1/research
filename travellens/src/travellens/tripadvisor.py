@@ -40,7 +40,7 @@ from . import config as C
 from .clean import make_review_id, normalise_text, recency_bucket, word_count
 from .ingest import CORPUS_COLUMNS
 
-SOURCE_CSV = C.ROOT.parent / "dataset" / "Reviews.csv"
+SOURCE_CSV = C.DATA_RAW / "tripadvisor_reviews.csv"
 SOURCE_TAG = "tripadvisor"
 
 # Reference point for converting absolute dates into the "months ago" field the
@@ -150,6 +150,10 @@ def load(path=None, verbose: bool = True) -> pd.DataFrame:
     df["source"] = SOURCE_TAG
     df["collected_at"] = "2023-05-20"
     df["rating"] = pd.to_numeric(df["Rating"], errors="coerce")
+    # Empty: this export preserved no review permalink, and a TripAdvisor
+    # review URL cannot be reconstructed without a listing id and a review id.
+    # See provenance.py -- destination-level links are offered instead.
+    df["source_url"] = pd.NA
 
     df["review_id"] = [
         make_review_id(d, t) for d, t in zip(df["destination"], df["text"])

@@ -36,7 +36,10 @@ from urllib.parse import quote_plus
 
 from . import config as C
 
-ENV_PATH = C.ROOT.parent / "backend" / ".env"
+# Credentials live inside the project so it is self-contained. Falls back
+# to the parent project's file if this one is absent.
+ENV_PATH = C.ROOT / ".env"
+ENV_FALLBACK = C.ROOT.parent / "backend" / ".env"
 OUT_DIR = C.ROOT / "data" / "incoming"
 
 USER_AGENT = ("TravelLensLK/1.0 (final-year research project; "
@@ -63,6 +66,8 @@ NEWS_RSS = {
 def load_env(path=None) -> Dict[str, str]:
     """Read backend/.env. Values are returned but never logged."""
     path = path or ENV_PATH
+    if not path.exists() and ENV_FALLBACK.exists():
+        path = ENV_FALLBACK
     env = {}
     if not path.exists():
         return env
