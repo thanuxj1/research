@@ -64,6 +64,44 @@ def _clean(v: str) -> str:
     return re.sub(r"\s+", " ", v).strip()
 
 
+# --------------------------------------------------------------------------
+# Relevance filter.
+#
+# Searching for a destination by name gets the ATTRIBUTION right -- the article
+# certainly mentions the place. It does not make the article useful to a
+# visitor. An audit of 415 collected items found roughly 3% that name a
+# destination inside a story about something else entirely:
+#
+#   "SLT-MOBITEL Extends Partnership with Sri Dalada Maligawa for Over a
+#    Decade of Connectivity Excellence"          -- a telecom press release
+#   "Visitors to National Botanical Gardens down 7.2% ... total revenue up"
+#                                                 -- a business report
+#   "Bengaluru man arrested for defrauding businessman of Rs 25 crore"
+#                                                 -- not even Sri Lankan
+#
+# A blocklist rather than an allowlist, deliberately. Most travel-adjacent
+# coverage is worth showing -- conservation appeals, weather, festivals,
+# birdwatching -- and an allowlist of "visitor words" would have discarded 82%
+# of the collection, including "Clarion call to protect vulnerable Horton
+# Plains NP". The small set of corporate-PR and unrelated-crime patterns is
+# what actually needs excluding.
+IRRELEVANT = re.compile(
+    r"\b(extends? partnership|signs? (an? )?(mou|agreement|deal)|"
+    r"memorandum of understanding|unveils? (new|its)|"
+    r"announces? (the )?(launch|appointment)|appoints?|"
+    r"connectivity|telecom|mobitel|dialog axiata|"
+    r"quarterly (results|earnings)|revenue (up|down|rose|fell)|"
+    r"profit (up|down|rose|fell)|shares? (rise|fall|surge|plunge)|"
+    r"stake in|ipo\b|merger|acquisition|"
+    r"defraud|arrested for|court orders|remanded|lawsuit|"
+    r"sponsors?hip deal|wins award for)\b", re.IGNORECASE)
+
+
+def is_relevant(title: str) -> bool:
+    """False for corporate PR and unrelated crime that merely names a place."""
+    return not IRRELEVANT.search(title or "")
+
+
 def _parse_items(xml: str) -> List[Dict]:
     out = []
     for raw in _ITEM.findall(xml):
@@ -117,6 +155,8 @@ def collect(destinations: List[Dict], mode: str = "any_named",
                 outlet = it["outlet"]
                 if not outlet:
                     continue                       # unattributable -- drop
+                if not is_relevant(it["title"]):
+                    continue                       # names the place, not about it
                 if mode == "sri_lankan_only" and outlet.lower() not in local_names:
                     continue
                 seen.add(it["url"])
