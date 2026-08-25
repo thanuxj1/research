@@ -57,6 +57,9 @@ export default function CulturalAssistant({ onBack }) {
         confidence: resultObj.confidence || 0.9,
         title: responseContent.title || 'Cultural Information',
         description: responseContent.description || 'Please follow local Sri Lankan cultural guidelines.',
+        guidance: Array.isArray(responseContent.guidance) ? responseContent.guidance : [],
+        avoid: Array.isArray(responseContent.avoid) ? responseContent.avoid : [],
+        recommendedFestivals: Array.isArray(responseContent.recommended_festivals) ? responseContent.recommended_festivals : [],
         time: getCurrentTimeStr(),
       };
 
@@ -138,6 +141,39 @@ export default function CulturalAssistant({ onBack }) {
                           ))}
                         </div>
 
+                        {msg.guidance && msg.guidance.length > 0 && (
+                          <div style={styles.assistantSection}>
+                            <div style={styles.assistantSectionTitle}>Guidance</div>
+                            <ul style={styles.assistantList}>
+                              {msg.guidance.map((tip, tIdx) => (
+                                <li key={tIdx}>{tip}</li>
+                              ))}
+                            </ul>
+                          </div>
+                        )}
+
+                        {msg.avoid && msg.avoid.length > 0 && (
+                          <div style={styles.assistantSection}>
+                            <div style={styles.assistantSectionTitle}>Avoid</div>
+                            <ul style={styles.assistantList}>
+                              {msg.avoid.map((tip, tIdx) => (
+                                <li key={tIdx}>{tip}</li>
+                              ))}
+                            </ul>
+                          </div>
+                        )}
+
+                        {msg.recommendedFestivals && msg.recommendedFestivals.length > 0 && (
+                          <div style={styles.assistantSection}>
+                            <div style={styles.assistantSectionTitle}>Recommended Festivals</div>
+                            <div style={styles.festivalTagsRow}>
+                              {msg.recommendedFestivals.map((fest, fIdx) => (
+                                <span key={fIdx} style={styles.festivalTag}>{fest}</span>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+
                         <div style={styles.assistantMetaRow}>
                           <span style={styles.timeSubtext}>{msg.time}</span>
                         </div>
@@ -217,6 +253,7 @@ export default function CulturalAssistant({ onBack }) {
       </div>
 
       {/* ── TEMPORARY BACKEND INPUT & OUTPUT INSPECTOR PANEL ── */}
+      {/*
       <div style={styles.debugInspectorContainer}>
         <div style={styles.debugInspectorHeader}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
@@ -239,7 +276,7 @@ export default function CulturalAssistant({ onBack }) {
 
         {showDebugPanel && (
           <div style={styles.debugBodyGrid}>
-            {/* 1. Sending Input (Request Payload) */}
+            {/* 1. Sending Input (Request Payload) *\/}
             <div style={styles.debugColumn}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
                 <span style={styles.debugColHeader}>
@@ -254,7 +291,7 @@ export default function CulturalAssistant({ onBack }) {
               </pre>
             </div>
 
-            {/* 2. Receiving Output (Response JSON) */}
+            {/* 2. Receiving Output (Response JSON) *\/}
             <div style={styles.debugColumn}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
                 <span style={{ ...styles.debugColHeader, color: isLiveApi ? '#34d399' : '#fbbf24' }}>
@@ -281,6 +318,7 @@ export default function CulturalAssistant({ onBack }) {
           </div>
         )}
       </div>
+      */}
     </div>
   );
 }
@@ -445,6 +483,42 @@ const styles = {
     color: '#1e293b',
     lineHeight: '1.65',
     fontWeight: '400',
+  },
+
+  assistantSection: {
+    marginTop: '14px',
+  },
+
+  assistantSectionTitle: {
+    fontSize: '12px',
+    fontWeight: '700',
+    color: '#059669',
+    textTransform: 'uppercase',
+    letterSpacing: '0.03em',
+    marginBottom: '6px',
+  },
+
+  assistantList: {
+    margin: 0,
+    paddingLeft: '20px',
+    fontSize: '14px',
+    color: '#1e293b',
+    lineHeight: '1.6',
+  },
+
+  festivalTagsRow: {
+    display: 'flex',
+    flexWrap: 'wrap',
+    gap: '8px',
+  },
+
+  festivalTag: {
+    fontSize: '12.5px',
+    fontWeight: '600',
+    color: '#8b5cf6',
+    background: '#f3e8ff',
+    padding: '4px 12px',
+    borderRadius: '20px',
   },
 
   assistantMetaRow: {

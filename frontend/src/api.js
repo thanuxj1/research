@@ -1,17 +1,21 @@
-// Global API Service for SafeTravel Assistance & Budget Planner Endpoints
+// Global API Service for SafeTravel Assistance, Budget Planner & Questions Endpoints
+// NOTE: This is the ONLY place the ML backend base URL should be configured.
+// (The separate `/api/...` endpoints used elsewhere belong to another backend/team member
+// and are intentionally not touched here.)
 const API_BASE_URL = 'http://127.0.0.1:5000';
+const API_BASE_URL_ALT = 'http://localhost:5000';
 
-const ASSISTANCE_ENDPOINTS = [
-  '/assistance/recommend',                       // Same-origin via Vite Proxy
-  'http://127.0.0.1:5000/assistance/recommend',   // Direct 127.0.0.1
-  'http://localhost:5000/assistance/recommend',   // Direct localhost
-];
+function buildEndpoints(path) {
+  return [
+    path,                          // Same-origin via Vite Proxy
+    `${API_BASE_URL}${path}`,      // Direct 127.0.0.1
+    `${API_BASE_URL_ALT}${path}`,  // Direct localhost
+  ];
+}
 
-const BUDGET_ENDPOINTS = [
-  '/budget_planner/predict',                      // Same-origin via Vite Proxy
-  'http://127.0.0.1:5000/budget_planner/predict',  // Direct 127.0.0.1
-  'http://localhost:5000/budget_planner/predict',  // Direct localhost
-];
+const ASSISTANCE_ENDPOINTS = buildEndpoints('/assistance/recommend');
+const BUDGET_ENDPOINTS = buildEndpoints('/budget_planner/predict');
+const QUESTIONS_ENDPOINTS = buildEndpoints('/questions/predict');
 
 // Comprehensive place metadata mapping for all Sri Lankan destinations
 export const DESTINATION_DETAILS = {
@@ -586,12 +590,6 @@ function generateFallbackRecommendations(userText = '') {
 }
 
 // ── Cultural Q&A / Intent Prediction Endpoint Service (/questions/predict) ──
-const QUESTIONS_ENDPOINTS = [
-  '/questions/predict',                      // Same-origin via Vite Proxy
-  'http://127.0.0.1:5000/questions/predict',  // Direct 127.0.0.1
-  'http://localhost:5000/questions/predict',  // Direct localhost
-];
-
 /**
  * Sends a question request to /questions/predict
  * @param {string} questionText - User's question string
