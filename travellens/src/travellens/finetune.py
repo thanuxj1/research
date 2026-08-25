@@ -1,5 +1,5 @@
 """
-TravelLens LK -- Stage 9: fine-tuning a model on the annotated gold set.
+LostinSriLanka -- Stage 9: fine-tuning a model on the annotated gold set.
 
 THIS is training. Everything before it borrowed a model somebody else trained
 on somebody else's data. This script takes a pre-trained language model and
@@ -266,7 +266,7 @@ def train(epochs: int = 4, batch_size: int = 16, lr: float = 2e-5,
     from transformers import (AutoModelForSequenceClassification, AutoTokenizer,
                               Trainer, TrainingArguments)
 
-    print("\nTravelLens LK -- Stage 9: fine-tuning\n" + "=" * 60)
+    print("\nLostinSriLanka -- Stage 9: fine-tuning\n" + "=" * 60)
 
     gold = load_gold()
     weak = load_weak() if use_weak else pd.DataFrame()

@@ -8,7 +8,7 @@ from travellens import config as C
 from travellens.aspects_model import tag_corpus_model, ASPECT_PROMPTS
 
 def main():
-    print("\nTravelLens LK -- model-based aspect extraction\n" + "="*60)
+    print("\nLostinSriLanka -- model-based aspect extraction\n" + "="*60)
     seg = pd.read_csv(C.DATA_PROCESSED / "segments_tagged.csv")
     seg = tag_corpus_model(seg)
 

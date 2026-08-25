@@ -1,5 +1,5 @@
 """
-TravelLens LK -- Stage 8: ingestion of newly collected reviews.
+LostinSriLanka -- Stage 8: ingestion of newly collected reviews.
 
 Takes freshly scraped reviews, normalises them into the corpus schema, and
 merges them without ever double-counting.
@@ -16,8 +16,8 @@ published numbers would drift upward for no real reason.
 
 Adapters
 --------
-Two input shapes are supported out of the box, matching the two collectors in
-backend/data_pipeline/collectors/google_maps.py:
+Two input shapes are supported out of the box, matching the two ways Google
+Maps reviews can be collected:
 
   from_apify_items()      compass/crawler-google-places actor output
   from_places_api()       Google Places API Place Details `reviews` array
@@ -257,7 +257,7 @@ def main(argv=None):
     ap.add_argument("--dry-run", action="store_true", help="report only, write nothing")
     args = ap.parse_args(argv)
 
-    print("\nTravelLens LK -- Stage 8: ingestion\n" + "=" * 60)
+    print("\nLostinSriLanka -- Stage 8: ingestion\n" + "=" * 60)
     records = load_input(args.input, args.district)
     print("  parsed {} raw records from {}".format(len(records), args.input))
 

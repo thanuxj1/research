@@ -1,5 +1,5 @@
 """
-TravelLens LK -- Reddit collection via the official API.
+LostinSriLanka -- Reddit collection via the official API.
 
 Why not scrape
 --------------
@@ -14,7 +14,7 @@ Setup (once)
 1. Sign in at https://www.reddit.com/prefs/apps
 2. "create another app..." -> type: **script**
 3. name: anything;  redirect uri: http://localhost:8080
-4. Copy the two values into backend/.env:
+4. Copy the two values into travellens/.env:
 
        REDDIT_CLIENT_ID=<the string under the app name>
        REDDIT_CLIENT_SECRET=<the "secret" field>

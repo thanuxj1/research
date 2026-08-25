@@ -1,5 +1,5 @@
 """
-TravelLens LK -- source links for quoted material.
+LostinSriLanka -- source links for quoted material.
 
 The problem
 -----------
@@ -112,7 +112,7 @@ def build(corpus_path=None, verbose: bool = True) -> Dict:
 
 
 def main():
-    print("\nTravelLens LK -- destination source links\n" + "=" * 60)
+    print("\nLostinSriLanka -- destination source links\n" + "=" * 60)
     print("  NOTE: per-review links do not exist in either source dataset and")
     print("        cannot be reconstructed. These are destination-level search")
     print("        links, constructed locally -- nothing is fetched.\n")

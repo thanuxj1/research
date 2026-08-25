@@ -1,5 +1,5 @@
 """
-TravelLens LK -- TripAdvisor corpus adapter.
+LostinSriLanka -- TripAdvisor corpus adapter.
 
 Brings dataset/Reviews.csv (16,156 TripAdvisor reviews) into the same corpus
 schema as the Google Maps data, so both can be processed by one pipeline and
@@ -185,7 +185,7 @@ def load(path=None, verbose: bool = True) -> pd.DataFrame:
 
 
 def main():
-    print("\nTravelLens LK -- TripAdvisor ingestion\n" + "=" * 60)
+    print("\nLostinSriLanka -- TripAdvisor ingestion\n" + "=" * 60)
     ta = load()
 
     corpus = pd.read_csv(C.CLEAN_REVIEWS_CSV)

@@ -9,7 +9,7 @@ from travellens.collect import write
 from travellens.collect_reddit_rss import collect
 
 def main():
-    print("\nTravelLens LK -- Reddit via public RSS\n" + "=" * 60)
+    print("\nLostinSriLanka -- Reddit via public RSS\n" + "=" * 60)
     print("  No key needed. The plain subreddit feed is the only unauthenticated")
     print("  route Reddit still serves: search.json is 403, search.rss is 429.")
     print("  Consequence: recent posts only, no historical search.\n")

@@ -1,5 +1,5 @@
 """
-TravelLens LK -- cross-corpus comparison.
+LostinSriLanka -- cross-corpus comparison.
 
 Asks whether the two corpora complain about different things, and then tests
 whether any difference survives the obvious confound.
@@ -142,7 +142,7 @@ def stratified(d: pd.DataFrame, aspect: str, pol_col: str = "pol_final") -> Dict
 
 
 def main():
-    print("\nTravelLens LK -- cross-corpus comparison\n" + "=" * 66)
+    print("\nLostinSriLanka -- cross-corpus comparison\n" + "=" * 66)
     d = load()
     print("  segments: {}".format(d["source"].value_counts().to_dict()))
 

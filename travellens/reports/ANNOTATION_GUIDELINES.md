@@ -1,4 +1,4 @@
-# TravelLens LK — Annotation Guidelines
+# LostinSriLanka — Annotation Guidelines
 
 **Purpose.** These rules let two different people read the same review piece and
 arrive at the same label. Consistency is the point: a gold set that one person

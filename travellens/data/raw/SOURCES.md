@@ -1,4 +1,4 @@
-# Data Provenance — TravelLens LK
+# Data Provenance — LostinSriLanka
 
 Status of every input this project uses. Written to be pasted into the thesis
 and the dataset datasheet.
@@ -91,7 +91,7 @@ Cite both in the thesis; neither is a contribution of this project.
 
 ---
 
-## ⚠️ Documentation error found in the parent project
+## ⚠️ Documentation error carried over from earlier work
 
 `docs/FULL_SYSTEM_DOCUMENTATION.md` line 171 states:
 
@@ -102,8 +102,10 @@ and it is **not** TripAdvisor data — it has no ratings, no user fields, and on
 relative timestamps. The 16,156 figure belongs to `Reviews.csv`, which *is*
 TripAdvisor.
 
-The code is correct: `backend/ingest_reviews_csv.py` reads `Reviews.csv` and
-describes it accurately. Only the documentation is wrong.
+The ingestion code read the right file; only the documentation was wrong.
+Recorded here because the same mislabelling could otherwise be carried into
+a write-up, where an examiner opening the file would find the row count does
+not match.
 
 **Fix the doc before submission.** If that table is reproduced in a thesis, an
 examiner who opens the file will find the row count doesn't match, and every

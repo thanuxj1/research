@@ -1,5 +1,5 @@
 """
-TravelLens LK -- the refresh pipeline.
+LostinSriLanka -- the refresh pipeline.
 
 Runs every stage from the current corpus to a rebuilt dashboard:
 
@@ -67,7 +67,7 @@ def snapshot(verbose: bool = True) -> Optional[str]:
 def run(rebuild_dashboard: bool = True, use_cache: bool = True,
         score_trained: bool = False, verbose: bool = True) -> Dict:
     started = datetime.now()
-    print("\nTravelLens LK -- refresh pipeline\n" + "=" * 60)
+    print("\nLostinSriLanka -- refresh pipeline\n" + "=" * 60)
 
     print("\n[0/5] snapshot")
     snap = snapshot(verbose)

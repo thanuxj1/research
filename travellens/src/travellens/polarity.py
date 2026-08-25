@@ -1,5 +1,5 @@
 """
-TravelLens LK -- Stage 5: polarity (complaint vs praise).
+LostinSriLanka -- Stage 5: polarity (complaint vs praise).
 
 Stage 3 answered "what is this piece ABOUT". This stage answers
 "is the visitor HAPPY or UNHAPPY about it".
@@ -568,7 +568,7 @@ def score_corpus(seg: pd.DataFrame, use_transformer: bool = True,
 
 
 def main():
-    print("\nTravelLens LK -- Stage 5: polarity\n" + "=" * 60)
+    print("\nLostinSriLanka -- Stage 5: polarity\n" + "=" * 60)
     seg = pd.read_csv(C.DATA_PROCESSED / "segments_tagged.csv")
     seg = score_corpus(seg, use_transformer=True, only_tagged=True)
 

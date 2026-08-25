@@ -1,5 +1,5 @@
 """
-TravelLens LK -- trained aspect classifier (rules as teacher, model as student).
+LostinSriLanka -- trained aspect classifier (rules as teacher, model as student).
 
 The architecture this implements
 --------------------------------

@@ -1,5 +1,5 @@
 """
-TravelLens LK -- the focused gold set.
+LostinSriLanka -- the focused gold set.
 
 A 600-row annotation sheet costs about three hours. This module builds a
 ~200-row sheet costing about 45 minutes that still supports a defensible
@@ -152,7 +152,7 @@ def build(seg: pd.DataFrame, reviews: pd.DataFrame) -> Dict:
 
 
 def main():
-    print("\nTravelLens LK -- focused gold set\n" + "=" * 60)
+    print("\nLostinSriLanka -- focused gold set\n" + "=" * 60)
     seg_path = C.DATA_PROCESSED / "segments_scored.csv"
     if not seg_path.exists():
         raise SystemExit("run scripts/10_refresh.py first -- need method predictions")

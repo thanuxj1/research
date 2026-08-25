@@ -1,5 +1,5 @@
 """
-TravelLens LK -- Reddit collection via public RSS feeds.
+LostinSriLanka -- Reddit collection via public RSS feeds.
 
 Why RSS
 -------

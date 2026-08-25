@@ -1,4 +1,4 @@
-# TravelLens LK
+# LostinSriLanka
 
 Aspect-based complaint mining for Sri Lankan tourist destinations.
 

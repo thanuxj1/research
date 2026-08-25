@@ -1,5 +1,5 @@
 """
-TravelLens LK -- Stage 3: aspect tagging (rule-based baseline).
+LostinSriLanka -- Stage 3: aspect tagging (rule-based baseline).
 
 Assigns each opinion unit to zero, one, or many of the seven aspects defined in
 config.ASPECTS, by matching the trigger words for each aspect.
@@ -90,7 +90,7 @@ def tag_corpus(seg: pd.DataFrame, verbose: bool = True):
 
 
 def main():
-    print("\nTravelLens LK -- Stage 3: aspect tagging\n" + "=" * 60)
+    print("\nLostinSriLanka -- Stage 3: aspect tagging\n" + "=" * 60)
     seg = pd.read_csv(C.DATA_PROCESSED / "segments.csv")
     seg, report = tag_corpus(seg)
 

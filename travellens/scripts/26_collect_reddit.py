@@ -1,6 +1,6 @@
 """Reddit collection via the official API. Run: python scripts/26_collect_reddit.py
 
-Needs REDDIT_CLIENT_ID and REDDIT_CLIENT_SECRET in backend/.env.
+Needs REDDIT_CLIENT_ID and REDDIT_CLIENT_SECRET in travellens/.env.
 See collect_reddit_oauth.py for the two-minute setup.
 """
 import argparse, sys
@@ -16,7 +16,7 @@ def main():
     ap.add_argument("--max-requests", type=int, default=40)
     args = ap.parse_args()
 
-    print("\nTravelLens LK -- Reddit (official API)\n" + "=" * 60)
+    print("\nLostinSriLanka -- Reddit (official API)\n" + "=" * 60)
     env = load_env()
     cid, sec = env.get("REDDIT_CLIENT_ID"), env.get("REDDIT_CLIENT_SECRET")
     print("  REDDIT_CLIENT_ID     : {}".format("present" if cid else "MISSING"))
@@ -25,7 +25,7 @@ def main():
         print("\n  Not configured. Two-minute setup:")
         print("    1. https://www.reddit.com/prefs/apps -> create another app -> type: script")
         print("    2. redirect uri: http://localhost:8080")
-        print("    3. add to backend/.env:")
+        print("    3. add to travellens/.env:")
         print("         REDDIT_CLIENT_ID=<string under the app name>")
         print("         REDDIT_CLIENT_SECRET=<the secret field>")
         print("\n  This is Reddit's sanctioned route. Scraping their HTML instead")

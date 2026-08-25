@@ -1,5 +1,5 @@
 """
-TravelLens LK -- dataset release.
+LostinSriLanka -- dataset release.
 
 Packages the project's outputs into a citable bundle with a datasheet, so the
 work can be handed to someone else and used without this conversation.
@@ -114,7 +114,7 @@ def datasheet(enriched: pd.DataFrame) -> str:
 
     lines = []
     A = lines.append
-    A("# TravelLens LK — Dataset Datasheet")
+    A("# LostinSriLanka — Dataset Datasheet")
     A("")
     A("Generated {}.".format(date.today().isoformat()))
     A("")
@@ -243,7 +243,7 @@ def datasheet(enriched: pd.DataFrame) -> str:
 
 
 def main():
-    print("\nTravelLens LK -- dataset release\n" + "=" * 60)
+    print("\nLostinSriLanka -- dataset release\n" + "=" * 60)
     RELEASE_DIR.mkdir(parents=True, exist_ok=True)
     (RELEASE_DIR / "evaluation_sets").mkdir(exist_ok=True)
 

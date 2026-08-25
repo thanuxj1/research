@@ -36,7 +36,7 @@ def main():
     ap.add_argument("--max-requests", type=int, default=140)
     args = ap.parse_args()
 
-    print("\nTravelLens LK -- openly licensed collection\n" + "=" * 60)
+    print("\nLostinSriLanka -- openly licensed collection\n" + "=" * 60)
     print("  No API key needed. One request per second per host.")
     print("  Wikivoyage/Wikipedia CC BY-SA 4.0 | OpenStreetMap ODbL\n")
 

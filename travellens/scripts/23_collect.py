@@ -37,7 +37,7 @@ def main():
                     help="hard ceiling on HTTP requests this run")
     args = ap.parse_args()
 
-    print("\nTravelLens LK -- collection\n" + "=" * 60)
+    print("\nLostinSriLanka -- collection\n" + "=" * 60)
     env = load_env()
     ks = key_status(env)
     print("  credentials found (values never printed):")

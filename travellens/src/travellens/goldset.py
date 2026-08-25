@@ -1,5 +1,5 @@
 """
-TravelLens LK -- Stage 4: gold-set construction.
+LostinSriLanka -- Stage 4: gold-set construction.
 
 Builds the human annotation sheet that every later measurement is scored
 against. This file does NOT label anything; it decides WHICH segments a human
@@ -125,7 +125,7 @@ def build_goldset(seg: pd.DataFrame, reviews: pd.DataFrame) -> Dict:
 
 
 def main():
-    print("\nTravelLens LK -- Stage 4: gold-set construction\n" + "=" * 60)
+    print("\nLostinSriLanka -- Stage 4: gold-set construction\n" + "=" * 60)
     seg = pd.read_csv(C.DATA_PROCESSED / "segments_tagged.csv")
     reviews = pd.read_csv(C.CLEAN_REVIEWS_CSV)
 

@@ -19,7 +19,7 @@ DASHBOARD = C.ROOT / "dashboard"
 
 
 def main():
-    print("\nTravelLens LK -- Stage 7: dashboard build\n" + "=" * 60)
+    print("\nLostinSriLanka -- Stage 7: dashboard build\n" + "=" * 60)
 
     tree_path = C.DATA_PROCESSED / "hierarchy.json"
     with open(tree_path, encoding="utf-8") as fh:

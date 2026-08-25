@@ -1,5 +1,5 @@
 <meta charset="utf-8">
-<title>TravelLens LK</title>
+<title>LostinSriLanka</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
@@ -24,6 +24,14 @@
   --warn:        #B4761F;
   --warn-soft:   #F5E7CE;
   --shadow:      0 1px 2px rgba(22,33,31,.06), 0 4px 16px rgba(22,33,31,.05);
+
+  /* Brand, from the logo: near-black ground, white wordmark, gold "in". The
+     gold is confined to the masthead. It is NOT promoted to --accent, because
+     accent already carries semantic weight alongside --warn (amber), and two
+     ambers in one interface makes "warning" stop meaning anything. */
+  --brand-ink:  #1C1C1F;
+  --brand-ink2: #2E2E34;
+  --brand-gold: #F5C842;
 
   --f-display: "Archivo", system-ui, sans-serif;
   --f-body:    "IBM Plex Sans", system-ui, sans-serif;
@@ -86,8 +94,8 @@ body {
 /* ---------------------------------------------------------------- header */
 .masthead {
   border-bottom: 1px solid var(--line);
-  background: var(--surface);
-  padding: 22px 0 20px;
+  background: linear-gradient(105deg, var(--brand-ink) 0%, var(--brand-ink2) 60%, var(--brand-ink) 100%);
+  padding: 26px 0 22px;
   margin-bottom: 28px;
 }
 .masthead-inner {
@@ -95,14 +103,18 @@ body {
   display: flex; align-items: baseline; gap: 16px; flex-wrap: wrap;
 }
 .brand {
-  font-family: var(--f-display); font-weight: 700; font-size: 20px;
-  letter-spacing: -.01em; margin: 0;
+  font-family: var(--f-display); font-weight: 700; font-size: 26px;
+  letter-spacing: -.03em; margin: 0; color: #FFFFFF; line-height: 1;
 }
-.brand span { color: var(--accent); }
-.tagline { color: var(--ink-muted); font-size: 13.5px; margin: 0; }
+.brand span { color: var(--brand-gold); }
+.tagline {
+  color: rgba(255,255,255,.62); font-size: 12px; margin: 0;
+  font-family: var(--f-display); font-weight: 600;
+  letter-spacing: .04em; text-transform: uppercase;
+}
 .corpus-note {
   margin-left: auto; font-family: var(--f-mono); font-size: 11.5px;
-  color: var(--ink-faint); letter-spacing: .02em;
+  color: rgba(255,255,255,.42); letter-spacing: .02em;
 }
 
 /* ---------------------------------------------------------------- breadcrumb */
@@ -469,8 +481,8 @@ footer.foot code { font-family: var(--f-mono); font-size: 11px; }
 
 <header class="masthead">
   <div class="masthead-inner">
-    <h1 class="brand">TravelLens<span>LK</span></h1>
-    <p class="tagline">What visitors complain about, and where</p>
+    <h1 class="brand">Lost<span>in</span>SriLanka</h1>
+    <p class="tagline">AI Powered Smart Tourism Ecosystem</p>
     <p class="corpus-note" id="corpus-note"></p>
   </div>
 </header>

@@ -1,5 +1,5 @@
 """
-TravelLens LK -- targeted news collection.
+LostinSriLanka -- targeted news collection.
 
 Why this replaces the RSS-feed approach
 ---------------------------------------

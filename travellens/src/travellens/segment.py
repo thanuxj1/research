@@ -1,5 +1,5 @@
 """
-TravelLens LK -- Stage 2: segmentation.
+LostinSriLanka -- Stage 2: segmentation.
 
 Cuts each review into "opinion units": short pieces of text that each express
 ONE opinion about ONE thing.
@@ -122,7 +122,7 @@ def segment_corpus(df: pd.DataFrame, verbose: bool = True) -> pd.DataFrame:
 
 
 def main():
-    print("\nTravelLens LK -- Stage 2: segmentation\n" + "=" * 60)
+    print("\nLostinSriLanka -- Stage 2: segmentation\n" + "=" * 60)
     df = pd.read_csv(C.CLEAN_REVIEWS_CSV)
     seg = segment_corpus(df)
 

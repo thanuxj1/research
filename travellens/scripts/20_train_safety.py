@@ -37,7 +37,7 @@ WARN_PHYS = (r"\b(be )?care ?ful\b(?=.{0,60}\b(walk|climb|step|water|swim|bath|r
 CLEAN_SAFETY = "(?:%s)|(?:%s)|(?:%s)|(?:%s)" % (HAZARD, NOTSAFE, DEATH, WARN_PHYS)
 
 def main():
-    print("\nTravelLens LK -- retraining SAFETY on clean labels\n" + "="*60)
+    print("\nLostinSriLanka -- retraining SAFETY on clean labels\n" + "="*60)
     seg = pd.read_csv(C.DATA_PROCESSED / "segments_tagged.csv")
     seg = seg[~seg.too_short].copy()
     ev = set(pd.read_csv(C.REPORTS / "safety_eval_sample.csv").segment_id)

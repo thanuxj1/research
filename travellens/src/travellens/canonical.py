@@ -1,5 +1,5 @@
 """
-TravelLens LK -- destination name canonicalisation.
+LostinSriLanka -- destination name canonicalisation.
 
 The problem this solves
 -----------------------
@@ -187,7 +187,7 @@ def main():
     ap.add_argument("--dry-run", action="store_true")
     args = ap.parse_args()
 
-    print("\nTravelLens LK -- destination canonicalisation\n" + "=" * 60)
+    print("\nLostinSriLanka -- destination canonicalisation\n" + "=" * 60)
     apply_to_corpus(dry_run=args.dry_run)
     print("\n  next: python scripts/10_refresh.py")
 

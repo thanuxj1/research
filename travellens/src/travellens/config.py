@@ -1,5 +1,5 @@
 """
-TravelLens LK -- central configuration.
+LostinSriLanka -- central configuration.
 
 Every domain decision in this project lives in this file:
   * which aspects (complaint categories) we recognise

@@ -1,5 +1,5 @@
 """
-TravelLens LK -- the storyboard layer (YouTube, Reddit, Sri Lankan news).
+LostinSriLanka -- the storyboard layer (YouTube, Reddit, Sri Lankan news).
 
 What this is
 ------------
@@ -59,8 +59,8 @@ MEDIA_COLUMNS = [
     "collected_at",
 ]
 
-# Sri Lankan outlets treated as credible, taken from the collector already in
-# the parent project (backend/data_pipeline/scrape_sl_news_v3.py). Anything from
+# Sri Lankan outlets treated as credible, originally taken from a collector in an
+# earlier project of the author's. Anything from
 # a domain not on this list is rejected rather than shown -- an unsourced claim
 # next to a destination is worse than no claim.
 CREDIBLE_NEWS_DOMAINS = {
@@ -367,7 +367,7 @@ def main(argv=None):
     ap.add_argument("--kind", required=True, choices=sorted(KINDS))
     args = ap.parse_args(argv)
 
-    print("\nTravelLens LK -- storyboard media ingestion\n" + "=" * 60)
+    print("\nLostinSriLanka -- storyboard media ingestion\n" + "=" * 60)
     print("  NOTE: these items are displayed only. They never enter any count.\n")
     with open(args.input, encoding="utf-8") as fh:
         data = json.load(fh)

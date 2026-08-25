@@ -7,7 +7,7 @@ from travellens import config as C
 from travellens.aspects_trained import TrainedAspectTagger
 
 def main():
-    print("\nTravelLens LK -- training the aspect classifier\n" + "="*60)
+    print("\nLostinSriLanka -- training the aspect classifier\n" + "="*60)
     seg = pd.read_csv(C.DATA_PROCESSED / "segments_tagged.csv")
     seg = seg[~seg.too_short].copy()
 

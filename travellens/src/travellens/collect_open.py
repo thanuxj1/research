@@ -1,5 +1,5 @@
 """
-TravelLens LK -- collection from openly licensed sources.
+LostinSriLanka -- collection from openly licensed sources.
 
 Why this module exists
 ----------------------

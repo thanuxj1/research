@@ -1,5 +1,5 @@
 """
-TravelLens LK -- weak supervision from star ratings.
+LostinSriLanka -- weak supervision from star ratings.
 
 Purpose
 -------
@@ -254,7 +254,7 @@ def exclude_gold(weak: pd.DataFrame, verbose: bool = True) -> pd.DataFrame:
 
 
 def main():
-    print("\nTravelLens LK -- weak supervision from star ratings\n" + "=" * 60)
+    print("\nLostinSriLanka -- weak supervision from star ratings\n" + "=" * 60)
 
     reviews = pd.read_csv(C.CLEAN_REVIEWS_CSV)
     if "rating" not in reviews.columns or reviews["rating"].notna().sum() == 0:

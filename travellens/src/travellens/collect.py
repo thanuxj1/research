@@ -1,5 +1,5 @@
 """
-TravelLens LK -- collection runner.
+LostinSriLanka -- collection runner.
 
 Collects fresh material through sanctioned interfaces only. Nothing here
 scrapes a page that asks not to be scraped.
@@ -9,7 +9,7 @@ scrapes a page that asks not to be scraped.
   reddit   Reddit public JSON     no key, rate-limited to 1 request/second
   news     RSS from 11 whitelisted Sri Lankan outlets   no key
 
-Credentials are read from backend/.env and never printed. The runner reports
+Credentials are read from travellens/.env and never printed. The runner reports
 which keys it found, never their values.
 
 Cost note
@@ -42,7 +42,7 @@ ENV_PATH = C.ROOT / ".env"
 ENV_FALLBACK = C.ROOT.parent / "backend" / ".env"
 OUT_DIR = C.ROOT / "data" / "incoming"
 
-USER_AGENT = ("TravelLensLK/1.0 (final-year research project; "
+USER_AGENT = ("LostinSriLanka/1.0 (final-year research project; "
               "tourism review analysis; contact via project repository)")
 
 REQUEST_PAUSE = 1.0          # seconds between requests to the same host
@@ -64,7 +64,7 @@ NEWS_RSS = {
 # Credentials
 # --------------------------------------------------------------------------
 def load_env(path=None) -> Dict[str, str]:
-    """Read backend/.env. Values are returned but never logged."""
+    """Read travellens/.env. Values are returned but never logged."""
     path = path or ENV_PATH
     if not path.exists() and ENV_FALLBACK.exists():
         path = ENV_FALLBACK

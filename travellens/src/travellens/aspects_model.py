@@ -1,5 +1,5 @@
 """
-TravelLens LK -- model-based aspect extraction (alternative to the rule lexicon).
+LostinSriLanka -- model-based aspect extraction (alternative to the rule lexicon).
 
 Replaces keyword matching with sentence embeddings. Each aspect is described in
 natural language, both the description and the segment are encoded as vectors,

@@ -1,5 +1,5 @@
 """
-TravelLens LK -- gold-set validator and agreement scorer.
+LostinSriLanka -- gold-set validator and agreement scorer.
 
 Two jobs:
   1. Catch labelling mistakes early (typos, impossible letters, missed rows).
@@ -119,7 +119,7 @@ def agreement(path1, path2) -> dict:
 
 
 def main():
-    print("\nTravelLens LK -- gold-set check\n" + "=" * 60)
+    print("\nLostinSriLanka -- gold-set check\n" + "=" * 60)
     p1 = C.REPORTS / "goldset_annotator1.csv"
     p2 = C.REPORTS / "goldset_annotator2.csv"
 

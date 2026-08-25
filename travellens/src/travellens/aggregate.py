@@ -1,5 +1,5 @@
 """
-TravelLens LK -- Stage 6: hierarchical aggregation.
+LostinSriLanka -- Stage 6: hierarchical aggregation.
 
 Turns 27,000 scored opinion units into the drill-down tree:
 
@@ -427,7 +427,7 @@ def flat_scorecards(tree: Dict) -> pd.DataFrame:
 
 
 def main():
-    print("\nTravelLens LK -- Stage 6: aggregation\n" + "=" * 60)
+    print("\nLostinSriLanka -- Stage 6: aggregation\n" + "=" * 60)
     seg = pd.read_csv(C.DATA_PROCESSED / "segments_scored.csv")
     tree = build_tree(seg)
 

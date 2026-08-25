@@ -1,15 +1,11 @@
 """
-TravelLens LK -- load the outputs into SQLite.
+LostinSriLanka -- load the outputs into SQLite.
 
 Why a separate database file
 ----------------------------
-The parent project already has `backend/safety_heatmap.db` with its own schema
-(`reports`, `risk_zones`) and a live application reading it. Writing this
-project's tables into that file would risk breaking something that works, for
-no gain: nothing here needs to join against those tables.
-
-So the default target is `travellens/travellens.db`. SQLite can attach two
-files in one connection when a cross-database query is genuinely wanted:
+The database lives inside the project, at `travellens/travellens.db`, so the
+whole thing stays self-contained. SQLite can attach a second file in one
+connection if a cross-database query is ever wanted:
 
     ATTACH DATABASE 'travellens.db' AS tl;
     SELECT * FROM tl.scorecards;
@@ -146,9 +142,9 @@ def summary(db_path=None) -> str:
 
 
 def main():
-    print("\nTravelLens LK -- load to SQLite\n" + "=" * 60)
+    print("\nLostinSriLanka -- load to SQLite\n" + "=" * 60)
     print("  target: {}".format(DB_PATH))
-    print("  (separate from backend/safety_heatmap.db -- see module docstring)\n")
+    print("  rebuilt from the CSVs -- running twice gives the same result\n")
     load()
     print("\n  contents:")
     print(summary())

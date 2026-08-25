@@ -15,7 +15,7 @@ def main():
     ap.add_argument("--mode", default="any_named", choices=["any_named","sri_lankan_only"])
     ap.add_argument("--per-destination", type=int, default=3)
     args = ap.parse_args()
-    print("\nTravelLens LK -- targeted news search\n" + "=" * 60)
+    print("\nLostinSriLanka -- targeted news search\n" + "=" * 60)
     print("  Google News RSS. One search per destination, so the article's")
     print("  destination is known rather than inferred.\n")
     df = pd.read_csv(C.CLEAN_REVIEWS_CSV)

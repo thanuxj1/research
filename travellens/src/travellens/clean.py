@@ -1,5 +1,5 @@
 """
-TravelLens LK -- Stage 1: corpus cleaning.
+LostinSriLanka -- Stage 1: corpus cleaning.
 
 Design rule: this module NEVER silently drops a row. Every filter records how
 many rows it removed and why, and the counts are written to
@@ -221,7 +221,7 @@ def clean_corpus(csv_path=None, verbose: bool = True) -> Tuple[pd.DataFrame, dic
 
 
 def main():
-    print("\nTravelLens LK -- Stage 1: cleaning\n" + "=" * 60)
+    print("\nLostinSriLanka -- Stage 1: cleaning\n" + "=" * 60)
     df, report = clean_corpus()
 
     C.DATA_PROCESSED.mkdir(parents=True, exist_ok=True)
