@@ -186,8 +186,8 @@ def main(argv=None):
                 rec.get("rows_changed", 0)))
             print("  That is ADJUDICATION, not agreement. No kappa is computed")
             print("  from it: a reviewer starting from someone else's answers")
-            print("  agrees with them by construction. An independent blind")
-            print("  pass over the same 200 rows is still outstanding.")
+            print("  agrees with them by construction -- so the kappa below,")
+            print("  if any, comes from the INDEPENDENT pass, never from this.")
 
     v2 = validate(p2)
     if v2["rows_checked"] > 0 and v["rows_checked"] > 0:

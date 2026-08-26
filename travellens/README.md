@@ -105,10 +105,11 @@ sampling artefact: it oversamples rows where the methods disagreed, which are
 rows where something fired confidently, so it is denser in true positives.
 Headline accuracy is Part A only, per `goldset_focused_sampling.json`.
 
-**The caveat that travels with these numbers:** one annotator, with two rows
-adjudicated by a second reader who had seen the first annotator's answers.
-There is no inter-annotator agreement yet, so this is *measured against one
-careful human*, not ground truth. See open problem #1.
+**The caveat that travels with these numbers:** scored against annotator 1 as
+the gold standard. A second annotator labelled the same 200 rows independently
+at **kappa 0.746** (substantial), so the scheme behind these labels is
+measurably reliable — with `facilities` the weakest at 0.559. See open
+problem #1.
 
 ---
 
@@ -148,12 +149,28 @@ tree and asserts every count and rate is unchanged.
 
 ## Open problems
 
-1. **No independent human validation.** Every evaluation set was labelled by
-   the assistant that built the pipeline. The scores are internally consistent
-   comparisons, *not* verified accuracy. This is the single highest-value
-   outstanding task, and it is the one thing in this repository that cannot be
-   automated — labels produced by the same process that built the classifiers
-   would restore the exact circularity they exist to remove.
+1. ~~**No independent human validation.**~~ **Resolved.** Two people
+   independently labelled the 200-row focused set, each working from a blank
+   sheet with no sight of the other's answers.
+
+   **Cohen's kappa = 0.746 — substantial.**
+
+   | aspect | kappa | exact agreement | |
+   |---|---|---|---|
+   | Cleanliness | 0.947 | 98.0% | almost perfect |
+   | Roads & Access | 0.756 | 90.5% | substantial |
+   | Safety | 0.721 | 92.5% | substantial |
+   | Facilities | **0.559** | 80.5% | **moderate — the guidelines are soft here** |
+
+   Facilities is the weak spot, and both the second annotator and a separate
+   automated pass diverged in the same place: the line between "mentioned"
+   (`X`) and "not really about this aspect" (blank). The scheme distinguishes
+   complaining from praising cleanly and is vague about bare mentions.
+
+   Accuracy is reported against annotator 1 as the gold standard; kappa is the
+   reliability of the scheme that produced it. Two rows were adjudicated by a
+   third reader who *had* seen annotator 1's answers — recorded separately in
+   `goldset_adjudication.json`, and never used for agreement.
 
    The tooling is ready and tested end to end:
 
@@ -169,11 +186,12 @@ tree and asserts every count and rate is unchanged.
    set's four aspect columns. Both would only have surfaced *after* someone
    spent the hour.
 
-   **Status.** 200 rows are labelled by one human annotator, with two rows
-   adjudicated by a second reader who had seen the first annotator's answers.
-   That yields a gold set and a real accuracy figure, but **no inter-annotator
-   agreement** — a reviewer starting from someone else's answers agrees with
-   them by construction. `reports/goldset_adjudication.json` records this.
+   **What it took.** Three separate attempts before a usable second pass
+   existed: a reviewer shown annotator 1's answers (adjudication, no kappa),
+   an AI assistant (circular — the very problem this open item names), and
+   finally a second person working from a blank sheet. Only the third counts,
+   and the difference is not a technicality: the first two produce numbers
+   that look identical to a real one.
 
    An AI assistant also labelled the 60-row overlap
    (`reports/automated_second_pass.csv`, mean kappa 0.700 against the human).
