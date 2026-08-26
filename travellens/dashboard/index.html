@@ -7,46 +7,29 @@
 <style>
 /* ---------------------------------------------------------------- tokens */
 :root {
-  /* ── Sri Lanka flag palette ───────────────────────────────────────────
-     Maroon #8D153A, gold #FFB700, green #00534E, orange #EB7400.
-
-     The roles are chosen, not decorative. On a data dashboard colour means
-     something before it means identity:
-
-       --critical  MAROON. It is the flag's dominant colour and it is a red,
-                   so "red = complaint" survives. It drives the choropleth.
-       --accent    GOLD, for selection and interactive state. Picked BECAUSE
-                   it is maximally distant from the maroon ramp -- a selected
-                   district must never read as a heavily complained-about one.
-                   Any warm red here would have made selection ambiguous.
-       --good      GREEN, the scenery positive control.
-       --warn      ORANGE, below-threshold and caution.
-
-     Light mode uses the true flag values: maroon and green were made for a
-     pale field and reach 8.5:1 and 8.3:1 on paper. Dark mode keeps the hues
-     and raises lightness -- at true value maroon sits at 2.07:1 on a dark
-     ground, which is invisible. Gold and orange need no adjustment.
-     Ground and surfaces are warm rather than blue-grey, so the palette sits
-     on a related base instead of fighting it.                             */
-  --ground:      #FBF6F0;
+  /* SafeTravel LK design system, applied to this dashboard.
+     Token NAMES are unchanged on purpose: --critical means "complaint rate"
+     everywhere, including inside the canvas map, which reads these values at
+     runtime through getComputedStyle. Swapping the palette must not swap what
+     a colour means. */
+  --ground:      #F1F5F9;
   --surface:     #FFFFFF;
-  --surface-2:   #F3E9DE;
-  --line:        #E3D5C6;
-  --line-soft:   #EFE4D8;
-  --ink:         #1E1216;
-  --ink-muted:   #5C4A50;
-  --ink-faint:   #8E7A80;
-  --accent:      #8D153A;
-  --accent-soft: #F7E2E8;
-  --accent-fill: #FFB700;
-  --accent-on-fill: #1E1216;
-  --critical:    #8D153A;
-  --critical-soft:#F7E2E8;
-  --good:        #00534E;
-  --good-soft:   #DDEDEA;
-  --warn:        #EB7400;
-  --warn-soft:   #FDEBD8;
-  --shadow:      0 1px 2px rgba(30,18,22,.06), 0 8px 24px rgba(30,18,22,.07);
+  --surface-2:   #E2E8F0;
+  --line:        #CBD5E1;
+  --line-soft:   #E2E8F0;
+  --ink:         #0F172A;
+  --ink-muted:   #475569;
+  --ink-faint:   #94A3B8;
+  --accent:      #7C3AED;
+  --accent-soft: #EDE9FE;
+  --accent-fill: #6D28D9;
+  --critical:    #DC2626;
+  --critical-soft:#FEE2E2;
+  --good:        #059669;
+  --good-soft:   #D1FAE5;
+  --warn:        #D97706;
+  --warn-soft:   #FEF3C7;
+  --shadow:      0 1px 2px rgba(15,23,42,.06), 0 8px 24px rgba(15,23,42,.06);
 
   /* Brand, from the logo: near-black ground, white wordmark, gold "in". The
      gold is confined to the masthead. It is NOT promoted to --accent, because
@@ -63,52 +46,51 @@
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
     /* The theme's own values. It is a dark-first system. */
-    /* Same hues, lifted for a dark ground. See the light block for why. */
-    --ground:      #150F14;
-    --surface:     #221A20;
-    --surface-2:   #33272E;
-    --line:        rgba(255,183,0,.16);
-    --line-soft:   rgba(255,183,0,.09);
-    --ink:         #F7F3EE;
-    --ink-muted:   #B9A9A0;
-    --ink-faint:   #7E6E68;
-    --accent:      #FFB700;
-    --accent-soft: rgba(255,183,0,.16);
-    --accent-fill: #FFB700;
-    --accent-on-fill: #150F14;
-    --critical:    #E0446A;
-    --critical-soft:rgba(224,68,106,.18);
-    --good:        #2FA18F;
-    --good-soft:   rgba(47,161,143,.18);
-    --warn:        #F2860E;
-    --warn-soft:   rgba(242,134,14,.18);
-    --shadow:      0 1px 2px rgba(0,0,0,.45), 0 12px 32px rgba(0,0,0,.4),
-                   0 0 0 1px rgba(255,183,0,.06);
+    --ground:      #0F172A;
+    --surface:     #1E293B;
+    --surface-2:   #334155;
+    --line:        rgba(255,255,255,.10);
+    --line-soft:   rgba(255,255,255,.06);
+    --ink:         #F8FAFC;
+    --ink-muted:   #94A3B8;
+    --ink-faint:   #64748B;
+    --accent:      #8B5CF6;
+    --accent-soft: rgba(139,92,246,.18);
+    /* Filled controls only. #8B5CF6 sits mid-luminance, so it reaches
+       just 4.2:1 against either black or white text -- under AA. This
+       deeper violet gives 6.6:1 with --ink on top, same hue. */
+    --accent-fill: #6D28D9;
+    --critical:    #EF4444;
+    --critical-soft:rgba(239,68,68,.16);
+    --good:        #10B981;
+    --good-soft:   rgba(16,185,129,.16);
+    --warn:        #F59E0B;
+    --warn-soft:   rgba(245,158,11,.16);
+    --shadow:      0 1px 2px rgba(0,0,0,.4), 0 12px 32px rgba(0,0,0,.35),
+                   0 0 0 1px rgba(255,255,255,.04);
   }
 }
 :root[data-theme="dark"] {
   /* The theme's own values. It is a dark-first system. */
-  /* Same hues, lifted for a dark ground. See the light block for why. */
-  --ground:      #150F14;
-  --surface:     #221A20;
-  --surface-2:   #33272E;
-  --line:        rgba(255,183,0,.16);
-  --line-soft:   rgba(255,183,0,.09);
-  --ink:         #F7F3EE;
-  --ink-muted:   #B9A9A0;
-  --ink-faint:   #7E6E68;
-  --accent:      #FFB700;
-  --accent-soft: rgba(255,183,0,.16);
-  --accent-fill: #FFB700;
-  --accent-on-fill: #150F14;
-  --critical:    #E0446A;
-  --critical-soft:rgba(224,68,106,.18);
-  --good:        #2FA18F;
-  --good-soft:   rgba(47,161,143,.18);
-  --warn:        #F2860E;
-  --warn-soft:   rgba(242,134,14,.18);
-  --shadow:      0 1px 2px rgba(0,0,0,.45), 0 12px 32px rgba(0,0,0,.4),
-                 0 0 0 1px rgba(255,183,0,.06);
+  --ground:      #0F172A;
+  --surface:     #1E293B;
+  --surface-2:   #334155;
+  --line:        rgba(255,255,255,.10);
+  --line-soft:   rgba(255,255,255,.06);
+  --ink:         #F8FAFC;
+  --ink-muted:   #94A3B8;
+  --ink-faint:   #64748B;
+  --accent:      #8B5CF6;
+  --accent-soft: rgba(139,92,246,.18);
+  --accent-fill: #6D28D9;
+  --critical:    #EF4444;
+  --critical-soft:rgba(239,68,68,.16);
+  --good:        #10B981;
+  --good-soft:   rgba(16,185,129,.16);
+  --warn:        #F59E0B;
+  --warn-soft:   rgba(245,158,11,.16);
+  --shadow:      0 1px 2px rgba(0,0,0,.4), 0 12px 32px rgba(0,0,0,.35),
+                 0 0 0 1px rgba(255,255,255,.04);
 }
 
 /* ---------------------------------------------------------------- base */
@@ -351,7 +333,7 @@ h3.section-title {
 }
 .quote-controls button:hover { border-color: var(--accent); color: var(--ink); }
 .quote-controls button[aria-pressed="true"] {
-  background: var(--accent-fill); border-color: var(--accent-fill); color: var(--accent-on-fill);
+  background: var(--accent-fill); border-color: var(--accent-fill); color: #F8FAFC;
 }
 .quote-controls button[aria-pressed="true"],
 .aspect-picker button[aria-pressed="true"],
@@ -413,7 +395,7 @@ h3.section-title {
 }
 .aspect-picker button:hover { border-color: var(--accent); color: var(--ink); }
 .aspect-picker button[aria-pressed="true"] {
-  background: var(--accent-fill); border-color: var(--accent-fill); color: var(--accent-on-fill);
+  background: var(--accent-fill); border-color: var(--accent-fill); color: #F8FAFC;
 }
 
 .scale-bar { display: flex; height: 9px; border-radius: 2px; overflow: hidden; }
@@ -507,7 +489,7 @@ button, .crumb, .view-switch button, .aspect-picker button,
   :root:not([data-theme="light"]) .section,
   :root:not([data-theme="light"]) .notice,
   :root:not([data-theme="light"]) .story-card {
-    background: rgba(34, 26, 32, .78);
+    background: rgba(30, 41, 59, .75);
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
   }
@@ -566,7 +548,7 @@ h1, h2, h3, .section-title { letter-spacing: -.02em; }
   border: 1px solid var(--line); border-radius: 2px; cursor: pointer;
 }
 .view-switch button[aria-pressed="true"] {
-  background: var(--accent-fill); border-color: var(--accent-fill); color: var(--accent-on-fill);
+  background: var(--accent-fill); border-color: var(--accent-fill); color: #F8FAFC;
 }
 /* Removed: this forced dark text onto the accent in dark mode. With the
    deeper --accent-fill that reads at 2.5:1. Light text is used in both
