@@ -37,6 +37,30 @@ import pandas as pd  # noqa: E402
 
 from travellens import config as C  # noqa: E402
 
+def _make_console_utf8():
+    """Windows consoles default to cp1252, and reviews contain emoji.
+
+    Without this the tool dies on the first review with a leaf or a flag in
+    it -- row 4 of the focused set, four rows in. Reconfiguring with
+    errors="replace" means an unrenderable character shows as '?' instead of
+    ending the session and losing the reader's place.
+    """
+    for stream in (sys.stdout, sys.stdin):
+        try:
+            stream.reconfigure(encoding="utf-8", errors="replace")
+        except Exception:
+            pass
+
+
+def say(text=""):
+    """print() that cannot kill an annotation session."""
+    try:
+        print(text)
+    except UnicodeEncodeError:
+        enc = getattr(sys.stdout, "encoding", None) or "ascii"
+        print(str(text).encode(enc, "replace").decode(enc, "replace"))
+
+
 KEYS = {
     "r": "roads_access", "c": "cleanliness", "f": "facilities", "s": "safety",
     "p": "price_value", "w": "crowd", "n": "scenery",
@@ -65,21 +89,21 @@ def parse(entry: str, aspects):
 
 
 def show(row, aspects, i, total, done):
-    print("\n" + "=" * 70)
-    print("  [{}/{}]  {} done   {}".format(
+    say("\n" + "=" * 70)
+    say("  [{}/{}]  {} done   {}".format(
         i + 1, total, done, str(row.get("destination", ""))[:40]))
-    print("  sampled as: {}".format(row.get("sample_reason", "")))
-    print("-" * 70)
-    print("  PIECE:  {}".format(str(row.get("segment", "")).strip()))
+    say("  sampled as: {}".format(row.get("sample_reason", "")))
+    say("-" * 70)
+    say("  PIECE:  {}".format(str(row.get("segment", "")).strip()))
     full = str(row.get("full_review", "") or "").strip()
     if full and full != str(row.get("segment", "")).strip():
         if len(full) > 600:
             full = full[:600] + " ..."
-        print("\n  in the review:\n    {}".format(full.replace("\n", " ")))
-    print("-" * 70)
+        say("\n  in the review:\n    {}".format(full.replace("\n", " ")))
+    say("-" * 70)
     marks = "  ".join("{}={}".format(k, a) for k, a in KEYS.items()
                       if a in aspects)
-    print("  {}".format(marks))
+    say("  {}".format(marks))
 
 
 def main():
@@ -91,6 +115,7 @@ def main():
     ap.add_argument("--review", action="store_true",
                     help="step through rows already checked")
     args = ap.parse_args()
+    _make_console_utf8()
 
     path = Path(args.file) if args.file else default_file(
         args.annotator, not args.full)
@@ -129,7 +154,7 @@ def main():
         existing = {a: df.at[idx, a] for a in aspects
                     if pd.notna(df.at[idx, a]) and str(df.at[idx, a]).strip()}
         if existing:
-            print("  currently: {}".format(existing))
+            say("  currently: {}".format(existing))
         try:
             entry = input("  > ").strip()
         except (EOFError, KeyboardInterrupt):

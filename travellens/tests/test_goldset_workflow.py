@@ -91,3 +91,31 @@ def test_the_gold_set_is_still_unlabelled():
         assert v["rows_checked"] == v["rows"], (
             "the gold set is partly labelled -- finish it by hand "
             "(python scripts/35_annotate.py), and never fill it in with code")
+
+
+def test_the_annotator_survives_a_windows_console():
+    """It died four rows in, on a review containing emoji.
+
+    Windows consoles default to cp1252 and the corpus is full of flags and
+    leaves. The crash lost the session, and a tool that dies partway through
+    is a tool nobody finishes. stdout is reconfigured to UTF-8 with
+    errors="replace", and every line that prints review text goes through
+    say(), which cannot raise.
+    """
+    src = (ROOT / "scripts" / "35_annotate.py").read_text(encoding="utf-8")
+    assert "_make_console_utf8" in src
+    assert 'errors="replace"' in src
+
+    # No bare print() may touch review text: those lines carry the emoji.
+    body = src.split("def show(")[1].split("def main(")[0]
+    assert "print(" not in body, \
+        "show() prints review text with a bare print(); use say()"
+
+
+def test_say_cannot_raise_on_unencodable_text():
+    import importlib.util
+    spec = importlib.util.spec_from_file_location(
+        "annotate", ROOT / "scripts" / "35_annotate.py")
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    mod.say("Avoid littering.\U0001F343\U0001F1F1\U0001F1F0 …")
