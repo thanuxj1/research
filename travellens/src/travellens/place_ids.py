@@ -565,7 +565,7 @@ def remap_auxiliary(mapping: Dict[str, str], verbose: bool = True) -> Dict:
     A merged-away entry is moved to the canonical name only when the canonical
     has none of its own -- an existing entry is never overwritten.
     """
-    moved = {"coordinates": [], "media": []}
+    moved = {"coordinates": [], "media": [], "segments": 0}
 
     coords_path = C.DATA_PROCESSED / "destination_coordinates.csv"
     if os.path.exists(str(coords_path)):
@@ -605,6 +605,24 @@ def remap_auxiliary(mapping: Dict[str, str], verbose: bool = True) -> Dict:
                     lambda d: mapping.get(d, d))
                 md.to_csv(media_path, index=False, encoding="utf-8")
 
+    # segments_tagged_union.csv is NOT rebuilt by the refresh: it comes from
+    # the embedding and trained-tagger steps (17, 19), which are expensive and
+    # run on demand. So it keeps whatever destination names it was written
+    # with, and the release bundle is built from it -- which is how the
+    # citable artifact ended up carrying 308 pre-merge names while the corpus
+    # had 294. The merge was a pure rename, so relabelling is exact: no
+    # segment, tag or score changes.
+    union_path = C.DATA_PROCESSED / "segments_tagged_union.csv"
+    if os.path.exists(str(union_path)):
+        ud = pd.read_csv(union_path, encoding="utf-8", low_memory=False)
+        if "destination" in ud.columns:
+            hits = int(ud["destination"].astype(str).isin(mapping).sum())
+            if hits:
+                ud["destination"] = ud["destination"].astype(str).map(
+                    lambda d: mapping.get(d, d))
+                ud.to_csv(union_path, index=False, encoding="utf-8")
+                moved["segments"] = hits
+
     # destination_links.json is DERIVED from the corpus by provenance.py, so
     # it is not patched here -- rebuilding it is both cleaner and correct.
     # Merged-away entries sometimes hold a link the survivor lacks ('Galle
@@ -618,7 +636,10 @@ def remap_auxiliary(mapping: Dict[str, str], verbose: bool = True) -> Dict:
         for old, canon, n in moved["media"]:
             print("    media relabelled: {} item(s) {!r} -> {!r}".format(
                 n, old, canon))
-        if not moved["coordinates"] and not moved["media"]:
-            print("    no coordinates or media needed moving")
+        if moved["segments"]:
+            print("    segments relabelled: {} rows in "
+                  "segments_tagged_union.csv".format(moved["segments"]))
+        if not moved["coordinates"] and not moved["media"] and not moved["segments"]:
+            print("    no coordinates, media or segments needed moving")
         print("    links: {}".format(moved["links_note"]))
     return moved

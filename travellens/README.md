@@ -112,8 +112,24 @@ tree and asserts every count and rate is unchanged.
 
 1. **No independent human validation.** Every evaluation set was labelled by
    the assistant that built the pipeline. The scores are internally consistent
-   comparisons, *not* verified accuracy. `reports/goldset_focused_annotator1.csv`
-   is 200 rows, ~46 minutes, and is the single highest-value outstanding task.
+   comparisons, *not* verified accuracy. This is the single highest-value
+   outstanding task, and it is the one thing in this repository that cannot be
+   automated — labels produced by the same process that built the classifiers
+   would restore the exact circularity they exist to remove.
+
+   The tooling is ready and tested end to end:
+
+   ```bash
+   python scripts/35_annotate.py               # ~20 min for 200 rows
+   python scripts/35_annotate.py --annotator 2 # the second pass
+   python scripts/05_check_goldset.py          # progress + Cohen's kappa
+   ```
+
+   The annotator writes after every row, so it is interruptible and resumable.
+   Two faults were found and fixed while testing this path: the checker read a
+   different file than the annotator writes, and it crashed on the focused
+   set's four aspect columns. Both would only have surfaced *after* someone
+   spent the hour.
 2. **Three hand-written correction rules are measured for impact, not
    accuracy.** `scripts/33_ablate_rules.py` switches each off and rebuilds the
    tree (`reports/rule_ablation.json`):

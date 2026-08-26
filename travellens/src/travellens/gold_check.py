@@ -20,12 +20,21 @@ VALID_LABELS = {"N", "P", "X"}
 ASPECT_COLS = list(C.ASPECTS.keys())
 
 
+def aspect_cols(df: pd.DataFrame) -> list:
+    """The aspect columns this sheet actually has.
+
+    The focused set covers four aspects, the full set all seven. Assuming
+    seven crashed on the focused set, and reporting a kappa of 1.0 for a
+    column that exists in neither sheet was worse than crashing -- it looked
+    like perfect agreement about nothing.
+    """
+    return [c for c in ASPECT_COLS if c in df.columns]
+
+
 def _normalise(df: pd.DataFrame) -> pd.DataFrame:
     """Uppercase, strip, and treat blank / '-' as 'not mentioned' (None)."""
     df = df.copy()
-    for col in ASPECT_COLS:
-        if col not in df.columns:
-            df[col] = ""
+    for col in aspect_cols(df):
         s = df[col].astype(str).str.strip().str.upper()
         df[col] = s.where(s.isin(VALID_LABELS), None)
     return df
@@ -35,9 +44,10 @@ def validate(path) -> dict:
     """Report progress and any invalid cells in one annotator's sheet."""
     raw = pd.read_csv(path)
     df = _normalise(raw)
+    cols = aspect_cols(raw)
 
     problems = []
-    for col in ASPECT_COLS:
+    for col in cols:
         bad = raw[col].astype(str).str.strip().str.upper()
         mask = (~bad.isin(VALID_LABELS)) & (~bad.isin(["", "NAN", "-"]))
         for row, value in zip(raw.loc[mask, "row"], raw.loc[mask, col]):
@@ -45,12 +55,12 @@ def validate(path) -> dict:
                             .format(row, col, value))
 
     checked = raw["checked"].astype(str).str.strip().str.lower().isin(["x", "yes", "1", "true"])
-    labelled_any = df[ASPECT_COLS].notna().any(axis=1)
+    labelled_any = df[cols].notna().any(axis=1)
     # A row marked checked with no labels is fine (nothing applied); a row with
     # labels but not marked checked is probably unfinished.
     unmarked = int((labelled_any & ~checked).sum())
 
-    counts = {c: df[c].value_counts().to_dict() for c in ASPECT_COLS}
+    counts = {c: df[c].value_counts().to_dict() for c in cols}
     return {
         "file": str(path),
         "rows": int(len(df)),
@@ -58,6 +68,7 @@ def validate(path) -> dict:
         "pct_complete": round(100 * checked.mean(), 1),
         "rows_with_labels_but_unchecked": unmarked,
         "invalid_cells": problems,
+        "aspects": cols,
         "label_counts": counts,
         "frame": df,
     }
@@ -102,8 +113,11 @@ def agreement(path1, path2) -> dict:
     d2 = _normalise(pd.read_csv(path2)).set_index("segment_id")
     shared = d1.index.intersection(d2.index)
 
+    # Only aspects BOTH sheets carry. Iterating all seven against the focused
+    # set produced a kappa of 1.0 for columns neither file had -- perfect
+    # agreement about nothing, which would have inflated the mean.
     out = {"overlap_rows": int(len(shared)), "per_aspect": {}}
-    for col in ASPECT_COLS:
+    for col in [c for c in aspect_cols(d1) if c in aspect_cols(d2)]:
         k = cohens_kappa(d1.loc[shared, col], d2.loc[shared, col])
         out["per_aspect"][col] = {
             "kappa": None if k is None else round(k, 3),
@@ -118,10 +132,24 @@ def agreement(path1, path2) -> dict:
     return out
 
 
-def main():
+def main(argv=None):
+    """Checks the FOCUSED 200-row set by default.
+
+    It used to check only the 600-row set. The README names the focused set as
+    the outstanding task and scripts/35_annotate.py fills that one in, so
+    somebody could label 200 rows and then find this script reading a
+    different file and reporting nothing. --full restores the old target.
+    """
+    import argparse
+    ap = argparse.ArgumentParser(description="Gold-set progress and agreement.")
+    ap.add_argument("--full", action="store_true",
+                    help="check the 600-row seven-aspect set instead")
+    args = ap.parse_args(argv)
+
+    stem = "goldset_annotator" if args.full else "goldset_focused_annotator"
     print("\nLostinSriLanka -- gold-set check\n" + "=" * 60)
-    p1 = C.REPORTS / "goldset_annotator1.csv"
-    p2 = C.REPORTS / "goldset_annotator2.csv"
+    p1 = C.REPORTS / "{}1.csv".format(stem)
+    p2 = C.REPORTS / "{}2.csv".format(stem)
 
     v = validate(p1)
     print("  {}".format(v["file"]))
