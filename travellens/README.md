@@ -168,6 +168,24 @@ tree and asserts every count and rate is unchanged.
    different file than the annotator writes, and it crashed on the focused
    set's four aspect columns. Both would only have surfaced *after* someone
    spent the hour.
+
+   **Status.** 200 rows are labelled by one human annotator, with two rows
+   adjudicated by a second reader who had seen the first annotator's answers.
+   That yields a gold set and a real accuracy figure, but **no inter-annotator
+   agreement** — a reviewer starting from someone else's answers agrees with
+   them by construction. `reports/goldset_adjudication.json` records this.
+
+   An AI assistant also labelled the 60-row overlap
+   (`reports/automated_second_pass.csv`, mean kappa 0.700 against the human).
+   That is kept for error analysis and is **not** reported as agreement: this
+   open problem exists *because* the labels came from an assistant, and
+   labels from a different assistant reproduce the problem with a statistic
+   attached, which reads as validation. The 25 human/automated disagreements
+   are listed in `automated_second_pass_disagreements.json` and are a useful
+   map of where the guidelines are ambiguous.
+
+   **Outstanding:** one person labelling the blank 60-row overlap sheet,
+   about 14 minutes. That is the only thing that produces a reportable kappa.
 2. **Three hand-written correction rules are measured for impact, not
    accuracy.** `scripts/33_ablate_rules.py` switches each off and rebuilds the
    tree (`reports/rule_ablation.json`):
