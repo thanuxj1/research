@@ -2,28 +2,34 @@
 <title>LostinSriLanka</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
 
 <style>
 /* ---------------------------------------------------------------- tokens */
 :root {
-  --ground:      #F2F4F3;
+  /* SafeTravel LK design system, applied to this dashboard.
+     Token NAMES are unchanged on purpose: --critical means "complaint rate"
+     everywhere, including inside the canvas map, which reads these values at
+     runtime through getComputedStyle. Swapping the palette must not swap what
+     a colour means. */
+  --ground:      #F1F5F9;
   --surface:     #FFFFFF;
-  --surface-2:   #E8ECEA;
-  --line:        #D2DAD7;
-  --line-soft:   #E2E8E6;
-  --ink:         #16211F;
-  --ink-muted:   #5C6B68;
-  --ink-faint:   #8A9894;
-  --accent:      #0F6C6A;
-  --accent-soft: #DCEAE8;
-  --critical:    #A8412C;
-  --critical-soft:#F0DCD6;
-  --good:        #4A7A54;
-  --good-soft:   #DDE8DE;
-  --warn:        #B4761F;
-  --warn-soft:   #F5E7CE;
-  --shadow:      0 1px 2px rgba(22,33,31,.06), 0 4px 16px rgba(22,33,31,.05);
+  --surface-2:   #E2E8F0;
+  --line:        #CBD5E1;
+  --line-soft:   #E2E8F0;
+  --ink:         #0F172A;
+  --ink-muted:   #475569;
+  --ink-faint:   #94A3B8;
+  --accent:      #7C3AED;
+  --accent-soft: #EDE9FE;
+  --accent-fill: #6D28D9;
+  --critical:    #DC2626;
+  --critical-soft:#FEE2E2;
+  --good:        #059669;
+  --good-soft:   #D1FAE5;
+  --warn:        #D97706;
+  --warn-soft:   #FEF3C7;
+  --shadow:      0 1px 2px rgba(15,23,42,.06), 0 8px 24px rgba(15,23,42,.06);
 
   /* Brand, from the logo: near-black ground, white wordmark, gold "in". The
      gold is confined to the masthead. It is NOT promoted to --accent, because
@@ -33,49 +39,58 @@
   --brand-ink2: #2E2E34;
   --brand-gold: #F5C842;
 
-  --f-display: "Archivo", system-ui, sans-serif;
-  --f-body:    "IBM Plex Sans", system-ui, sans-serif;
+  --f-display: "Inter", system-ui, sans-serif;
+  --f-body:    "Inter", system-ui, sans-serif;
   --f-mono:    "IBM Plex Mono", ui-monospace, monospace;
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --ground:      #0E1614;
-    --surface:     #16211F;
-    --surface-2:   #1E2C29;
-    --line:        #2C3D39;
-    --line-soft:   #223330;
-    --ink:         #E4EAE7;
-    --ink-muted:   #9AAAA6;
-    --ink-faint:   #6B7C78;
-    --accent:      #4DBDB0;
-    --accent-soft: #143430;
-    --critical:    #E0785C;
-    --critical-soft:#3A211B;
-    --good:        #7CB388;
-    --good-soft:   #1C2E20;
-    --warn:        #DFA455;
-    --warn-soft:   #33280F;
-    --shadow:      0 1px 2px rgba(0,0,0,.3), 0 4px 16px rgba(0,0,0,.25);
+    /* The theme's own values. It is a dark-first system. */
+    --ground:      #0F172A;
+    --surface:     #1E293B;
+    --surface-2:   #334155;
+    --line:        rgba(255,255,255,.10);
+    --line-soft:   rgba(255,255,255,.06);
+    --ink:         #F8FAFC;
+    --ink-muted:   #94A3B8;
+    --ink-faint:   #64748B;
+    --accent:      #8B5CF6;
+    --accent-soft: rgba(139,92,246,.18);
+    /* Filled controls only. #8B5CF6 sits mid-luminance, so it reaches
+       just 4.2:1 against either black or white text -- under AA. This
+       deeper violet gives 6.6:1 with --ink on top, same hue. */
+    --accent-fill: #6D28D9;
+    --critical:    #EF4444;
+    --critical-soft:rgba(239,68,68,.16);
+    --good:        #10B981;
+    --good-soft:   rgba(16,185,129,.16);
+    --warn:        #F59E0B;
+    --warn-soft:   rgba(245,158,11,.16);
+    --shadow:      0 1px 2px rgba(0,0,0,.4), 0 12px 32px rgba(0,0,0,.35),
+                   0 0 0 1px rgba(255,255,255,.04);
   }
 }
 :root[data-theme="dark"] {
-  --ground:      #0E1614;
-  --surface:     #16211F;
-  --surface-2:   #1E2C29;
-  --line:        #2C3D39;
-  --line-soft:   #223330;
-  --ink:         #E4EAE7;
-  --ink-muted:   #9AAAA6;
-  --ink-faint:   #6B7C78;
-  --accent:      #4DBDB0;
-  --accent-soft: #143430;
-  --critical:    #E0785C;
-  --critical-soft:#3A211B;
-  --good:        #7CB388;
-  --good-soft:   #1C2E20;
-  --warn:        #DFA455;
-  --warn-soft:   #33280F;
-  --shadow:      0 1px 2px rgba(0,0,0,.3), 0 4px 16px rgba(0,0,0,.25);
+  /* The theme's own values. It is a dark-first system. */
+  --ground:      #0F172A;
+  --surface:     #1E293B;
+  --surface-2:   #334155;
+  --line:        rgba(255,255,255,.10);
+  --line-soft:   rgba(255,255,255,.06);
+  --ink:         #F8FAFC;
+  --ink-muted:   #94A3B8;
+  --ink-faint:   #64748B;
+  --accent:      #8B5CF6;
+  --accent-soft: rgba(139,92,246,.18);
+  --accent-fill: #6D28D9;
+  --critical:    #EF4444;
+  --critical-soft:rgba(239,68,68,.16);
+  --good:        #10B981;
+  --good-soft:   rgba(16,185,129,.16);
+  --warn:        #F59E0B;
+  --warn-soft:   rgba(245,158,11,.16);
+  --shadow:      0 1px 2px rgba(0,0,0,.4), 0 12px 32px rgba(0,0,0,.35),
+                 0 0 0 1px rgba(255,255,255,.04);
 }
 
 /* ---------------------------------------------------------------- base */
@@ -318,10 +333,15 @@ h3.section-title {
 }
 .quote-controls button:hover { border-color: var(--accent); color: var(--ink); }
 .quote-controls button[aria-pressed="true"] {
-  background: var(--accent); border-color: var(--accent); color: var(--surface);
+  background: var(--accent-fill); border-color: var(--accent-fill); color: #F8FAFC;
 }
-:root[data-theme="dark"] .quote-controls button[aria-pressed="true"],
-:root:not([data-theme="light"]) .quote-controls button[aria-pressed="true"] { color: var(--ground); }
+.quote-controls button[aria-pressed="true"],
+.aspect-picker button[aria-pressed="true"],
+.view-switch button[aria-pressed="true"] {
+  background: var(--accent-fill);
+  border-color: var(--accent-fill);
+  color: #F8FAFC;
+}
 .quote-controls .sep { color: var(--ink-faint); padding: 0 2px; }
 .quote-band {
   font-family: var(--f-mono); font-size: 10px; color: var(--ink-faint);
@@ -375,10 +395,9 @@ h3.section-title {
 }
 .aspect-picker button:hover { border-color: var(--accent); color: var(--ink); }
 .aspect-picker button[aria-pressed="true"] {
-  background: var(--accent); border-color: var(--accent); color: var(--surface);
+  background: var(--accent-fill); border-color: var(--accent-fill); color: #F8FAFC;
 }
-:root[data-theme="dark"] .aspect-picker button[aria-pressed="true"],
-:root:not([data-theme="light"]) .aspect-picker button[aria-pressed="true"] { color: var(--ground); }
+
 .scale-bar { display: flex; height: 9px; border-radius: 2px; overflow: hidden; }
 .scale-bar i { flex: 1; }
 .scale-ends {
@@ -442,6 +461,43 @@ h3.section-title {
 .map-pin:focus-visible { outline: 2px solid var(--accent); }
 .pin-toggle { margin-left: auto; }
 
+/* ── SafeTravel LK shape language ──────────────────────────────────────
+   The imported theme is not only a palette: 16px cards, 10px controls, and
+   translucent surfaces over a blurred backdrop. Applied by overriding the
+   existing rules rather than editing each one, so the diff stays readable and
+   reverting is one block.
+
+   backdrop-filter is gated on @supports: without it a translucent surface
+   over an unblurred page is just washed-out text, which is worse than a solid
+   panel. Browsers that cannot blur get the solid fallback below.           */
+.section, .card, .notice, .story-card, .panel, .aspect-row, .map-wrap {
+  border-radius: 16px;
+}
+button, .crumb, .view-switch button, .aspect-picker button,
+.quote-controls button, input, select {
+  border-radius: 10px;
+}
+.section, .notice, .story-card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow);
+}
+@supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  :root[data-theme="dark"] .section,
+  :root[data-theme="dark"] .notice,
+  :root[data-theme="dark"] .story-card,
+  :root:not([data-theme="light"]) .section,
+  :root:not([data-theme="light"]) .notice,
+  :root:not([data-theme="light"]) .story-card {
+    background: rgba(30, 41, 59, .75);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+  }
+}
+/* Inter is tighter than Archivo at display sizes; without this the headings
+   read loose against the theme's compact nav. */
+h1, h2, h3, .section-title { letter-spacing: -.02em; }
+
 /* ---------------------------------------------------------------- 3D map */
 #map-canvas {
   display: block; width: 100%; border-radius: 3px;
@@ -492,10 +548,11 @@ h3.section-title {
   border: 1px solid var(--line); border-radius: 2px; cursor: pointer;
 }
 .view-switch button[aria-pressed="true"] {
-  background: var(--accent); border-color: var(--accent); color: var(--surface);
+  background: var(--accent-fill); border-color: var(--accent-fill); color: #F8FAFC;
 }
-:root[data-theme="dark"] .view-switch button[aria-pressed="true"],
-:root:not([data-theme="light"]) .view-switch button[aria-pressed="true"] { color: var(--ground); }
+/* Removed: this forced dark text onto the accent in dark mode. With the
+   deeper --accent-fill that reads at 2.5:1. Light text is used in both
+   schemes now, which is the whole reason --accent-fill exists. */
 @media (prefers-reduced-motion: reduce) { .map3d-rotating { animation: none !important; } }
 @media (max-width: 780px) {
   .map-shell { grid-template-columns: 1fr; }
