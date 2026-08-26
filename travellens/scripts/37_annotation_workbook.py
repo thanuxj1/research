@@ -69,7 +69,16 @@ THIN = Side(style="thin", color="C8D2CF")
 BORDER = Border(left=THIN, right=THIN, top=THIN, bottom=THIN)
 
 
-def goldset_path(annotator, full=False):
+def goldset_path(annotator, full=False, override=None):
+    """Where the labels live.
+
+    `override` exists so tests can run against a copy. Without it they import
+    into the real gold set and assert it is still empty -- which was fine
+    while it WAS empty, and became a way to destroy an afternoon of somebody's
+    labelling the moment it was not.
+    """
+    if override:
+        return Path(override)
     stem = "goldset_annotator" if full else "goldset_focused_annotator"
     return C.REPORTS / "{}{}.csv".format(stem, annotator)
 
@@ -131,8 +140,8 @@ def _instructions(ws, examples, aspects):
     ws.sheet_view.showGridLines = False
 
 
-def export(annotator=1, full=False, all_aspects=False):
-    src = goldset_path(annotator, full)
+def export(annotator=1, full=False, all_aspects=False, gold_path=None):
+    src = goldset_path(annotator, full, gold_path)
     df = pd.read_csv(src)
     aspects = [a for a in ASPECTS if a in df.columns] or list(ASPECTS)
     if all_aspects:
@@ -222,7 +231,7 @@ def export(annotator=1, full=False, all_aspects=False):
     return dest, len(df)
 
 
-def read_back(filled, annotator=1, full=False):
+def read_back(filled, annotator=1, full=False, gold_path=None):
     src = Path(filled)
     if not src.exists():
         sys.exit("no such file: {}".format(src))
@@ -271,7 +280,7 @@ def read_back(filled, annotator=1, full=False):
         print("\n  Fix those and run this again. Nothing was written.")
         return None
 
-    gold = pd.read_csv(goldset_path(annotator, full))
+    gold = pd.read_csv(goldset_path(annotator, full, gold_path))
     # A column the sheet carries but the gold set does not is added rather
     # than dropped: a verdict somebody actually made must not be thrown away
     # because the original sampling did not ask for it.
@@ -312,7 +321,7 @@ def read_back(filled, annotator=1, full=False):
         gold.at[i, "checked"] = "x"
         filled_rows += 1
 
-    dest = goldset_path(annotator, full)
+    dest = goldset_path(annotator, full, gold_path)
     gold.to_csv(dest, index=False, encoding="utf-8")
     print("\n  imported {} rows -> {}".format(filled_rows, dest.name))
     print("    {} carry at least one label".format(filled_rows - blank_verdicts))

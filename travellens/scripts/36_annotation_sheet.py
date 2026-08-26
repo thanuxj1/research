@@ -40,13 +40,22 @@ VALID = {"N", "P", "X"}
 BIASING = ["sample_reason", "n_distinct_labels"]
 
 
-def goldset_path(annotator, full=False):
+def goldset_path(annotator, full=False, override=None):
+    """Where the labels live.
+
+    `override` exists so tests can run against a copy. Without it they import
+    into the real gold set and assert it is still empty -- which was fine
+    while it WAS empty, and became a way to destroy an afternoon of somebody's
+    labelling the moment it was not.
+    """
+    if override:
+        return Path(override)
     stem = "goldset_annotator" if full else "goldset_focused_annotator"
     return C.REPORTS / "{}{}.csv".format(stem, annotator)
 
 
-def export(annotator, full=False):
-    src = goldset_path(annotator, full)
+def export(annotator, full=False, gold_path=None):
+    src = goldset_path(annotator, full, gold_path)
     df = pd.read_csv(src)
     aspects = [a for a in df.columns if a in ASPECTS] or ASPECTS
 
@@ -79,7 +88,7 @@ def export(annotator, full=False):
     return dest
 
 
-def read_back(filled, annotator, full=False):
+def read_back(filled, annotator, full=False, gold_path=None):
     src = Path(filled)
     if not src.exists():
         sys.exit("no such file: {}".format(src))
@@ -94,7 +103,7 @@ def read_back(filled, annotator, full=False):
     if "segment_id" not in sheet.columns:
         sys.exit("that file has no segment_id column -- is it the right sheet?")
 
-    gold = pd.read_csv(goldset_path(annotator, full))
+    gold = pd.read_csv(goldset_path(annotator, full, gold_path))
     aspects = [a for a in ASPECTS if a in gold.columns and a in sheet.columns]
     if not aspects:
         sys.exit("no aspect columns found in that sheet")
@@ -150,7 +159,7 @@ def read_back(filled, annotator, full=False):
         print("\n  Fix those cells and run this again. Nothing was written.")
         return None
 
-    dest = goldset_path(annotator, full)
+    dest = goldset_path(annotator, full, gold_path)
     gold.to_csv(dest, index=False, encoding="utf-8")
     print("\n  imported {} labelled rows -> {}".format(filled_rows, dest.name))
     if blank_rows:

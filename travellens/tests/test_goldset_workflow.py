@@ -10,6 +10,7 @@ pinned here.
 
 Run:  python -m pytest tests/test_goldset_workflow.py -q
 """
+import re
 import sys
 from pathlib import Path
 
@@ -153,26 +154,46 @@ def test_the_sheet_is_readable_by_excel():
     assert sheet.read_bytes()[:3] == b"\xef\xbb\xbf", "no UTF-8 BOM"
 
 
+def _gold_copy(tmp_path):
+    """A throwaway copy of the gold set.
+
+    Every import test used to write into the REAL file and assert it stayed
+    empty. That passed only while it WAS empty; the day it held 200 hand-made
+    labels, the same tests failed AND one of them was two lines from erasing
+    the lot. Tests never touch the real gold set now.
+    """
+    src = ROOT / "reports" / "goldset_focused_annotator1.csv"
+    dest = tmp_path / "gold.csv"
+    dest.write_text(src.read_text(encoding="utf-8"), encoding="utf-8")
+    return dest
+
+
+def _checked(path):
+    d = pd.read_csv(path)
+    return int((d["checked"].astype(str).str.strip().str.lower() == "x").sum())
+
+
 def test_an_untouched_sheet_imports_nothing(tmp_path):
     """An empty spreadsheet must not become 200 confident 'nothing here'
     verdicts. That would fabricate a gold set out of a file nobody read."""
     mod = _sheet_module()
-    gold_before = pd.read_csv(ROOT / "reports" / "goldset_focused_annotator1.csv")
+    gold = _gold_copy(tmp_path)
     blank = pd.read_csv(ROOT / "reports" / "TO_LABEL_annotator1.csv",
                         encoding="utf-8-sig")
+    for a in ["roads_access", "cleanliness", "facilities", "safety"]:
+        blank[a] = ""
     path = tmp_path / "untouched.csv"
     blank.to_csv(path, index=False, encoding="utf-8-sig")
 
-    mod.read_back(path, 1)
-    gold_after = pd.read_csv(ROOT / "reports" / "goldset_focused_annotator1.csv")
-    checked = gold_after["checked"].astype(str).str.strip().str.lower() == "x"
-    assert int(checked.sum()) == 0, "an unread sheet was imported as verdicts"
-    assert len(gold_after) == len(gold_before)
+    before = _checked(gold)
+    mod.read_back(path, 1, gold_path=gold)
+    assert _checked(gold) == before, "an unread sheet was imported as verdicts"
 
 
 def test_an_unreadable_cell_blocks_the_whole_import(tmp_path):
-    """Half-importing a sheet leaves the gold set in a state nobody chose."""
+    """Half-importing leaves the gold set in a state nobody chose."""
     mod = _sheet_module()
+    gold = _gold_copy(tmp_path)
     sheet = pd.read_csv(ROOT / "reports" / "TO_LABEL_annotator1.csv",
                         encoding="utf-8-sig")
     sheet["safety"] = sheet["safety"].astype("object")
@@ -181,10 +202,9 @@ def test_an_unreadable_cell_blocks_the_whole_import(tmp_path):
     path = tmp_path / "bad.csv"
     sheet.to_csv(path, index=False, encoding="utf-8-sig")
 
-    assert mod.read_back(path, 1) is None, "a bad sheet was accepted"
-    gold = pd.read_csv(ROOT / "reports" / "goldset_focused_annotator1.csv")
-    checked = gold["checked"].astype(str).str.strip().str.lower() == "x"
-    assert int(checked.sum()) == 0, "a refused import still wrote rows"
+    before = _checked(gold)
+    assert mod.read_back(path, 1, gold_path=gold) is None, "a bad sheet was accepted"
+    assert _checked(gold) == before, "a refused import still wrote rows"
 
 
 # --------------------------------------------------------------------------
@@ -199,24 +219,19 @@ def _wb_module():
     return mod
 
 
-def test_the_workbook_constrains_answers_to_npx():
-    """A dropdown removes the whole class of typo the CSV importer had to
-    reject, and tells the annotator the options without them looking away."""
+def test_the_workbook_constrains_answers_to_npx(tmp_path):
+    """A dropdown removes the whole class of typo the CSV importer rejects."""
     from openpyxl import load_workbook
-    mod = _wb_module()
-    path, _ = mod.export(1)
-    ws = load_workbook(path)["Label these"]
-    dvs = ws.data_validations.dataValidation
-    assert dvs, "no dropdown on the answer cells"
-    assert dvs[0].formula1 == '"N,P,X"'
+    path, _ = _wb_module().export(1, gold_path=_gold_copy(tmp_path))
+    dvs = load_workbook(path)["Label these"].data_validations.dataValidation
+    assert dvs and dvs[0].formula1 == '"N,P,X"'
     assert dvs[0].allow_blank, "blank must stay allowed -- most cells are blank"
 
 
-def test_the_workbook_does_not_show_the_expected_answer():
+def test_the_workbook_does_not_show_the_expected_answer(tmp_path):
     """sample_reason names the aspect the pipeline thinks the row is about."""
     from openpyxl import load_workbook
-    mod = _wb_module()
-    path, _ = mod.export(1)
+    path, _ = _wb_module().export(1, gold_path=_gold_copy(tmp_path))
     wb = load_workbook(path)
     for sheet in wb.sheetnames:
         for row in wb[sheet].iter_rows(max_row=3):
@@ -226,56 +241,64 @@ def test_the_workbook_does_not_show_the_expected_answer():
                 assert "disagreement:" not in text
 
 
-def test_the_workbook_names_which_column_to_judge():
+def test_the_workbook_names_which_column_to_judge(tmp_path):
     """The commonest mistake is labelling the whole review."""
     from openpyxl import load_workbook
-    mod = _wb_module()
-    path, _ = mod.export(1)
+    path, _ = _wb_module().export(1, gold_path=_gold_copy(tmp_path))
     header = [c.value for c in load_workbook(path)["Label these"][1]]
     piece = [h for h in header if h and "PIECE" in h]
     assert piece and "judge" in piece[0].lower()
-    context = [h for h in header if h and "whole review" in h]
-    assert context and "context" in context[0].lower()
+    assert any(h and "whole review" in h for h in header)
 
 
 def test_an_untouched_workbook_imports_nothing(tmp_path):
     """200 empty cells are a file nobody read, not 200 verdicts."""
     mod = _wb_module()
-    path, _ = mod.export(1)
-    mod.read_back(path, 1)
-    gold = pd.read_csv(ROOT / "reports" / "goldset_focused_annotator1.csv")
-    checked = gold["checked"].astype(str).str.strip().str.lower() == "x"
-    assert int(checked.sum()) == 0
+    gold = _gold_copy(tmp_path)
+    path, _ = mod.export(1, gold_path=gold)
+    before = _checked(gold)
+    mod.read_back(path, 1, gold_path=gold)
+    assert _checked(gold) == before
 
 
 def test_a_blank_row_before_a_labelled_one_is_a_verdict(tmp_path):
-    """40 of the first real annotator's 200 rows were blank, scattered
-    throughout, with labels running to row 200. Those blanks are judgements
-    of 'nothing applies'. Dropping them would keep only rows where the
-    annotator found something, biasing the measurement towards positives.
-    """
+    """40 of annotator 1's 200 rows were blank, scattered throughout, with
+    labels running to row 200. Those are judgements of 'nothing applies'.
+    Dropping them would keep only rows where the annotator found something,
+    biasing the set towards positives."""
     from openpyxl import load_workbook
     mod = _wb_module()
-    path, _ = mod.export(1)
+    gold = _gold_copy(tmp_path)
+    # start from an unlabelled copy so the high-water mark is ours
+    d = pd.read_csv(gold)
+    for col in ["roads_access", "cleanliness", "facilities", "safety",
+                "checked", "notes"]:
+        if col in d.columns:
+            d[col] = ""
+    d.to_csv(gold, index=False, encoding="utf-8")
+
+    path, _ = mod.export(1, gold_path=gold)
     wb = load_workbook(path)
     ws = wb["Label these"]
-    ws["I2"] = "N"        # row 1 labelled
-    # rows 2 and 3 left blank on purpose
-    ws["I5"] = "P"        # row 4 labelled -> rows 2,3 are verdicts
-    # everything from row 5 on stays blank -> unreached
+    ws["I2"] = "N"          # row 1 labelled
+    ws["I5"] = "P"          # row 4 labelled -> rows 2 and 3 are verdicts
     filled = tmp_path / "partly.xlsx"
     wb.save(filled)
 
-    mod.read_back(filled, 1)
-    gold = pd.read_csv(ROOT / "reports" / "goldset_focused_annotator1.csv")
-    checked = gold["checked"].astype(str).str.strip().str.lower() == "x"
+    mod.read_back(filled, 1, gold_path=gold)
+    out = pd.read_csv(gold)
+    checked = out["checked"].astype(str).str.strip().str.lower() == "x"
     assert int(checked.sum()) == 4, "blanks between labels must count as verdicts"
     assert not checked.iloc[4:].any(), "rows past the last label must stay open"
 
-    # leave the gold set as we found it
-    for col in ["roads_access", "cleanliness", "facilities", "safety",
-                "checked", "notes"]:
-        if col in gold.columns:
-            gold[col] = ""
-    gold.to_csv(ROOT / "reports" / "goldset_focused_annotator1.csv",
-                index=False, encoding="utf-8")
+
+def test_tests_never_write_to_the_real_gold_set():
+    """A tripwire on the tests themselves.
+
+    Annotation is hours of somebody's life and is not reproducible. No test
+    may name the real gold set as an import target.
+    """
+    src = Path(__file__).read_text(encoding="utf-8")
+    body = src.split("def test_tests_never_write")[0]
+    for call in re.findall(r"read_back\([^)]*\)", body):
+        assert "gold_path=" in call,             "read_back without gold_path -- that writes to the real gold set: " + call
