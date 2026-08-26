@@ -707,6 +707,138 @@ h3.section-title, h3, .section-title {
      a narrower hero the rail would leave the map a sliver. */
   .bento-hero .map-shell { grid-template-columns: minmax(0, 1fr); }
 }
+
+/* ═══════════════════════════════════════════════════════════════════════
+   PANEL & MOTION
+
+   Motion here has one job: to show where something came from. A page that
+   rises 10px and fades has told you it replaced the one before it; a row
+   that arrives 30ms after its neighbour has told you it belongs to a list.
+   Nothing bounces, nothing spins, nothing lasts longer than 400ms. Movement
+   that draws attention to itself is the opposite of what a reading interface
+   wants -- and every rule here is switched off under prefers-reduced-motion,
+   where the end state is identical and only the journey is skipped.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+.panel { display: flex; flex-direction: column; gap: 24px; }
+
+/* Tabs: a rule with a travelling underline, not a row of pills. */
+.panel-tabs {
+  display: flex; gap: 26px;
+  border-bottom: 1px solid var(--line-soft);
+}
+.panel-tabs button {
+  appearance: none; background: none; border: 0; cursor: pointer;
+  padding: 0 0 12px; margin-bottom: -1px;
+  font-family: var(--f-mono); font-size: var(--t-micro);
+  letter-spacing: .08em; text-transform: uppercase;
+  color: var(--ink-faint);
+  border-bottom: 2px solid transparent;
+  transition: color .18s ease, border-color .18s ease;
+}
+.panel-tabs button:hover { color: var(--ink); }
+.panel-tabs button[aria-selected="true"] {
+  color: var(--ink); border-bottom-color: var(--critical);
+}
+
+.panel-pages { position: relative; }
+.panel-page { display: none; }
+.panel-page.is-active { display: block; }
+
+@media (prefers-reduced-motion: no-preference) {
+  .panel-page.enter { animation: pageIn .28s cubic-bezier(.2,.8,.2,1) both; }
+  @keyframes pageIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to   { opacity: 1; transform: none; }
+  }
+  /* Rows arrive in sequence. --i is set in JS and capped at 14, so a long
+     list never turns into a wait. */
+  .aspect-row, .district-row, .stat-tile {
+    animation: rowIn .34s cubic-bezier(.2,.8,.2,1) both;
+    animation-delay: calc(var(--i, 0) * 26ms);
+  }
+  @keyframes rowIn {
+    from { opacity: 0; transform: translateY(6px); }
+    to   { opacity: 1; transform: none; }
+  }
+  /* Bars grow from nothing rather than appearing at length. */
+  .dr-bar i, .ar-bar i { animation: barIn .5s cubic-bezier(.2,.8,.2,1) both;
+                         animation-delay: calc(var(--i, 0) * 26ms + 60ms); }
+  @keyframes barIn { from { transform: scaleX(0); } to { transform: none; } }
+}
+
+/* ── District list ──────────────────────────────────────────────────── */
+.district-list { list-style: none; margin: 0; padding: 0; }
+.district-row button {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  grid-template-areas: "name pct" "meta pct" "bar bar" "top top";
+  gap: 2px 12px;
+  width: 100%; text-align: left; cursor: pointer;
+  background: none; border: 0; border-bottom: 1px solid var(--line-soft);
+  padding: 14px 0;
+  transition: background .16s ease, padding-left .16s ease;
+}
+.district-row button:hover {
+  background: var(--surface-2);
+  padding-left: 10px;
+}
+.dr-name { grid-area: name; font-weight: 600; color: var(--ink); font-size: 15px; }
+.dr-meta { grid-area: meta; font-size: var(--t-micro); color: var(--ink-faint);
+           font-family: var(--f-mono); }
+.dr-pct  { grid-area: pct; align-self: center; font-family: var(--f-mono);
+           font-size: 17px; color: var(--critical); font-variant-numeric: tabular-nums; }
+.dr-top  { grid-area: top; font-size: var(--t-small); color: var(--ink-muted); }
+.dr-bar  { grid-area: bar; height: 3px; background: var(--line-soft);
+           border-radius: 2px; margin: 6px 0 4px; overflow: hidden; }
+.dr-bar i { display: block; height: 100%; background: var(--critical);
+            transform-origin: left center; }
+
+/* ── District preview ───────────────────────────────────────────────── */
+.detail-eyebrow {
+  font-family: var(--f-mono); font-size: var(--t-micro);
+  letter-spacing: .1em; text-transform: uppercase; color: var(--ink-faint);
+}
+.detail-name { font-family: var(--f-display); font-size: 34px; font-weight: 600;
+               letter-spacing: -.02em; margin: 6px 0 4px; line-height: 1.1; }
+.detail-sub { font-family: var(--f-mono); font-size: var(--t-micro);
+              color: var(--ink-faint); margin: 0; }
+.detail-figure { margin: 26px 0 20px; padding: 20px 0;
+                 border-top: 1px solid var(--line-soft);
+                 border-bottom: 1px solid var(--line-soft); }
+.detail-big { display: block; font-family: var(--f-display); font-size: 52px;
+              font-weight: 600; line-height: 1; color: var(--critical);
+              font-variant-numeric: tabular-nums; letter-spacing: -.03em; }
+.detail-figure-label { display: block; margin-top: 8px; font-size: var(--t-small);
+                       color: var(--ink-muted); max-width: 34ch; }
+.detail-aspects { list-style: none; margin: 0 0 24px; padding: 0; }
+.detail-aspects .aspect-row {
+  display: grid; grid-template-columns: 1fr 90px 44px;
+  align-items: center; gap: 12px;
+  padding: 9px 0; border-bottom: 1px solid var(--line-soft);
+  font-size: var(--t-small);
+}
+.ar-bar { height: 3px; background: var(--line-soft); border-radius: 2px; overflow: hidden; }
+.ar-bar i { display: block; height: 100%; background: var(--critical);
+            transform-origin: left center; }
+.ar-pct { text-align: right; font-family: var(--f-mono);
+          font-variant-numeric: tabular-nums; color: var(--ink-muted); }
+.detail-open {
+  appearance: none; cursor: pointer;
+  background: none; border: 1px solid var(--line);
+  border-radius: 2px; padding: 10px 16px;
+  font-family: var(--f-mono); font-size: var(--t-micro);
+  letter-spacing: .06em; color: var(--ink);
+  transition: border-color .16s ease, background .16s ease;
+}
+.detail-open:hover { border-color: var(--accent); background: var(--accent-soft); }
+
+/* The map column sticks while the panel pages change beside it, so the
+   thing you clicked stays in view. */
+@media (min-width: 1080px) {
+  .bento-panel { grid-column: 2; grid-row: 1 / span 3; margin: 0; }
+  .bento-hero  { position: sticky; top: 24px; }
+}
 </style>
 
 <header class="masthead">
@@ -1646,6 +1778,16 @@ h3.section-title, h3, .section-title {
        becomes a second, subtly different way to move around the same data.
        render() sets SELECTED_DISTRICT from state and redraws the map. */
     if (state.district === name) { flyToDistrict(name); return; }
+    /* On the country view, a map click previews in the panel and keeps the
+       map where it is. Navigating away from the thing you just clicked is
+       what made this feel abrupt. */
+    if (!state.district && name && showDistrictPreview(name)) {
+      SELECTED_DISTRICT = name;
+      SPIN = false;
+      flyToDistrict(name);
+      renderMapAny();
+      return;
+    }
     state.district = name || null;
     state.destination = null;
     /* render() jumps to the top of the page, which is right when you clicked a
@@ -1891,7 +2033,16 @@ h3.section-title, h3, .section-title {
       '<span>' + c.n_aspect_mentions.toLocaleString() + ' aspect mentions</span></div></div>' +
 
       '<div class="bento">' +
-      '<div class="notice bento-note"><strong>Roads and access is the country’s largest complaint category</strong> ' +
+      '<div class="panel bento-panel">' +
+        '<nav class="panel-tabs" role="tablist">' +
+          '<button role="tab" data-page="finding" aria-selected="true">Finding</button>' +
+          '<button role="tab" data-page="aspects" aria-selected="false">Aspects</button>' +
+          '<button role="tab" data-page="districts" aria-selected="false">Districts</button>' +
+        '</nav>' +
+        '<div class="panel-pages">' +
+        '<section class="panel-page is-active" data-page="finding">' +
+        '<div class="notice">' +
+        '<strong>Roads and access is the country’s largest complaint category</strong> ' +
       'by volume, and safety carries the highest complaint rate of any aspect. Scenery is included as a ' +
       'positive control — its low complaint rate confirms the classifier is not simply labelling everything negative. ' +
       '<em>Safety ranking first rests on one hand-written rule. Switch off the safety recall rule and the ' +
@@ -1899,22 +2050,39 @@ h3.section-title, h3, .section-title {
       'rules and it falls to 44.1%. Their impact is measured (reports/rule_ablation.json); their accuracy is ' +
       'not, because that needs a human-labelled sample the project does not yet have.</em></div>' +
 
+      '</div></section>' +
+
+      '<section class="panel-page" data-page="aspects">' +
+      aspectBlock(TREE.aspects, true) + '<div id="quote-panel" class="quote-panel"></div>' +
+      '</section>' +
+
+      '<section class="panel-page" data-page="districts">' +
+      '<ol class="district-list">' +
+      districts.map(function (d, i) {
+        var n = TREE.districts[d];
+        var top = n.top_complaint ? (n.aspects[n.top_complaint] || {}).label : "—";
+        var rate = n.top_complaint ? (n.aspects[n.top_complaint] || {}).complaint_rate : null;
+        var pct = rate === null || rate === undefined ? "" : Math.round(rate * 100) + "%";
+        var w = rate ? Math.max(3, Math.round(rate * 100)) : 0;
+        return '<li class="district-row" style="--i:' + i + '">' +
+          '<button data-district="' + esc(d) + '">' +
+            '<span class="dr-name">' + esc(d) + '</span>' +
+            '<span class="dr-meta">' + n.n_destinations + ' destinations &middot; ' +
+              n.n_reviews.toLocaleString() + ' reviews</span>' +
+            '<span class="dr-bar"><i style="width:' + w + '%"></i></span>' +
+            '<span class="dr-top">' + esc(top || "—") + '</span>' +
+            '<span class="dr-pct">' + pct + '</span>' +
+          '</button></li>';
+      }).join("") +
+      '</ol></section>' +
+
+      '<section class="panel-page" data-page="detail" id="panel-detail"></section>' +
+      '</div></div>' +
+
       '<div class="section bento-hero"><h3 class="section-title">Where complaints concentrate</h3>' +
       mapBlock() + '</div>' +
 
-      '<div class="section bento-side"><h3 class="section-title">National picture &mdash; select an aspect to see which districts drive it</h3>' +
-      aspectBlock(TREE.aspects, true) + '<div id="quote-panel" class="quote-panel"></div></div>' +
-
-      '<div class="section bento-wide"><h3 class="section-title">Districts</h3><div class="table-scroll"><table class="dest-table">' +
-      '<thead><tr><th>District</th><th class="num">Destinations</th><th class="num">Reviews</th><th>Top complaint</th></tr></thead><tbody>' +
-      districts.map(function (d) {
-        var n = TREE.districts[d];
-        var top = n.top_complaint ? (n.aspects[n.top_complaint] || {}).label : "—";
-        return '<tr><td><button data-district="' + esc(d) + '">' + esc(d) + '</button></td>' +
-          '<td class="num">' + n.n_destinations + '</td>' +
-          '<td class="num">' + n.n_reviews.toLocaleString() + '</td>' +
-          '<td>' + esc(top || "—") + '</td></tr>';
-      }).join("") + '</tbody></table></div></div>' + '</div>';
+      '</div>';
     view.innerHTML = html;
   }
 
@@ -2103,6 +2271,122 @@ h3.section-title, h3, .section-title {
     }
     crumbs.innerHTML = parts.join(" ");
   }
+
+
+  /* ═══════════════════════════════════════════════════════════════════
+     PANEL: pages instead of scroll, and motion that carries meaning
+     ═══════════════════════════════════════════════════════════════════ */
+
+  /* Every animation here is gated. A reader who has asked their system for
+     less motion gets the same information with none of the movement -- the
+     end state is identical, only the transition is skipped. */
+  function motionOK() {
+    return !(window.matchMedia &&
+             window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+  }
+
+  function showPage(name) {
+    var pages = document.querySelectorAll(".panel-page");
+    var tabs = document.querySelectorAll(".panel-tabs [data-page]");
+    var found = false;
+    pages.forEach(function (p) {
+      var on = p.dataset.page === name;
+      if (on) found = true;
+      p.classList.toggle("is-active", on);
+      if (on && motionOK()) {
+        /* Re-trigger the entrance: remove, force reflow, re-add. Without the
+           reflow the browser coalesces both class changes and nothing moves. */
+        p.classList.remove("enter");
+        void p.offsetWidth;
+        p.classList.add("enter");
+        stagger(p);
+        countUp(p);
+      }
+    });
+    tabs.forEach(function (t) {
+      t.setAttribute("aria-selected", t.dataset.page === name ? "true" : "false");
+    });
+    return found;
+  }
+
+  /* Rows arrive in sequence rather than all at once. The delay is capped:
+     past ~400ms a stagger stops reading as choreography and starts reading
+     as the page being slow. */
+  function stagger(scope) {
+    var rows = scope.querySelectorAll(".aspect-row, .district-row, .stat-tile");
+    for (var i = 0; i < rows.length; i++) {
+      rows[i].style.setProperty("--i", Math.min(i, 14));
+    }
+  }
+
+  /* Figures count up to their value. Only for the big headline numbers --
+     doing it to every number on the page would be noise, and a percentage
+     you cannot read while it moves is worse than one that simply appears. */
+  function countUp(scope) {
+    scope.querySelectorAll("[data-count]").forEach(function (el) {
+      var target = parseFloat(el.dataset.count);
+      if (isNaN(target)) return;
+      var dec = (el.dataset.countDec | 0);
+      var suffix = el.dataset.countSuffix || "";
+      var t0 = performance.now(), dur = 520;
+      function frame(now) {
+        var k = Math.min(1, (now - t0) / dur);
+        var eased = 1 - Math.pow(1 - k, 3);
+        el.textContent = (target * eased).toFixed(dec) + suffix;
+        if (k < 1) requestAnimationFrame(frame);
+      }
+      requestAnimationFrame(frame);
+    });
+  }
+
+  /* Selecting on the map fills a preview page rather than navigating away.
+     Losing the map you just clicked -- and the mental place you were in --
+     is the thing that made the old behaviour feel abrupt. The full district
+     view is still one click further, for when the reader actually wants it. */
+  function showDistrictPreview(name) {
+    var host = document.getElementById("panel-detail");
+    if (!host) return false;
+    var d = TREE.districts[name];
+    if (!d) return false;
+    var aspects = Object.keys(d.aspects || {}).map(function (k) {
+      return { key: k, label: (d.aspects[k] || {}).label || k,
+               rate: (d.aspects[k] || {}).complaint_rate,
+               n: (d.aspects[k] || {}).n_negative };
+    }).filter(function (a) { return a.rate !== null && a.rate !== undefined; })
+      .sort(function (a, b) { return b.rate - a.rate; });
+
+    var top = aspects[0];
+    host.innerHTML =
+      '<div class="detail-head">' +
+        '<span class="detail-eyebrow">District</span>' +
+        '<h3 class="detail-name">' + esc(name) + '</h3>' +
+        '<p class="detail-sub">' + d.n_destinations + ' destinations &middot; ' +
+          d.n_reviews.toLocaleString() + ' reviews</p>' +
+      '</div>' +
+      (top ? '<div class="detail-figure">' +
+        '<span class="detail-big" data-count="' + (top.rate * 100).toFixed(1) +
+          '" data-count-dec="1" data-count-suffix="%">0.0%</span>' +
+        '<span class="detail-figure-label">' + esc(top.label) +
+          ' &mdash; highest complaint rate here</span></div>' : "") +
+      '<ul class="detail-aspects">' +
+        aspects.slice(0, 7).map(function (a, i) {
+          return '<li class="aspect-row" style="--i:' + i + '">' +
+            '<span class="ar-label">' + esc(a.label) + '</span>' +
+            '<span class="ar-bar"><i style="width:' +
+              Math.max(2, Math.round(a.rate * 100)) + '%"></i></span>' +
+            '<span class="ar-pct">' + Math.round(a.rate * 100) + '%</span></li>';
+        }).join("") +
+      '</ul>' +
+      '<button class="detail-open" data-district="' + esc(name) + '">' +
+        'Open ' + esc(name) + ' in full &rarr;</button>';
+    showPage("detail");
+    return true;
+  }
+
+  document.addEventListener("click", function (ev) {
+    var tab = ev.target.closest(".panel-tabs [data-page]");
+    if (tab) { showPage(tab.dataset.page); }
+  });
 
   function render() {
     renderCrumbs();
