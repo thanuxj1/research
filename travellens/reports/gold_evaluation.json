@@ -1,0 +1,144 @@
+{
+ "what_this_is": "The first accuracy measured against labels the pipeline had no hand in. Headline is Part A only, per the sampling rule; Part B oversamples contested rows and is reported apart.",
+ "caveat": "One annotator, two rows adjudicated by a second reader who saw the first annotator's answers. No inter-annotator agreement exists yet, so this is 'measured against one careful human', not ground truth.",
+ "results": {
+  "part_a_headline": {
+   "n_rows": 120,
+   "macro_f1": 0.712,
+   "per_aspect": {
+    "roads_access": {
+     "tp": 20,
+     "fp": 20,
+     "fn": 3,
+     "tn": 77,
+     "precision": 0.5,
+     "recall": 0.87,
+     "f1": 0.635,
+     "human_positives": 23
+    },
+    "cleanliness": {
+     "tp": 27,
+     "fp": 6,
+     "fn": 1,
+     "tn": 86,
+     "precision": 0.818,
+     "recall": 0.964,
+     "f1": 0.885,
+     "human_positives": 28
+    },
+    "facilities": {
+     "tp": 33,
+     "fp": 12,
+     "fn": 6,
+     "tn": 69,
+     "precision": 0.733,
+     "recall": 0.846,
+     "f1": 0.786,
+     "human_positives": 39
+    },
+    "safety": {
+     "tp": 13,
+     "fp": 20,
+     "fn": 2,
+     "tn": 85,
+     "precision": 0.394,
+     "recall": 0.867,
+     "f1": 0.542,
+     "human_positives": 15
+    }
+   }
+  },
+  "part_b_contested": {
+   "n_rows": 80,
+   "macro_f1": 0.808,
+   "per_aspect": {
+    "roads_access": {
+     "tp": 24,
+     "fp": 9,
+     "fn": 0,
+     "tn": 47,
+     "precision": 0.727,
+     "recall": 1.0,
+     "f1": 0.842,
+     "human_positives": 24
+    },
+    "cleanliness": {
+     "tp": 17,
+     "fp": 4,
+     "fn": 0,
+     "tn": 59,
+     "precision": 0.81,
+     "recall": 1.0,
+     "f1": 0.895,
+     "human_positives": 17
+    },
+    "facilities": {
+     "tp": 13,
+     "fp": 10,
+     "fn": 2,
+     "tn": 55,
+     "precision": 0.565,
+     "recall": 0.867,
+     "f1": 0.684,
+     "human_positives": 15
+    },
+    "safety": {
+     "tp": 17,
+     "fp": 5,
+     "fn": 3,
+     "tn": 55,
+     "precision": 0.773,
+     "recall": 0.85,
+     "f1": 0.81,
+     "human_positives": 20
+    }
+   }
+  },
+  "all_rows": {
+   "n_rows": 200,
+   "macro_f1": 0.761,
+   "per_aspect": {
+    "roads_access": {
+     "tp": 44,
+     "fp": 29,
+     "fn": 3,
+     "tn": 124,
+     "precision": 0.603,
+     "recall": 0.936,
+     "f1": 0.733,
+     "human_positives": 47
+    },
+    "cleanliness": {
+     "tp": 44,
+     "fp": 10,
+     "fn": 1,
+     "tn": 145,
+     "precision": 0.815,
+     "recall": 0.978,
+     "f1": 0.889,
+     "human_positives": 45
+    },
+    "facilities": {
+     "tp": 46,
+     "fp": 22,
+     "fn": 8,
+     "tn": 124,
+     "precision": 0.676,
+     "recall": 0.852,
+     "f1": 0.754,
+     "human_positives": 54
+    },
+    "safety": {
+     "tp": 30,
+     "fp": 25,
+     "fn": 5,
+     "tn": 140,
+     "precision": 0.545,
+     "recall": 0.857,
+     "f1": 0.667,
+     "human_positives": 35
+    }
+   }
+  }
+ }
+}

@@ -74,6 +74,44 @@ on a purpose-built test set measuring precision *and* recall:
 | Facilities | trained classifier | 0.773 | 21 |
 | Safety | dedicated classifier | 0.755 | 22 |
 
+### Measured against human labels
+
+The table above was scored on evaluation sets the assistant labelled itself.
+A person outside the pipeline has now labelled 200 rows
+(`scripts/38_evaluate_against_gold.py`, Part A only, n=120):
+
+| Aspect | precision | recall | **F1 (human)** | F1 (self-labelled) | change |
+|---|---|---|---|---|---|
+| Cleanliness | 0.818 | 0.964 | **0.885** | 0.901 | −0.016 |
+| Facilities | 0.733 | 0.846 | **0.786** | 0.773 | +0.013 |
+| Roads & Access | 0.500 | 0.870 | **0.635** | 0.914 | **−0.279** |
+| Safety | 0.394 | 0.867 | **0.542** | 0.755 | **−0.213** |
+| | | | **0.712 macro** | | |
+
+**Cleanliness and facilities held. Roads and safety did not** — and those are
+the two aspects the trained classifiers were introduced for, so the
+self-labelled evaluation was flattering precisely the components it existed to
+justify.
+
+The failure is **precision, not recall**. Recall is 0.85–0.96: the pipeline
+finds what is there. Safety precision is 0.394, so three in five safety tags
+are wrong; roads is 0.500. It over-tags. The annotator hit this by hand within
+four rows — "We saw a few monkeys, a deer and a few birds" tagged safety,
+"the tuk tuk drivers try to get a commission" tagged roads_access — before any
+number said so.
+
+Part B (contested cases, n=80) scores *higher* at 0.808 macro. That is a
+sampling artefact: it oversamples rows where the methods disagreed, which are
+rows where something fired confidently, so it is denser in true positives.
+Headline accuracy is Part A only, per `goldset_focused_sampling.json`.
+
+**The caveat that travels with these numbers:** one annotator, with two rows
+adjudicated by a second reader who had seen the first annotator's answers.
+There is no inter-annotator agreement yet, so this is *measured against one
+careful human*, not ground truth. See open problem #1.
+
+---
+
 The headline finding: **for four of seven aspects the lexicon wins outright**,
 once its vocabulary gaps are fixed. Those gaps — not the method — were the real
 problem. The safety lexicon had no entry for `safe`, so every warning phrased

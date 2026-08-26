@@ -172,6 +172,23 @@ def main(argv=None):
         print("  {:<16} {:>4} {:>4} {:>4}".format(
             col, counts.get("N", 0), counts.get("P", 0), counts.get("X", 0)))
 
+    # A second reader who was SHOWN the first annotator's labels agrees with
+    # them by construction. Reporting kappa from that would overstate the
+    # reliability of the task, which is the one thing kappa exists to measure.
+    adj = C.REPORTS / "goldset_adjudication.json"
+    if adj.exists():
+        import json
+        with open(str(adj), encoding="utf-8") as fh:
+            rec = json.load(fh)
+        if rec.get("second_reader_saw_annotator_1_labels"):
+            print("\n  NOTE: a second reader reviewed annotator 1's labels and")
+            print("  changed {} row(s) -- see goldset_adjudication.json.".format(
+                rec.get("rows_changed", 0)))
+            print("  That is ADJUDICATION, not agreement. No kappa is computed")
+            print("  from it: a reviewer starting from someone else's answers")
+            print("  agrees with them by construction. An independent blind")
+            print("  pass over the same 200 rows is still outstanding.")
+
     v2 = validate(p2)
     if v2["rows_checked"] > 0 and v["rows_checked"] > 0:
         print("\n  inter-annotator agreement")

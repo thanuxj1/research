@@ -1,0 +1,27 @@
+{
+ "what_this_is": "ADJUDICATION, not inter-annotator agreement. A second reader was shown annotator 1's completed labels and asked to review them, rather than labelling the 200 rows independently. That produces a better gold set and CANNOT produce Cohen's kappa: a reviewer who starts from another person's answers agrees with them by construction. No agreement statistic may be computed from this.",
+ "second_reader_saw_annotator_1_labels": true,
+ "rows_reviewed": 200,
+ "rows_changed": 2,
+ "changes": [
+  {
+   "row": 135,
+   "aspect": "cleanliness",
+   "from": "N",
+   "to": "",
+   "piece": "Too much noise pollution from road and bars ...",
+   "reason": "Cleanliness is defined as litter, plastic, rubbish, smells and upkeep. Noise is listed under crowd -- 'busy, queues, noise'. The guidelines put this in a different aspect.",
+   "was": "N"
+  },
+  {
+   "row": 194,
+   "aspect": "safety",
+   "from": "N",
+   "to": "",
+   "piece": "A real danger to all forms of marine life.",
+   "reason": "Safety is defined as risk TO A VISITOR -- slippery ground, deep water, warnings to other visitors. Danger to marine life is environmental, not visitor safety. The pipeline made the same mistake and annotator 1 agreed with it.",
+   "was": "N"
+  }
+ ],
+ "still_outstanding": "An independent second pass over the same 200 rows, labelled blind, is the only thing that yields a reliability figure. reports/LABEL_THESE_annotator2.xlsx is empty and ready."
+}
