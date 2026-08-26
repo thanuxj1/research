@@ -36,10 +36,31 @@ from openpyxl.worksheet.datavalidation import DataValidation  # noqa: E402
 
 from travellens import config as C  # noqa: E402
 
+# The four the focused set was sampled to measure.
 ASPECTS = ["roads_access", "cleanliness", "facilities", "safety"]
+# The other three. Not part of the sampling design -- price, crowding and
+# scenery already score 0.98, 0.90 and 0.91 with the plain word list, so there
+# was little to check. But a piece like "there were no much crowd when we
+# reach there" is plainly ABOUT crowding, and having nowhere to say so makes
+# the task feel wrong even when a blank is the correct answer. --all-aspects
+# adds them, and anything recorded in them is a bonus rather than part of the
+# headline measurement.
+EXTRA = ["price_value", "crowd", "scenery"]
 NICE = {"roads_access": "Roads & access", "cleanliness": "Cleanliness",
-        "facilities": "Facilities", "safety": "Safety"}
+        "facilities": "Facilities", "safety": "Safety",
+        "price_value": "Price & value", "crowd": "Crowding & noise",
+        "scenery": "Scenery"}
 VALID = {"N", "P", "X"}
+
+COVERS = {
+    "roads_access": "roads, parking, buses, the walk, signage, finding it",
+    "cleanliness": "litter, plastic, smells, upkeep",
+    "facilities": "toilets, food, seating, shelter, bins, guides",
+    "safety": "slippery ground, deep water, wildlife, warnings",
+    "price_value": "entrance fees, parking charges, value for money",
+    "crowd": "busy, queues, noise -- and also peaceful or quiet",
+    "scenery": "the view, the landscape, how beautiful it is",
+}
 
 FONT = "Arial"
 HEAD_FILL = PatternFill("solid", fgColor="1F3B36")
@@ -53,20 +74,20 @@ def goldset_path(annotator, full=False):
     return C.REPORTS / "{}{}.csv".format(stem, annotator)
 
 
-def _instructions(ws, examples):
+def _instructions(ws, examples, aspects):
     ws.column_dimensions["A"].width = 4
     ws.column_dimensions["B"].width = 104
     rows = [
         ("h1", "How to label these 200 rows"),
         ("p", ""),
         ("p", "You are reading one PIECE of a review and saying whether the "
-              "visitor is complaining about any of four things."),
+              "visitor is complaining about any of {} things.".format(
+                  len(aspects))),
         ("p", ""),
-        ("h2", "The four columns"),
-        ("p", "Roads & access   roads, parking, buses, the walk, signage, finding it"),
-        ("p", "Cleanliness      litter, plastic, smells, upkeep"),
-        ("p", "Facilities       toilets, food, seating, shelter, bins, guides"),
-        ("p", "Safety           slippery ground, deep water, wildlife, warnings"),
+        ("h2", "The {} columns".format(len(aspects))),
+    ] + [
+        ("p", "{:<18} {}".format(NICE[a], COVERS[a])) for a in aspects
+    ] + [
         ("p", ""),
         ("h2", "What to put in a cell"),
         ("p", "N   the visitor is COMPLAINING about it"),
@@ -110,10 +131,12 @@ def _instructions(ws, examples):
     ws.sheet_view.showGridLines = False
 
 
-def export(annotator=1, full=False):
+def export(annotator=1, full=False, all_aspects=False):
     src = goldset_path(annotator, full)
     df = pd.read_csv(src)
-    aspects = [a for a in ASPECTS if a in df.columns] or ASPECTS
+    aspects = [a for a in ASPECTS if a in df.columns] or list(ASPECTS)
+    if all_aspects:
+        aspects = aspects + [a for a in EXTRA if a not in aspects]
 
     wb = Workbook()
     _instructions(wb.active, [
@@ -133,7 +156,7 @@ def export(annotator=1, full=False):
          "The visitor is asking others to behave, not reporting that the "
          "place is dirty. Judgement calls like this are why a person does "
          "this and not a program."),
-    ])
+    ], aspects)
     wb.active.title = "Read me first"
 
     ws = wb.create_sheet("Label these")
@@ -193,7 +216,8 @@ def export(annotator=1, full=False):
     ws.freeze_panes = "F2"
     ws.sheet_view.showGridLines = False
 
-    dest = C.REPORTS / "LABEL_THESE_annotator{}.xlsx".format(annotator)
+    dest = C.REPORTS / "LABEL_THESE_annotator{}{}.xlsx".format(
+        annotator, "_all7" if all_aspects else "")
     wb.save(dest)
     return dest, len(df)
 
@@ -211,7 +235,7 @@ def read_back(filled, annotator=1, full=False):
     except ValueError:
         sys.exit("that workbook has no segment_id column -- is it the right file?")
     label_cols = {}
-    for a in ASPECTS:
+    for a in ASPECTS + EXTRA:
         if NICE[a] in header:
             label_cols[a] = header.index(NICE[a]) + 1
     if not label_cols:
@@ -248,6 +272,9 @@ def read_back(filled, annotator=1, full=False):
         return None
 
     gold = pd.read_csv(goldset_path(annotator, full))
+    # A column the sheet carries but the gold set does not is added rather
+    # than dropped: a verdict somebody actually made must not be thrown away
+    # because the original sampling did not ask for it.
     for a in list(label_cols) + ["checked", "notes"]:
         if a not in gold.columns:
             gold[a] = ""
@@ -285,13 +312,15 @@ def main():
     ap.add_argument("--annotator", type=int, default=1, choices=(1, 2))
     ap.add_argument("--import-from", dest="import_from")
     ap.add_argument("--full", action="store_true")
+    ap.add_argument("--all-aspects", dest="all_aspects", action="store_true",
+                    help="add price, crowding and scenery columns")
     args = ap.parse_args()
 
     print("\nLostinSriLanka -- annotation workbook\n" + "=" * 60)
     if args.import_from:
         read_back(args.import_from, args.annotator, args.full)
         return
-    dest, n = export(args.annotator, args.full)
+    dest, n = export(args.annotator, args.full, args.all_aspects)
     print("\n  wrote {}".format(dest))
     print("  {} rows, dropdowns on every answer cell".format(n))
     print("\n  Open it, read the first tab, fill in the second.")
