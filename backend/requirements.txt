@@ -1,10 +1,37 @@
+# Version pins are carried over from the original requirements file, which is a
+# known-consistent set. See README for the note on why these could not be
+# installed or verified in the authoring environment.
+
+# --- API ---
 fastapi==0.111.0
 uvicorn[standard]==0.29.0
-pandas==2.2.2
+pydantic==2.7.1
+
+# --- numerics ---
 numpy==1.26.4
+
+# --- retrieval ---
+# Bi-encoder (BAAI/bge-small-en-v1.5) and cross-encoder (BAAI/bge-reranker-base).
+# Both model weights download on first run and are cached by huggingface_hub.
+sentence-transformers==3.0.1
+
+# --- recommender ---
+# Required to unpickle sri_lankan_food_model.pkl.
 scikit-learn==1.4.2
 xgboost==2.0.3
-sentence-transformers==3.0.1
-faiss-cpu==1.8.0
-rank-bm25==0.2.2
-pydantic==2.7.1
+# Only needed so the pickled model unpickles cleanly; no application code
+# imports pandas any more.
+pandas==2.2.2
+
+# --- removed ---
+# rank-bm25:  BM25 is now implemented in app/lexical.py against an inverted
+#             index. At 155 documents the dependency bought nothing, and
+#             rank_bm25 scores the entire corpus on every query.
+#
+# --- optional ---
+# faiss-cpu:  the dense index uses exact NumPy search below
+#             app/dense.py:FAISS_MIN_CORPUS (5,000 docs), where it is faster than
+#             FAISS once index build and call overhead are counted. Install
+#             faiss-cpu==1.8.0 if the corpus grows past that; app/dense.py picks
+#             it up automatically. Both paths are exact and return identical
+#             results.
