@@ -75,24 +75,51 @@ def default_file(annotator: int, focused: bool) -> Path:
 
 
 def parse(entry: str, aspects):
-    """'r=N c=P' -> {'roads_access': 'N', 'cleanliness': 'P'}. None if invalid."""
-    out = {}
-    for token in entry.replace(",", " ").split():
-        if "=" not in token:
+    """Read whatever the annotator typed.
+
+    Accepts, all meaning the same thing:
+        r=N     rN     r n     R=n
+    and a bare aspect letter with no verdict:
+        r       -> ("roads_access", None), so the caller can ask which verdict
+
+    The first version demanded 'r=N' exactly. Somebody labelling 200 rows
+    types the shortest thing that could work, and being told "did not
+    understand" for pressing 'r' is how a twenty-minute job turns into an
+    abandoned one.
+
+    Returns (mapping, pending) where pending lists aspects named without a
+    verdict. None means the entry made no sense at all.
+    """
+    out, pending = {}, []
+    tokens = entry.replace(",", " ").replace("=", " ").split()
+    i = 0
+    while i < len(tokens):
+        tok = tokens[i].strip().lower()
+        i += 1
+        # "rn" -- letter and verdict stuck together
+        if len(tok) == 2 and tok[0] in KEYS and tok[1].upper() in LABELS:
+            key, verdict = tok[0], tok[1].upper()
+        elif tok in KEYS:
+            key = tok
+            verdict = None
+            if i < len(tokens) and tokens[i].strip().upper() in LABELS:
+                verdict = tokens[i].strip().upper()
+                i += 1
+        else:
             return None
-        k, _, v = token.partition("=")
-        k, v = k.strip().lower(), v.strip().upper()
-        if k not in KEYS or KEYS[k] not in aspects or v not in LABELS:
+        if KEYS[key] not in aspects:
             return None
-        out[KEYS[k]] = v
-    return out
+        if verdict:
+            out[KEYS[key]] = verdict
+        else:
+            pending.append(KEYS[key])
+    return out, pending
 
 
 def show(row, aspects, i, total, done):
     say("\n" + "=" * 70)
     say("  [{}/{}]  {} done   {}".format(
         i + 1, total, done, str(row.get("destination", ""))[:40]))
-    say("  sampled as: {}".format(row.get("sample_reason", "")))
     say("-" * 70)
     say("  PIECE:  {}".format(str(row.get("segment", "")).strip()))
     full = str(row.get("full_review", "") or "").strip()
@@ -128,7 +155,11 @@ def main():
         df["checked"] = ""
     if "notes" not in df.columns:
         df["notes"] = ""
-    for a in aspects:
+    # Every column we write to must be object dtype up front. pandas reads an
+    # all-empty column as float64 and then warns, mid-session, that writing a
+    # string into it is deprecated -- which looks like an error to somebody
+    # halfway through labelling.
+    for a in aspects + ["checked", "notes"]:
         df[a] = df[a].astype("object")
 
     checked = df["checked"].astype(str).str.strip().str.lower() == "x"
@@ -176,12 +207,32 @@ def main():
 
         parsed = parse(entry, aspects)
         if parsed is None:
-            print("  did not understand that. Use 's=N' or 'r=N c=P', or"
-                  " enter for none.")
+            say("  Not a known aspect. Use the letters shown above"
+                " (or just press enter if none apply).")
             continue
+        picked, pending = parsed
+
+        # A bare letter means "this aspect, but I have not said how yet".
+        aborted = False
+        for aspect in pending:
+            say("    {} -- is the visitor (N)egative, (P)ositive, or is it"
+                " (X) just mentioned?".format(aspect))
+            try:
+                v = input("    N/P/X > ").strip().upper()
+            except (EOFError, KeyboardInterrupt):
+                aborted = True
+                break
+            if v in LABELS:
+                picked[aspect] = v
+            else:
+                say("    skipped {} -- press enter at the main prompt to"
+                    " leave a row blank".format(aspect))
+        if aborted:
+            print("\n  stopping -- everything answered so far is saved.")
+            break
 
         for a in aspects:
-            df.at[idx, a] = parsed.get(a, "")
+            df.at[idx, a] = picked.get(a, "")
         df.at[idx, "checked"] = "x"
         # Written every row: a crash or a closed terminal must never cost
         # somebody the labels they already made.
