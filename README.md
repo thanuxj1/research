@@ -32,9 +32,24 @@ uvicorn main:app --reload
 # 2 — client  (http://localhost:5173)
 cd frontend
 npm install
-cp .env.example .env      # optional; defaults to http://localhost:8000
 npm run dev
 ```
+
+## How to run backend
+```bash
+# 1 — API  (http://localhost:8000, docs at /docs)
+cd backend
+.venv\Scripts\activate
+uvicorn main:app --reload
+```
+
+## How to run frontend
+```bash
+# 2 — client  (http://localhost:5173)
+cd frontend
+npm run dev
+```
+
 
 The bi-encoder (`BAAI/bge-small-en-v1.5`, ~130 MB) and cross-encoder
 (`BAAI/bge-reranker-base`, ~1.1 GB) download from Hugging Face on first run and
