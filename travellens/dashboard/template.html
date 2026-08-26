@@ -44,37 +44,12 @@
   --f-body:    "Inter", system-ui, sans-serif;
   --f-mono:    "IBM Plex Mono", ui-monospace, monospace;
 }
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    /* The theme's own values. It is a dark-first system. */
-    --ground:      #0F172A;
-    --surface:     #1E293B;
-    --surface-2:   #334155;
-    --line:        rgba(255,255,255,.10);
-    --line-soft:   rgba(255,255,255,.06);
-    --ink:         #F8FAFC;
-    --ink-muted:   #94A3B8;
-    --ink-faint:   #8493A8;
-    --accent:      #8B5CF6;
-    --accent-soft: rgba(139,92,246,.18);
-  --accent-text: #A78BFA;
-    /* Accent used as TEXT. #8B5CF6 is 4.22:1 -- under AA. This is
-       the same hue lifted until it is legible on the ground. */
-    --accent-text: #A78BFA;
-    /* Filled controls only. #8B5CF6 sits mid-luminance, so it reaches
-       just 4.2:1 against either black or white text -- under AA. This
-       deeper violet gives 6.6:1 with --ink on top, same hue. */
-    --accent-fill: #6D28D9;
-    --critical:    #EF4444;
-    --critical-soft:rgba(239,68,68,.16);
-    --good:        #10B981;
-    --good-soft:   rgba(16,185,129,.16);
-    --warn:        #F59E0B;
-    --warn-soft:   rgba(245,158,11,.16);
-    --shadow:      0 1px 2px rgba(0,0,0,.4), 0 12px 32px rgba(0,0,0,.35),
-                   0 0 0 1px rgba(255,255,255,.04);
-  }
-}
+/* The OS dark preference no longer flips this page. The dashboard is a light
+   document: a whitish ground is what the reader asked for, and it is also the
+   better default for a paper-bound thesis, where every figure will be printed
+   on white anyway. The dark palette is kept and still applies to
+   :root[data-theme="dark"], so nothing was thrown away -- it simply is not
+   chosen automatically by whatever the machine happens to be set to. */
 :root[data-theme="dark"] {
   /* The theme's own values. It is a dark-first system. */
   --ground:      #0F172A;
@@ -491,10 +466,7 @@ button, .crumb, .view-switch button, .aspect-picker button,
 @supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
   :root[data-theme="dark"] .section,
   :root[data-theme="dark"] .notice,
-  :root[data-theme="dark"] .story-card,
-  :root:not([data-theme="light"]) .section,
-  :root:not([data-theme="light"]) .notice,
-  :root:not([data-theme="light"]) .story-card {
+  :root[data-theme="dark"] .story-card {
     background: rgba(30, 41, 59, .75);
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
@@ -614,14 +586,15 @@ body { font-size: var(--t-body); line-height: 1.6; }
    near-white needs one hairline -- so light keeps the border and drops the
    shadow instead.                                                         */
 :root[data-theme="dark"] .section,
-:root[data-theme="dark"] .story-card,
-:root:not([data-theme="light"]) .section,
-:root:not([data-theme="light"]) .story-card {
+:root[data-theme="dark"] .story-card {
+  /* Dark can carry a group on surface lift alone. */
   border-color: transparent;
   box-shadow: none;
 }
-:root[data-theme="light"] .section,
-:root[data-theme="light"] .story-card {
+.section, .story-card {
+  /* Light is the default: white on near-white needs one hairline, and the
+     shadow is the separator that gets dropped instead. */
+  border: 1px solid var(--line-soft);
   box-shadow: none;
 }
 
