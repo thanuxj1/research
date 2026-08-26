@@ -668,6 +668,60 @@ a, .linkish, button:not([aria-pressed="true"]),
 }
 button:not([aria-pressed="true"]) { color: var(--ink); }
 a, .linkish, .chip-ctrl { color: var(--accent-text); }
+
+/* ── 8. Bento grid ──────────────────────────────────────────────────────
+   The country view was a single column: map, then aspects, then districts,
+   each the full width and each demanding a scroll before the next began.
+   Nothing was ever visible beside anything else.
+
+   The three blocks happen to balance: the map runs ~1700px tall, and the
+   aspect list plus the district table together run ~1740px. So the map
+   becomes a full-height hero on the left and the other two stack beside it,
+   both columns ending together. That is the whole trick -- a bento only
+   looks composed when the tiles actually resolve into a rectangle.
+
+   Below 1080px it returns to one column. A choropleth squeezed into half of
+   a narrow viewport is worse than a stacked one, and the map is the reason
+   the page exists.                                                        */
+.bento { display: block; }
+
+@media (min-width: 1080px) {
+  .bento {
+    display: grid;
+    /* minmax(0, …) matters: without it a grid column refuses to go below its
+       content's min-content width, and the district table -- four columns of
+       place names -- was dragging the SIDE column wider than the hero. The
+       ratio was being quietly overruled by a table. */
+    grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+    gap: 24px;
+    align-items: start;
+  }
+  /* The key-finding callout moves into the grid rather than sitting above it
+     as full-width prose. Two reasons: a bento with a paragraph bolted on top
+     is not a bento, and the hero runs 1246px against a 657px aspect tile --
+     a 589px hole in the right column. The callout fills it and reads better
+     beside the map it describes than stacked above it. */
+  .bento-note { grid-column: 2; grid-row: 1; margin-bottom: 0; align-self: start; }
+  .bento-hero { grid-column: 1; grid-row: 1 / span 2; margin-bottom: 0; }
+  /* .map-shell is itself a two-column grid: a fixed 300px control rail plus
+     the map. That works at full page width and collapses badly inside the
+     hero -- 300px of controls left the map 194px in a 614px column. Inside
+     the bento the rail stacks above instead, so the map gets the whole
+     column. The map is the reason this page exists; it does not lose a
+     width negotiation to a legend. */
+  .bento-hero .map-shell { grid-template-columns: minmax(0, 1fr); }
+  .bento-side { grid-column: 2; grid-row: 2; margin-bottom: 0; }
+  /* The table spans the full width underneath. A first attempt stacked it in
+     the side column so both columns would end together, and it measured
+     beautifully on paper -- but the map shrinks when its column narrows, so
+     the hero came out 810px against a 1472px stack. Data decided the layout,
+     not the sketch. Full width also gives the table the room it wants. */
+  .bento-wide { grid-column: 1 / -1; grid-row: 3; margin-bottom: 0; }
+}
+
+@media (min-width: 1500px) {
+  .bento { grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); gap: 28px; }
+}
 </style>
 
 <header class="masthead">
@@ -1851,7 +1905,8 @@ a, .linkish, .chip-ctrl { color: var(--accent-text); }
       '<span>' + c.n_reviews.toLocaleString() + ' reviews</span>' +
       '<span>' + c.n_aspect_mentions.toLocaleString() + ' aspect mentions</span></div></div>' +
 
-      '<div class="notice"><strong>Roads and access is the country’s largest complaint category</strong> ' +
+      '<div class="bento">' +
+      '<div class="notice bento-note"><strong>Roads and access is the country’s largest complaint category</strong> ' +
       'by volume, and safety carries the highest complaint rate of any aspect. Scenery is included as a ' +
       'positive control — its low complaint rate confirms the classifier is not simply labelling everything negative. ' +
       '<em>Safety ranking first rests on one hand-written rule. Switch off the safety recall rule and the ' +
@@ -1859,13 +1914,13 @@ a, .linkish, .chip-ctrl { color: var(--accent-text); }
       'rules and it falls to 44.1%. Their impact is measured (reports/rule_ablation.json); their accuracy is ' +
       'not, because that needs a human-labelled sample the project does not yet have.</em></div>' +
 
-      '<div class="section"><h3 class="section-title">Where complaints concentrate</h3>' +
+      '<div class="section bento-hero"><h3 class="section-title">Where complaints concentrate</h3>' +
       mapBlock() + '</div>' +
 
-      '<div class="section"><h3 class="section-title">National picture &mdash; select an aspect to see which districts drive it</h3>' +
+      '<div class="section bento-side"><h3 class="section-title">National picture &mdash; select an aspect to see which districts drive it</h3>' +
       aspectBlock(TREE.aspects, true) + '<div id="quote-panel" class="quote-panel"></div></div>' +
 
-      '<div class="section"><h3 class="section-title">Districts</h3><div class="table-scroll"><table class="dest-table">' +
+      '<div class="section bento-wide"><h3 class="section-title">Districts</h3><div class="table-scroll"><table class="dest-table">' +
       '<thead><tr><th>District</th><th class="num">Destinations</th><th class="num">Reviews</th><th>Top complaint</th></tr></thead><tbody>' +
       districts.map(function (d) {
         var n = TREE.districts[d];
@@ -1874,7 +1929,7 @@ a, .linkish, .chip-ctrl { color: var(--accent-text); }
           '<td class="num">' + n.n_destinations + '</td>' +
           '<td class="num">' + n.n_reviews.toLocaleString() + '</td>' +
           '<td>' + esc(top || "—") + '</td></tr>';
-      }).join("") + '</tbody></table></div></div>';
+      }).join("") + '</tbody></table></div></div>' + '</div>';
     view.innerHTML = html;
   }
 
