@@ -19,9 +19,10 @@
   --line-soft:   #E2E8F0;
   --ink:         #0F172A;
   --ink-muted:   #475569;
-  --ink-faint:   #94A3B8;
+  --ink-faint:   #5B6879;
   --accent:      #7C3AED;
   --accent-soft: #EDE9FE;
+  --accent-text: #6D28D9;
   --accent-fill: #6D28D9;
   --critical:    #DC2626;
   --critical-soft:#FEE2E2;
@@ -53,9 +54,13 @@
     --line-soft:   rgba(255,255,255,.06);
     --ink:         #F8FAFC;
     --ink-muted:   #94A3B8;
-    --ink-faint:   #64748B;
+    --ink-faint:   #8493A8;
     --accent:      #8B5CF6;
     --accent-soft: rgba(139,92,246,.18);
+  --accent-text: #A78BFA;
+    /* Accent used as TEXT. #8B5CF6 is 4.22:1 -- under AA. This is
+       the same hue lifted until it is legible on the ground. */
+    --accent-text: #A78BFA;
     /* Filled controls only. #8B5CF6 sits mid-luminance, so it reaches
        just 4.2:1 against either black or white text -- under AA. This
        deeper violet gives 6.6:1 with --ink on top, same hue. */
@@ -79,9 +84,10 @@
   --line-soft:   rgba(255,255,255,.06);
   --ink:         #F8FAFC;
   --ink-muted:   #94A3B8;
-  --ink-faint:   #64748B;
+  --ink-faint:   #8493A8;
   --accent:      #8B5CF6;
   --accent-soft: rgba(139,92,246,.18);
+  --accent-text: #A78BFA;
   --accent-fill: #6D28D9;
   --critical:    #EF4444;
   --critical-soft:rgba(239,68,68,.16);
@@ -100,7 +106,7 @@ body {
   background: var(--ground);
   color: var(--ink);
   font-family: var(--f-body);
-  font-size: 15px;
+  font-size: 14.5px;
   line-height: 1.55;
   -webkit-font-smoothing: antialiased;
 }
@@ -118,17 +124,17 @@ body {
   display: flex; align-items: baseline; gap: 16px; flex-wrap: wrap;
 }
 .brand {
-  font-family: var(--f-display); font-weight: 700; font-size: 26px;
+  font-family: var(--f-display); font-weight: 700; font-size: 28px;
   letter-spacing: -.03em; margin: 0; color: #FFFFFF; line-height: 1;
 }
 .brand span { color: var(--brand-gold); }
 .tagline {
-  color: rgba(255,255,255,.62); font-size: 12px; margin: 0;
+  color: rgba(255,255,255,.62); font-size: 12.5px; margin: 0;
   font-family: var(--f-display); font-weight: 600;
   letter-spacing: .04em; text-transform: uppercase;
 }
 .corpus-note {
-  margin-left: auto; font-family: var(--f-mono); font-size: 11.5px;
+  margin-left: auto; font-family: var(--f-mono); font-size: 12.5px;
   color: rgba(255,255,255,.42); letter-spacing: .02em;
 }
 
@@ -151,7 +157,7 @@ body {
 /* ---------------------------------------------------------------- headings */
 .view-head { margin-bottom: 20px; }
 h2.view-title {
-  font-family: var(--f-display); font-weight: 600; font-size: 27px;
+  font-family: var(--f-display); font-weight: 600; font-size: 28px;
   letter-spacing: -.015em; margin: 0 0 5px; text-wrap: balance;
 }
 .view-meta {
@@ -159,7 +165,7 @@ h2.view-title {
   display: flex; gap: 14px; flex-wrap: wrap;
 }
 h3.section-title {
-  font-family: var(--f-display); font-weight: 600; font-size: 12px;
+  font-family: var(--f-display); font-weight: 600; font-size: 12.5px;
   text-transform: uppercase; letter-spacing: .09em; color: var(--ink-muted);
   margin: 0 0 12px;
 }
@@ -182,23 +188,23 @@ h3.section-title {
 .aspect-row:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .aspect-row.is-static { cursor: default; }
 .aspect-row.is-static:hover { border-color: var(--line-soft); }
-.aspect-name { font-weight: 500; font-size: 14px; display: flex; align-items: center; gap: 7px; }
+.aspect-name { font-weight: 500; font-size: 14.5px; display: flex; align-items: center; gap: 7px; }
 
 .bar-track { height: 22px; display: flex; border-radius: 2px; overflow: hidden; background: var(--surface-2); }
 .bar-neg { background: var(--critical); }
 .bar-pos { background: var(--good); }
 
 .rate {
-  font-family: var(--f-mono); font-size: 15px; font-weight: 600;
+  font-family: var(--f-mono); font-size: 14.5px; font-weight: 600;
   font-variant-numeric: tabular-nums; text-align: right;
 }
 .counts {
-  font-family: var(--f-mono); font-size: 11.5px; color: var(--ink-muted);
+  font-family: var(--f-mono); font-size: 12.5px; color: var(--ink-muted);
   font-variant-numeric: tabular-nums; text-align: right; white-space: nowrap;
 }
 
 .chip {
-  font-family: var(--f-mono); font-size: 9.5px; font-weight: 600;
+  font-family: var(--f-mono); font-size: 11px; font-weight: 600;
   text-transform: uppercase; letter-spacing: .06em;
   padding: 2px 5px; border-radius: 2px; white-space: nowrap;
 }
@@ -217,7 +223,7 @@ h3.section-title {
   font-family: var(--f-mono); font-variant-numeric: tabular-nums;
   border-bottom: 1px solid var(--line-soft); }
 .tl-table th:first-child, .tl-table td:first-child { text-align: left; }
-.tl-table th { font-size: 10px; text-transform: uppercase; letter-spacing: .06em;
+.tl-table th { font-size: 11px; text-transform: uppercase; letter-spacing: .06em;
   color: var(--ink-muted); font-weight: 600; }
 
 /* ---------------------------------------------------------------- ranked lists */
@@ -227,12 +233,12 @@ h3.section-title {
   border-radius: 3px; padding: 14px 16px;
 }
 .rank-card h4 {
-  font-family: var(--f-display); font-size: 13px; font-weight: 600;
+  font-family: var(--f-display); font-size: 12.5px; font-weight: 600;
   margin: 0 0 10px; display: flex; justify-content: space-between; gap: 10px;
 }
 .rank-card h4 em { font-style: normal; font-family: var(--f-mono); font-size: 11px; color: var(--ink-muted); font-weight: 400; }
 .rank-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 5px; }
-.rank-item { display: flex; align-items: center; gap: 9px; font-size: 13px; }
+.rank-item { display: flex; align-items: center; gap: 9px; font-size: 12.5px; }
 .rank-item button {
   background: none; border: 0; padding: 0; font: inherit; color: var(--accent);
   cursor: pointer; text-align: left; flex: 1; min-width: 0;
@@ -241,14 +247,14 @@ h3.section-title {
 .rank-item button:hover { text-decoration: underline; }
 .rank-item span.plain { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .rank-n {
-  font-family: var(--f-mono); font-size: 12px; font-variant-numeric: tabular-nums;
+  font-family: var(--f-mono); font-size: 12.5px; font-variant-numeric: tabular-nums;
   color: var(--critical); font-weight: 600; min-width: 34px; text-align: right;
 }
 
 /* ---------------------------------------------------------------- destination table */
-.dest-table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+.dest-table { width: 100%; border-collapse: collapse; font-size: 14.5px; }
 .dest-table th {
-  font-family: var(--f-display); font-size: 10.5px; text-transform: uppercase;
+  font-family: var(--f-display); font-size: 11px; text-transform: uppercase;
   letter-spacing: .07em; color: var(--ink-muted); font-weight: 600;
   text-align: left; padding: 8px 12px; border-bottom: 1px solid var(--line);
 }
@@ -265,7 +271,7 @@ h3.section-title {
 /* ---------------------------------------------------------- source links */
 .srclinks {
   display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
-  font-family: var(--f-mono); font-size: 11.5px; color: var(--ink-muted);
+  font-family: var(--f-mono); font-size: 12.5px; color: var(--ink-muted);
   margin: -8px 0 20px;
 }
 .srclinks a { color: var(--accent); text-decoration: none; border-bottom: 1px solid transparent; }
@@ -277,7 +283,7 @@ h3.section-title {
 .story-note {
   border-left: 3px solid var(--accent); background: var(--accent-soft);
   padding: 11px 16px; border-radius: 0 3px 3px 0; margin-bottom: 14px;
-  font-size: 13px; color: var(--ink);
+  font-size: 12.5px; color: var(--ink);
 }
 .story-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(272px, 1fr)); gap: 12px; }
 .story-card {
@@ -285,14 +291,14 @@ h3.section-title {
   border-radius: 4px; padding: 13px 15px; display: flex; flex-direction: column; gap: 7px;
 }
 .story-card a.story-title {
-  font-weight: 600; font-size: 14px; color: var(--ink); text-decoration: none;
+  font-weight: 600; font-size: 14.5px; color: var(--ink); text-decoration: none;
   line-height: 1.4;
 }
 .story-card a.story-title:hover { color: var(--accent); text-decoration: underline; }
 .story-card a.story-title:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .story-head { display: flex; align-items: center; gap: 7px; flex-wrap: wrap; }
 .story-kind {
-  font-family: var(--f-mono); font-size: 9.5px; font-weight: 600; text-transform: uppercase;
+  font-family: var(--f-mono); font-size: 11px; font-weight: 600; text-transform: uppercase;
   letter-spacing: .06em; padding: 2px 6px; border-radius: 2px;
 }
 .story-kind.youtube { background: var(--critical-soft); color: var(--critical); }
@@ -303,13 +309,13 @@ h3.section-title {
    item is context, and most foreign coverage here is ordinary travel writing.
    It has to be legible enough that the reader never mistakes it for local. */
 .story-foreign {
-  font-family: var(--f-mono); font-size: 10px; letter-spacing: .04em;
+  font-family: var(--f-mono); font-size: 11px; letter-spacing: .04em;
   color: var(--ink-muted); border: 1px solid currentColor; border-radius: 3px;
   padding: 0 4px; margin-left: 6px; white-space: nowrap; opacity: .85;
 }
 .story-snip { font-size: 12.5px; color: var(--ink-muted); line-height: 1.5; }
 .story-foot {
-  font-family: var(--f-mono); font-size: 10.5px; color: var(--ink-faint);
+  font-family: var(--f-mono); font-size: 11px; color: var(--ink-faint);
   display: flex; gap: 9px; flex-wrap: wrap; margin-top: auto; padding-top: 4px;
 }
 
@@ -319,7 +325,7 @@ h3.section-title {
   background: var(--surface); border: 1px solid var(--line-soft);
   border-left: 3px solid var(--critical);
   border-radius: 0 3px 3px 0; padding: 11px 15px;
-  font-size: 13.5px; line-height: 1.6;
+  font-size: 14.5px; line-height: 1.6;
 }
 .quote-controls {
   display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
@@ -344,12 +350,12 @@ h3.section-title {
 }
 .quote-controls .sep { color: var(--ink-faint); padding: 0 2px; }
 .quote-band {
-  font-family: var(--f-mono); font-size: 10px; color: var(--ink-faint);
+  font-family: var(--f-mono); font-size: 11px; color: var(--ink-faint);
   border: 1px solid var(--line-soft); border-radius: 2px; padding: 1px 5px;
   margin-right: 7px;
 }
 .quote-meta {
-  font-family: var(--f-mono); font-size: 10.5px; color: var(--ink-faint);
+  font-family: var(--f-mono); font-size: 11px; color: var(--ink-faint);
   margin-top: 6px; letter-spacing: .02em;
 }
 .quote-panel { margin-top: 14px; }
@@ -359,10 +365,10 @@ h3.section-title {
   background: var(--surface); border: 1px solid var(--line-soft);
   border-left: 3px solid var(--warn);
   padding: 12px 16px; border-radius: 0 3px 3px 0;
-  font-size: 13px; color: var(--ink-muted); margin-bottom: 24px;
+  font-size: 12.5px; color: var(--ink-muted); margin-bottom: 24px;
 }
 .notice strong { color: var(--ink); font-weight: 600; }
-.empty { color: var(--ink-muted); font-size: 13.5px; font-style: italic; padding: 10px 0; }
+.empty { color: var(--ink-muted); font-size: 14.5px; font-style: italic; padding: 10px 0; }
 
 .legend {
   display: flex; gap: 18px; flex-wrap: wrap; align-items: center;
@@ -402,13 +408,13 @@ h3.section-title {
 .scale-bar i { flex: 1; }
 .scale-ends {
   display: flex; justify-content: space-between;
-  font-family: var(--f-mono); font-size: 10.5px; color: var(--ink-faint); margin-top: 4px;
+  font-family: var(--f-mono); font-size: 11px; color: var(--ink-faint); margin-top: 4px;
 }
 .map-readout {
   border-top: 1px solid var(--line-soft); padding-top: 12px; min-height: 92px;
 }
 .map-readout h4 {
-  font-family: var(--f-display); font-size: 15px; margin: 0 0 4px; font-weight: 600;
+  font-family: var(--f-display); font-size: 14.5px; margin: 0 0 4px; font-weight: 600;
 }
 .map-readout dl {
   margin: 0; display: grid; grid-template-columns: auto 1fr; gap: 2px 12px;
@@ -419,7 +425,7 @@ h3.section-title {
   margin: 0; font-family: var(--f-mono); font-variant-numeric: tabular-nums; text-align: right;
 }
 .nodata-note {
-  font-size: 11.5px; color: var(--ink-faint); line-height: 1.5;
+  font-size: 12.5px; color: var(--ink-faint); line-height: 1.5;
   display: flex; gap: 7px; align-items: flex-start;
 }
 .nodata-swatch {
@@ -505,12 +511,12 @@ h1, h2, h3, .section-title { letter-spacing: -.02em; }
 }
 #map-canvas:active { cursor: grabbing; }
 .map3d-hint {
-  font-family: var(--f-mono); font-size: 10.5px; color: var(--ink-faint);
+  font-family: var(--f-mono); font-size: 11px; color: var(--ink-faint);
   text-align: center; margin-top: 6px; letter-spacing: .03em;
 }
 .map3d-legend {
   display: flex; flex-wrap: wrap; gap: 12px 20px; align-items: center;
-  margin-top: 10px; font-family: var(--f-mono); font-size: 10.5px;
+  margin-top: 10px; font-family: var(--f-mono); font-size: 11px;
   color: var(--ink-muted);
 }
 .map3d-legend .key { display: flex; align-items: center; gap: 6px; }
@@ -561,7 +567,7 @@ h1, h2, h3, .section-title { letter-spacing: -.02em; }
 
 footer.foot {
   border-top: 1px solid var(--line); margin-top: 46px; padding-top: 18px;
-  font-size: 12px; color: var(--ink-faint); line-height: 1.7;
+  font-size: 12.5px; color: var(--ink-faint); line-height: 1.7;
 }
 footer.foot code { font-family: var(--f-mono); font-size: 11px; }
 
@@ -569,9 +575,99 @@ footer.foot code { font-family: var(--f-mono); font-size: 11px; }
   .aspect-row { grid-template-columns: 116px 1fr 52px; }
   .aspect-row .spark-cell { display: none; }
   .aspect-row .counts { display: none; }
-  h2.view-title { font-size: 22px; }
+  h2.view-title { font-size: 21px; }
 }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+
+/* ═══════════════════════════════════════════════════════════════════════
+   MINIMALIST LAYER
+   Applied as an override block rather than edits scattered through the
+   sheet above: one readable diff, and reverting is deleting one section.
+
+   The audit that motivated it: 14 distinct font sizes (ten of them between
+   9.5px and 14px), 23 distinct padding values, and 16 borders stacked on top
+   of 14 background fills. None of that was decided -- it accumulated. On a
+   dashboard the chrome should recede so the data is the only thing with
+   weight, and drift like that does the opposite: every element shouts
+   slightly differently.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* ── 1. Type scale ──────────────────────────────────────────────────────
+   14 sizes collapse to 5. Anything between 9.5 and 11.5 was a distinction
+   nobody could see; it just made the page feel unresolved. The mono face is
+   kept for figures only -- digits that must line up -- not for labels.     */
+:root {
+  --t-micro: 11px;    /* mono labels, legends, captions */
+  --t-small: 12.5px;  /* secondary prose */
+  --t-body:  14.5px;  /* reading size */
+  --t-lead:  17px;    /* subheads, lead-ins */
+  --t-title: 25px;    /* section and page titles */
+}
+body { font-size: var(--t-body); line-height: 1.6; }
+/* Sizes are snapped at source to the scale above, so there are no
+   per-selector overrides here: one source of truth. */
+
+/* ── 2. One separator, not three ────────────────────────────────────────
+   A panel was carrying a border AND a shadow AND a fill. Each alone says
+   "this is a group"; together they say it three times and the page reads as
+   busy. On dark the surface lift is enough on its own. On light, white on
+   near-white needs one hairline -- so light keeps the border and drops the
+   shadow instead.                                                         */
+:root[data-theme="dark"] .section,
+:root[data-theme="dark"] .story-card,
+:root:not([data-theme="light"]) .section,
+:root:not([data-theme="light"]) .story-card {
+  border-color: transparent;
+  box-shadow: none;
+}
+:root[data-theme="light"] .section,
+:root[data-theme="light"] .story-card {
+  box-shadow: none;
+}
+
+/* ── 3. Spacing rhythm ──────────────────────────────────────────────────
+   23 arbitrary paddings become a 4pt scale. Generous rather than tight:
+   whitespace is the cheapest way to make dense data feel calm, and this
+   page is dense by necessity.                                             */
+.section { margin-bottom: 40px; padding: 28px; }
+.notice { padding: 16px 20px; border-radius: 12px; border-left-width: 2px; }
+.story-card { padding: 18px; }
+.wrap { padding: 0 32px 96px; }
+
+/* ── 4. Accent discipline ───────────────────────────────────────────────
+   Violet now appears only where something is genuinely interactive or
+   selected. It was also tinting hairlines and idle controls, which spends
+   the one colour the eye is meant to trust as "this responds to you".     */
+.section, .story-card, .notice { border-color: var(--line-soft); }
+button:not([aria-pressed="true"]) { background: transparent; }
+button:not([aria-pressed="true"]):hover { background: var(--surface-2); }
+
+/* ── 5. Quieter uppercase ───────────────────────────────────────────────
+   Six uppercase label styles at 10-11px with heavy tracking read as shouting
+   at small sizes. Kept as a device -- it does separate label from value --
+   but lightened.                                                          */
+[class*="label"], .section-label, .scale-ends {
+  letter-spacing: .06em; font-weight: 500; color: var(--ink-faint);
+}
+
+/* ── 6. Focus that is visible but not loud ──────────────────────────── */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+/* ── 7. Accent as text vs accent as fill ────────────────────────────────
+   One token cannot do both jobs. As a fill it needs dark text on it; as
+   text it needs to out-contrast the ground. #8B5CF6 manages neither well
+   (4.22:1 either way), so the roles are split: --accent-fill for filled
+   controls, --accent-text for anything the eye reads as words.           */
+a, .linkish, button:not([aria-pressed="true"]),
+.chip-ctrl, [data-district], [data-destination] {
+  color: var(--accent-text);
+}
+button:not([aria-pressed="true"]) { color: var(--ink); }
+a, .linkish, .chip-ctrl { color: var(--accent-text); }
 </style>
 
 <header class="masthead">
