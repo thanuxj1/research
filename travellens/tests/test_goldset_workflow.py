@@ -185,3 +185,64 @@ def test_an_unreadable_cell_blocks_the_whole_import(tmp_path):
     gold = pd.read_csv(ROOT / "reports" / "goldset_focused_annotator1.csv")
     checked = gold["checked"].astype(str).str.strip().str.lower() == "x"
     assert int(checked.sum()) == 0, "a refused import still wrote rows"
+
+
+# --------------------------------------------------------------------------
+# The Excel route (scripts/37_annotation_workbook.py)
+# --------------------------------------------------------------------------
+def _wb_module():
+    import importlib.util
+    spec = importlib.util.spec_from_file_location(
+        "wbmod", ROOT / "scripts" / "37_annotation_workbook.py")
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    return mod
+
+
+def test_the_workbook_constrains_answers_to_npx():
+    """A dropdown removes the whole class of typo the CSV importer had to
+    reject, and tells the annotator the options without them looking away."""
+    from openpyxl import load_workbook
+    mod = _wb_module()
+    path, _ = mod.export(1)
+    ws = load_workbook(path)["Label these"]
+    dvs = ws.data_validations.dataValidation
+    assert dvs, "no dropdown on the answer cells"
+    assert dvs[0].formula1 == '"N,P,X"'
+    assert dvs[0].allow_blank, "blank must stay allowed -- most cells are blank"
+
+
+def test_the_workbook_does_not_show_the_expected_answer():
+    """sample_reason names the aspect the pipeline thinks the row is about."""
+    from openpyxl import load_workbook
+    mod = _wb_module()
+    path, _ = mod.export(1)
+    wb = load_workbook(path)
+    for sheet in wb.sheetnames:
+        for row in wb[sheet].iter_rows(max_row=3):
+            for c in row:
+                text = str(c.value or "").lower()
+                assert "representative:" not in text
+                assert "disagreement:" not in text
+
+
+def test_the_workbook_names_which_column_to_judge():
+    """The commonest mistake is labelling the whole review."""
+    from openpyxl import load_workbook
+    mod = _wb_module()
+    path, _ = mod.export(1)
+    header = [c.value for c in load_workbook(path)["Label these"][1]]
+    piece = [h for h in header if h and "PIECE" in h]
+    assert piece and "judge" in piece[0].lower()
+    context = [h for h in header if h and "whole review" in h]
+    assert context and "context" in context[0].lower()
+
+
+def test_an_untouched_workbook_imports_nothing(tmp_path):
+    """200 empty cells are a file nobody read, not 200 verdicts."""
+    mod = _wb_module()
+    path, _ = mod.export(1)
+    mod.read_back(path, 1)
+    gold = pd.read_csv(ROOT / "reports" / "goldset_focused_annotator1.csv")
+    checked = gold["checked"].astype(str).str.strip().str.lower() == "x"
+    assert int(checked.sum()) == 0
