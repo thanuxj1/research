@@ -302,3 +302,39 @@ def test_tests_never_write_to_the_real_gold_set():
     body = src.split("def test_tests_never_write")[0]
     for call in re.findall(r"read_back\([^)]*\)", body):
         assert "gold_path=" in call,             "read_back without gold_path -- that writes to the real gold set: " + call
+
+
+def test_the_agreement_sheet_carries_no_answers(tmp_path):
+    """Annotator 2 must not see annotator 1's verdicts.
+
+    export() reads the gold set, which now HOLDS annotator 1's labels. Handing
+    that straight to a second reader would produce agreement by construction --
+    the exact failure that made the adjudication pass unusable for kappa.
+    """
+    from openpyxl import load_workbook
+    mod = _wb_module()
+    gold = _gold_copy(tmp_path)
+    # give the copy some labels, as the real gold set has
+    d = pd.read_csv(gold)
+    d["safety"] = "N"
+    d["checked"] = "x"
+    d.to_csv(gold, index=False, encoding="utf-8")
+
+    path, _ = mod.export(2, gold_path=gold, overlap=20)
+    ws = load_workbook(path)["Label these"]
+    leaked = [ws.cell(row=r, column=c).value
+              for r in range(2, ws.max_row + 1) for c in (6, 7, 8, 9)]
+    assert not any(leaked), "annotator 1's answers leaked into the second sheet"
+
+
+def test_the_overlap_is_spread_across_the_sample(tmp_path):
+    """60 rows all from one aspect would give a kappa about that aspect."""
+    mod = _wb_module()
+    gold = _gold_copy(tmp_path)
+    d = pd.read_csv(gold)
+    sub = mod.overlap_subset(d, 60)
+    assert len(sub) == 60
+    assert sub["part"].nunique() == 2, "overlap missed one part of the sample"
+    assert sub["sample_reason"].nunique() >= 6, "overlap is too narrow"
+    # reproducible: the same seed must give the same rows
+    assert list(sub["row"]) == list(mod.overlap_subset(d, 60)["row"])

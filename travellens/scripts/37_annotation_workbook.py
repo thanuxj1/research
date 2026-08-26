@@ -140,9 +140,41 @@ def _instructions(ws, examples, aspects):
     ws.sheet_view.showGridLines = False
 
 
-def export(annotator=1, full=False, all_aspects=False, gold_path=None):
+def overlap_subset(df, n, seed=42):
+    """The rows a second annotator labels for the agreement figure.
+
+    goldset_focused_sampling.json plans a 60-row overlap, not a second full
+    pass: kappa needs enough shared rows to be stable, not all of them. At the
+    measured rate that is about fourteen minutes rather than three quarters of
+    an hour, which is the difference between a favour somebody does and one
+    they put off.
+
+    Stratified by part and by sampling reason, so the overlap is not
+    accidentally all one aspect, and seeded so it is reproducible.
+    """
+    if not n or n >= len(df):
+        return df
+    key = df["sample_reason"] if "sample_reason" in df.columns else df["part"]
+    picked = (df.groupby(key, group_keys=False)
+                .apply(lambda g: g.sample(
+                    max(1, round(n * len(g) / len(df))), random_state=seed)))
+    if len(picked) > n:
+        picked = picked.sample(n, random_state=seed)
+    return picked.sort_values("row")
+
+
+def export(annotator=1, full=False, all_aspects=False, gold_path=None,
+           overlap=0):
     src = goldset_path(annotator, full, gold_path)
     df = pd.read_csv(src)
+    if overlap:
+        df = overlap_subset(df, overlap)
+    # A second annotator must never see the first one's verdicts.
+    for a in ASPECTS + EXTRA:
+        if a in df.columns:
+            df[a] = ""
+    if "notes" in df.columns:
+        df["notes"] = ""
     aspects = [a for a in ASPECTS if a in df.columns] or list(ASPECTS)
     if all_aspects:
         aspects = aspects + [a for a in EXTRA if a not in aspects]
@@ -225,8 +257,9 @@ def export(annotator=1, full=False, all_aspects=False, gold_path=None):
     ws.freeze_panes = "F2"
     ws.sheet_view.showGridLines = False
 
-    dest = C.REPORTS / "LABEL_THESE_annotator{}{}.xlsx".format(
-        annotator, "_all7" if all_aspects else "")
+    dest = C.REPORTS / "LABEL_THESE_annotator{}{}{}.xlsx".format(
+        annotator, "_all7" if all_aspects else "",
+        "_overlap{}".format(len(df)) if overlap else "")
     wb.save(dest)
     return dest, len(df)
 
@@ -342,13 +375,16 @@ def main():
     ap.add_argument("--full", action="store_true")
     ap.add_argument("--all-aspects", dest="all_aspects", action="store_true",
                     help="add price, crowding and scenery columns")
+    ap.add_argument("--overlap", type=int, default=0,
+                    help="export only N rows, for the agreement pass (try 60)")
     args = ap.parse_args()
 
     print("\nLostinSriLanka -- annotation workbook\n" + "=" * 60)
     if args.import_from:
         read_back(args.import_from, args.annotator, args.full)
         return
-    dest, n = export(args.annotator, args.full, args.all_aspects)
+    dest, n = export(args.annotator, args.full, args.all_aspects,
+                     overlap=args.overlap)
     print("\n  wrote {}".format(dest))
     print("  {} rows, dropdowns on every answer cell".format(n))
     print("\n  Open it, read the first tab, fill in the second.")
