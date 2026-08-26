@@ -280,17 +280,32 @@ def read_back(filled, annotator=1, full=False):
             gold[a] = ""
         gold[a] = gold[a].astype("object")
 
-    filled_rows = blank_rows = 0
+    # A blank row is ambiguous: it means "I read this and nothing applied", or
+    # "I never got here". Both look identical in the file, and the difference
+    # matters -- dropping the first kind keeps only rows where the annotator
+    # found something, which biases the measurement towards positives.
+    #
+    # The distinction is positional. Somebody working top to bottom leaves a
+    # labelled row as their high-water mark; blanks before it were judged,
+    # blanks after it were never reached. An untouched sheet has no labelled
+    # row at all, so nothing imports -- which is the protection that matters.
+    order = list(gold["segment_id"].astype(str))
+    last_labelled = -1
+    for pos, sid in enumerate(order):
+        if sid in answers and any(answers[sid][0].values()):
+            last_labelled = pos
+
+    filled_rows = blank_verdicts = unreached = 0
     for i, r in gold.iterrows():
         sid = str(r["segment_id"])
         if sid not in answers:
             continue
         vals, note = answers[sid]
-        # An untouched workbook must import nothing. 200 empty cells are not
-        # 200 verdicts of "nothing here" -- they are a file nobody read.
         if not any(vals.values()) and not note.strip():
-            blank_rows += 1
-            continue
+            if order.index(sid) > last_labelled:
+                unreached += 1
+                continue
+            blank_verdicts += 1
         for a in label_cols:
             gold.at[i, a] = vals[a]
         gold.at[i, "notes"] = note
@@ -299,10 +314,14 @@ def read_back(filled, annotator=1, full=False):
 
     dest = goldset_path(annotator, full)
     gold.to_csv(dest, index=False, encoding="utf-8")
-    print("\n  imported {} labelled rows -> {}".format(filled_rows, dest.name))
-    if blank_rows:
-        print("  {} rows were entirely empty and were SKIPPED.".format(blank_rows))
-        print("  If a blank row really is your verdict, put a note on it.")
+    print("\n  imported {} rows -> {}".format(filled_rows, dest.name))
+    print("    {} carry at least one label".format(filled_rows - blank_verdicts))
+    print("    {} are blank, recorded as 'nothing applies' because labelled"
+          " rows follow them".format(blank_verdicts))
+    if unreached:
+        print("  {} blank rows AFTER the last labelled row were left unchecked"
+              .format(unreached))
+        print("  (read as 'not reached', not as a verdict)")
     print("\n  next: python scripts/05_check_goldset.py")
     return dest
 

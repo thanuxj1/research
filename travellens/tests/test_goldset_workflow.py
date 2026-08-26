@@ -246,3 +246,36 @@ def test_an_untouched_workbook_imports_nothing(tmp_path):
     gold = pd.read_csv(ROOT / "reports" / "goldset_focused_annotator1.csv")
     checked = gold["checked"].astype(str).str.strip().str.lower() == "x"
     assert int(checked.sum()) == 0
+
+
+def test_a_blank_row_before_a_labelled_one_is_a_verdict(tmp_path):
+    """40 of the first real annotator's 200 rows were blank, scattered
+    throughout, with labels running to row 200. Those blanks are judgements
+    of 'nothing applies'. Dropping them would keep only rows where the
+    annotator found something, biasing the measurement towards positives.
+    """
+    from openpyxl import load_workbook
+    mod = _wb_module()
+    path, _ = mod.export(1)
+    wb = load_workbook(path)
+    ws = wb["Label these"]
+    ws["I2"] = "N"        # row 1 labelled
+    # rows 2 and 3 left blank on purpose
+    ws["I5"] = "P"        # row 4 labelled -> rows 2,3 are verdicts
+    # everything from row 5 on stays blank -> unreached
+    filled = tmp_path / "partly.xlsx"
+    wb.save(filled)
+
+    mod.read_back(filled, 1)
+    gold = pd.read_csv(ROOT / "reports" / "goldset_focused_annotator1.csv")
+    checked = gold["checked"].astype(str).str.strip().str.lower() == "x"
+    assert int(checked.sum()) == 4, "blanks between labels must count as verdicts"
+    assert not checked.iloc[4:].any(), "rows past the last label must stay open"
+
+    # leave the gold set as we found it
+    for col in ["roads_access", "cleanliness", "facilities", "safety",
+                "checked", "notes"]:
+        if col in gold.columns:
+            gold[col] = ""
+    gold.to_csv(ROOT / "reports" / "goldset_focused_annotator1.csv",
+                index=False, encoding="utf-8")
