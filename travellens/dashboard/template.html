@@ -2,35 +2,47 @@
 <title>LostinSriLanka</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=IBM+Plex+Mono:wght@400;500&display=swap">
 
 <style>
 /* ---------------------------------------------------------------- tokens */
 :root {
-  /* SafeTravel LK design system, applied to this dashboard.
-     Token NAMES are unchanged on purpose: --critical means "complaint rate"
-     everywhere, including inside the canvas map, which reads these values at
-     runtime through getComputedStyle. Swapping the palette must not swap what
-     a colour means. */
-  --ground:      #F1F5F9;
+  /* ── Field-report palette ─────────────────────────────────────────────
+     Warm paper, not blue-grey. Slate (#F1F5F9) is the default of every SaaS
+     dashboard built since 2020, and it made this read as an admin panel when
+     the content is closer to a scientific report. A warm off-white reads as
+     a printed page, which is what this is: something an examiner reads, and
+     something whose figures end up printed on paper anyway.
+
+     One saturated colour, and it belongs to the data. Terracotta rather than
+     alarm red -- these are complaints about footpaths and toilets, not
+     emergencies, and a screaming red would misrepresent the finding. The
+     accent is a deep teal used ONLY for interaction, quiet enough that it
+     never competes with the complaint ramp for attention.                */
+  --paper:       #FCFBF7;
+  --ground:      #FCFBF7;
   --surface:     #FFFFFF;
-  --surface-2:   #E2E8F0;
-  --line:        #CBD5E1;
-  --line-soft:   #E2E8F0;
-  --ink:         #0F172A;
-  --ink-muted:   #475569;
-  --ink-faint:   #5B6879;
-  --accent:      #7C3AED;
-  --accent-soft: #EDE9FE;
-  --accent-text: #6D28D9;
-  --accent-fill: #6D28D9;
-  --critical:    #DC2626;
-  --critical-soft:#FEE2E2;
-  --good:        #059669;
-  --good-soft:   #D1FAE5;
-  --warn:        #D97706;
-  --warn-soft:   #FEF3C7;
-  --shadow:      0 1px 2px rgba(15,23,42,.06), 0 8px 24px rgba(15,23,42,.06);
+  --surface-2:   #F4F2EA;
+  --line:        #DFDBCD;
+  --line-soft:   #EAE7DC;
+  --ink:         #16150F;
+  --ink-muted:   #5F5C50;
+  /* #837F70 measured 3.87:1 on this paper -- under AA, and it was carrying
+     19 real labels ("19 districts", "16.7%"). Muted is a tone, not an excuse
+     to stop being readable. */
+  --ink-faint:   #726E5E;
+  --accent:      #1F5C57;
+  --accent-soft: #E4EFEC;
+  --accent-fill: #1F5C57;
+  --accent-on-fill: #FCFBF7;
+  --accent-text: #1A4E4A;
+  --critical:    #B04A2F;
+  --critical-soft:#F6EAE4;
+  --good:        #4A6B45;
+  --good-soft:   #E8EFE5;
+  --warn:        #9A6B18;
+  --warn-soft:   #F6EEDC;
+  --shadow:      none;
 
   /* Brand, from the logo: near-black ground, white wordmark, gold "in". The
      gold is confined to the masthead. It is NOT promoted to --accent, because
@@ -40,7 +52,7 @@
   --brand-ink2: #2E2E34;
   --brand-gold: #F5C842;
 
-  --f-display: "Inter", system-ui, sans-serif;
+  --f-display: "Source Serif 4", Georgia, serif;
   --f-body:    "Inter", system-ui, sans-serif;
   --f-mono:    "IBM Plex Mono", ui-monospace, monospace;
 }
@@ -52,26 +64,26 @@
    chosen automatically by whatever the machine happens to be set to. */
 :root[data-theme="dark"] {
   /* The theme's own values. It is a dark-first system. */
-  --ground:      #0F172A;
-  --surface:     #1E293B;
-  --surface-2:   #334155;
-  --line:        rgba(255,255,255,.10);
-  --line-soft:   rgba(255,255,255,.06);
-  --ink:         #F8FAFC;
-  --ink-muted:   #94A3B8;
-  --ink-faint:   #8493A8;
-  --accent:      #8B5CF6;
-  --accent-soft: rgba(139,92,246,.18);
-  --accent-text: #A78BFA;
-  --accent-fill: #6D28D9;
-  --critical:    #EF4444;
-  --critical-soft:rgba(239,68,68,.16);
-  --good:        #10B981;
-  --good-soft:   rgba(16,185,129,.16);
-  --warn:        #F59E0B;
-  --warn-soft:   rgba(245,158,11,.16);
-  --shadow:      0 1px 2px rgba(0,0,0,.4), 0 12px 32px rgba(0,0,0,.35),
-                 0 0 0 1px rgba(255,255,255,.04);
+  --ground:      #14130E;
+  --surface:     #1C1B15;
+  --surface-2:   #262419;
+  --line:        #38352A;
+  --line-soft:   #2B2921;
+  --ink:         #F2EFE6;
+  --ink-muted:   #ABA694;
+  --ink-faint:   #8A8677;
+  --accent:      #6FBFB2;
+  --accent-soft: rgba(111,191,178,.16);
+  --accent-fill: #6FBFB2;
+  --accent-on-fill: #14130E;
+  --accent-text: #6FBFB2;
+  --critical:    #D9714F;
+  --critical-soft:rgba(217,113,79,.18);
+  --good:        #8FB07F;
+  --good-soft:   rgba(143,176,127,.18);
+  --warn:        #D3A03C;
+  --warn-soft:   rgba(211,160,60,.18);
+  --shadow:      none;
 }
 
 /* ---------------------------------------------------------------- base */
@@ -442,40 +454,6 @@ h3.section-title {
 .map-pin:focus-visible { outline: 2px solid var(--accent); }
 .pin-toggle { margin-left: auto; }
 
-/* ── SafeTravel LK shape language ──────────────────────────────────────
-   The imported theme is not only a palette: 16px cards, 10px controls, and
-   translucent surfaces over a blurred backdrop. Applied by overriding the
-   existing rules rather than editing each one, so the diff stays readable and
-   reverting is one block.
-
-   backdrop-filter is gated on @supports: without it a translucent surface
-   over an unblurred page is just washed-out text, which is worse than a solid
-   panel. Browsers that cannot blur get the solid fallback below.           */
-.section, .card, .notice, .story-card, .panel, .aspect-row, .map-wrap {
-  border-radius: 16px;
-}
-button, .crumb, .view-switch button, .aspect-picker button,
-.quote-controls button, input, select {
-  border-radius: 10px;
-}
-.section, .notice, .story-card {
-  background: var(--surface);
-  border: 1px solid var(--line);
-  box-shadow: var(--shadow);
-}
-@supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
-  :root[data-theme="dark"] .section,
-  :root[data-theme="dark"] .notice,
-  :root[data-theme="dark"] .story-card {
-    background: rgba(30, 41, 59, .75);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-  }
-}
-/* Inter is tighter than Archivo at display sizes; without this the headings
-   read loose against the theme's compact nav. */
-h1, h2, h3, .section-title { letter-spacing: -.02em; }
-
 /* ---------------------------------------------------------------- 3D map */
 #map-canvas {
   display: block; width: 100%; border-radius: 3px;
@@ -551,149 +529,183 @@ footer.foot code { font-family: var(--f-mono); font-size: 11px; }
 }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
 
-/* ═══════════════════════════════════════════════════════════════════════
-   MINIMALIST LAYER
-   Applied as an override block rather than edits scattered through the
-   sheet above: one readable diff, and reverting is deleting one section.
 
-   The audit that motivated it: 14 distinct font sizes (ten of them between
-   9.5px and 14px), 23 distinct padding values, and 16 borders stacked on top
-   of 14 background fills. None of that was decided -- it accumulated. On a
-   dashboard the chrome should recede so the data is the only thing with
-   weight, and drift like that does the opposite: every element shouts
-   slightly differently.
+/* ═══════════════════════════════════════════════════════════════════════
+   EDITORIAL LAYER
+
+   The diagnosis this replaces: every block on the page was a rounded,
+   filled, bordered, blurred card. Prose in a card, caveats in a card, a
+   table in a card, cards inside cards. That is the vocabulary of an admin
+   panel, and this is not one -- it is a report about a place, mostly made
+   of writing, with one strong data object in it.
+
+   So: containers are removed from everything that is text. Space and a
+   hairline do the separating. Only the map and the table keep a surface,
+   because they are objects on the page rather than passages of it.
    ═══════════════════════════════════════════════════════════════════════ */
 
-/* ── 1. Type scale ──────────────────────────────────────────────────────
-   14 sizes collapse to 5. Anything between 9.5 and 11.5 was a distinction
-   nobody could see; it just made the page feel unresolved. The mono face is
-   kept for figures only -- digits that must line up -- not for labels.     */
+/* ── Type ───────────────────────────────────────────────────────────────
+   A serif for headings against a sans for everything else. Two sans faces
+   at four sizes gave the page no voice at all -- everything whispered in
+   the same register. The scale is widely spaced on purpose: 13 / 15 / 20 /
+   27 / 44 has real jumps in it, so hierarchy is felt rather than measured. */
 :root {
-  --t-micro: 11px;    /* mono labels, legends, captions */
-  --t-small: 12.5px;  /* secondary prose */
-  --t-body:  14.5px;  /* reading size */
-  --t-lead:  17px;    /* subheads, lead-ins */
-  --t-title: 25px;    /* section and page titles */
+  --t-micro: 12px;
+  --t-small: 13.5px;
+  --t-body:  16px;
+  --t-lead:  20px;
+  --t-h2:    27px;
+  --t-h1:    44px;
 }
-body { font-size: var(--t-body); line-height: 1.6; }
-/* Sizes are snapped at source to the scale above, so there are no
-   per-selector overrides here: one source of truth. */
+body {
+  background: var(--paper);
+  font-size: var(--t-body);
+  line-height: 1.65;
+  letter-spacing: -.003em;
+}
+h1, h2, .view-title {
+  font-family: var(--f-display);
+  font-weight: 600;
+  letter-spacing: -.02em;
+  line-height: 1.12;
+}
+/* Specificity note: the original sheet styles these as h2.view-title and
+   h3.section-title (0,1,1). A bare .section-title (0,1,0) loses, which is
+   why the first pass rendered a 27px heading at 12.5px. Matched rather than
+   fought with !important. */
+h2.view-title, .view-title { font-size: var(--t-h1); margin: 0 0 4px; }
+h3.section-title, h3, .section-title {
+  font-family: var(--f-display);
+  font-weight: 600;
+  font-size: var(--t-h2);
+  letter-spacing: -.015em;
+  line-height: 1.2;
+  text-transform: none;
+  color: var(--ink);
+}
+/* Prose gets a measure. 100+ characters a line is where reading breaks
+   down, and several of these passages are long. */
+.notice, .section > p, .story-note, .map3d-note, .section-note { max-width: 68ch; }
 
-/* ── 2. One separator, not three ────────────────────────────────────────
-   A panel was carrying a border AND a shadow AND a fill. Each alone says
-   "this is a group"; together they say it three times and the page reads as
-   busy. On dark the surface lift is enough on its own. On light, white on
-   near-white needs one hairline -- so light keeps the border and drops the
-   shadow instead.                                                         */
-:root[data-theme="dark"] .section,
-:root[data-theme="dark"] .story-card {
-  /* Dark can carry a group on surface lift alone. */
-  border-color: transparent;
-  box-shadow: none;
+/* Figures use tabular numerals so columns of numbers line up and a changing
+   value does not make the row jitter. */
+.num, .view-meta, .dest-table, .aspect-row, code, .corpus-note,
+.scale-ends, .map3d-legend { font-variant-numeric: tabular-nums; }
+
+/* ── The one label device ───────────────────────────────────────────────
+   Small, letterspaced, muted. Used for eyebrows above content and nothing
+   else, so it keeps meaning something. */
+.section-label, .scale-ends span, .map3d-legend .key, .view-meta {
+  font-family: var(--f-mono);
+  font-size: var(--t-micro);
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
 }
-.section, .story-card {
-  /* Light is the default: white on near-white needs one hairline, and the
-     shadow is the separator that gets dropped instead. */
+
+/* ── Containers removed ─────────────────────────────────────────────────
+   Sections become passages: no fill, no border, no radius, no shadow. They
+   are separated by air and a hairline, which is how a document separates
+   things. */
+.section {
+  background: none;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  padding: 0;
+  margin: 0 0 64px;
+}
+.section + .section { padding-top: 56px; border-top: 1px solid var(--line-soft); }
+
+/* The key finding is a pull-quote, not an alert box. */
+.notice {
+  background: none;
+  border: 0;
+  border-left: 2px solid var(--critical);
+  border-radius: 0;
+  box-shadow: none;
+  padding: 2px 0 2px 22px;
+  margin: 0 0 56px;
+  font-size: var(--t-body);
+  color: var(--ink-muted);
+}
+.notice strong { color: var(--ink); font-weight: 600; }
+
+/* Objects, not passages: the map and the table keep a surface. */
+.map-shell, .table-scroll {
+  background: var(--surface);
   border: 1px solid var(--line-soft);
+  border-radius: 4px;
   box-shadow: none;
 }
-
-/* ── 3. Spacing rhythm ──────────────────────────────────────────────────
-   23 arbitrary paddings become a 4pt scale. Generous rather than tight:
-   whitespace is the cheapest way to make dense data feel calm, and this
-   page is dense by necessity.                                             */
-.section { margin-bottom: 40px; padding: 28px; }
-.notice { padding: 16px 20px; border-radius: 12px; border-left-width: 2px; }
-.story-card { padding: 18px; }
-.wrap { padding: 0 32px 96px; }
-
-/* ── 4. Accent discipline ───────────────────────────────────────────────
-   Violet now appears only where something is genuinely interactive or
-   selected. It was also tinting hairlines and idle controls, which spends
-   the one colour the eye is meant to trust as "this responds to you".     */
-.section, .story-card, .notice { border-color: var(--line-soft); }
-button:not([aria-pressed="true"]) { background: transparent; }
-button:not([aria-pressed="true"]):hover { background: var(--surface-2); }
-
-/* ── 5. Quieter uppercase ───────────────────────────────────────────────
-   Six uppercase label styles at 10-11px with heavy tracking read as shouting
-   at small sizes. Kept as a device -- it does separate label from value --
-   but lightened.                                                          */
-[class*="label"], .section-label, .scale-ends {
-  letter-spacing: .06em; font-weight: 500; color: var(--ink-faint);
+.story-card {
+  background: none;
+  border: 0;
+  border-top: 1px solid var(--line-soft);
+  border-radius: 0;
+  padding: 18px 0 0;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
 }
 
-/* ── 6. Focus that is visible but not loud ──────────────────────────── */
-:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
-  border-radius: 6px;
+/* ── Controls ───────────────────────────────────────────────────────────
+   Pills and chips everywhere read as an app. These are quieter: text-first,
+   with the selected one carrying the only fill on the page besides the map. */
+.aspect-picker button, .view-switch button, .quote-controls button {
+  background: none;
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  font-family: var(--f-mono);
+  font-size: var(--t-micro);
+  letter-spacing: .04em;
+  color: var(--ink-muted);
+  padding: 6px 12px;
+}
+.aspect-picker button:hover, .view-switch button:hover, .quote-controls button:hover {
+  border-color: var(--ink-faint);
+  color: var(--ink);
+}
+.aspect-picker button[aria-pressed="true"],
+.view-switch button[aria-pressed="true"],
+.quote-controls button[aria-pressed="true"] {
+  background: var(--accent-fill);
+  border-color: var(--accent-fill);
+  color: var(--accent-on-fill);
 }
 
-/* ── 7. Accent as text vs accent as fill ────────────────────────────────
-   One token cannot do both jobs. As a fill it needs dark text on it; as
-   text it needs to out-contrast the ground. #8B5CF6 manages neither well
-   (4.22:1 either way), so the roles are split: --accent-fill for filled
-   controls, --accent-text for anything the eye reads as words.           */
-a, .linkish, button:not([aria-pressed="true"]),
-.chip-ctrl, [data-district], [data-destination] {
-  color: var(--accent-text);
-}
-button:not([aria-pressed="true"]) { color: var(--ink); }
-a, .linkish, .chip-ctrl { color: var(--accent-text); }
+/* ── Rhythm ─────────────────────────────────────────────────────────────
+   One measure of air, used consistently. Dense data feels calm when the
+   space around it is generous and regular. */
+.wrap { max-width: 1200px; padding: 0 40px 120px; }
+.view-head { margin: 0 0 44px; }
+.view-meta { display: flex; gap: 20px; margin-top: 10px; }
 
-/* ── 8. Bento grid ──────────────────────────────────────────────────────
-   The country view was a single column: map, then aspects, then districts,
-   each the full width and each demanding a scroll before the next began.
-   Nothing was ever visible beside anything else.
+/* ── Focus ──────────────────────────────────────────────────────────── */
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 2px; }
 
-   The three blocks happen to balance: the map runs ~1700px tall, and the
-   aspect list plus the district table together run ~1740px. So the map
-   becomes a full-height hero on the left and the other two stack beside it,
-   both columns ending together. That is the whole trick -- a bento only
-   looks composed when the tiles actually resolve into a rectangle.
-
-   Below 1080px it returns to one column. A choropleth squeezed into half of
-   a narrow viewport is worse than a stacked one, and the map is the reason
-   the page exists.                                                        */
+/* ── Bento, restated as an editorial two-column ─────────────────────────
+   Kept, because reading the map beside its commentary is genuinely better
+   than scrolling between them. But the tiles are no longer cards -- they
+   are columns of a page, divided by a rule. */
 .bento { display: block; }
-
 @media (min-width: 1080px) {
   .bento {
     display: grid;
-    /* minmax(0, …) matters: without it a grid column refuses to go below its
-       content's min-content width, and the district table -- four columns of
-       place names -- was dragging the SIDE column wider than the hero. The
-       ratio was being quietly overruled by a table. */
-    grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
-    gap: 24px;
+    grid-template-columns: minmax(0, 1.45fr) minmax(0, 1fr);
+    column-gap: 56px;
+    row-gap: 56px;
     align-items: start;
   }
-  /* The key-finding callout moves into the grid rather than sitting above it
-     as full-width prose. Two reasons: a bento with a paragraph bolted on top
-     is not a bento, and the hero runs 1246px against a 657px aspect tile --
-     a 589px hole in the right column. The callout fills it and reads better
-     beside the map it describes than stacked above it. */
-  .bento-note { grid-column: 2; grid-row: 1; margin-bottom: 0; align-self: start; }
-  .bento-hero { grid-column: 1; grid-row: 1 / span 2; margin-bottom: 0; }
-  /* .map-shell is itself a two-column grid: a fixed 300px control rail plus
-     the map. That works at full page width and collapses badly inside the
-     hero -- 300px of controls left the map 194px in a 614px column. Inside
-     the bento the rail stacks above instead, so the map gets the whole
-     column. The map is the reason this page exists; it does not lose a
-     width negotiation to a legend. */
+  .bento-note { grid-column: 2; grid-row: 1; margin: 0; }
+  .bento-hero { grid-column: 1; grid-row: 1 / span 2; margin: 0; padding: 0; border: 0; }
+  .bento-side { grid-column: 2; grid-row: 2; margin: 0; padding: 0; border: 0; }
+  .bento-wide {
+    grid-column: 1 / -1; grid-row: 3; margin: 0;
+    padding-top: 56px; border-top: 1px solid var(--line-soft);
+  }
+  /* .map-shell is its own two-column grid with a fixed control rail; inside
+     a narrower hero the rail would leave the map a sliver. */
   .bento-hero .map-shell { grid-template-columns: minmax(0, 1fr); }
-  .bento-side { grid-column: 2; grid-row: 2; margin-bottom: 0; }
-  /* The table spans the full width underneath. A first attempt stacked it in
-     the side column so both columns would end together, and it measured
-     beautifully on paper -- but the map shrinks when its column narrows, so
-     the hero came out 810px against a 1472px stack. Data decided the layout,
-     not the sketch. Full width also gives the table the room it wants. */
-  .bento-wide { grid-column: 1 / -1; grid-row: 3; margin-bottom: 0; }
-}
-
-@media (min-width: 1500px) {
-  .bento { grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); gap: 28px; }
 }
 </style>
 
