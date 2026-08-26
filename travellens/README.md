@@ -176,8 +176,25 @@ tree and asserts every count and rate is unchanged.
    worse than leaving the problem stated. What the API *does* return —
    `rating` and `userRatingCount` — is used instead, see external validity
    below.
-5. **Reddit needs an app registration**; the public JSON endpoint returns 403.
-6. **Three districts have no data**: Monaragala, Puttalam, the Vanni.
+5. **The seven aspects have no category for touts, commissions or pressure
+   selling** — found by a human reading the gold set, which is the argument
+   for #1 in miniature. 236 segments are about being scammed or overcharged
+   ("Watch out for the tourist touts", "the tuk tuk drivers try to get a
+   commission from every place they take you"). Most are absorbed by
+   `price_value` because they mention money, but that aspect was defined as
+   *entrance fees, parking charges, value for money* — it catches them by
+   accident. Around 30 carry no aspect word at all ("Absolute scam.") and are
+   invisible to every scorecard. The tuk-tuk example is tagged `roads_access`,
+   which is defensible — a tuk tuk is transport — and is the wrong reading,
+   because the complaint is about money.
+
+   Not fixed here. An eighth aspect means a new lexicon, a retrained
+   classifier and a redone evaluation. Stated as a scope limit instead: this
+   project measures complaints about the PLACE, not about the people trading
+   around it.
+
+6. **Reddit needs an app registration**; the public JSON endpoint returns 403.
+7. **Three districts have no data**: Monaragala, Puttalam, the Vanni.
 
 ---
 
