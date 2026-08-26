@@ -119,3 +119,69 @@ def test_say_cannot_raise_on_unencodable_text():
     mod = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(mod)
     mod.say("Avoid littering.\U0001F343\U0001F1F1\U0001F1F0 …")
+
+
+# --------------------------------------------------------------------------
+# The spreadsheet route (scripts/36_annotation_sheet.py)
+# --------------------------------------------------------------------------
+def _sheet_module():
+    import importlib.util
+    spec = importlib.util.spec_from_file_location(
+        "sheet", ROOT / "scripts" / "36_annotation_sheet.py")
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    return mod
+
+
+def test_the_sheet_never_carries_the_pipelines_guess():
+    """sample_reason says which answer is expected. An annotator who can see
+    it is not independent, and independence is the whole exercise."""
+    sheet = ROOT / "reports" / "TO_LABEL_annotator1.csv"
+    if not sheet.exists():
+        _sheet_module().export(1)
+    cols = pd.read_csv(sheet, encoding="utf-8-sig", nrows=1).columns
+    assert "sample_reason" not in cols
+    assert not any("sample" in c.lower() for c in cols)
+
+
+def test_the_sheet_is_readable_by_excel():
+    """Without the BOM, Excel reads it in the local codepage and every
+    Sinhala name and emoji becomes mojibake."""
+    sheet = ROOT / "reports" / "TO_LABEL_annotator1.csv"
+    if not sheet.exists():
+        _sheet_module().export(1)
+    assert sheet.read_bytes()[:3] == b"\xef\xbb\xbf", "no UTF-8 BOM"
+
+
+def test_an_untouched_sheet_imports_nothing(tmp_path):
+    """An empty spreadsheet must not become 200 confident 'nothing here'
+    verdicts. That would fabricate a gold set out of a file nobody read."""
+    mod = _sheet_module()
+    gold_before = pd.read_csv(ROOT / "reports" / "goldset_focused_annotator1.csv")
+    blank = pd.read_csv(ROOT / "reports" / "TO_LABEL_annotator1.csv",
+                        encoding="utf-8-sig")
+    path = tmp_path / "untouched.csv"
+    blank.to_csv(path, index=False, encoding="utf-8-sig")
+
+    mod.read_back(path, 1)
+    gold_after = pd.read_csv(ROOT / "reports" / "goldset_focused_annotator1.csv")
+    checked = gold_after["checked"].astype(str).str.strip().str.lower() == "x"
+    assert int(checked.sum()) == 0, "an unread sheet was imported as verdicts"
+    assert len(gold_after) == len(gold_before)
+
+
+def test_an_unreadable_cell_blocks_the_whole_import(tmp_path):
+    """Half-importing a sheet leaves the gold set in a state nobody chose."""
+    mod = _sheet_module()
+    sheet = pd.read_csv(ROOT / "reports" / "TO_LABEL_annotator1.csv",
+                        encoding="utf-8-sig")
+    sheet["safety"] = sheet["safety"].astype("object")
+    sheet.loc[0, "safety"] = "N"
+    sheet.loc[1, "safety"] = "probably?"
+    path = tmp_path / "bad.csv"
+    sheet.to_csv(path, index=False, encoding="utf-8-sig")
+
+    assert mod.read_back(path, 1) is None, "a bad sheet was accepted"
+    gold = pd.read_csv(ROOT / "reports" / "goldset_focused_annotator1.csv")
+    checked = gold["checked"].astype(str).str.strip().str.lower() == "x"
+    assert int(checked.sum()) == 0, "a refused import still wrote rows"
