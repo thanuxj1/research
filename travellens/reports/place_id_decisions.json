@@ -1,0 +1,161 @@
+{
+ "decisions": {
+  "ChIJXQLueKNz4ToR_sMWrhaKb7k": {
+   "decision": "merge",
+   "canonical": "Galle Dutch Fort",
+   "reason": "",
+   "variants": [
+    "Galle Fort",
+    "Galle Dutch Fort",
+    "Black Galle Fort"
+   ],
+   "reviews": 521
+  },
+  "ChIJr7L0oW9Z4joRjaT5aD0oCtk": {
+   "decision": "merge",
+   "canonical": "Colombo National Museum",
+   "reason": "",
+   "variants": [
+    "Colombo National Museum",
+    "Colombo Natational Museum"
+   ],
+   "reviews": 506
+  },
+  "ChIJ_xb2dldk5DoRMN9Ol1xqHKw": {
+   "decision": "merge",
+   "canonical": "Uva Halpewatte Tea Factory Tour",
+   "reason": "",
+   "variants": [
+    "Halpewatte Tea Factory Tour",
+    "Uva Halpewatte Tea Factory Tour"
+   ],
+   "reviews": 493
+  },
+  "ChIJcU1HJ3GB4zoRF-NtFybYYU8": {
+   "decision": "merge",
+   "canonical": "Lover's leap waterfall",
+   "reason": "",
+   "variants": [
+    "Lover's leap waterfall",
+    "Lover's Leap Falls"
+   ],
+   "reviews": 435
+  },
+  "ChIJJQMFzqpb4joRn_WT_b_1kP0": {
+   "decision": "merge",
+   "canonical": "Dehiwala Zoological Gardens",
+   "reason": "",
+   "variants": [
+    "National Zoological Gardens of Sri Lanka",
+    "Dehiwala Zoological Gardens"
+   ],
+   "reviews": 423
+  },
+  "ChIJQZi_QPly4ToRRzqjCuvOLv4": {
+   "decision": "merge",
+   "canonical": "Jungle Beach",
+   "reason": "",
+   "variants": [
+    "Jungle Beach, Unawatuna",
+    "Jungle Beach"
+   ],
+   "reviews": 405
+  },
+  "ChIJZRPdHihY4joRRH3j8j-i36Y": {
+   "decision": "merge",
+   "canonical": "Kelaniya Raja Maha Viharaya",
+   "reason": "",
+   "variants": [
+    "Kelaniya Raja Maha Viharaya",
+    "Kelaniya Raja Maha Vihara"
+   ],
+   "reviews": 381
+  },
+  "ChIJodWylxBb4joRd_aoOLm_cm0": {
+   "decision": "merge",
+   "canonical": "Mount Lavinia Beach",
+   "reason": "",
+   "variants": [
+    "Mount Lavania Beach",
+    "Mount Lavinia Beach"
+   ],
+   "reviews": 379
+  },
+  "ChIJeZht1is54ToRiwGVI5Dx78Q": {
+   "decision": "merge",
+   "canonical": "Parewi Duwa Temple",
+   "reason": "",
+   "variants": [
+    "Parewi Duwa Temple",
+    "Matara Paravi Duwa Beach"
+   ],
+   "reviews": 322
+  },
+  "ChIJSd-J13eJ5DoRMKEcysUoUpA": {
+   "decision": "merge",
+   "canonical": "Narangala Mountain",
+   "reason": "",
+   "variants": [
+    "Narangala Mountain",
+    "Narangala Hill"
+   ],
+   "reviews": 204
+  },
+  "ChIJb0HuFDy95joR98xOu5uMrWw": {
+   "decision": "merge",
+   "canonical": "Hambantota Beach",
+   "reason": "",
+   "variants": [
+    "Hambantota Beach",
+    "Hambantota Beach Children Park"
+   ],
+   "reviews": 41
+  },
+  "ChIJQ9yCmWtZ4joRNu1evW41NTo": {
+   "decision": "merge",
+   "canonical": "Gangaramaya (Vihara) Buddhist Temple",
+   "reason": "One temple in Colombo. 'Gangarama' and 'Gangaramaya' are the same name with and without the Sinhala definite suffix; the token guard cannot see that, a reader can. Both variants are filed under Colombo and share Google's id and address.",
+   "variants": [
+    "Gangaramaya (Vihara) Buddhist Temple",
+    "Gangarama Temple"
+   ],
+   "reviews": 486,
+   "decided_by": "Claude, reviewed against corpus district + Google address"
+  },
+  "ChIJk6Socrtl5DoR4NnxYbPPr6c": {
+   "decision": "keep_apart",
+   "canonical": "Ravana Ella Falls",
+   "reason": "The id points at 'Kuda Ravana Ella waterfall', a smaller separate fall, so it is not evidence for merging the main Ravana Falls names. The group also swept in 'Kande sudu ella water falls' (Matale, 10 reviews), which is a different waterfall entirely. The first three names probably ARE one place, but this identifier does not show it, and an under-merge is the honest error.",
+   "variants": [
+    "Ravana Waterfall",
+    "Ravana Ella Falls",
+    "Ravan Ella Waterfall",
+    "Kande sudu ella water falls"
+   ],
+   "reviews": 478,
+   "decided_by": "Claude, reviewed against corpus district + Google address"
+  },
+  "ChIJ25dfbSNZ4joRn9ugCqEaB_w": {
+   "decision": "keep_apart",
+   "canonical": "Colombo Port Maritime Museum",
+   "reason": "Two different museums. 'Maritime Museum' (204 reviews) is filed under Galle -- the Maritime Archaeology Museum there -- and was matched to the Colombo Port Maritime Museum at 19 Chaithya Rd. Merging would move 204 Galle reviews to a Colombo place.",
+   "variants": [
+    "Maritime Museum",
+    "Colombo Port Maritime Museum"
+   ],
+   "reviews": 230,
+   "decided_by": "Claude, reviewed against corpus district + Google address"
+  },
+  "ChIJ2-1Xv41P4zoRSf9DYK-EgP0": {
+   "decision": "merge",
+   "canonical": "Hulangala mini world's end view",
+   "reason": "One viewpoint. Both variants carry Google's id and the same address (HHRH+XXG, Selagama, which is in Matale). The district split is a labelling error in the corpus -- 40 reviews filed under Kurunegala -- not two places, so the district guard fired on our own bad data rather than on Google's.",
+   "variants": [
+    "Hulangala mini world's end view",
+    "Hulangala mini world end entrance"
+   ],
+   "reviews": 224,
+   "decided_by": "Claude, reviewed against corpus district + Google address"
+  }
+ }
+}

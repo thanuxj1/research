@@ -287,9 +287,15 @@ def normalise(items: List[Dict], kind: str, matcher: DestinationMatcher,
         # earlier untargeted news pass guessed wrong three times out of four.
         hint = item.get("destination_hint")
         if hint:
+            # The hint says which destination was SEARCHED FOR, not what the
+            # article is about. Google News matches loosely, so the text has
+            # to bear the hint out -- see supports_destination().
+            if not supports_destination(hint, text):
+                unmatched += 1
+                continue
             hit = {"destination": hint,
                    "district": item.get("district_hint") or "",
-                   "match_method": "search_query"}
+                   "match_method": "search_query+verified"}
             rows.append({
                 "media_id": make_media_id(item["url"]),
                 "kind": item["kind"],
@@ -379,3 +385,100 @@ def main(argv=None):
 
 if __name__ == "__main__":
     main()
+
+
+# --------------------------------------------------------------------------
+# Where a news item comes from
+# --------------------------------------------------------------------------
+# The storyboard told the reader that news is "restricted to established Sri
+# Lankan outlets". It never was: the targeted collector runs in 'any_named'
+# mode, so Google News returns whatever it has. 246 of 411 items came from
+# outlets with no Sri Lankan signal at all -- Mongabay, Xinhua, Time Out, and
+# one article about the National Maritime Museum in GREENWICH filed under a
+# museum in Galle.
+#
+# The fix is not to throw the foreign coverage away. Much of it is good travel
+# journalism, and a thesis that quietly deleted inconvenient sources would be
+# worse than one that shows them. The fix is to stop claiming otherwise and to
+# mark which is which, so a reader can weigh a Sunday Times report differently
+# from a listicle.
+#
+# Matched on the outlet NAME because that is what Google News gives us -- the
+# URL is a news.google.com redirect that hides the publisher's domain.
+_SRI_LANKAN_OUTLET = re.compile(
+    r"sri\s*lanka|lanka|ceylon|colombo|"
+    r"\bada\s*derana\b|adaderana|newsfirst|news\s*first|hiru|newswire|"
+    r"economynext|daily\s*ft|dailynews|daily\s*news|sundaytimes|"
+    r"island\.lk|the\s*island|the\s*morning|roar\s*media|"
+    r"groundviews|tamil\s*guardian|virakesari|dailymirror",
+    re.IGNORECASE)
+
+
+def is_sri_lankan_outlet(source_name: str) -> bool:
+    """True for a publisher recognisably based in or covering Sri Lanka.
+
+    Deliberately generous: a false 'local' is a smaller error than dropping a
+    genuine Sri Lankan outlet whose name happens not to say so. Anything this
+    cannot vouch for is marked in the interface rather than hidden.
+    """
+    name = str(source_name or "").strip()
+    if not name:
+        return False
+    if name.lower() in {v.lower() for v in CREDIBLE_NEWS_DOMAINS.values()}:
+        return True
+    return bool(_SRI_LANKAN_OUTLET.search(name))
+
+
+# --------------------------------------------------------------------------
+# Does the item actually concern the destination it is filed under?
+# --------------------------------------------------------------------------
+# normalise() used to trust a destination_hint absolutely: "the item came from
+# a search FOR that destination, so its subject is KNOWN rather than
+# inferred". That is false, and the storyboard showed the proof -- a search for
+# "Maritime Museum" Sri Lanka returned an article about the National Maritime
+# Museum in GREENWICH, one about the Ancient Maritime Silk Road, and one about
+# a museum in China, all filed under a museum in Galle. Google News matches
+# loosely; the query is a hint, not a guarantee.
+#
+# DestinationMatcher.distinctive cannot be reused here. It strips tokens that
+# are COMMON IN THE REVIEW CORPUS, so "horton" and "plains" are removed --
+# reviews of Horton Plains say "Horton Plains" constantly. That is correct for
+# identifying an unlabelled item and useless for checking one we already have
+# a candidate for. What is wanted is the opposite: the words that identify the
+# place, however often visitors write them.
+def identifying_tokens(name: str) -> List[str]:
+    """The words in a destination name that actually name the place.
+
+    Feature nouns ("beach", "museum", "falls") and country words are dropped,
+    because they identify nothing on their own.
+    """
+    return [t for t in _norm(name).split()
+            if t not in STOPWORD_TOKENS and len(t) > 3]
+
+
+def supports_destination(destination: str, text: str) -> bool:
+    """True if the text bears out the destination it is filed under.
+
+    Every identifying word must be present -- "Ancient Maritime Silk Road"
+    contains 'maritime' but is not about the Maritime Museum.
+
+    A name with only ONE identifying word must appear in full. Otherwise a
+    generic name like "Maritime Museum" accepts any article that says
+    "maritime", which is how all three of that museum's cards got there.
+    Single-word destinations ("Riverston") are unaffected: their full name IS
+    the token, so the stricter test is the same test.
+
+    Deliberately an under-match. It discards "Birdwatching in the highlands of
+    Sri Lanka" from Horton Plains, which is a loss, and keeps "Clarion call to
+    protect vulnerable Horton Plains NP", which is the point. Showing a
+    reader something that is not about the place is a worse failure than
+    showing them less.
+    """
+    toks = identifying_tokens(destination)
+    norm = _norm(destination)
+    body = " " + _norm(text) + " "
+    if not toks:
+        return bool(norm) and (" " + norm + " ") in body
+    if not all((" " + t + " ") in body for t in toks):
+        return False
+    return len(toks) >= 2 or (" " + norm + " ") in body

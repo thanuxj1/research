@@ -203,7 +203,8 @@ def _quotes(group: pd.DataFrame, pol_col: str, limit: int = QUOTES_PER_NODE) -> 
 
 def build_tree(seg: pd.DataFrame, pol_col: str = DEFAULT_POLARITY_COL,
                sources=None, reviews: Optional[pd.DataFrame] = None,
-               use_trained: bool = False) -> Dict:
+               use_trained: bool = False, safety_recall: bool = True,
+               site_rule: bool = True) -> Dict:
     """Build the full Sri Lanka -> district -> destination -> aspect tree.
 
     `sources` optionally restricts the tree to reviews from particular
@@ -295,7 +296,11 @@ def build_tree(seg: pd.DataFrame, pol_col: str = DEFAULT_POLARITY_COL,
     # depends on WHICH aspect a segment is being counted under -- the same
     # sentence keeps its ordinary verdict for every other aspect.
     from .polarity import safety_recall_rule
-    if "pol_lexicon" in long.columns:
+    # safety_recall=False exists so the rule can be switched off and the
+    # published numbers recomputed without it. A hand-written rule that
+    # changes a headline figure has to be answerable for how much it changes
+    # it; see ablation.py.
+    if safety_recall and "pol_lexicon" in long.columns:
         recovered = 0
         labels = []
         for r in long.itertuples(index=False):
@@ -309,6 +314,23 @@ def build_tree(seg: pd.DataFrame, pol_col: str = DEFAULT_POLARITY_COL,
         long[pol_col] = labels
         if recovered:
             print("  safety recall rule: {} hedged warnings recovered".format(recovered))
+
+    # A reported regulation is not a grievance. Applied after the safety
+    # recall so a prohibition that carries a hazard keeps the negative label
+    # the recall rule just gave it.
+    if site_rule:
+        from .polarity import site_rule_is_not_a_complaint
+        neutralised = 0
+        labels = []
+        for r in long.itertuples(index=False):
+            new_lab, fired = site_rule_is_not_a_complaint(
+                getattr(r, "segment", ""), getattr(r, pol_col))
+            neutralised += fired
+            labels.append(new_lab)
+        long[pol_col] = labels
+        if neutralised:
+            print("  site-rule correction: {} regulations no longer counted "
+                  "as complaints".format(neutralised))
 
     suppressed = {"destination_aspect": 0, "district_aspect": 0}
 

@@ -1,0 +1,473 @@
+{
+ "what_this_is": "Sensitivity analysis, not accuracy. It reports how far the published numbers move when each hand-written rule is switched off. It does not show that a rule is correct -- the project has no polarity ground truth.",
+ "domain_patch": "Not deployed. hybrid_polarity feeds pol_hybrid (Method C), a comparison column; the tree is built from pol_final.",
+ "variants": {
+  "deployed": {
+   "note": "all three rules on -- the published numbers",
+   "polarity_column": "pol_final",
+   "safety_recall": true,
+   "site_rule": true,
+   "aspects": {
+    "cleanliness": {
+     "complaint_rate": 0.418,
+     "n_negative": 1769,
+     "n_opinions": 4235
+    },
+    "crowd": {
+     "complaint_rate": 0.149,
+     "n_negative": 600,
+     "n_opinions": 4038
+    },
+    "facilities": {
+     "complaint_rate": 0.244,
+     "n_negative": 1290,
+     "n_opinions": 5278
+    },
+    "price_value": {
+     "complaint_rate": 0.467,
+     "n_negative": 2185,
+     "n_opinions": 4681
+    },
+    "roads_access": {
+     "complaint_rate": 0.288,
+     "n_negative": 1887,
+     "n_opinions": 6542
+    },
+    "safety": {
+     "complaint_rate": 0.509,
+     "n_negative": 1387,
+     "n_opinions": 2724
+    },
+    "scenery": {
+     "complaint_rate": 0.061,
+     "n_negative": 1456,
+     "n_opinions": 23952
+    }
+   },
+   "displayed_scorecards": 1130,
+   "n_destinations": 293
+  },
+  "no_request_rule": {
+   "note": "the model's own label, politely phrased complaints left neutral",
+   "polarity_column": "pol_roberta",
+   "safety_recall": true,
+   "site_rule": true,
+   "aspects": {
+    "cleanliness": {
+     "complaint_rate": 0.405,
+     "n_negative": 1687,
+     "n_opinions": 4170
+    },
+    "crowd": {
+     "complaint_rate": 0.142,
+     "n_negative": 571,
+     "n_opinions": 4016
+    },
+    "facilities": {
+     "complaint_rate": 0.228,
+     "n_negative": 1181,
+     "n_opinions": 5188
+    },
+    "price_value": {
+     "complaint_rate": 0.443,
+     "n_negative": 2008,
+     "n_opinions": 4531
+    },
+    "roads_access": {
+     "complaint_rate": 0.257,
+     "n_negative": 1626,
+     "n_opinions": 6319
+    },
+    "safety": {
+     "complaint_rate": 0.488,
+     "n_negative": 1285,
+     "n_opinions": 2633
+    },
+    "scenery": {
+     "complaint_rate": 0.053,
+     "n_negative": 1259,
+     "n_opinions": 23855
+    }
+   },
+   "displayed_scorecards": 1120,
+   "n_destinations": 293
+  },
+  "no_safety_recall": {
+   "note": "hedged hazard warnings left as the model read them",
+   "polarity_column": "pol_final",
+   "safety_recall": false,
+   "site_rule": true,
+   "aspects": {
+    "cleanliness": {
+     "complaint_rate": 0.418,
+     "n_negative": 1769,
+     "n_opinions": 4235
+    },
+    "crowd": {
+     "complaint_rate": 0.149,
+     "n_negative": 600,
+     "n_opinions": 4038
+    },
+    "facilities": {
+     "complaint_rate": 0.244,
+     "n_negative": 1290,
+     "n_opinions": 5278
+    },
+    "price_value": {
+     "complaint_rate": 0.467,
+     "n_negative": 2185,
+     "n_opinions": 4681
+    },
+    "roads_access": {
+     "complaint_rate": 0.288,
+     "n_negative": 1887,
+     "n_opinions": 6542
+    },
+    "safety": {
+     "complaint_rate": 0.467,
+     "n_negative": 1172,
+     "n_opinions": 2509
+    },
+    "scenery": {
+     "complaint_rate": 0.061,
+     "n_negative": 1456,
+     "n_opinions": 23952
+    }
+   },
+   "displayed_scorecards": 1121,
+   "n_destinations": 293
+  },
+  "no_site_rule": {
+   "note": "reported regulations counted as complaints again",
+   "polarity_column": "pol_final",
+   "safety_recall": true,
+   "site_rule": false,
+   "aspects": {
+    "cleanliness": {
+     "complaint_rate": 0.421,
+     "n_negative": 1790,
+     "n_opinions": 4256
+    },
+    "crowd": {
+     "complaint_rate": 0.149,
+     "n_negative": 601,
+     "n_opinions": 4039
+    },
+    "facilities": {
+     "complaint_rate": 0.246,
+     "n_negative": 1300,
+     "n_opinions": 5288
+    },
+    "price_value": {
+     "complaint_rate": 0.467,
+     "n_negative": 2190,
+     "n_opinions": 4686
+    },
+    "roads_access": {
+     "complaint_rate": 0.29,
+     "n_negative": 1900,
+     "n_opinions": 6555
+    },
+    "safety": {
+     "complaint_rate": 0.51,
+     "n_negative": 1389,
+     "n_opinions": 2726
+    },
+    "scenery": {
+     "complaint_rate": 0.063,
+     "n_negative": 1502,
+     "n_opinions": 23998
+    }
+   },
+   "displayed_scorecards": 1131,
+   "n_destinations": 293
+  },
+  "no_rules_at_all": {
+   "note": "no hand-written correction anywhere in the polarity path",
+   "polarity_column": "pol_roberta",
+   "safety_recall": false,
+   "site_rule": false,
+   "aspects": {
+    "cleanliness": {
+     "complaint_rate": 0.408,
+     "n_negative": 1708,
+     "n_opinions": 4191
+    },
+    "crowd": {
+     "complaint_rate": 0.142,
+     "n_negative": 572,
+     "n_opinions": 4017
+    },
+    "facilities": {
+     "complaint_rate": 0.229,
+     "n_negative": 1190,
+     "n_opinions": 5197
+    },
+    "price_value": {
+     "complaint_rate": 0.444,
+     "n_negative": 2011,
+     "n_opinions": 4534
+    },
+    "roads_access": {
+     "complaint_rate": 0.259,
+     "n_negative": 1638,
+     "n_opinions": 6331
+    },
+    "safety": {
+     "complaint_rate": 0.441,
+     "n_negative": 1064,
+     "n_opinions": 2412
+    },
+    "scenery": {
+     "complaint_rate": 0.055,
+     "n_negative": 1304,
+     "n_opinions": 23900
+    }
+   },
+   "displayed_scorecards": 1111,
+   "n_destinations": 293
+  }
+ },
+ "vs_deployed": {
+  "no_request_rule": {
+   "note": "the model's own label, politely phrased complaints left neutral",
+   "aspects": {
+    "cleanliness": {
+     "deployed_rate": 0.418,
+     "variant_rate": 0.405,
+     "delta_pp": -1.3,
+     "delta_negatives": -82
+    },
+    "crowd": {
+     "deployed_rate": 0.149,
+     "variant_rate": 0.142,
+     "delta_pp": -0.7,
+     "delta_negatives": -29
+    },
+    "facilities": {
+     "deployed_rate": 0.244,
+     "variant_rate": 0.228,
+     "delta_pp": -1.6,
+     "delta_negatives": -109
+    },
+    "price_value": {
+     "deployed_rate": 0.467,
+     "variant_rate": 0.443,
+     "delta_pp": -2.4,
+     "delta_negatives": -177
+    },
+    "roads_access": {
+     "deployed_rate": 0.288,
+     "variant_rate": 0.257,
+     "delta_pp": -3.1,
+     "delta_negatives": -261
+    },
+    "safety": {
+     "deployed_rate": 0.509,
+     "variant_rate": 0.488,
+     "delta_pp": -2.1,
+     "delta_negatives": -102
+    },
+    "scenery": {
+     "deployed_rate": 0.061,
+     "variant_rate": 0.053,
+     "delta_pp": -0.8,
+     "delta_negatives": -197
+    }
+   },
+   "ranking": [
+    "safety",
+    "price_value",
+    "cleanliness",
+    "roads_access",
+    "facilities",
+    "crowd",
+    "scenery"
+   ],
+   "top_aspect_changes": false,
+   "largest_move": "roads_access",
+   "largest_move_pp": -3.1,
+   "scorecards_delta": -10
+  },
+  "no_safety_recall": {
+   "note": "hedged hazard warnings left as the model read them",
+   "aspects": {
+    "cleanliness": {
+     "deployed_rate": 0.418,
+     "variant_rate": 0.418,
+     "delta_pp": 0.0,
+     "delta_negatives": 0
+    },
+    "crowd": {
+     "deployed_rate": 0.149,
+     "variant_rate": 0.149,
+     "delta_pp": 0.0,
+     "delta_negatives": 0
+    },
+    "facilities": {
+     "deployed_rate": 0.244,
+     "variant_rate": 0.244,
+     "delta_pp": 0.0,
+     "delta_negatives": 0
+    },
+    "price_value": {
+     "deployed_rate": 0.467,
+     "variant_rate": 0.467,
+     "delta_pp": 0.0,
+     "delta_negatives": 0
+    },
+    "roads_access": {
+     "deployed_rate": 0.288,
+     "variant_rate": 0.288,
+     "delta_pp": 0.0,
+     "delta_negatives": 0
+    },
+    "safety": {
+     "deployed_rate": 0.509,
+     "variant_rate": 0.467,
+     "delta_pp": -4.2,
+     "delta_negatives": -215
+    },
+    "scenery": {
+     "deployed_rate": 0.061,
+     "variant_rate": 0.061,
+     "delta_pp": 0.0,
+     "delta_negatives": 0
+    }
+   },
+   "ranking": [
+    "price_value",
+    "safety",
+    "cleanliness",
+    "roads_access",
+    "facilities",
+    "crowd",
+    "scenery"
+   ],
+   "top_aspect_changes": true,
+   "largest_move": "safety",
+   "largest_move_pp": -4.2,
+   "scorecards_delta": -9
+  },
+  "no_site_rule": {
+   "note": "reported regulations counted as complaints again",
+   "aspects": {
+    "cleanliness": {
+     "deployed_rate": 0.418,
+     "variant_rate": 0.421,
+     "delta_pp": 0.3,
+     "delta_negatives": 21
+    },
+    "crowd": {
+     "deployed_rate": 0.149,
+     "variant_rate": 0.149,
+     "delta_pp": 0.0,
+     "delta_negatives": 1
+    },
+    "facilities": {
+     "deployed_rate": 0.244,
+     "variant_rate": 0.246,
+     "delta_pp": 0.2,
+     "delta_negatives": 10
+    },
+    "price_value": {
+     "deployed_rate": 0.467,
+     "variant_rate": 0.467,
+     "delta_pp": 0.0,
+     "delta_negatives": 5
+    },
+    "roads_access": {
+     "deployed_rate": 0.288,
+     "variant_rate": 0.29,
+     "delta_pp": 0.2,
+     "delta_negatives": 13
+    },
+    "safety": {
+     "deployed_rate": 0.509,
+     "variant_rate": 0.51,
+     "delta_pp": 0.1,
+     "delta_negatives": 2
+    },
+    "scenery": {
+     "deployed_rate": 0.061,
+     "variant_rate": 0.063,
+     "delta_pp": 0.2,
+     "delta_negatives": 46
+    }
+   },
+   "ranking": [
+    "safety",
+    "price_value",
+    "cleanliness",
+    "roads_access",
+    "facilities",
+    "crowd",
+    "scenery"
+   ],
+   "top_aspect_changes": false,
+   "largest_move": "cleanliness",
+   "largest_move_pp": 0.3,
+   "scorecards_delta": 1
+  },
+  "no_rules_at_all": {
+   "note": "no hand-written correction anywhere in the polarity path",
+   "aspects": {
+    "cleanliness": {
+     "deployed_rate": 0.418,
+     "variant_rate": 0.408,
+     "delta_pp": -1.0,
+     "delta_negatives": -61
+    },
+    "crowd": {
+     "deployed_rate": 0.149,
+     "variant_rate": 0.142,
+     "delta_pp": -0.7,
+     "delta_negatives": -28
+    },
+    "facilities": {
+     "deployed_rate": 0.244,
+     "variant_rate": 0.229,
+     "delta_pp": -1.5,
+     "delta_negatives": -100
+    },
+    "price_value": {
+     "deployed_rate": 0.467,
+     "variant_rate": 0.444,
+     "delta_pp": -2.3,
+     "delta_negatives": -174
+    },
+    "roads_access": {
+     "deployed_rate": 0.288,
+     "variant_rate": 0.259,
+     "delta_pp": -2.9,
+     "delta_negatives": -249
+    },
+    "safety": {
+     "deployed_rate": 0.509,
+     "variant_rate": 0.441,
+     "delta_pp": -6.8,
+     "delta_negatives": -323
+    },
+    "scenery": {
+     "deployed_rate": 0.061,
+     "variant_rate": 0.055,
+     "delta_pp": -0.6,
+     "delta_negatives": -152
+    }
+   },
+   "ranking": [
+    "price_value",
+    "safety",
+    "cleanliness",
+    "roads_access",
+    "facilities",
+    "crowd",
+    "scenery"
+   ],
+   "top_aspect_changes": true,
+   "largest_move": "safety",
+   "largest_move_pp": -6.8,
+   "scorecards_delta": -19
+  }
+ }
+}

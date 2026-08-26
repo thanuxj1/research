@@ -284,6 +284,14 @@ h3.section-title {
 .story-kind.reddit  { background: var(--warn-soft);     color: var(--warn); }
 .story-kind.news    { background: var(--accent-soft);   color: var(--accent); }
 .story-src { font-family: var(--f-mono); font-size: 11px; color: var(--ink-muted); }
+/* Marks a publisher we cannot place in Sri Lanka. Muted, not alarming: the
+   item is context, and most foreign coverage here is ordinary travel writing.
+   It has to be legible enough that the reader never mistakes it for local. */
+.story-foreign {
+  font-family: var(--f-mono); font-size: 10px; letter-spacing: .04em;
+  color: var(--ink-muted); border: 1px solid currentColor; border-radius: 3px;
+  padding: 0 4px; margin-left: 6px; white-space: nowrap; opacity: .85;
+}
 .story-snip { font-size: 12.5px; color: var(--ink-muted); line-height: 1.5; }
 .story-foot {
   font-family: var(--f-mono); font-size: 10.5px; color: var(--ink-faint);
@@ -435,6 +443,36 @@ h3.section-title {
 .pin-toggle { margin-left: auto; }
 
 /* ---------------------------------------------------------------- 3D map */
+#map-canvas {
+  display: block; width: 100%; border-radius: 3px;
+  background: transparent; cursor: grab; touch-action: none;
+}
+#map-canvas:active { cursor: grabbing; }
+.map3d-hint {
+  font-family: var(--f-mono); font-size: 10.5px; color: var(--ink-faint);
+  text-align: center; margin-top: 6px; letter-spacing: .03em;
+}
+.map3d-legend {
+  display: flex; flex-wrap: wrap; gap: 12px 20px; align-items: center;
+  margin-top: 10px; font-family: var(--f-mono); font-size: 10.5px;
+  color: var(--ink-muted);
+}
+.map3d-legend .key { display: flex; align-items: center; gap: 6px; }
+.map3d-ramp {
+  width: 96px; height: 9px; border-radius: 2px; border: 1px solid var(--line);
+}
+.map3d-ramp.rate {
+  background: linear-gradient(90deg, var(--surface-2), var(--critical));
+}
+.map3d-ramp.relief {
+  background: linear-gradient(90deg, var(--surface-2), var(--ink-faint));
+}
+.map3d-swatch-col {
+  width: 2px; height: 15px; background: var(--critical); display: inline-block;
+}
+.map3d-note {
+  font-size: 11px; color: var(--ink-faint); margin-top: 8px; line-height: 1.5;
+}
 .map3d-ground {
   stroke: var(--surface); stroke-width: .6; cursor: pointer;
   transition: fill-opacity .12s ease;
@@ -511,11 +549,13 @@ footer.foot code { font-family: var(--f-mono); font-size: 11px; }
 <script type="application/json" id="media-data">__MEDIA__</script>
 <script type="application/json" id="links-data">__LINKS__</script>
 <script type="application/json" id="coords-data">__COORDS__</script>
+<script type="application/json" id="terrain-data">__TERRAIN__</script>
 <script>
 (function () {
   "use strict";
   var TREE = JSON.parse(document.getElementById("tree-data").textContent);
   var GEO = JSON.parse(document.getElementById("geo-data").textContent);
+  var TERRAIN = JSON.parse(document.getElementById("terrain-data").textContent);
   var MEDIA = JSON.parse(document.getElementById("media-data").textContent);
   var LINKS = JSON.parse(document.getElementById("links-data").textContent);
   var COORDS = JSON.parse(document.getElementById("coords-data").textContent);
@@ -798,76 +838,435 @@ footer.foot code { font-family: var(--f-mono); font-size: 11px; }
   var SHOW_PINS = true;
 
 
-  /* ----------------------------------------------------------------- 3D map
-     Hand-rolled isometric projection. No library: the published page blocks
-     third-party scripts, and this needs about sixty lines anyway.
+  /* ------------------------------------------------------------ 3D terrain
+     A heightfield renderer on a canvas. No mapping library and no tile
+     server: the page has to open from a memory stick with no network, so the
+     elevation is collected once (NASA SRTM 30m, public domain) and embedded
+     as a 64x96 grid of integers -- about 30 KB, less than a single map tile.
 
-       1. rotate the ground plane about its centre by `angle`
-       2. project isometrically -- screenX = (x-y)*cos30, screenY = (x+y)*sin30
-       3. lift each destination into a column whose HEIGHT is its complaint
-          count and whose COLOUR is its complaint rate
-       4. draw far-to-near so nearer columns occlude farther ones
+     What is drawn, in order:
+       1. the terrain, one quad per grid cell, shaded by slope so the central
+          highlands and the Knuckles range read as landforms
+       2. a complaint-rate tint on the cells belonging to each district, so
+          the choropleth is painted ON the terrain rather than floating over it
+       3. district boundaries, draped by sampling terrain height along them
+       4. one column per destination: HEIGHT is complaint count, COLOUR is
+          complaint rate
 
-     Honest caveat, stated in the interface too: 3D is worse than the flat map
-     for reading values. Perspective shrinks distant columns and near ones hide
-     far ones, so two heights cannot be compared reliably across depth. It is
-     offered for presentation; the flat view remains the one to read numbers
-     from, and both are driven by identical data. */
-  var MAP_MODE = "flat";        // "flat" | "iso"
-  var SELECTED_DISTRICT = null; // drives the map highlight
-  var ISO_ANGLE = 0.6;          // radians, animated
-  var ISO_SPIN = null;
+     Honest caveats, stated in the legend too:
+       * vertical relief is exaggerated about 12x. At true scale a 2.5 km peak
+         on a 400 km island is invisible. Any 3D map you have seen does this;
+         few admit it.
+       * perspective makes distant columns smaller and lets near ones hide far
+         ones, so heights cannot be compared across depth. The flat map
+         remains the one to read values from. Both are driven by identical
+         data.
+       * the canvas cannot be reached by keyboard. Every district is also a
+         button in the list below the map, which can -- the 3D view adds a way
+         in, it does not remove one.                                        */
+  var MAP_MODE = "flat";          /* "flat" | "iso" */
+  var SELECTED_DISTRICT = null;
 
-  var COS30 = Math.cos(Math.PI / 6), SIN30 = Math.sin(Math.PI / 6);
+  /* Camera. cx/cy are the look-at point in map units; yaw and pitch are
+     radians; zoom is a plain multiplier. */
+  var CAM = { yaw: 0.62, pitch: 0.48, zoom: 1, cx: 0, cy: 0 };
+  var CAM_FROM = null, CAM_TO = null, CAM_T0 = 0, CAM_MS = 900;
+  var SPIN = true, RAF = null, DRAG = null, MOVED = 0;
+  var HOVER_DISTRICT = null;
+  /* Which district the camera is currently framed on. Compared against
+     SELECTED_DISTRICT so the fly-to happens however the selection was
+     made -- clicking the map, clicking the list, or the breadcrumb. */
+  var CAM_FOCUS = null;
+  var HITS = [];                  /* screen polygons for click testing */
 
-  function isoProject(x, y, z, cx, cy, angle) {
-    var dx = x - cx, dy = y - cy;
-    var rx = dx * Math.cos(angle) - dy * Math.sin(angle);
-    var ry = dx * Math.sin(angle) + dy * Math.cos(angle);
-    return [(rx - ry) * COS30, (rx + ry) * SIN30 - z];
+  /* Vertical exaggeration. Named, not hidden, because it is a claim about the
+     picture rather than about the data. 22x is chosen so the central massif
+     and the Knuckles read as distinct landforms at the default pitch; below
+     about 15x the island looks flat and the terrain earns nothing. */
+  var RELIEF = 22;
+
+  function reduceMotion() {
+    return !!(window.matchMedia &&
+              window.matchMedia("(prefers-reduced-motion: reduce)").matches);
   }
 
-  function renderMap3D() {
-    var host = document.getElementById("map-svg-host");
-    if (!host) return;
-    var p = project();
-    var vals = mapValues(MAP_ASPECT);
-    var cx = p.W / 2, cy = p.H / 2, a = ISO_ANGLE;
+  function cssVar(name) {
+    return getComputedStyle(document.documentElement)
+      .getPropertyValue(name).trim() || "#888";
+  }
 
-    // Ground: district outlines, flattened onto the plane.
-    var ground = GEO.features.map(function (f) {
+  /* #rrggbb -> [r,g,b]. The palette is authored in hex in one place, so the
+     canvas reads the same tokens the rest of the page does and follows the
+     light/dark switch without a second definition. */
+  function rgb(hex) {
+    var h = hex.replace("#", "");
+    if (h.length === 3) h = h[0] + h[0] + h[1] + h[1] + h[2] + h[2];
+    var n = parseInt(h, 16);
+    return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
+  }
+  function mix(a, b, t) {
+    return [Math.round(a[0] + (b[0] - a[0]) * t),
+            Math.round(a[1] + (b[1] - a[1]) * t),
+            Math.round(a[2] + (b[2] - a[2]) * t)];
+  }
+  function css(c, alpha) {
+    return "rgba(" + c[0] + "," + c[1] + "," + c[2] + "," +
+           (alpha === undefined ? 1 : alpha) + ")";
+  }
+
+  /* ---------------------------------------------------------- terrain prep */
+  var TERRA = null;
+
+  function pointInRing(lon, lat, ring) {
+    var inside = false;
+    for (var i = 0, j = ring.length - 1; i < ring.length; j = i++) {
+      var xi = ring[i][0], yi = ring[i][1], xj = ring[j][0], yj = ring[j][1];
+      if (((yi > lat) !== (yj > lat)) &&
+          (lon < (xj - xi) * (lat - yi) / (yj - yi) + xi)) inside = !inside;
+    }
+    return inside;
+  }
+
+  function prepTerrain() {
+    if (TERRA !== null) return TERRA;
+    if (!TERRAIN || !TERRAIN.z || !TERRAIN.z.length || !TERRAIN.z[0]) {
+      TERRA = false;                       /* no grid -> flat plane fallback */
+      return TERRA;
+    }
+    var p = project();
+    var cols = TERRAIN.cols, rows = TERRAIN.rows, z = TERRAIN.z;
+    var xs = TERRAIN.lons.map(function (lon) { return p.x(lon); });
+    var ys = TERRAIN.lats.map(function (lat) { return p.y(lat); });
+
+    var maxZ = 1, i, j;
+    for (j = 0; j < rows; j++) {
+      for (i = 0; i < cols; i++) if (z[j][i] > maxZ) maxZ = z[j][i];
+    }
+    /* Metres -> map units, then exaggerated. */
+    var vs = (p.W * 0.075 / maxZ) * RELIEF / 12;
+
+    /* Which district each cell falls in. Done once: 6,144 cells against 22
+       polygons is far too slow to repeat every frame, and it never changes. */
+    var bounds = GEO.features.map(function (f) {
+      var b = [180, 90, -180, -90], rings = [];
+      eachRing(f, function (ring) {
+        rings.push(ring);
+        ring.forEach(function (pt) {
+          if (pt[0] < b[0]) b[0] = pt[0];
+          if (pt[1] < b[1]) b[1] = pt[1];
+          if (pt[0] > b[2]) b[2] = pt[0];
+          if (pt[1] > b[3]) b[3] = pt[1];
+        });
+      });
+      return { name: f.properties.district, box: b, rings: rings };
+    });
+
+    var owner = new Array(rows);
+    for (j = 0; j < rows; j++) {
+      owner[j] = new Array(cols);
+      var lat = TERRAIN.lats[j];
+      for (i = 0; i < cols; i++) {
+        var lon = TERRAIN.lons[i], hit = null;
+        for (var k = 0; k < bounds.length; k++) {
+          var b = bounds[k];
+          if (lon < b.box[0] || lon > b.box[2] || lat < b.box[1] || lat > b.box[3]) continue;
+          for (var r = 0; r < b.rings.length; r++) {
+            if (pointInRing(lon, lat, b.rings[r])) { hit = b.name; break; }
+          }
+          if (hit) break;
+        }
+        owner[j][i] = hit;
+      }
+    }
+
+    /* Slope shading. A cell's brightness comes from the angle between its
+       surface normal and a light from the north-west -- the convention that
+       makes ridges read as ridges rather than as valleys. */
+    var shade = new Array(rows);
+    var stepX = Math.abs(xs[1] - xs[0]) || 1, stepY = Math.abs(ys[1] - ys[0]) || 1;
+    for (j = 0; j < rows; j++) {
+      shade[j] = new Array(cols);
+      for (i = 0; i < cols; i++) {
+        var zl = z[j][Math.max(0, i - 1)], zr = z[j][Math.min(cols - 1, i + 1)];
+        var zu = z[Math.max(0, j - 1)][i], zd = z[Math.min(rows - 1, j + 1)][i];
+        var nx = (zl - zr) * vs / (2 * stepX), ny = (zu - zd) * vs / (2 * stepY);
+        var len = Math.sqrt(nx * nx + ny * ny + 1);
+        /* light direction, normalised */
+        var lx = -0.55, ly = -0.55, lz = 0.63;
+        var d = (nx * lx + ny * ly + lz) / len;
+        shade[j][i] = Math.max(0, Math.min(1, 0.5 + d * 0.95));
+      }
+    }
+
+    TERRA = { cols: cols, rows: rows, xs: xs, ys: ys, z: z, vs: vs,
+              owner: owner, shade: shade, maxZ: maxZ };
+    return TERRA;
+  }
+
+  /* --------------------------------------------------------------- camera */
+  /* CAM.cx/cy are an OFFSET from the middle of the map, not absolute map
+     coordinates. Treating them as absolute put the camera at the map's corner
+     and pushed the island off the right edge of the canvas. */
+  function camProject(x, y, zz, out) {
+    var pj = project();
+    var dx = x - pj.W / 2 - CAM.cx, dy = y - pj.H / 2 - CAM.cy;
+    var c = Math.cos(CAM.yaw), s = Math.sin(CAM.yaw);
+    var rx = dx * c - dy * s, ry = dx * s + dy * c;
+    out[0] = rx * CAM.zoom;
+    out[1] = (ry * Math.sin(CAM.pitch) - zz) * CAM.zoom;
+    out[2] = ry;                            /* depth, larger = nearer */
+    return out;
+  }
+
+  function districtCentre(name) {
+    var p = project(), sx = 0, sy = 0, n = 0;
+    GEO.features.forEach(function (f) {
+      if (f.properties.district !== name) return;
+      eachRing(f, function (ring) {
+        ring.forEach(function (pt) { sx += p.x(pt[0]); sy += p.y(pt[1]); n++; });
+      });
+    });
+    return n ? { x: sx / n, y: sy / n } : null;
+  }
+
+  function easeInOut(t) {
+    return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+  }
+
+  /* Fly the camera somewhere. Instant when the reader has asked for reduced
+     motion -- they still get the destination, just not the journey. */
+  function flyTo(target, ms) {
+    if (reduceMotion()) {
+      for (var k in target) if (target.hasOwnProperty(k)) CAM[k] = target[k];
+      CAM_TO = null;
+      draw3D();
+      return;
+    }
+    CAM_FROM = { yaw: CAM.yaw, pitch: CAM.pitch, zoom: CAM.zoom,
+                 cx: CAM.cx, cy: CAM.cy };
+    CAM_TO = target;
+    CAM_MS = ms || 900;
+    CAM_T0 = performance.now();
+    startLoop();
+  }
+
+  function flyToDistrict(name) {
+    var p = project();
+    if (!name) {
+      flyTo({ cx: 0, cy: 0, zoom: 1, pitch: 0.55 }, 850);
+      return;
+    }
+    var c = districtCentre(name);
+    if (!c) return;
+    /* Yaw is left alone: spinning the country to face the reader is
+       disorienting when they only asked to look at one district. */
+    /* 1.75x rather than tighter: the district has to arrive with its
+       neighbours and its complaint columns still in frame, or the reader
+       loses both the context and the data they flew in to see. */
+    flyTo({ cx: c.x - p.W / 2, cy: c.y - p.H / 2, zoom: 1.75, pitch: 0.6 }, 950);
+  }
+
+  /* Measures the projected extent of the island at the current yaw/pitch,
+     ignoring pan and zoom, and returns the scale that fits it plus the centre
+     to align on. Sampled rather than exhaustive: every 3rd boundary vertex is
+     more than enough to bound a shape, and this runs every frame. */
+  var FIT_SAMPLE = null;
+
+  function frameFit(p, t) {
+    if (!FIT_SAMPLE) {
+      FIT_SAMPLE = [];
+      GEO.features.forEach(function (f) {
+        eachRing(f, function (ring) {
+          for (var i = 0; i < ring.length; i += 3) {
+            var x = p.x(ring[i][0]), y = p.y(ring[i][1]);
+            FIT_SAMPLE.push([x, y, sampleZ(t, x, y)]);
+          }
+        });
+      });
+    }
+    var c = Math.cos(CAM.yaw), s2 = Math.sin(CAM.yaw), sp = Math.sin(CAM.pitch);
+    var x0 = 1e9, y0 = 1e9, x1 = -1e9, y1 = -1e9;
+    for (var i = 0; i < FIT_SAMPLE.length; i++) {
+      var dx = FIT_SAMPLE[i][0] - p.W / 2, dy = FIT_SAMPLE[i][1] - p.H / 2;
+      var rx = dx * c - dy * s2, ry = dx * s2 + dy * c;
+      var sy = ry * sp - FIT_SAMPLE[i][2];
+      if (rx < x0) x0 = rx;
+      if (rx > x1) x1 = rx;
+      if (sy < y0) y0 = sy;
+      if (sy > y1) y1 = sy;
+    }
+    /* Headroom above the terrain for the tallest complaint column. */
+    y0 -= 110;
+    var spanX = Math.max(1, x1 - x0), spanY = Math.max(1, y1 - y0);
+    var cv = document.getElementById("map-canvas");
+    var host = cv ? cv.parentNode : null;
+    var w = host ? (host.clientWidth || 640) : 640;
+    var h = Math.max(340, Math.round(w * 0.72));
+    return {
+      scale: Math.min(w * 0.92 / spanX, h * 0.92 / spanY),
+      mx: (x0 + x1) / 2,
+      my: (y0 + y1) / 2
+    };
+  }
+
+  /* ---------------------------------------------------------------- render */
+  function draw3D() {
+    var cv = document.getElementById("map-canvas");
+    if (!cv) return;
+    var host = cv.parentNode;
+    var dpr = Math.min(window.devicePixelRatio || 1, 2);
+    var wCss = host.clientWidth || 640;
+    var hCss = Math.max(340, Math.round(wCss * 0.72));
+    if (cv.width !== Math.round(wCss * dpr) || cv.height !== Math.round(hCss * dpr)) {
+      cv.width = Math.round(wCss * dpr);
+      cv.height = Math.round(hCss * dpr);
+      cv.style.width = wCss + "px";
+      cv.style.height = hCss + "px";
+    }
+    var ctx = cv.getContext("2d");
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.clearRect(0, 0, wCss, hCss);
+
+    var p = project();
+    var t = prepTerrain();
+    var vals = mapValues(MAP_ASPECT);
+
+    /* Framing. A fixed scale cannot work: as the island rotates its projected
+       width swings between its narrow and its diagonal extent, and terrain
+       plus columns add height that depends on the pitch. So the extent is
+       measured first -- with the pan and zoom neutralised -- and the scale
+       and origin derived from it. That keeps the country fully in frame at
+       every angle instead of sliding off an edge mid-spin. */
+    var fitInfo = frameFit(p, t);
+    var fit = fitInfo.scale * CAM.zoom;
+    /* The centring correction uses the BASE scale, not the zoomed one. It
+       compensates for the projection being asymmetric about the map centre
+       (terrain rises, and headroom is reserved above for the columns), which
+       is a fixed screen-space offset. Multiplying it by zoom made it grow
+       with the zoom and pushed a flown-to district off the canvas. */
+    var ox = wCss / 2 - fitInfo.mx * fitInfo.scale;
+    var oy = hCss / 2 - fitInfo.my * fitInfo.scale;
+
+    var land = rgb(cssVar("--surface-2"));
+    var high = rgb(cssVar("--ink-faint"));
+    var crit = rgb(cssVar("--critical"));
+    var line = rgb(cssVar("--ink-muted"));
+    var acc = rgb(cssVar("--accent"));
+
+    var q = [0, 0, 0];
+    function scr(x, y, zz) {
+      camProject(x, y, zz, q);
+      return [ox + q[0] * fit, oy + q[1] * fit, q[2]];
+    }
+
+    HITS = [];
+
+    if (t) {
+      /* Painter's order without a sort: on a regular grid the correct
+         far-to-near sequence is fixed by the sign of the rotated basis, so
+         the iteration direction is chosen and the whole grid draws in one
+         pass. Sorting 6,000 quads every frame would cost more than the
+         drawing does. */
+      var c = Math.cos(CAM.yaw), s = Math.sin(CAM.yaw);
+      var iStart = s > 0 ? 0 : t.cols - 2, iEnd = s > 0 ? t.cols - 1 : -1, iStep = s > 0 ? 1 : -1;
+      var jStart = c > 0 ? 0 : t.rows - 2, jEnd = c > 0 ? t.rows - 1 : -1, jStep = c > 0 ? 1 : -1;
+
+      for (var j = jStart; j !== jEnd; j += jStep) {
+        for (var i = iStart; i !== iEnd; i += iStep) {
+          var z00 = t.z[j][i], z10 = t.z[j][i + 1],
+              z01 = t.z[j + 1][i], z11 = t.z[j + 1][i + 1];
+          /* Sea is drawn, but flat and unshaded -- a rippling ocean would be
+             decoration competing with the data. */
+          var isSea = (z00 <= 0 && z10 <= 0 && z01 <= 0 && z11 <= 0);
+          if (isSea) continue;
+
+          var a = scr(t.xs[i], t.ys[j], z00 * t.vs);
+          var b2 = scr(t.xs[i + 1], t.ys[j], z10 * t.vs);
+          var d2 = scr(t.xs[i + 1], t.ys[j + 1], z11 * t.vs);
+          var e2 = scr(t.xs[i], t.ys[j + 1], z01 * t.vs);
+
+          var sh = t.shade[j][i];
+          var alt = Math.min(1, z00 / (t.maxZ * 0.8));
+          var base = mix(land, high, alt * 0.55);
+          base = mix([0, 0, 0], base, 0.35 + sh * 0.75);
+
+          var owner = t.owner[j][i];
+          var v = owner ? vals[owner] : null;
+          if (v) {
+            /* The choropleth, painted onto the ground itself. */
+            base = mix(base, crit, 0.16 + 0.46 * v.rate);
+          }
+          var dim = SELECTED_DISTRICT && owner !== SELECTED_DISTRICT;
+          var hot = HOVER_DISTRICT && owner === HOVER_DISTRICT;
+          var alpha = dim ? 0.34 : 1;
+          if (hot && !dim) base = mix(base, acc, 0.22);
+
+          ctx.fillStyle = css(base, alpha);
+          ctx.beginPath();
+          ctx.moveTo(a[0], a[1]);
+          ctx.lineTo(b2[0], b2[1]);
+          ctx.lineTo(d2[0], d2[1]);
+          ctx.lineTo(e2[0], e2[1]);
+          ctx.closePath();
+          ctx.fill();
+        }
+      }
+    }
+
+    /* District boundaries, draped over the terrain. Also the click targets. */
+    GEO.features.forEach(function (f) {
       var name = f.properties.district;
       var v = vals[name];
-      var d = "";
+      var poly = [];
       eachRing(f, function (ring) {
-        ring.forEach(function (pt, i) {
-          var q = isoProject(p.x(pt[0]), p.y(pt[1]), 0, cx, cy, a);
-          d += (i ? "L" : "M") + q[0].toFixed(1) + " " + q[1].toFixed(1);
+        var pts = ring.map(function (pt) {
+          var x = p.x(pt[0]), y = p.y(pt[1]);
+          return scr(x, y, sampleZ(t, x, y));
         });
-        d += "Z";
+        poly.push(pts);
       });
-      var fill = v ? "var(--critical)" : "var(--surface-2)";
-      var op = v ? (0.10 + 0.28 * v.rate).toFixed(3) : "1";
-      // Districts stay selectable here exactly as they are on the flat map --
-      // the two views must behave the same, or switching to 3D quietly removes
-      // a way of navigating the data.
-      if (!v) {
-        return '<path class="map3d-ground no-data" d="' + d + '" fill="' + fill +
-          '" fill-opacity="' + op + '" tabindex="-1"><title>' + esc(name) +
-          ' — no reviews collected</title></path>';
-      }
-      var gcls = "map3d-ground" + (SELECTED_DISTRICT
-        ? (name === SELECTED_DISTRICT ? " is-selected" : " is-dimmed") : "");
-      return '<path class="' + gcls + '" d="' + d + '" fill="' + fill +
-        '" fill-opacity="' + op + '" data-district="' + esc(name) + '" ' +
-        'data-map-hover="' + esc(name) + '" tabindex="0" role="button">' +
-        '<title>' + esc(name) + ': ' + pct(v.rate) + ' complaint rate (' +
-        v.neg + ' complaints, ' + v.pos + ' praise) — click to open</title></path>';
-    }).join("");
+      HITS.push({ name: name, rings: poly, hasData: !!v });
 
-    // Columns: one per destination that has coordinates and data.
-    var cols = [];
-    var maxN = 1;
+      var sel = name === SELECTED_DISTRICT;
+      ctx.lineWidth = sel ? 2.4 : (name === HOVER_DISTRICT ? 1.8 : 0.9);
+      ctx.strokeStyle = sel ? css(acc, 1)
+        : (v ? css(line, 0.75) : css(line, 0.4));
+      poly.forEach(function (pts) {
+        ctx.beginPath();
+        pts.forEach(function (pt, k) {
+          if (k) ctx.lineTo(pt[0], pt[1]); else ctx.moveTo(pt[0], pt[1]);
+        });
+        ctx.closePath();
+        ctx.stroke();
+      });
+
+      /* No data must never read as "few complaints", so it is hatched here
+         exactly as it is on the flat map -- never shaded pale. */
+      if (!v) {
+        ctx.save();
+        ctx.beginPath();
+        poly.forEach(function (pts) {
+          pts.forEach(function (pt, k) {
+            if (k) ctx.lineTo(pt[0], pt[1]); else ctx.moveTo(pt[0], pt[1]);
+          });
+          ctx.closePath();
+        });
+        ctx.clip();
+        ctx.strokeStyle = css(line, 0.20);
+        ctx.lineWidth = 0.8;
+        var bb = ringBounds(poly);
+        for (var g = bb.x0 - bb.y1; g < bb.x1; g += 11) {
+          ctx.beginPath();
+          ctx.moveTo(g, bb.y0);
+          ctx.lineTo(g + (bb.y1 - bb.y0), bb.y1);
+          ctx.stroke();
+        }
+        ctx.restore();
+      }
+    });
+
+    /* Destination columns, far to near. */
+    var cols = [], maxN = 1;
     Object.keys(COORDS).forEach(function (dest) {
       var rec = destAspect(dest, MAP_ASPECT);
       if (rec && rec.n_negative) maxN = Math.max(maxN, rec.n_negative);
@@ -875,72 +1274,259 @@ footer.foot code { font-family: var(--f-mono); font-size: 11px; }
     Object.keys(COORDS).forEach(function (dest) {
       var rec = destAspect(dest, MAP_ASPECT);
       if (!rec || !rec.n_negative || rec.complaint_rate === null) return;
-      var c = COORDS[dest];
-      var bx = p.x(c.lon), by = p.y(c.lat);
-      // Height on a square-root scale: linear height would let one busy place
-      // tower over everything and hide the rest behind it.
-      var h = 6 + 120 * Math.sqrt(rec.n_negative / maxN);
-      var base = isoProject(bx, by, 0, cx, cy, a);
-      var top = isoProject(bx, by, h, cx, cy, a);
-      cols.push({ base: base, top: top, dest: dest, rec: rec,
-                  depth: base[1] });          // larger screenY = nearer
+      var co = COORDS[dest];
+      var x = p.x(co.lon), y = p.y(co.lat);
+      var gz = sampleZ(t, x, y);
+      /* Square root, so one busy place cannot tower over and hide the rest. */
+      var h = (8 + 90 * Math.sqrt(rec.n_negative / maxN));
+      var b0 = scr(x, y, gz);
+      var b1 = scr(x, y, gz + h);
+      cols.push({ b0: b0, b1: b1, dest: dest, rec: rec, depth: b0[2] });
     });
     cols.sort(function (u, v2) { return u.depth - v2.depth; });
 
-    var colSvg = cols.map(function (c) {
-      var op = (0.45 + 0.5 * c.rec.complaint_rate).toFixed(2);
-      var w = 2.2;
-      var dim = SELECTED_DISTRICT && destDistrict(c.dest) !== SELECTED_DISTRICT
-        ? " is-dimmed" : "";
-      return '<path class="map3d-col-side' + dim + '" d="M' +
-          (c.base[0] - w).toFixed(1) + ' ' + c.base[1].toFixed(1) +
-          'L' + (c.top[0] - w).toFixed(1) + ' ' + c.top[1].toFixed(1) +
-          'L' + (c.top[0] + w).toFixed(1) + ' ' + c.top[1].toFixed(1) +
-          'L' + (c.base[0] + w).toFixed(1) + ' ' + c.base[1].toFixed(1) + 'Z" ' +
-          'fill="var(--critical)" fill-opacity="' + (op * 0.55).toFixed(2) + '"></path>' +
-        '<circle class="map3d-col-cap' + dim + '" cx="' + c.top[0].toFixed(1) + '" cy="' +
-          c.top[1].toFixed(1) + '" r="' + (2.6 + 2.2 * c.rec.complaint_rate).toFixed(1) +
-          '" fill="var(--critical)" fill-opacity="' + op + '" ' +
-          'data-destination="' + esc(c.dest) + '" tabindex="0" role="button">' +
-          '<title>' + esc(c.dest) + ': ' + c.rec.n_negative + ' complaints, ' +
-          pct(c.rec.complaint_rate) + ' rate</title></circle>';
-    }).join("");
+    cols.forEach(function (cl) {
+      var dimmed = SELECTED_DISTRICT && destDistrict(cl.dest) !== SELECTED_DISTRICT;
+      var a = dimmed ? 0.2 : (0.5 + 0.5 * cl.rec.complaint_rate);
+      var w = 1.6 * Math.max(0.6, CAM.zoom * 0.7);
+      ctx.strokeStyle = css(crit, a * 0.55);
+      ctx.lineWidth = w;
+      ctx.beginPath();
+      ctx.moveTo(cl.b0[0], cl.b0[1]);
+      ctx.lineTo(cl.b1[0], cl.b1[1]);
+      ctx.stroke();
+      ctx.fillStyle = css(crit, a);
+      ctx.beginPath();
+      ctx.arc(cl.b1[0], cl.b1[1],
+              (1.8 + 2.4 * cl.rec.complaint_rate) * Math.max(0.7, CAM.zoom * 0.8),
+              0, Math.PI * 2);
+      ctx.fill();
+    });
+  }
 
-    // The rotated projection needs a viewBox wide enough for any angle.
-    var R = Math.sqrt(cx * cx + cy * cy) * 1.15;
-    var vb = [-R * COS30 * 1.1, -R * SIN30 - 140,
-              2 * R * COS30 * 1.1, 2 * R * SIN30 + 190];
-    host.innerHTML = '<svg class="map-svg" viewBox="' + vb.join(" ") + '" ' +
-      'role="img" aria-label="Three-dimensional view of complaints by destination">' +
-      ground + colSvg + '</svg>';
+  function ringBounds(poly) {
+    var x0 = 1e9, y0 = 1e9, x1 = -1e9, y1 = -1e9;
+    poly.forEach(function (pts) {
+      pts.forEach(function (pt) {
+        if (pt[0] < x0) x0 = pt[0];
+        if (pt[1] < y0) y0 = pt[1];
+        if (pt[0] > x1) x1 = pt[0];
+        if (pt[1] > y1) y1 = pt[1];
+      });
+    });
+    return { x0: x0, y0: y0, x1: x1, y1: y1 };
+  }
+
+  /* Terrain height at an arbitrary map point, bilinear. Used to sit district
+     borders and destination columns ON the ground instead of at sea level. */
+  function sampleZ(t, x, y) {
+    if (!t) return 0;
+    var fx = (x - t.xs[0]) / (t.xs[t.cols - 1] - t.xs[0]) * (t.cols - 1);
+    var fy = (y - t.ys[0]) / (t.ys[t.rows - 1] - t.ys[0]) * (t.rows - 1);
+    if (!isFinite(fx) || !isFinite(fy)) return 0;
+    var i = Math.max(0, Math.min(t.cols - 2, Math.floor(fx)));
+    var j = Math.max(0, Math.min(t.rows - 2, Math.floor(fy)));
+    var tx = Math.max(0, Math.min(1, fx - i)), ty = Math.max(0, Math.min(1, fy - j));
+    var z = t.z[j][i] * (1 - tx) * (1 - ty) + t.z[j][i + 1] * tx * (1 - ty) +
+            t.z[j + 1][i] * (1 - tx) * ty + t.z[j + 1][i + 1] * tx * ty;
+    return Math.max(0, z) * t.vs;
+  }
+
+  /* ----------------------------------------------------------- animation */
+  function tick(now) {
+    RAF = null;
+    var busy = false;
+
+    if (CAM_TO) {
+      var k = Math.min(1, (now - CAM_T0) / CAM_MS);
+      var e = easeInOut(k);
+      for (var key in CAM_TO) {
+        if (CAM_TO.hasOwnProperty(key)) {
+          CAM[key] = CAM_FROM[key] + (CAM_TO[key] - CAM_FROM[key]) * e;
+        }
+      }
+      if (k >= 1) CAM_TO = null; else busy = true;
+    } else if (SPIN && !DRAG && !SELECTED_DISTRICT && !reduceMotion()) {
+      CAM.yaw += 0.0035;
+      busy = true;
+    }
+
+    draw3D();
+    if (busy && MAP_MODE === "iso") startLoop();
+  }
+
+  function startLoop() {
+    if (RAF === null && MAP_MODE === "iso") RAF = requestAnimationFrame(tick);
+  }
+  function stopLoop() {
+    if (RAF !== null) { cancelAnimationFrame(RAF); RAF = null; }
+    CAM_TO = null;
+  }
+
+  /* ---------------------------------------------------------- interaction */
+  function hitDistrict(px, py) {
+    for (var i = HITS.length - 1; i >= 0; i--) {
+      var h = HITS[i];
+      for (var r = 0; r < h.rings.length; r++) {
+        var pts = h.rings[r], inside = false;
+        for (var a = 0, b = pts.length - 1; a < pts.length; b = a++) {
+          var xi = pts[a][0], yi = pts[a][1], xj = pts[b][0], yj = pts[b][1];
+          if (((yi > py) !== (yj > py)) &&
+              (px < (xj - xi) * (py - yi) / (yj - yi) + xi)) inside = !inside;
+        }
+        if (inside) return h;
+      }
+    }
+    return null;
+  }
+
+  function bindCanvas(cv) {
+    if (cv.dataset.bound) return;
+    cv.dataset.bound = "1";
+
+    cv.addEventListener("pointerdown", function (ev) {
+      DRAG = { x: ev.clientX, y: ev.clientY, yaw: CAM.yaw, pitch: CAM.pitch };
+      MOVED = 0;
+      CAM_TO = null;
+      /* Capture keeps a drag alive if the pointer leaves the canvas. It can
+         throw for a pointer the browser no longer considers active, and an
+         exception here would abandon the drag it was meant to protect. */
+      try { cv.setPointerCapture(ev.pointerId); } catch (e) {}
+    });
+
+    cv.addEventListener("pointermove", function (ev) {
+      var r = cv.getBoundingClientRect();
+      if (DRAG) {
+        var dx = ev.clientX - DRAG.x, dy = ev.clientY - DRAG.y;
+        MOVED = Math.max(MOVED, Math.abs(dx) + Math.abs(dy));
+        CAM.yaw = DRAG.yaw + dx * 0.008;
+        /* Pitch is clamped: past vertical the heightfield turns inside out. */
+        CAM.pitch = Math.max(0.18, Math.min(1.15, DRAG.pitch + dy * 0.005));
+        startLoop();
+        return;
+      }
+      var h = hitDistrict(ev.clientX - r.left, ev.clientY - r.top);
+      var name = h ? h.name : null;
+      if (name !== HOVER_DISTRICT) {
+        HOVER_DISTRICT = name;
+        /* A district with no reviews cannot be opened, so it must not offer a
+           pointer. The flat map already says 'not-allowed' here; the two
+           views have to agree about what is clickable. */
+        cv.style.cursor = !h ? "grab" : (h.hasData ? "pointer" : "not-allowed");
+        setReadout(h && h.hasData ? name : null);
+        startLoop();
+      }
+    });
+
+    function endDrag(ev) {
+      if (!DRAG) return;
+      var wasClick = MOVED < 5;
+      DRAG = null;
+      if (wasClick) {
+        var r = cv.getBoundingClientRect();
+        var h = hitDistrict(ev.clientX - r.left, ev.clientY - r.top);
+        if (h && h.hasData) selectDistrict(h.name);
+        else if (!h) selectDistrict(null);
+      }
+      startLoop();
+    }
+    cv.addEventListener("pointerup", endDrag);
+    cv.addEventListener("pointercancel", function () { DRAG = null; });
+
+    cv.addEventListener("pointerleave", function () {
+      if (HOVER_DISTRICT) { HOVER_DISTRICT = null; setReadout(null); startLoop(); }
+    });
+
+    cv.addEventListener("wheel", function (ev) {
+      ev.preventDefault();
+      CAM_TO = null;
+      CAM.zoom = Math.max(0.6, Math.min(6, CAM.zoom * (ev.deltaY > 0 ? 0.9 : 1.1)));
+      startLoop();
+    }, { passive: false });
+  }
+
+  /* Selecting from the 3D map does the same thing selecting from the flat map
+     does, plus the camera move. One selection model, two ways to reach it. */
+  function selectDistrict(name) {
+    /* Route through the page's own navigation rather than setting the
+       highlight directly. Clicking a district on the map has to mean exactly
+       what clicking it in the list below means -- open it -- or the 3D view
+       becomes a second, subtly different way to move around the same data.
+       render() sets SELECTED_DISTRICT from state and redraws the map. */
+    if (state.district === name) { flyToDistrict(name); return; }
+    state.district = name || null;
+    state.destination = null;
+    /* render() jumps to the top of the page, which is right when you clicked a
+       name in a list and wrong when you clicked the map: the camera would fly
+       somewhere you can no longer see. Keep the reader where they were. */
+    var keep = window.scrollY;
+    render();
+    window.scrollTo({ top: keep, behavior: "auto" });
+  }
+
+  function renderMap3D() {
+    var host = document.getElementById("map-svg-host");
+    if (!host) return;
+    if (!host.querySelector("#map-canvas")) {
+      host.innerHTML =
+        '<canvas id="map-canvas" role="img" aria-label="Three-dimensional ' +
+        'terrain map of complaint rates by district"></canvas>' +
+        '<div class="map3d-hint">drag to orbit &middot; scroll to zoom &middot; ' +
+        'click a district to fly to it</div>' +
+        '<div class="map3d-legend" id="map3d-legend"></div>' +
+        '<p class="map3d-note" id="map3d-note"></p>';
+    }
+    var cv = host.querySelector("#map-canvas");
+    bindCanvas(cv);
+    prepTerrain();
+    if (CAM_FOCUS !== SELECTED_DISTRICT) {
+      CAM_FOCUS = SELECTED_DISTRICT;
+      SPIN = !SELECTED_DISTRICT;
+      flyToDistrict(SELECTED_DISTRICT);
+    }
+    draw3D();
 
     var sc = document.getElementById("scale-ends");
-    if (sc) sc.innerHTML = '<span>column height = complaints</span>' +
-                           '<span>shade = rate</span>';
+    if (sc) {
+      sc.innerHTML = '<span>ground tint = complaint rate</span>' +
+        '<span>column height = number of complaints</span>';
+    }
+
+    /* Legend. Every visual channel on the map is named here, including the
+       two that are choices rather than measurements: the relief is
+       exaggerated, and a district with no reviews is hatched rather than
+       shaded, because pale would read as "few complaints" when the truth is
+       "never measured". */
+    var lg = document.getElementById("map3d-legend");
+    if (lg) {
+      lg.innerHTML =
+        '<span class="key"><span class="map3d-ramp rate"></span>' +
+          'complaint rate, low to high</span>' +
+        '<span class="key"><span class="map3d-ramp relief"></span>' +
+          'ground height, sea level to ' + (TERRA ? TERRA.maxZ : 0) + '&thinsp;m</span>' +
+        '<span class="key"><span class="map3d-swatch-col"></span>' +
+          'column = complaints at one destination</span>' +
+        '<span class="key">diagonal hatch = no reviews collected</span>';
+    }
+    var nt = document.getElementById("map3d-note");
+    if (nt) {
+      nt.innerHTML = 'Relief is exaggerated about ' + RELIEF + '&times; &mdash; at ' +
+        'true scale a 2&thinsp;km peak on a 400&thinsp;km island is invisible. ' +
+        'Depth also shrinks far columns and lets near ones hide them, so heights ' +
+        'are not comparable across the map; the flat view is the one to read ' +
+        'numbers from. Terrain: ' + esc(TERRAIN.source || 'none') + '.';
+    }
     document.querySelectorAll(".aspect-picker button[data-map-aspect]").forEach(function (b) {
       b.setAttribute("aria-pressed", b.dataset.mapAspect === MAP_ASPECT ? "true" : "false");
     });
     setReadout(null);
   }
 
-  function startSpin() {
-    if (ISO_SPIN) return;
-    if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    ISO_SPIN = setInterval(function () {
-      if (MAP_MODE !== "iso") return;
-      ISO_ANGLE += 0.012;
-      renderMap3D();
-    }, 90);
-  }
-
-  function stopSpin() {
-    if (ISO_SPIN) { clearInterval(ISO_SPIN); ISO_SPIN = null; }
-  }
-
   function renderMapAny() {
-    if (MAP_MODE === "iso") { renderMap3D(); startSpin(); }
-    else { stopSpin(); renderMap(); }
+    if (MAP_MODE === "iso") { renderMap3D(); startLoop(); }
+    else { stopLoop(); renderMap(); }
   }
+
 
   function renderMap() {
     var host = document.getElementById("map-svg-host");
@@ -1114,7 +1700,11 @@ footer.foot code { font-family: var(--f-mono); font-size: 11px; }
 
       '<div class="notice"><strong>Roads and access is the country’s largest complaint category</strong> ' +
       'by volume, and safety carries the highest complaint rate of any aspect. Scenery is included as a ' +
-      'positive control — its low complaint rate confirms the classifier is not simply labelling everything negative.</div>' +
+      'positive control — its low complaint rate confirms the classifier is not simply labelling everything negative. ' +
+      '<em>Safety ranking first rests on one hand-written rule. Switch off the safety recall rule and the ' +
+      'rate falls 50.9% &rarr; 46.7%, putting price &amp; value first instead; switch off all three correction ' +
+      'rules and it falls to 44.1%. Their impact is measured (reports/rule_ablation.json); their accuracy is ' +
+      'not, because that needs a human-labelled sample the project does not yet have.</em></div>' +
 
       '<div class="section"><h3 class="section-title">Where complaints concentrate</h3>' +
       mapBlock() + '</div>' +
@@ -1206,6 +1796,11 @@ footer.foot code { font-family: var(--f-mono); font-size: 11px; }
         '<div class="story-head">' +
           '<span class="story-kind ' + esc(m.kind) + '">' + esc(KIND_LABEL[m.kind] || m.kind) + '</span>' +
           '<span class="story-src">' + esc(m.source_name || "") + '</span>' +
+          (m.kind === "news" && m.local === false
+            ? '<span class="story-foreign" title="Publisher is not a Sri Lankan' +
+              ' outlet. Shown for context; check it against a local source.">' +
+              'non-local source</span>'
+            : "") +
         '</div>' +
         '<a class="story-title" href="' + esc(m.url) + '" target="_blank" rel="noopener noreferrer">' +
           esc(m.title) + '</a>' +
@@ -1222,8 +1817,12 @@ footer.foot code { font-family: var(--f-mono); font-size: 11px; }
       'These items are linked, not analysed. They do not affect any complaint rate, ' +
       'count or ranking on this page. A video title is written to attract viewers, a ' +
       'forum thread is one traveller, and a news report covers the unusual by definition &mdash; ' +
-      'none of which measures what an ordinary visit is like. News is restricted to ' +
-      'established Sri Lankan outlets; anything from an unverified source is not shown.</div>' +
+      'none of which measures what an ordinary visit is like. Items are collected by ' +
+      'searching for each destination by name, and a search matches loosely, so an ' +
+      'item is shown only if its own text names the place &mdash; roughly half are ' +
+      'withheld on that test. What survives can still come from anywhere: items from ' +
+      'outlets that are not recognisably Sri Lankan are marked <em>non-local ' +
+      'source</em> rather than hidden.</div>' +
       '<div class="story-grid">' + cards + '</div></div>';
   }
 
@@ -1354,7 +1953,10 @@ footer.foot code { font-family: var(--f-mono); font-size: 11px; }
       return renderMapAny();
     }
     var picker = ev.target.closest("[data-map-aspect]");
-    if (picker) { MAP_ASPECT = picker.dataset.mapAspect; return renderMap(); }
+    /* renderMapAny, not renderMap: changing the aspect while the 3D view
+       is open used to draw the flat SVG into the same host and silently
+       replace the canvas. */
+    if (picker) { MAP_ASPECT = picker.dataset.mapAspect; return renderMapAny(); }
 
     var t = ev.target.closest("[data-nav],[data-district],[data-destination],[data-aspect]");
     if (!t) return;

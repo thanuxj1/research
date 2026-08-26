@@ -593,3 +593,60 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+
+# --------------------------------------------------------------------------
+# Site rules are not complaints
+#
+# Open problem #3 in the README: "site rules ('no polythene allowed') counted
+# as cleanliness complaints". Measured before fixing -- 18 segments, all of
+# this shape:
+#
+#     "Its is prohibited to take polythene, plastic bottles inside the park."
+#     "Not allowed to bring any plastic or polythene."
+#
+# The visitor is reporting a regulation, and often approvingly: several of
+# these sit next to "that's the main reason the place is kept clean". The
+# model reads the prohibition words as negative sentiment about litter.
+#
+# Note what this is: a THIRD hand-written rule, added to a pipeline whose
+# dependence on the other two was just quantified at up to 6.9 pp. It is
+# therefore narrow, off-switchable, and included in the ablation. It fires only
+# when the segment states a prohibition AND carries no word describing a bad
+# experience -- so "not allowed to swim, the current is dangerous" and
+# "prohibited but people litter anyway" are untouched.
+# --------------------------------------------------------------------------
+PROHIBITION = re.compile(
+    r"\b(not allowed|isn'?t allowed|aren'?t allowed|no longer allowed|"
+    r"prohibit(ed|s)?|forbidden|banned|not permitted|restricted from|"
+    r"must not (take|bring|carry)|cannot (take|bring|carry))\b", re.IGNORECASE)
+
+# Words that mean the visitor is describing a bad experience rather than
+# reporting a regulation. Any of these and the rule stands down.
+_COMPLAINT_EVIDENCE = re.compile(
+    r"\b(dirty|filthy|litter(ed|ing)?|rubbish|garbage|waste[sd]?|smell(y|s)?|"
+    r"stink(s|ing)?|mess(y)?|unclean|disgusting|everywhere|neglected|"
+    r"poor|bad|awful|terrible|horrible|worst|shame|sad|unfortunately)\b",
+    re.IGNORECASE)
+
+
+def site_rule_is_not_a_complaint(text, label):
+    """(label, fired). Turns a reported regulation from N into X.
+
+    X, not P: the visitor has not praised anything, they have described a
+    rule. Counting it as praise would be the mirror of the error being fixed.
+    """
+    if label != "N":
+        return label, False
+    body = text or ""
+    if not PROHIBITION.search(body):
+        return label, False
+    if _COMPLAINT_EVIDENCE.search(body):
+        return label, False
+    # A prohibition that comes WITH a hazard is a warning, not a regulation:
+    # "not allowed to swim here, the current is dangerous". Neutralising that
+    # would erase the exact class of warning the safety recall rule exists to
+    # recover -- one rule must not undo another.
+    if HAZARD_WORDS.search(body):
+        return label, False
+    return "X", True

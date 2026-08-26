@@ -285,17 +285,6 @@
     },
     "note": "Links to the destination's page on the platform, not to the individual review. The source datasets did not preserve review URLs."
   },
-  "Black Galle Fort": {
-    "district": "Galle",
-    "n_reviews": 39,
-    "links": {
-      "google_maps": {
-        "label": "Google Maps",
-        "url": "https://www.google.com/maps/search/?api=1&query=Black+Galle+Fort+Sri+Lanka"
-      }
-    },
-    "note": "Links to the destination's page on the platform, not to the individual review. The source datasets did not preserve review URLs."
-  },
   "Blackpool": {
     "district": "Badulla",
     "n_reviews": 28,
@@ -476,21 +465,14 @@
     },
     "note": "Links to the destination's page on the platform, not to the individual review. The source datasets did not preserve review URLs."
   },
-  "Colombo Natational Museum": {
+  "Colombo National Museum": {
     "district": "Colombo",
-    "n_reviews": 204,
+    "n_reviews": 506,
     "links": {
       "google_maps": {
         "label": "Google Maps",
-        "url": "https://www.google.com/maps/search/?api=1&query=Colombo+Natational+Museum+Sri+Lanka"
-      }
-    },
-    "note": "Links to the destination's page on the platform, not to the individual review. The source datasets did not preserve review URLs."
-  },
-  "Colombo National Museum": {
-    "district": "Colombo",
-    "n_reviews": 302,
-    "links": {
+        "url": "https://www.google.com/maps/search/?api=1&query=Colombo+National+Museum+Sri+Lanka"
+      },
       "tripadvisor": {
         "label": "TripAdvisor",
         "url": "https://www.tripadvisor.com/Search?q=Colombo+National+Museum+Sri+Lanka"
@@ -643,11 +625,15 @@
   },
   "Dehiwala Zoological Gardens": {
     "district": "Colombo",
-    "n_reviews": 210,
+    "n_reviews": 423,
     "links": {
       "google_maps": {
         "label": "Google Maps",
         "url": "https://www.google.com/maps/search/?api=1&query=Dehiwala+Zoological+Gardens+Colombo+Sri+Lanka"
+      },
+      "tripadvisor": {
+        "label": "TripAdvisor",
+        "url": "https://www.tripadvisor.com/Search?q=Dehiwala+Zoological+Gardens+Colombo+Sri+Lanka"
       }
     },
     "note": "Links to the destination's page on the platform, not to the individual review. The source datasets did not preserve review URLs."
@@ -856,11 +842,15 @@
   },
   "Galle Dutch Fort": {
     "district": "Galle",
-    "n_reviews": 199,
+    "n_reviews": 521,
     "links": {
       "google_maps": {
         "label": "Google Maps",
         "url": "https://www.google.com/maps/search/?api=1&query=Galle+Dutch+Fort+Sri+Lanka"
+      },
+      "tripadvisor": {
+        "label": "TripAdvisor",
+        "url": "https://www.tripadvisor.com/Search?q=Galle+Dutch+Fort+Sri+Lanka"
       }
     },
     "note": "Links to the destination's page on the platform, not to the individual review. The source datasets did not preserve review URLs."
@@ -883,17 +873,6 @@
       "google_maps": {
         "label": "Google Maps",
         "url": "https://www.google.com/maps/search/?api=1&query=Galle+Face+park+%26+Beach+Colombo+Sri+Lanka"
-      }
-    },
-    "note": "Links to the destination's page on the platform, not to the individual review. The source datasets did not preserve review URLs."
-  },
-  "Galle Fort": {
-    "district": "Galle",
-    "n_reviews": 283,
-    "links": {
-      "tripadvisor": {
-        "label": "TripAdvisor",
-        "url": "https://www.tripadvisor.com/Search?q=Galle+Fort+Sri+Lanka"
       }
     },
     "note": "Links to the destination's page on the platform, not to the individual review. The source datasets did not preserve review URLs."
@@ -953,21 +932,14 @@
     },
     "note": "Links to the destination's page on the platform, not to the individual review. The source datasets did not preserve review URLs."
   },
-  "Gangarama Temple": {
+  "Gangaramaya (Vihara) Buddhist Temple": {
     "district": "Colombo",
-    "n_reviews": 197,
+    "n_reviews": 486,
     "links": {
       "google_maps": {
         "label": "Google Maps",
-        "url": "https://www.google.com/maps/search/?api=1&query=Gangarama+Temple+Colombo+Sri+Lanka"
-      }
-    },
-    "note": "Links to the destination's page on the platform, not to the individual review. The source datasets did not preserve review URLs."
-  },
-  "Gangaramaya (Vihara) Buddhist Temple": {
-    "district": "Colombo",
-    "n_reviews": 289,
-    "links": {
+        "url": "https://www.google.com/maps/search/?api=1&query=Gangaramaya+%28Vihara%29+Buddhist+Temple+Colombo+Sri+Lanka"
+      },
       "tripadvisor": {
         "label": "TripAdvisor",
         "url": "https://www.tripadvisor.com/Search?q=Gangaramaya+%28Vihara%29+Buddhist+Temple+Colombo+Sri+Lanka"
@@ -1052,35 +1024,13 @@
     },
     "note": "Links to the destination's page on the platform, not to the individual review. The source datasets did not preserve review URLs."
   },
-  "Halpewatte Tea Factory Tour": {
-    "district": "Badulla",
-    "n_reviews": 264,
-    "links": {
-      "tripadvisor": {
-        "label": "TripAdvisor",
-        "url": "https://www.tripadvisor.com/Search?q=Halpewatte+Tea+Factory+Tour+Badulla+Sri+Lanka"
-      }
-    },
-    "note": "Links to the destination's page on the platform, not to the individual review. The source datasets did not preserve review URLs."
-  },
   "Hambantota Beach": {
     "district": "Hambantota",
-    "n_reviews": 25,
+    "n_reviews": 41,
     "links": {
       "google_maps": {
         "label": "Google Maps",
         "url": "https://www.google.com/maps/search/?api=1&query=Hambantota+Beach+Sri+Lanka"
-      }
-    },
-    "note": "Links to the destination's page on the platform, not to the individual review. The source datasets did not preserve review URLs."
-  },
-  "Hambantota Beach Children Park": {
-    "district": "Hambantota",
-    "n_reviews": 16,
-    "links": {
-      "google_maps": {
-        "label": "Google Maps",
-        "url": "https://www.google.com/maps/search/?api=1&query=Hambantota+Beach+Children+Park+Sri+Lanka"
       }
     },
     "note": "Links to the destination's page on the platform, not to the individual review. The source datasets did not preserve review URLs."
@@ -1184,17 +1134,6 @@
       "tripadvisor": {
         "label": "TripAdvisor",
         "url": "https://www.tripadvisor.com/Search?q=Horton+Plains+National+Park+Nuwara+Eliya+Sri+Lanka"
-      }
-    },
-    "note": "Links to the destination's page on the platform, not to the individual review. The source datasets did not preserve review URLs."
-  },
-  "Hulangala mini world end entrance": {
-    "district": "Kurunegala",
-    "n_reviews": 40,
-    "links": {
-      "google_maps": {
-        "label": "Google Maps",
-        "url": "https://www.google.com/maps/search/?api=1&query=Hulangala+mini+world+end+entrance+Kurunegala+Sri+Lanka"
       }
     },
     "note": "Links to the destination's page on the platform, not to the individual review. The source datasets did not preserve review URLs."
@@ -1322,22 +1261,15 @@
   },
   "Jungle Beach": {
     "district": "Galle",
-    "n_reviews": 183,
-    "links": {
-      "tripadvisor": {
-        "label": "TripAdvisor",
-        "url": "https://www.tripadvisor.com/Search?q=Jungle+Beach+Galle+Sri+Lanka"
-      }
-    },
-    "note": "Links to the destination's page on the platform, not to the individual review. The source datasets did not preserve review URLs."
-  },
-  "Jungle Beach, Unawatuna": {
-    "district": "Galle",
-    "n_reviews": 222,
+    "n_reviews": 405,
     "links": {
       "google_maps": {
         "label": "Google Maps",
-        "url": "https://www.google.com/maps/search/?api=1&query=Jungle+Beach%2C+Unawatuna+Galle+Sri+Lanka"
+        "url": "https://www.google.com/maps/search/?api=1&query=Jungle+Beach+Galle+Sri+Lanka"
+      },
+      "tripadvisor": {
+        "label": "TripAdvisor",
+        "url": "https://www.tripadvisor.com/Search?q=Jungle+Beach+Galle+Sri+Lanka"
       }
     },
     "note": "Links to the destination's page on the platform, not to the individual review. The source datasets did not preserve review URLs."
@@ -1463,24 +1395,17 @@
     },
     "note": "Links to the destination's page on the platform, not to the individual review. The source datasets did not preserve review URLs."
   },
-  "Kelaniya Raja Maha Vihara": {
-    "district": "Colombo",
-    "n_reviews": 187,
-    "links": {
-      "tripadvisor": {
-        "label": "TripAdvisor",
-        "url": "https://www.tripadvisor.com/Search?q=Kelaniya+Raja+Maha+Vihara+Colombo+Sri+Lanka"
-      }
-    },
-    "note": "Links to the destination's page on the platform, not to the individual review. The source datasets did not preserve review URLs."
-  },
   "Kelaniya Raja Maha Viharaya": {
     "district": "Colombo",
-    "n_reviews": 194,
+    "n_reviews": 381,
     "links": {
       "google_maps": {
         "label": "Google Maps",
         "url": "https://www.google.com/maps/search/?api=1&query=Kelaniya+Raja+Maha+Viharaya+Colombo+Sri+Lanka"
+      },
+      "tripadvisor": {
+        "label": "TripAdvisor",
+        "url": "https://www.tripadvisor.com/Search?q=Kelaniya+Raja+Maha+Viharaya+Colombo+Sri+Lanka"
       }
     },
     "note": "Links to the destination's page on the platform, not to the individual review. The source datasets did not preserve review URLs."
@@ -1694,24 +1619,17 @@
     },
     "note": "Links to the destination's page on the platform, not to the individual review. The source datasets did not preserve review URLs."
   },
-  "Lover's Leap Falls": {
-    "district": "Nuwara Eliya",
-    "n_reviews": 194,
-    "links": {
-      "tripadvisor": {
-        "label": "TripAdvisor",
-        "url": "https://www.tripadvisor.com/Search?q=Lover%27s+Leap+Falls+Nuwara+Eliya+Sri+Lanka"
-      }
-    },
-    "note": "Links to the destination's page on the platform, not to the individual review. The source datasets did not preserve review URLs."
-  },
   "Lover's leap waterfall": {
     "district": "Nuwara Eliya",
-    "n_reviews": 241,
+    "n_reviews": 435,
     "links": {
       "google_maps": {
         "label": "Google Maps",
         "url": "https://www.google.com/maps/search/?api=1&query=Lover%27s+leap+waterfall+Nuwara+Eliya+Sri+Lanka"
+      },
+      "tripadvisor": {
+        "label": "TripAdvisor",
+        "url": "https://www.tripadvisor.com/Search?q=Lover%27s+leap+waterfall+Nuwara+Eliya+Sri+Lanka"
       }
     },
     "note": "Links to the destination's page on the platform, not to the individual review. The source datasets did not preserve review URLs."
@@ -1903,17 +1821,6 @@
     },
     "note": "Links to the destination's page on the platform, not to the individual review. The source datasets did not preserve review URLs."
   },
-  "Matara Paravi Duwa Beach": {
-    "district": "Matara",
-    "n_reviews": 79,
-    "links": {
-      "google_maps": {
-        "label": "Google Maps",
-        "url": "https://www.google.com/maps/search/?api=1&query=Matara+Paravi+Duwa+Beach+Sri+Lanka"
-      }
-    },
-    "note": "Links to the destination's page on the platform, not to the individual review. The source datasets did not preserve review URLs."
-  },
   "Mayan Water Park": {
     "district": "Gampaha",
     "n_reviews": 162,
@@ -2039,21 +1946,14 @@
     },
     "note": "Links to the destination's page on the platform, not to the individual review. The source datasets did not preserve review URLs."
   },
-  "Mount Lavania Beach": {
+  "Mount Lavinia Beach": {
     "district": "Colombo",
-    "n_reviews": 199,
+    "n_reviews": 379,
     "links": {
       "google_maps": {
         "label": "Google Maps",
-        "url": "https://www.google.com/maps/search/?api=1&query=Mount+Lavania+Beach+Colombo+Sri+Lanka"
-      }
-    },
-    "note": "Links to the destination's page on the platform, not to the individual review. The source datasets did not preserve review URLs."
-  },
-  "Mount Lavinia Beach": {
-    "district": "Colombo",
-    "n_reviews": 180,
-    "links": {
+        "url": "https://www.google.com/maps/search/?api=1&query=Mount+Lavinia+Beach+Colombo+Sri+Lanka"
+      },
       "tripadvisor": {
         "label": "TripAdvisor",
         "url": "https://www.tripadvisor.com/Search?q=Mount+Lavinia+Beach+Colombo+Sri+Lanka"
@@ -2105,20 +2005,9 @@
     },
     "note": "Links to the destination's page on the platform, not to the individual review. The source datasets did not preserve review URLs."
   },
-  "Narangala Hill": {
-    "district": "Badulla",
-    "n_reviews": 75,
-    "links": {
-      "google_maps": {
-        "label": "Google Maps",
-        "url": "https://www.google.com/maps/search/?api=1&query=Narangala+Hill+Badulla+Sri+Lanka"
-      }
-    },
-    "note": "Links to the destination's page on the platform, not to the individual review. The source datasets did not preserve review URLs."
-  },
   "Narangala Mountain": {
     "district": "Badulla",
-    "n_reviews": 129,
+    "n_reviews": 204,
     "links": {
       "google_maps": {
         "label": "Google Maps",
@@ -2145,17 +2034,6 @@
       "google_maps": {
         "label": "Google Maps",
         "url": "https://www.google.com/maps/search/?api=1&query=National+Meuseum+Galle+Sri+Lanka"
-      }
-    },
-    "note": "Links to the destination's page on the platform, not to the individual review. The source datasets did not preserve review URLs."
-  },
-  "National Zoological Gardens of Sri Lanka": {
-    "district": "Colombo",
-    "n_reviews": 213,
-    "links": {
-      "tripadvisor": {
-        "label": "TripAdvisor",
-        "url": "https://www.tripadvisor.com/Search?q=National+Zoological+Gardens+of+Sri+Lanka+Colombo+Sri+Lanka"
       }
     },
     "note": "Links to the destination's page on the platform, not to the individual review. The source datasets did not preserve review URLs."
@@ -2294,7 +2172,7 @@
   },
   "Parewi Duwa Temple": {
     "district": "Matara",
-    "n_reviews": 243,
+    "n_reviews": 322,
     "links": {
       "google_maps": {
         "label": "Google Maps",
@@ -3196,11 +3074,15 @@
   },
   "Uva Halpewatte Tea Factory Tour": {
     "district": "Badulla",
-    "n_reviews": 229,
+    "n_reviews": 493,
     "links": {
       "google_maps": {
         "label": "Google Maps",
         "url": "https://www.google.com/maps/search/?api=1&query=Uva+Halpewatte+Tea+Factory+Tour+Badulla+Sri+Lanka"
+      },
+      "tripadvisor": {
+        "label": "TripAdvisor",
+        "url": "https://www.tripadvisor.com/Search?q=Uva+Halpewatte+Tea+Factory+Tour+Badulla+Sri+Lanka"
       }
     },
     "note": "Links to the destination's page on the platform, not to the individual review. The source datasets did not preserve review URLs."

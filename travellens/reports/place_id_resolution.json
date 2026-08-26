@@ -1,0 +1,361 @@
+{
+ "destinations_considered": 308,
+ "resolved": 308,
+ "counts": {
+  "new": 11,
+  "agreed": 0,
+  "needs_review": 4
+ },
+ "groups": [
+  {
+   "place_id": "ChIJXQLueKNz4ToR_sMWrhaKb7k",
+   "kind": "new",
+   "reason": "",
+   "canonical": "Galle Dutch Fort",
+   "matched_name": "Galle Dutch Fort",
+   "matched_a_variant": true,
+   "variants": [
+    "Galle Fort",
+    "Galle Dutch Fort",
+    "Black Galle Fort"
+   ],
+   "reviews": {
+    "Galle Fort": 283,
+    "Galle Dutch Fort": 199,
+    "Black Galle Fort": 39
+   },
+   "shared_words": [
+    "galle"
+   ],
+   "districts": [
+    "Galle"
+   ]
+  },
+  {
+   "place_id": "ChIJr7L0oW9Z4joRjaT5aD0oCtk",
+   "kind": "new",
+   "reason": "",
+   "canonical": "Colombo National Museum",
+   "matched_name": "Colombo National Museum",
+   "matched_a_variant": true,
+   "variants": [
+    "Colombo National Museum",
+    "Colombo Natational Museum"
+   ],
+   "reviews": {
+    "Colombo National Museum": 302,
+    "Colombo Natational Museum": 204
+   },
+   "shared_words": [
+    "colombo"
+   ],
+   "districts": [
+    "Colombo"
+   ]
+  },
+  {
+   "place_id": "ChIJ_xb2dldk5DoRMN9Ol1xqHKw",
+   "kind": "new",
+   "reason": "",
+   "canonical": "Uva Halpewatte Tea Factory Tour",
+   "matched_name": "Uva Halpewatte Tea Factory Tour",
+   "matched_a_variant": true,
+   "variants": [
+    "Halpewatte Tea Factory Tour",
+    "Uva Halpewatte Tea Factory Tour"
+   ],
+   "reviews": {
+    "Halpewatte Tea Factory Tour": 264,
+    "Uva Halpewatte Tea Factory Tour": 229
+   },
+   "shared_words": [
+    "factory",
+    "halpewatte",
+    "tea",
+    "tour"
+   ],
+   "districts": [
+    "Badulla"
+   ]
+  },
+  {
+   "place_id": "ChIJcU1HJ3GB4zoRF-NtFybYYU8",
+   "kind": "new",
+   "reason": "",
+   "canonical": "Lover's leap waterfall",
+   "matched_name": "Lover's Leap Waterfall",
+   "matched_a_variant": true,
+   "variants": [
+    "Lover's leap waterfall",
+    "Lover's Leap Falls"
+   ],
+   "reviews": {
+    "Lover's leap waterfall": 241,
+    "Lover's Leap Falls": 194
+   },
+   "shared_words": [
+    "leap",
+    "lover",
+    "s"
+   ],
+   "districts": [
+    "Nuwara Eliya"
+   ]
+  },
+  {
+   "place_id": "ChIJJQMFzqpb4joRn_WT_b_1kP0",
+   "kind": "new",
+   "reason": "",
+   "canonical": "Dehiwala Zoological Gardens",
+   "matched_name": "Dehiwala Zoological Gardens",
+   "matched_a_variant": true,
+   "variants": [
+    "National Zoological Gardens of Sri Lanka",
+    "Dehiwala Zoological Gardens"
+   ],
+   "reviews": {
+    "National Zoological Gardens of Sri Lanka": 213,
+    "Dehiwala Zoological Gardens": 210
+   },
+   "shared_words": [
+    "zoological"
+   ],
+   "districts": [
+    "Colombo"
+   ]
+  },
+  {
+   "place_id": "ChIJQZi_QPly4ToRRzqjCuvOLv4",
+   "kind": "new",
+   "reason": "",
+   "canonical": "Jungle Beach",
+   "matched_name": "Jungle Beach",
+   "matched_a_variant": true,
+   "variants": [
+    "Jungle Beach, Unawatuna",
+    "Jungle Beach"
+   ],
+   "reviews": {
+    "Jungle Beach, Unawatuna": 222,
+    "Jungle Beach": 183
+   },
+   "shared_words": [
+    "jungle"
+   ],
+   "districts": [
+    "Galle"
+   ]
+  },
+  {
+   "place_id": "ChIJZRPdHihY4joRRH3j8j-i36Y",
+   "kind": "new",
+   "reason": "",
+   "canonical": "Kelaniya Raja Maha Viharaya",
+   "matched_name": "Kelaniya Raja Maha Viharaya",
+   "matched_a_variant": true,
+   "variants": [
+    "Kelaniya Raja Maha Viharaya",
+    "Kelaniya Raja Maha Vihara"
+   ],
+   "reviews": {
+    "Kelaniya Raja Maha Viharaya": 194,
+    "Kelaniya Raja Maha Vihara": 187
+   },
+   "shared_words": [
+    "kelaniya",
+    "maha",
+    "raja"
+   ],
+   "districts": [
+    "Colombo"
+   ]
+  },
+  {
+   "place_id": "ChIJodWylxBb4joRd_aoOLm_cm0",
+   "kind": "new",
+   "reason": "",
+   "canonical": "Mount Lavinia Beach",
+   "matched_name": "Mount Lavinia Beach.",
+   "matched_a_variant": true,
+   "variants": [
+    "Mount Lavania Beach",
+    "Mount Lavinia Beach"
+   ],
+   "reviews": {
+    "Mount Lavania Beach": 199,
+    "Mount Lavinia Beach": 180
+   },
+   "shared_words": [
+    "mount"
+   ],
+   "districts": [
+    "Colombo"
+   ]
+  },
+  {
+   "place_id": "ChIJeZht1is54ToRiwGVI5Dx78Q",
+   "kind": "new",
+   "reason": "",
+   "canonical": "Parewi Duwa Temple",
+   "matched_name": "Parewi Duwa Temple",
+   "matched_a_variant": true,
+   "variants": [
+    "Parewi Duwa Temple",
+    "Matara Paravi Duwa Beach"
+   ],
+   "reviews": {
+    "Parewi Duwa Temple": 243,
+    "Matara Paravi Duwa Beach": 79
+   },
+   "shared_words": [
+    "duwa"
+   ],
+   "districts": [
+    "Matara"
+   ]
+  },
+  {
+   "place_id": "ChIJSd-J13eJ5DoRMKEcysUoUpA",
+   "kind": "new",
+   "reason": "",
+   "canonical": "Narangala Mountain",
+   "matched_name": "Narangala Mountain",
+   "matched_a_variant": true,
+   "variants": [
+    "Narangala Mountain",
+    "Narangala Hill"
+   ],
+   "reviews": {
+    "Narangala Mountain": 129,
+    "Narangala Hill": 75
+   },
+   "shared_words": [
+    "narangala"
+   ],
+   "districts": [
+    "Badulla"
+   ]
+  },
+  {
+   "place_id": "ChIJb0HuFDy95joR98xOu5uMrWw",
+   "kind": "new",
+   "reason": "",
+   "canonical": "Hambantota Beach",
+   "matched_name": "Hambantota Beach",
+   "matched_a_variant": true,
+   "variants": [
+    "Hambantota Beach",
+    "Hambantota Beach Children Park"
+   ],
+   "reviews": {
+    "Hambantota Beach": 25,
+    "Hambantota Beach Children Park": 16
+   },
+   "shared_words": [
+    "hambantota"
+   ],
+   "districts": [
+    "Hambantota"
+   ]
+  },
+  {
+   "place_id": "ChIJQ9yCmWtZ4joRNu1evW41NTo",
+   "kind": "needs_review",
+   "reason": "variants share no identifying word",
+   "canonical": "Gangaramaya (Vihara) Buddhist Temple",
+   "matched_name": "Gangaramaya Temple Colombo",
+   "matched_a_variant": false,
+   "variants": [
+    "Gangaramaya (Vihara) Buddhist Temple",
+    "Gangarama Temple"
+   ],
+   "reviews": {
+    "Gangaramaya (Vihara) Buddhist Temple": 289,
+    "Gangarama Temple": 197
+   },
+   "shared_words": [],
+   "districts": [
+    "Colombo"
+   ]
+  },
+  {
+   "place_id": "ChIJk6Socrtl5DoR4NnxYbPPr6c",
+   "kind": "needs_review",
+   "reason": "variants are filed under different districts: Badulla, Matale",
+   "canonical": "Ravana Ella Falls",
+   "matched_name": "Kuda Ravana Ella waterfall",
+   "matched_a_variant": false,
+   "variants": [
+    "Ravana Waterfall",
+    "Ravana Ella Falls",
+    "Ravan Ella Waterfall",
+    "Kande sudu ella water falls"
+   ],
+   "reviews": {
+    "Ravana Waterfall": 216,
+    "Ravana Ella Falls": 206,
+    "Ravan Ella Waterfall": 46,
+    "Kande sudu ella water falls": 10
+   },
+   "shared_words": [],
+   "districts": [
+    "Badulla",
+    "Matale"
+   ]
+  },
+  {
+   "place_id": "ChIJ25dfbSNZ4joRn9ugCqEaB_w",
+   "kind": "needs_review",
+   "reason": "variants are filed under different districts: Colombo, Galle",
+   "canonical": "Colombo Port Maritime Museum",
+   "matched_name": "Colombo Port Maritime Museum",
+   "matched_a_variant": true,
+   "variants": [
+    "Maritime Museum",
+    "Colombo Port Maritime Museum"
+   ],
+   "reviews": {
+    "Maritime Museum": 204,
+    "Colombo Port Maritime Museum": 26
+   },
+   "shared_words": [
+    "maritime"
+   ],
+   "districts": [
+    "Colombo",
+    "Galle"
+   ]
+  },
+  {
+   "place_id": "ChIJ2-1Xv41P4zoRSf9DYK-EgP0",
+   "kind": "needs_review",
+   "reason": "variants are filed under different districts: Kurunegala, Matale",
+   "canonical": "Hulangala mini world's end view",
+   "matched_name": "Hulangala Mini World's End Entrance",
+   "matched_a_variant": false,
+   "variants": [
+    "Hulangala mini world's end view",
+    "Hulangala mini world end entrance"
+   ],
+   "reviews": {
+    "Hulangala mini world's end view": 184,
+    "Hulangala mini world end entrance": 40
+   },
+   "shared_words": [
+    "end",
+    "hulangala",
+    "mini",
+    "world"
+   ],
+   "districts": [
+    "Kurunegala",
+    "Matale"
+   ]
+  }
+ ],
+ "conflicts": [],
+ "applied": {
+  "destinations_before": 308,
+  "destinations_after": 294
+ }
+}

@@ -1,0 +1,81 @@
+{
+ "what_this_is": "Corroboration, not accuracy. Complaint rates produced by this project are rank-correlated against public Google star ratings, which nobody here produced. A star rating measures overall satisfaction and this project measures aspect-specific complaints, so agreement is weak evidence that the pipeline points the right way -- it says nothing about whether any individual label is correct. That still needs the human gold set (open problem #1).",
+ "expected_direction": "negative: more complaints, fewer stars",
+ "results": {
+  "n_destinations_rated": 300,
+  "aspects": {
+   "cleanliness": {
+    "n": 152,
+    "spearman_rate_vs_stars": -0.268,
+    "significance": {
+     "p_value": 0.0008,
+     "significant_at_05": true
+    }
+   },
+   "crowd": {
+    "n": 166,
+    "spearman_rate_vs_stars": -0.37,
+    "significance": {
+     "p_value": 0.0,
+     "significant_at_05": true
+    }
+   },
+   "facilities": {
+    "n": 128,
+    "spearman_rate_vs_stars": -0.236,
+    "significance": {
+     "p_value": 0.0072,
+     "significant_at_05": true
+    }
+   },
+   "price_value": {
+    "n": 142,
+    "spearman_rate_vs_stars": -0.131,
+    "significance": {
+     "p_value": 0.1203,
+     "significant_at_05": false
+    }
+   },
+   "roads_access": {
+    "n": 160,
+    "spearman_rate_vs_stars": -0.128,
+    "significance": {
+     "p_value": 0.1068,
+     "significant_at_05": false
+    }
+   },
+   "safety": {
+    "n": 106,
+    "spearman_rate_vs_stars": -0.087,
+    "significance": {
+     "p_value": 0.3761,
+     "significant_at_05": false
+    }
+   },
+   "scenery": {
+    "n": 252,
+    "spearman_rate_vs_stars": -0.209,
+    "significance": {
+     "p_value": 0.0008,
+     "significant_at_05": true
+    }
+   }
+  },
+  "overall": {
+   "n": 254,
+   "spearman_rate_vs_stars": -0.421,
+   "significance": {
+    "p_value": 0.0,
+    "significant_at_05": true
+   }
+  },
+  "corpus_vs_public_volume": {
+   "n": 254,
+   "spearman": 0.709,
+   "significance": {
+    "p_value": 0.0,
+    "significant_at_05": true
+   }
+  }
+ }
+}

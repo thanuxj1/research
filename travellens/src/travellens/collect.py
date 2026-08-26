@@ -94,8 +94,8 @@ class Fetcher:
         self.n = 0
         self._last = {}
 
-    def get(self, url: str, params: Optional[Dict] = None, timeout: int = 20):
-        import requests
+    def _before(self, url: str) -> None:
+        """Ceiling check and per-host pacing, shared by every verb."""
         if self.n >= self.max:
             raise RuntimeError("request ceiling reached ({})".format(self.max))
         host = re.sub(r"^https?://([^/]+).*", r"\1", url)
@@ -104,8 +104,30 @@ class Fetcher:
             time.sleep(wait)
         self.n += 1
         self._last[host] = time.time()
-        return requests.get(url, params=params, timeout=timeout,
-                            headers={"User-Agent": USER_AGENT})
+
+    def get(self, url: str, params: Optional[Dict] = None, timeout: int = 20,
+            headers: Optional[Dict] = None):
+        import requests
+        self._before(url)
+        h = {"User-Agent": USER_AGENT}
+        # Places API (New) authenticates and selects fields through headers,
+        # not query parameters, so callers need to add their own.
+        h.update(headers or {})
+        return requests.get(url, params=params, timeout=timeout, headers=h)
+
+    def post_json(self, url: str, body: Dict, headers: Optional[Dict] = None,
+                  timeout: int = 20):
+        """POST a JSON body. Counted and paced exactly like get().
+
+        Needed because Places API (New) is POST-only. The legacy GET endpoints
+        this module also calls cannot be enabled on projects created after
+        Google's 2025 cutover, so anything new has to speak the new protocol.
+        """
+        import requests
+        self._before(url)
+        h = {"User-Agent": USER_AGENT, "Content-Type": "application/json"}
+        h.update(headers or {})
+        return requests.post(url, json=body, headers=h, timeout=timeout)
 
 
 # --------------------------------------------------------------------------

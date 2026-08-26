@@ -20,6 +20,14 @@ data/processed/hierarchy.json
 data/processed/weak_training_set.csv
 travellens.db
 
+# Google place_id cache. Expensive to regenerate (a billed call per
+# destination), which by the rule above argues for committing it -- but the
+# matched name and address in it are Google's content, and their terms cap how
+# long it may be cached and forbid redistributing it. The ids we actually
+# relied on are recorded in the merge report, so nothing is lost by leaving
+# this out of the repository.
+data/processed/place_ids.csv
+
 # Kept: the small, hard-to-regenerate results.
 !data/processed/scorecards.csv
 !data/processed/media.csv
