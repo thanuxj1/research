@@ -17,6 +17,11 @@ const paths = {
   leaf: <path d="M13 3c0 5.5-3.4 8.6-7.6 8.6H3.6C3.6 6.6 7.3 3 13 3ZM4 13c1.2-3.4 3.2-5.4 6-6.6" />,
   close: <path d="M4 4l8 8M12 4l-8 8" />,
   chevron: <path d="M5.5 3.5 10 8l-4.5 4.5" />,
+  // The same stroke turned a quarter turn, as its own entry rather than a CSS
+  // rotation on the caller: the one place that needs a downward chevron is the
+  // hero's scroll cue, and that element's `transform` is already carrying a
+  // keyframe animation, so a `rotate()` there would be overwritten mid-cycle.
+  'chevron-down': <path d="M3.5 5.5 8 10l4.5-4.5" />,
   layers: <path d="M8 2 2 5.2l6 3.2 6-3.2L8 2ZM2 8.4l6 3.2 6-3.2M2 11.4l6 3.2 6-3.2" />,
   info: <path d="M8 7.2v4M8 4.9v.5M14 8A6 6 0 1 1 2 8a6 6 0 0 1 12 0Z" />,
   refresh: <path d="M13 8a5 5 0 1 1-1.6-3.7M13 2.6V5h-2.4" />,
