@@ -156,6 +156,9 @@ export async function getRecommendations(userText = '', overrideParams = {}) {
 
   const payload = {
     user_text: userText,
+    origin: overrideParams.origin || 'Colombo',
+    days: overrideParams.days || 3,
+    transport_mode: overrideParams.transport_mode || 'car',
     weather: overrideParams.weather || autoData.weather,
     crowd: crowdParams,
   };
@@ -174,8 +177,11 @@ export async function getRecommendations(userText = '', overrideParams = {}) {
 
       if (response.ok) {
         const data = await response.json();
-        if (data && Array.isArray(data.recommendations)) {
-          const enriched = data.recommendations.map((item) => {
+        if (data && (Array.isArray(data.recommendations) || Array.isArray(data.route_recommendations))) {
+          const recs = Array.isArray(data.recommendations) ? data.recommendations : [];
+          const routeRecs = Array.isArray(data.route_recommendations) ? data.route_recommendations : [];
+
+          const enriched = recs.map((item) => {
             const pName = item.place || item.name || 'Galle';
             const meta = DESTINATION_DETAILS[pName] || {
               desc: 'Top travel destination in Sri Lanka.',
@@ -200,6 +206,7 @@ export async function getRecommendations(userText = '', overrideParams = {}) {
 
           return {
             recommendations: enriched,
+            route_recommendations: routeRecs,
             isLive: true,
             rawJson: data,
             requestPayload: payload,
@@ -215,10 +222,13 @@ export async function getRecommendations(userText = '', overrideParams = {}) {
   }
 
   const fallbackRecs = generateFallbackRecommendations(userText);
+  const fallbackRoutes = generateFallbackRouteRecommendations(userText, payload.days);
   return {
     recommendations: fallbackRecs,
+    route_recommendations: fallbackRoutes,
     isLive: false,
     rawJson: {
+      route_recommendations: fallbackRoutes,
       recommendations: fallbackRecs.map(({ place, crowd, weather, score }) => ({
         place,
         crowd,
@@ -229,6 +239,43 @@ export async function getRecommendations(userText = '', overrideParams = {}) {
     requestPayload: payload,
     errorDetail: lastError,
   };
+}
+
+function generateFallbackRouteRecommendations(userText = '', days = 3) {
+  return [
+    {
+      rank: 1,
+      route: ['Colombo', 'Kandy', 'Nuwara Eliya', 'Ella'],
+      route_display: 'Colombo → Kandy → Nuwara Eliya → Ella',
+      overall_route_score: 92,
+      decision: 'Highly Recommended',
+      total_distance_km: 246,
+      total_travel_time_hours: 6.8,
+      total_travel_time: '6h 48m',
+      days: days,
+      feasible: true,
+      segments: [
+        { from: 'Colombo', to: 'Kandy', distance_km: 115, estimated_travel_time: '2h 34m', is_estimated_distance: false, warnings: [] },
+        { from: 'Kandy', to: 'Nuwara Eliya', distance_km: 76, estimated_travel_time: '1h 41m', is_estimated_distance: false, warnings: [] },
+        { from: 'Nuwara Eliya', to: 'Ella', distance_km: 55, estimated_travel_time: '1h 14m', is_estimated_distance: false, warnings: [] }
+      ],
+      daily_plan: [
+        { day: 1, route: 'Colombo → Kandy', destinations: ['Colombo', 'Kandy'], travel_time: '2h 34m', activities: [{ name: 'Temple of the Tooth', time: '15:00-17:00' }] },
+        { day: 2, route: 'Kandy → Nuwara Eliya', destinations: ['Kandy', 'Nuwara Eliya'], travel_time: '1h 41m', activities: [{ name: 'Pedro Tea Estate', time: '09:30-11:30' }] },
+        { day: 3, route: 'Nuwara Eliya → Ella', destinations: ['Nuwara Eliya', 'Ella'], travel_time: '1h 14m', activities: [{ name: 'Nine Arches Bridge', time: '14:00-16:30' }] }
+      ],
+      why_recommended: [
+        'Strong match for quiet and cool-weather preferences',
+        'Route minimizes unnecessary backtracking',
+        'Destination sequence is geographically efficient',
+        'Weather conditions are suitable across the route',
+        'Travel time is feasible within the selected duration'
+      ],
+      tradeoffs: [
+        'Some route segments require longer travel time'
+      ]
+    }
+  ];
 }
 
 /**
