@@ -510,8 +510,8 @@
     pointer-events: none;
     background: linear-gradient(
       to bottom,
-      rgba(255, 255, 255, 0.74) 0%,
-      rgba(255, 255, 255, 0.86) 52%,
+      rgba(255, 255, 255, 0.50) 0%,
+      rgba(255, 255, 255, 0.76) 52%,
       var(--bg) 100%
     );
   }
@@ -521,6 +521,32 @@
     z-index: 1;
     width: 100%;
     padding: 40px 20px 96px;
+  }
+  
+  .hero__features {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 30px;
+  }
+  
+  .hero__feature {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 8px 12px;
+    border: 1px solid var(--border);
+    border-radius: var(--r-pill);
+    background: var(--surface-2);
+    box-shadow: var(--shadow-sm);
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-1);
+  }
+  
+  .hero__feature svg {
+    color: var(--accent-bright);
+    flex: 0 0 auto;
   }
   
   .hero__eyebrow {
@@ -1946,16 +1972,17 @@
   
      Every hue in this app is already spoken for: green is a dietary attribute the
      dish satisfies (the Veg chip) and "open now" in this same row, amber and red
-     are health severity, violet is "you can interact with this". A fourth meaning
-     painted in a borrowed colour would weaken all of them. Worse, the halal flag
-     is the *least* certain thing in a venue row - a tag some mapper entered, not an
-     audit - so colouring it like a verified attribute would put the strongest
-     visual emphasis on the weakest claim.
+     are health severity, and the emerald accent is "you can interact with this".
+     A fourth meaning painted in a borrowed colour would weaken all of them. Worse,
+     the halal flag is the *least* certain thing in a venue row - a tag some mapper
+     entered, or a line in a hand-kept list, not an audit - so colouring it like a
+     verified attribute would put the strongest visual emphasis on the weakest
+     claim.
   
      So it is the loudest of the neutrals instead: --surface-4 and --border-strong
      are one step above every chip beside it, which makes it findable while the
-     crescent and the server's label do the actual telling. `cursor: help` because
-     the tooltip carries the caveat that a badge this size cannot. */
+     mark and the server's label do the actual telling. `cursor: help` because the
+     tooltip carries the caveat that a badge this size cannot. */
   .halal {
     display: inline-flex;
     align-items: center;
@@ -1968,8 +1995,19 @@
     border: 1px solid var(--border-strong);
     border-radius: var(--r-pill);
     background: var(--surface-4);
-    color: var(--text-1);
+    color: #00b72a;
     cursor: help;
+  }
+  
+  /* The crescent-and-star glyph. The mark's ink sits low in its own 16-unit box -
+     the crescent runs to y 13.5 while the cap height of the label beside it stops
+     around y 11 - so centring the two boxes leaves the mark reading low. The nudge
+     is optical, not geometric, which is why it is a fraction of a pixel rather than
+     a round number. `flex-shrink: 0` because the row it lives in wraps chips, and a
+     squashed crescent stops being a crescent. */
+  .halal__mark {
+    flex: 0 0 auto;
+    margin-top: -0.5px;
   }
   
   @media (max-width: 640px) {

@@ -17,6 +17,8 @@ const paths = {
   leaf: <path d="M13 3c0 5.5-3.4 8.6-7.6 8.6H3.6C3.6 6.6 7.3 3 13 3ZM4 13c1.2-3.4 3.2-5.4 6-6.6" />,
   close: <path d="M4 4l8 8M12 4l-8 8" />,
   chevron: <path d="M5.5 3.5 10 8l-4.5 4.5" />,
+  wallet: <path d="M2.5 4.5A2.5 2.5 0 0 1 5 2h6a2.5 2.5 0 0 1 2.5 2.5V5H5.5A2.5 2.5 0 0 0 3 7.5v4A2.5 2.5 0 0 0 5.5 14h8V5H5.5" />,
+  'map-pin': <path d="M8 14s4.5-4.1 4.5-7.5A4.5 4.5 0 0 0 8 2a4.5 4.5 0 0 0-4.5 4.5C3.5 9.9 8 14 8 14Z M8 8.2a1.7 1.7 0 1 0 0-3.4 1.7 1.7 0 0 0 0 3.4Z" />,
   // The same stroke turned a quarter turn, as its own entry rather than a CSS
   // rotation on the caller: the one place that needs a downward chevron is the
   // hero's scroll cue, and that element's `transform` is already carrying a
@@ -26,11 +28,32 @@ const paths = {
   info: <path d="M8 7.2v4M8 4.9v.5M14 8A6 6 0 1 1 2 8a6 6 0 0 1 12 0Z" />,
   refresh: <path d="M13 8a5 5 0 1 1-1.6-3.7M13 2.6V5h-2.4" />,
   filter: <path d="M2.5 4h11L9.2 8.9v3.7L6.8 13.8V8.9L2.5 4Z" />,
-  // Used for the halal badge. Named for the shape, not the feature, like every
+  // Used for the halal badge. Named for the shapes, not the feature, like every
   // other entry here — and deliberately *not* a certification mark. Real halal
   // marks belong to certifying bodies; reproducing one would both infringe a
-  // trademark and assert an audit that the underlying OpenStreetMap tag has not
-  // had. A crescent is the conventional shorthand and claims nothing.
+  // trademark and assert an audit that neither an OpenStreetMap tag nor a
+  // hand-written list has had. A crescent and star is the conventional shorthand
+  // and claims nothing, and it is drawn as an open mark rather than inside a
+  // circular seal for exactly that reason — a ringed roundel is the visual
+  // grammar of a certifier's stamp, which is the one thing this badge must not
+  // look like.
+  //
+  // Two shapes in a `<g>` rather than one path: they are separate closed
+  // outlines, and the star has to sit clear of the crescent's upper horn. The
+  // geometry was rasterised and looked at, at both 208px and the 13px the badge
+  // actually renders, which is how the first attempt got caught — its star sat
+  // 0.35 units from the horn and the two merged into one blob at badge size.
+  // Current clearance is ~0.9 units of the 16 viewBox after the 1.35 stroke, and
+  // the widest ink (the star's right tip at x 14.6) stays inside the box.
+  halal: (
+    <image 
+      href="halal2.png" 
+      width="18" 
+      height="18" 
+    />
+  ),
+  // The bare crescent, kept because it is the neutral single-shape variant and
+  // the mark above is composed from it. Nothing mounts it today.
   crescent: <path d="M10.5 3.1a5.5 5.5 0 1 0 0 9.8 5 5 0 0 1 0-9.8Z" />,
 }
 

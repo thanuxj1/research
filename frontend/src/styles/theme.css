@@ -146,7 +146,7 @@
        is also what guarantees the hero text stays legible no matter which image is
        used. Drop in a wide landscape shot here and it will look sharper; nothing
        else needs to change. */
-    --hero-image: url('/dishes/rice-and-curry.jpg');
+    --hero-image: url('/background1.jpg');
   
     /* --- typography ---------------------------------------------------- */
     --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,

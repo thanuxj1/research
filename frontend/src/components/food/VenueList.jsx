@@ -30,24 +30,30 @@ function formatDistance(km, approximate) {
  * The halal mark on a venue row.
  *
  * Rendered only when the server says `halal === true`. The two other states are
- * deliberately silent: `null` means nobody has surveyed this venue, and `false`
- * means an OpenStreetMap contributor tagged it `diet:halal=no` — thin evidence
- * on which to print a public negative claim about a named business, and the
- * absence of a badge already carries "not established" for anyone looking for
- * one. Only the positive is shown, and only as a quotation of the tag.
+ * deliberately silent: `null` means nobody has surveyed this venue and it is not
+ * on the operator's list, and `false` means an OpenStreetMap contributor tagged
+ * it `diet:halal=no` — thin evidence on which to print a public negative claim
+ * about a named business, and the absence of a badge already carries "not
+ * established" for anyone looking for one. Only the positive is shown.
  *
  * The label and the tooltip are the server's words, not this file's, for the
  * same reason as the venue disclaimer and the confidence legend: the caveat that
- * this is a mapper's tag rather than a certification has to travel with the
- * claim. A local fallback string here would be a second copy free to drift, and
- * one that would keep reassuring the user after the server had stopped.
+ * this is a mapper's tag or a hand-written listing rather than a certification
+ * has to travel with the claim. It is also what keeps the two provenances
+ * distinguishable — `diet:halal=only` says "Halal only", the operator's list says
+ * "Halal" and nothing stronger — and this component cannot tell them apart, nor
+ * does it need to. A local fallback string here would be a second copy free to
+ * drift, and one that would keep reassuring the user after the server stopped.
+ *
+ * The mark is a crescent and star, not a certifier's seal; see the note beside
+ * the `halal` entry in the icon set.
  */
 function HalalBadge({ venue }) {
   if (venue.halal !== true || !venue.halal_label) return null
 
   return (
     <span className="halal" title={venue.halal_note || undefined}>
-      <Icon name="crescent" size={10} />
+      <Icon name="halal" className="halal__mark" size={13} strokeWidth={1.35} />
       {venue.halal_label}
     </span>
   )
