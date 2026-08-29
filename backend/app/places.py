@@ -25,10 +25,15 @@ UI says so. Presenting all three with equal authority would be the real bug -
 this is the same reasoning behind the health engine's negative keywords.
 
 The halal flag is the same problem in a sharper form, which is why it is
-tri-state: it comes from OpenStreetMap's `diet:halal` tag and from nowhere else,
-so True and False are claims a mapper made and None means nobody has looked. See
-`parse_halal`. Google Places has no halal field and the seed list has no source
-for one, so under either of those a venue's halal status is simply unknown.
+tri-state: True and False are claims somebody made and None means nobody has
+looked. It has exactly two sources, each with its own wording. A provider survey
+- OpenStreetMap's `diet:halal` tag, see `parse_halal` - is the stronger one and
+wins in both directions. Where no provider has surveyed a venue, the operator's
+hand-compiled list in `data/halal_venues.py` can fill the gap, captioned as a
+hand-written listing rather than a certification; see `apply_curated_halal` for
+the precedence and why a disagreement is left as the provider found it. Google
+Places has no halal field at all, so a Google-backed deployment shows only the
+curated rows.
 
 **Coordinate minimisation.** Incoming coordinates are rounded to
 `coordinate_precision` decimals - 3 dp is about 110 m - before they are used as a
@@ -57,6 +62,11 @@ from dataclasses import dataclass, replace
 from typing import Sequence
 from urllib.parse import quote_plus
 
+from .data.halal_venues import (
+    CURATED_LABEL,
+    CURATED_NOTE,
+    curated_halal_name,
+)
 from .data.venue_profiles import (
     BAKERY,
     CAFE,
@@ -194,11 +204,13 @@ class Venue:
     source: str  # 'overpass' | 'google' | 'seed'
     cuisines: tuple[str, ...] = ()
     # Halal status, tri-state on purpose - True and False are claims, None means
-    # nobody has surveyed it. Only OpenStreetMap carries this (`diet:halal`):
-    # Google Places (New) has no halal field, and the seed list is a hand-written
-    # file of real named restaurants, so both leave it None rather than guessing.
-    # Inferring it from a venue's name would be a claim about someone's kitchen
-    # derived from a string.
+    # nobody has surveyed it. Two sources, in that order of authority: a provider
+    # survey (only OpenStreetMap has one, via `diet:halal`) and, where there is
+    # no survey, the operator's hand-compiled list - see `apply_curated_halal`.
+    # `halal_label` and `halal_note` say which of the two is speaking, so the two
+    # provenances cannot be confused on screen. Nothing infers this from a venue's
+    # name: that would be a claim about someone's kitchen derived from a string,
+    # and it is the reason matching against the curated list is whole-name only.
     #
     # The client badges True only. False is stored because "surveyed and tagged
     # no" is genuinely different from "untagged" - a future halal filter needs
@@ -389,6 +401,40 @@ def parse_halal(raw: object) -> tuple[bool | None, str | None, str | None]:
     return None, None, None
 
 
+def apply_curated_halal(venue: Venue) -> Venue:
+    """Fill in the halal flag from the operator's list, if nothing surveyed it.
+
+    Two rules, and the second is the one worth arguing about.
+
+    **A provider survey wins, in both directions.** If OpenStreetMap tagged this
+    venue `diet:halal`, that tag is kept even when the curated list disagrees -
+    including when the tag is `no` and the list says halal, which leaves the venue
+    unbadged. That is the same stance the pricing layer takes when the CSV band
+    and the LKR table disagree: report the disagreement, never quietly reconcile
+    it. Someone surveyed the place; a hand-written list is not grounds to overrule
+    them, and printing a halal badge over an explicit `diet:halal=no` is the one
+    outcome here with a real cost to a real user.
+
+    **The curated claim is captioned as itself.** It gets `CURATED_LABEL` and
+    `CURATED_NOTE`, not the `diet:halal` wording, so the badge never implies a
+    survey or a certification that nobody performed.
+
+    Applied once at the provider boundary in `_fetch`, which is why it reaches
+    every provider (overpass, google and the seed fallback) and both `find()` and
+    `nearby()` without either of them knowing about it.
+    """
+    if venue.halal is not None:
+        return venue
+    if curated_halal_name(venue.name) is None:
+        return venue
+    return replace(
+        venue,
+        halal=True,
+        halal_label=CURATED_LABEL,
+        halal_note=CURATED_NOTE,
+    )
+
+
 # ---------------------------------------------------------------------------
 # Cache
 # ---------------------------------------------------------------------------
@@ -494,11 +540,14 @@ def _http_json(
 class SeedProvider:
     """The bundled list. Always available, never live.
 
-    Seed rows carry no halal flag. They name real Sri Lankan restaurants, and
-    marking one halal from memory rather than from a source would be inventing a
-    fact about a named business - so `Venue.halal` stays None here, and a
-    deployment that has degraded to the seed list shows no halal badges. Unknown
-    reading as unknown is the point of the tri-state.
+    Seed rows carry no halal flag of their own. They name real Sri Lankan
+    restaurants, and marking one halal from memory rather than from a source would
+    be inventing a fact about a named business - so `Venue.halal` stays None here.
+    A venue on the operator's curated list is badged one layer up, in
+    `VenueFinder._fetch`, from that list and captioned as coming from it; keeping
+    the two apart is what stops "this row happens to be in the seed file" from
+    becoming the evidence. Everything the operator did not list reads as unknown,
+    which is the point of the tri-state.
     """
 
     name = "seed"
@@ -869,8 +918,9 @@ class GooglePlacesProvider:
                     # equivalent and feed the same cuisine matching. It has no
                     # halal field at all, and there is no `types` value that
                     # stands in for one, so `halal` is left at None here - see
-                    # `Venue.halal`. A Google-backed deployment therefore shows
-                    # no halal badges, which is the truth about what it knows.
+                    # `Venue.halal`. Leaving it None is also what lets the curated
+                    # list fill it in later: this provider never overrules that
+                    # list because it never has an opinion to overrule it with.
                     cuisines=tuple(types),
                     address=(
                         str(place["formattedAddress"])
@@ -1027,6 +1077,12 @@ class VenueFinder:
         if not venues and degraded and getattr(self.settings, "fallback_to_seed", True):
             venues = self.seed.search(latitude, longitude, radius_km, profile.selectors)
             self.fallbacks += 1
+
+        # The halal layer sits here, at the provider boundary, for two reasons: it
+        # is the one point every provider and both public methods pass through, and
+        # doing it before `put` means the cache stores the finished record rather
+        # than a half-annotated one that has to be re-decorated on every hit.
+        venues = [apply_curated_halal(v) for v in venues]
 
         # Failures are not cached, so a transient timeout does not pin a degraded
         # result for the whole TTL.

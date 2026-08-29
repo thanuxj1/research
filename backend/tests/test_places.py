@@ -27,6 +27,13 @@ from unittest import mock
 from app import places
 from app.config import PlacesSettings
 from app.corpus import load_corpus
+from app.data.halal_venues import (
+    CURATED_HALAL_VENUES,
+    CURATED_LABEL,
+    CURATED_NOTE,
+    curated_halal_name,
+    normalise_name,
+)
 from app.data.venue_profiles import BAKERY, CAFE, RESTAURANT, profile_for
 from app.data.venues_seed import SEED_VENUES, SRI_LANKA_CITIES
 from app.places import (
@@ -42,6 +49,7 @@ from app.places import (
     TTLCache,
     Venue,
     VenueFinder,
+    apply_curated_halal,
     build_provider,
     cities,
     coarsen,
@@ -310,6 +318,117 @@ class TestHalalTag(unittest.TestCase):
         self.assertIs(parse_halal("  Only ")[0], True)
         self.assertIs(parse_halal("YES")[0], True)
         self.assertIs(parse_halal(" No ")[0], False)
+
+
+class TestCuratedHalalNames(unittest.TestCase):
+    """Name matching for the operator's hand-compiled list.
+
+    The thing under test is really the *shape* of the match. A dietary claim
+    printed over the wrong restaurant is the failure that matters here, so these
+    lean on the negative cases: matching is whole-name equality after
+    normalisation, and it is meant to fail closed.
+    """
+
+    def test_every_listed_venue_resolves_to_itself(self) -> None:
+        for name in CURATED_HALAL_VENUES:
+            with self.subTest(venue=name):
+                self.assertEqual(curated_halal_name(name), name)
+
+    def test_punctuation_case_and_spacing_do_not_lose_a_match(self) -> None:
+        # The spellings a provider realistically returns for the same business.
+        cases = {
+            "UPALI'S BY NAWALOKA": "Upali's by Nawaloka",
+            "Upalis  By   Nawaloka": "Upali's by Nawaloka",
+            "hotel de pilawoos": "Hotel De Pilawoos",
+            "Kandy Muslim Hotel.": "Kandy Muslim Hotel",
+        }
+        for raw, expected in cases.items():
+            with self.subTest(raw=raw):
+                self.assertEqual(curated_halal_name(raw), expected)
+
+    def test_accents_and_non_breaking_spaces_are_folded(self) -> None:
+        self.assertEqual(curated_halal_name("Balají Dosai"), "Balaji Dosai")
+
+    def test_aliases_resolve_to_the_canonical_name(self) -> None:
+        self.assertEqual(curated_halal_name("Pilawoos"), "Hotel De Pilawoos")
+        self.assertEqual(curated_halal_name("Anna Pooram"), "Anna Pooram Vegetarian Restaurant")
+
+    def test_a_longer_name_containing_a_listed_one_is_not_a_match(self) -> None:
+        """The reason matching is equality and not a substring test.
+
+        Two entries on the list are short and generic. Under a substring rule
+        `Fab` would badge every bakery whose name starts with it, and each of
+        these is a plausible sign on a different business.
+        """
+        for imposter in (
+            "Fabulous Kitchen",
+            "Fab Cakes and More",
+            "Shanmugas Bar",
+            "New Pilawoos",
+            "Kandy Muslim Hotel Annexe",
+        ):
+            with self.subTest(name=imposter):
+                self.assertIsNone(curated_halal_name(imposter))
+
+    def test_a_shorter_fragment_of_a_listed_name_is_not_a_match(self) -> None:
+        for fragment in ("Kandy", "Hotel", "Muslim Hotel", "Dosai", "Anna"):
+            with self.subTest(name=fragment):
+                self.assertIsNone(curated_halal_name(fragment))
+
+    def test_empty_and_non_string_names_are_not_matches(self) -> None:
+        # `normalise_name` reduces punctuation to spaces, so a name made only of
+        # punctuation collapses to "" - which must not become a lookup hit.
+        for raw in (None, "", "   ", "---", "&", 0, [], {}):
+            with self.subTest(raw=raw):
+                self.assertIsNone(curated_halal_name(raw))
+        self.assertEqual(normalise_name("---"), "")
+
+
+class TestCuratedHalalPrecedence(unittest.TestCase):
+    """What happens when the list and a provider survey disagree."""
+
+    def test_an_unsurveyed_listed_venue_is_badged_from_the_list(self) -> None:
+        marked = apply_curated_halal(venue("Kandy Muslim Hotel"))
+        self.assertIs(marked.halal, True)
+        self.assertEqual(marked.halal_label, CURATED_LABEL)
+        self.assertEqual(marked.halal_note, CURATED_NOTE)
+
+    def test_the_curated_note_does_not_claim_a_certification(self) -> None:
+        # The badge is small and the tooltip is where the caveat lives, so the
+        # caveat has to actually be in it.
+        self.assertIn("not a certification", CURATED_NOTE.lower())
+        self.assertIn("confirm with the venue", CURATED_NOTE.lower())
+
+    def test_the_curated_label_does_not_borrow_the_stronger_osm_wording(self) -> None:
+        """`diet:halal=only` can say "entirely halal"; a hand-kept list cannot.
+
+        Sharing a label would let the weaker source inherit the stronger claim.
+        """
+        self.assertNotEqual(CURATED_LABEL, parse_halal("only")[1])
+        self.assertNotEqual(CURATED_LABEL, parse_halal("yes")[1])
+
+    def test_an_unlisted_venue_is_left_unknown(self) -> None:
+        untouched = apply_curated_halal(venue("Beach Wadiya"))
+        self.assertIsNone(untouched.halal)
+        self.assertIsNone(untouched.halal_label)
+
+    def test_an_osm_tag_wins_over_the_list(self) -> None:
+        surveyed = venue(
+            "Hotel De Pilawoos", halal=True, halal_label="Halal only", halal_note="surveyed"
+        )
+        self.assertEqual(apply_curated_halal(surveyed), surveyed)
+
+    def test_an_explicit_osm_no_is_not_overruled_into_a_badge(self) -> None:
+        """The case with a real cost to a real user.
+
+        Somebody surveyed this venue and recorded a negative. A hand-written list
+        is not grounds to print a halal badge over that, so the negative stands
+        and the row shows no badge at all.
+        """
+        refused = venue("Shanmugas", halal=False)
+        result = apply_curated_halal(refused)
+        self.assertIs(result.halal, False)
+        self.assertIsNone(result.halal_label)
 
 
 class TestTierInference(unittest.TestCase):
@@ -698,10 +817,15 @@ class TestSeedProvider(unittest.TestCase):
         self.assertEqual(len({v.id for v in found}), len(found))
 
     def test_the_seed_list_makes_no_halal_claims(self) -> None:
-        """These are real named businesses with no source for a dietary tag.
+        """The *provider* claims nothing, even for venues on the curated list.
 
-        The seed list is what a degraded deployment falls back to, so this is
-        also the assertion that losing the live provider cannot turn a badge on.
+        Several seed rows are on the operator's halal list, and it would be easy
+        to badge them here. Keeping the layers apart is what stops "this row
+        happens to be in the seed file" from silently becoming the evidence: the
+        claim is added one level up, in `VenueFinder._fetch`, where it can be
+        captioned with where it came from. So this stays an assertion about the
+        provider, not about the finished payload - see
+        `TestCuratedHalalReachesThePayload` for that.
         """
         for found in self.provider.search(*COLOMBO, 500.0, []):
             with self.subTest(venue=found.name):
@@ -944,6 +1068,85 @@ class TestFindPayload(FinderTestCase):
         )
         result = self.finder(provider).find(self.dish("Chicken Kottu"), *COLOMBO)
         self.assertEqual([r["name"] for r in result["results"]], ["Near Unknown", "Far Halal"])
+
+
+class TestCuratedHalalReachesThePayload(FinderTestCase):
+    """The curated layer, end to end.
+
+    `apply_curated_halal` is unit-tested above; these pin the wiring, which is
+    the part that has actually broken in this project before - three separate
+    bugs were a server-side fact that never reached the screen.
+    """
+
+    def test_a_listed_venue_arrives_badged_and_captioned(self) -> None:
+        provider = StubProvider([venue("Kandy Muslim Hotel", 0.002)])
+        row = self.finder(provider).find(self.dish("Chicken Kottu"), *COLOMBO)["results"][0]
+        self.assertIs(row["halal"], True)
+        self.assertEqual(row["halal_label"], CURATED_LABEL)
+        self.assertEqual(row["halal_note"], CURATED_NOTE)
+
+    def test_an_alias_arrives_badged_too(self) -> None:
+        provider = StubProvider([venue("Pilawoos", 0.002)])
+        row = self.finder(provider).find(self.dish("Chicken Kottu"), *COLOMBO)["results"][0]
+        self.assertIs(row["halal"], True)
+
+    def test_an_unlisted_neighbour_is_untouched(self) -> None:
+        provider = StubProvider([venue("Kandy Muslim Hotel", 0.002), venue("Some Diner", 0.003)])
+        rows = {
+            r["name"]: r["halal"]
+            for r in self.finder(provider).find(self.dish("Chicken Kottu"), *COLOMBO)["results"]
+        }
+        self.assertIs(rows["Kandy Muslim Hotel"], True)
+        self.assertIsNone(rows["Some Diner"])
+
+    def test_the_dishless_nearby_endpoint_badges_them_as_well(self) -> None:
+        """`nearby()` builds its rows itself rather than going through `_annotate`.
+
+        That is why the curated pass sits at the provider boundary: putting it in
+        the annotation step would have badged the dish search and quietly skipped
+        this endpoint.
+        """
+        provider = StubProvider([venue("Kandy Muslim Hotel", 0.002)])
+        row = self.finder(provider).nearby(*COLOMBO)["results"][0]
+        self.assertIs(row["halal"], True)
+        self.assertEqual(row["halal_label"], CURATED_LABEL)
+
+    def test_a_degraded_deployment_still_badges_them(self) -> None:
+        """Losing the live provider must not lose the badge.
+
+        The seed rows themselves carry no halal flag - see
+        `TestSeedProvider.test_the_seed_list_makes_no_halal_claims` - so this is
+        the assertion that the curated layer is applied after the fallback rather
+        than before it.
+        """
+        result = self.finder(FailingProvider()).find(
+            self.dish("Chicken Kottu"), *COLOMBO, radius_km=10.0
+        )
+        self.assertTrue(result["degraded"])
+        badged = {r["name"] for r in result["results"] if r["halal"] is True}
+        # Radius widened past the 3 km default on purpose: Pilawoos is in Colombo
+        # 04, about 3.5 km from the city centre this searches from, so the default
+        # would have made this assertion a statement about the radius instead of
+        # about the fallback.
+        self.assertIn("Hotel De Pilawoos", badged)
+        self.assertIn("Upali's by Nawaloka", badged)
+        self.assertLessEqual(badged, set(CURATED_HALAL_VENUES))
+
+    def test_the_whole_list_is_reachable_from_a_real_seed_search(self) -> None:
+        """Every name the operator gave has to be badgeable somewhere.
+
+        A typo in `halal_venues.py` that matches nothing in the seed list is
+        silent otherwise: the code path works, the tests above pass on their
+        stubs, and the badge simply never appears in the app.
+        """
+        finder = self.finder(NullProvider())
+        badged: set[str] = set()
+        # Colombo, Kandy and Trincomalee between them cover every listed venue.
+        for centre in (COLOMBO, KANDY, (8.5874, 81.2152)):
+            for row in finder.nearby(*centre, radius_km=25.0, limit=40)["results"]:
+                if row["halal"] is True:
+                    badged.add(row["name"])
+        self.assertEqual(badged, set(CURATED_HALAL_VENUES))
 
 
 class TestPriceAnnotation(FinderTestCase):
