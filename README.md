@@ -1,19 +1,16 @@
-# research
+﻿# research
 
-Three independent applications in one repository. They share a git history and
-nothing else: separate stacks, separate data, separate ports. Nothing here
-imports anything from a sibling directory, and none of them has to be running
-for another to work.
+One web application with three functions. Built from three independent codebases merged into one origin behind the gateway.
 
 | directory | what it is | owner |
 |---|---|---|
-| `backend/`, `backend_flask/`, `frontend/` | SafeTravel LK — safety heatmap and scam analytics | udesh, irusha, chamika |
+| `backend_flask/`, `frontend/` | AI Travel Assistant — destination recommendations, budget planner, cultural Q&A | irusha, olith |
 | `food-assistant/` | Sri Lankan food recommender | nihara |
-| `travellens/` | LostinSriLanka — aspect-based complaint mining over 46,854 tourist reviews | thanuja |
+| `travellens/` | LostinSriLanka â€” aspect-based complaint mining over 46,854 tourist reviews | thanuja |
 
 `food-assistant/` sits in its own directory because it defines
 `backend/app/main.py`, `backend/main.py`, `frontend/src/App.jsx`,
-`frontend/package.json` and `frontend/vite.config.js` — the same five paths
+`frontend/package.json` and `frontend/vite.config.js` â€” the same five paths
 SafeTravel LK uses. Merged at the repository root, one of the two FastAPI apps
 and one of the two React apps would be unable to run, and git reports no
 conflict on most of those files.
@@ -29,36 +26,36 @@ python gateway.py --check    # what is reachable, starts nothing
 
 | path | what |
 |---|---|
-| `/` | landing page, with a card per application |
-| `/safety/` | SafeTravel LK |
-| `/food/` | food assistant |
-| `/travellens/` | LostinSriLanka |
+| `/` | unified portal — one page, three tabs |
+| `/ai/` | AI Travel Assistant (built React SPA) |
+| `/food/` | Food Guide (built React SPA) |
+| `/travellens/` | Reviews — LostinSriLanka (mounted FastAPI) |
+| `/assistance/...`, `/budget_planner/...`, `/questions/...` | AI backend APIs (proxied to Flask) |
+| `/food/api/...` | food API (proxied to FastAPI) |
 
-One origin, so no CORS and one address to share. The three are served
-differently, and the differences are the design:
+One origin — no CORS, one URL to share. Open `/` and use the top tabs to
+switch between the three functions. Each section is loaded in an iframe on
+first use; the frames stay loaded when you switch tabs, so the review map
+only pays its startup cost once.
 
-**travellens is mounted into the gateway process.** It is a FastAPI app in this
-repository, so it costs no extra port and no proxy hop. Its API comes with it
-at `/travellens/analyse`, `/travellens/docs` and so on.
+**travellens is mounted**, not proxied. It is a FastAPI app in this
+repository — no extra port and no proxy hop.
 
-**The two React apps are served as built files**, so build them first:
+**The two React SPAs are served as built files.** Build them first:
 
 ```bash
 cd frontend && npm install && npm run build
 cd food-assistant/frontend && npm install && npm run build
 ```
 
-`base` is set in both vite configs, because a single-page app behind a path
-prefix needs that prefix compiled into its asset URLs — otherwise the built
-page asks the gateway for `/assets/...` and gets a blank screen. Both still run
-under `npm run dev` exactly as before.
+`base` is set in both vite configs — a single-page app behind a path prefix
+needs that prefix baked into its asset URLs, otherwise the built page asks
+the gateway for `/assets/...` and gets a blank screen.
 
-**Their two backends stay on their own ports and are proxied**, because they
-are separate Python applications with separate dependencies. Start them
-yourself:
+**The Flask AI backend and the food API are proxied.** Start them yourself:
 
 ```bash
-cd backend && uvicorn app.main:app --port 8000
+cd backend_flask && python app.py                               # port 5000
 cd food-assistant/backend && uvicorn main:app --port 8001
 ```
 
@@ -69,7 +66,7 @@ with the command to fix it.
 
 **The food backend takes several minutes on its first run.** It downloads a
 sentence-transformer and a cross-encoder (about 1 GB together) before it binds
-its port. That is its own start-up, not a gateway problem — subsequent runs use
+its port. That is its own start-up, not a gateway problem â€” subsequent runs use
 the cached models.
 
 ---
@@ -80,16 +77,16 @@ Everything is on a distinct port, so all three can run at once.
 
 | port | service |
 |---|---|
-| 3000 | SafeTravel LK — web UI |
-| 8000 | SafeTravel LK — API |
-| 5000 | SafeTravel LK — Flask services (optional locally, see below) |
-| 5173 | Food assistant — web UI |
-| 8001 | Food assistant — API |
-| 8778 | travellens — UI **and** API, one process |
+| 3000 | SafeTravel LK â€” web UI |
+| 8000 | SafeTravel LK â€” API |
+| 5000 | SafeTravel LK â€” Flask services (optional locally, see below) |
+| 5173 | Food assistant â€” web UI |
+| 8001 | Food assistant â€” API |
+| 8778 | travellens â€” UI **and** API, one process |
 
 The food API is on **8001**, not the 8000 its own docs mention, because
 SafeTravel LK's API already holds 8000. Copy
-`food-assistant/frontend/.env.example` to `.env` so its client points at 8001 —
+`food-assistant/frontend/.env.example` to `.env` so its client points at 8001 â€”
 that file is the intended way to move it, so nothing in the application code
 changed.
 
@@ -99,7 +96,7 @@ changed.
 
 Each is independent, and each still runs on its own without the gateway.
 
-### travellens — one command
+### travellens â€” one command
 
 ```bash
 cd travellens
@@ -108,13 +105,13 @@ python scripts/49_build_all.py     # rebuild every artefact, in order
 python scripts/50_launch.py        # check it, then serve it
 ```
 
-Then <http://localhost:8778/> — a three-tab app (Map, Stories & videos, Add a
+Then <http://localhost:8778/> â€” a three-tab app (Map, Stories & videos, Add a
 review) with its API on the same port. `50_launch.py` runs a preflight first
 and refuses to start if anything is stale, naming the command that fixes it.
 See `travellens/README.md`.
 
 **A fresh clone cannot rebuild this one.** `travellens/data/raw/*.csv` is
-deliberately not committed — the two review corpora are third-party scrapes
+deliberately not committed â€” the two review corpora are third-party scrapes
 this project has no right to redistribute. The built dashboard, portal and
 scorecards *are* committed, so the pages open and are readable; re-deriving
 anything needs the raw corpus supplied separately.
@@ -190,7 +187,7 @@ layout. In particular:
   git checkout origin/thanuja -- travellens .claude
   ```
 
-- **`origin/irusha` is superseded by `origin/udesh`** — the same 161 file
+- **`origin/irusha` is superseded by `origin/udesh`** â€” the same 161 file
   paths, and udesh is six commits newer.
 
 - **`origin/Food-AI-Assistant` still has its files at the repository root.**
