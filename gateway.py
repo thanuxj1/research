@@ -217,152 +217,183 @@ def build_app(upstreams: Optional[Dict[str, str]] = None):
 PORTAL_HTML = """<!doctype html>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Sri Lanka Tourism</title>
+<title>LostinSriLanka</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
 <style>
-  :root {
-    --ink:    #16150F;
-    --muted:  #5F5C50;
-    --line:   #E0DDD0;
-    --paper:  #FAFAF7;
-    --accent: #1F5C57;
-    --active-bg: #1F5C57;
-    --active-fg: #FFFFFF;
-    --nav-h:  52px;
-  }
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0 }
-  html, body { height: 100%; overflow: hidden }
-  body {
-    font: 14px/1.5 Inter, system-ui, sans-serif;
-    background: var(--paper);
-    color: var(--ink);
-    display: flex;
-    flex-direction: column;
-  }
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;overflow:hidden;background:#08111A;
+  font-family:'Inter',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
 
-  /* ── top nav ──────────────────────────────────────────────── */
-  nav {
-    height: var(--nav-h);
-    display: flex;
-    align-items: center;
-    gap: 0;
-    padding: 0 20px;
-    background: var(--paper);
-    border-bottom: 1px solid var(--line);
-    flex-shrink: 0;
-  }
-  .brand {
-    font-weight: 700;
-    font-size: 15px;
-    letter-spacing: -0.02em;
-    color: var(--accent);
-    margin-right: 28px;
-    white-space: nowrap;
-    flex-shrink: 0;
-  }
-  .brand span { color: var(--muted); font-weight: 400 }
-  .tabs {
-    display: flex;
-    gap: 2px;
-  }
-  .tab {
-    display: flex;
-    align-items: center;
-    gap: 7px;
-    padding: 6px 18px;
-    border-radius: 6px;
-    border: none;
-    background: transparent;
-    color: var(--muted);
-    font: 13.5px/1 Inter, system-ui, sans-serif;
-    font-weight: 500;
-    cursor: pointer;
-    transition: background .12s, color .12s;
-    white-space: nowrap;
-  }
-  .tab:hover { background: rgba(31,92,87,.07); color: var(--accent) }
-  .tab.active {
-    background: var(--active-bg);
-    color: var(--active-fg);
-  }
-  .tab .icon { font-size: 15px }
+/* ── Cover ──────────────────────────────────────────── */
+#cover{
+  position:fixed;inset:0;z-index:200;
+  display:flex;align-items:center;justify-content:center;
+  transition:opacity .45s ease;
+}
+#cover-bg{position:absolute;inset:0;width:100%;height:100%}
+.cover-body{
+  position:relative;z-index:1;
+  text-align:center;
+  display:flex;flex-direction:column;align-items:center;gap:20px;
+}
+.c-wordmark{
+  font-size:clamp(44px,9vw,96px);
+  font-weight:800;letter-spacing:-.035em;color:#EFF7F2;line-height:1;
+}
+.c-wordmark .gold{color:#E8B84B}
+.c-sub{
+  font-size:clamp(10px,1.4vw,12px);letter-spacing:.18em;text-transform:uppercase;
+  color:rgba(239,247,242,.38);
+}
+.c-stats{
+  display:flex;gap:24px;
+  color:rgba(239,247,242,.48);font-size:12.5px;
+}
+.c-stats b{color:#E8B84B;font-weight:600}
+#enter-btn{
+  margin-top:6px;display:flex;align-items:center;gap:10px;
+  padding:14px 32px;
+  background:#E8B84B;color:#08111A;
+  border:none;border-radius:6px;
+  font:700 14px/1 'Inter',system-ui,sans-serif;
+  cursor:pointer;letter-spacing:.01em;
+  transition:transform .15s,box-shadow .15s;
+}
+#enter-btn:hover{transform:translateY(-2px);box-shadow:0 12px 30px rgba(232,184,75,.42)}
 
-  /* ── frame area ───────────────────────────────────────────── */
-  .frames {
-    flex: 1;
-    position: relative;
-    overflow: hidden;
-  }
-  .frames iframe {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    border: none;
-    display: none;
-  }
-  .frames iframe.active { display: block }
-  .placeholder {
-    position: absolute;
-    inset: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 12px;
-    color: var(--muted);
-    font-size: 14px;
-  }
-  .placeholder.hidden { display: none }
-  .placeholder .big { font-size: 36px }
+/* ── Platform ───────────────────────────────────────── */
+#platform{
+  display:none;flex-direction:column;height:100%;
+  opacity:0;transition:opacity .3s ease;
+}
+.p-nav{
+  height:50px;flex-shrink:0;
+  display:flex;align-items:center;padding:0 20px;gap:0;
+  background:#0D1B2A;
+  border-bottom:1px solid rgba(239,247,242,.07);
+}
+.p-brand{
+  font-size:15px;font-weight:800;letter-spacing:-.02em;
+  color:#EFF7F2;margin-right:32px;white-space:nowrap;flex-shrink:0;
+}
+.p-brand .gold{color:#E8B84B}
+.p-tabs{display:flex;height:100%}
+.p-tab{
+  display:flex;align-items:center;gap:6px;
+  padding:0 16px;height:100%;
+  background:none;border:none;border-bottom:2px solid transparent;
+  color:rgba(239,247,242,.42);
+  font:500 13px/1 'Inter',system-ui,sans-serif;
+  cursor:pointer;white-space:nowrap;
+  transition:color .12s,border-color .12s;
+}
+.p-tab:hover{color:rgba(239,247,242,.75)}
+.p-tab.active{color:#E8B84B;border-bottom-color:#E8B84B}
+
+/* ── Frames ─────────────────────────────────────────── */
+.frames{flex:1;position:relative;overflow:hidden}
+.frames iframe{
+  position:absolute;inset:0;width:100%;height:100%;
+  border:none;display:none;
+}
+.frames iframe.active{display:block}
 </style>
 
-<nav>
-  <div class="brand">TravelLens <span>Sri Lanka</span></div>
-  <div class="tabs">
-    <button class="tab active" data-tab="reviews">
-      <span class="icon">🗺️</span> Reviews
-    </button>
-    <button class="tab" data-tab="assistant">
-      <span class="icon">✨</span> AI Assistant
-    </button>
-    <button class="tab" data-tab="food">
-      <span class="icon">🍛</span> Food Guide
-    </button>
+<!-- Cover -->
+<div id="cover">
+  <canvas id="cover-bg"></canvas>
+  <div class="cover-body">
+    <div class="c-wordmark">Lost<span class="gold">in</span>SriLanka</div>
+    <p class="c-sub">AI Powered Smart Tourism Ecosystem</p>
+    <div class="c-stats">
+      <span><b>46,854</b> reviews</span>
+      <span><b>293</b> destinations</span>
+      <span><b>19</b> districts</span>
+    </div>
+    <button id="enter-btn">Enter Platform &nbsp;&#8594;</button>
   </div>
-</nav>
+</div>
 
-<div class="frames" id="frames">
-  <iframe id="f-reviews"   class="active" src="/travellens/portal/index.html"></iframe>
-  <iframe id="f-assistant" src=""></iframe>
-  <iframe id="f-food"      src=""></iframe>
+<!-- Platform -->
+<div id="platform">
+  <nav class="p-nav">
+    <div class="p-brand">Lost<span class="gold">in</span>SriLanka</div>
+    <div class="p-tabs">
+      <button class="p-tab active" data-tab="reviews">&#128506; Reviews</button>
+      <button class="p-tab" data-tab="assistant">&#10024; AI Assistant</button>
+      <button class="p-tab" data-tab="food">&#127835; Food Guide</button>
+    </div>
+  </nav>
+  <div class="frames" id="frames">
+    <iframe id="f-reviews"   class="active" src="/travellens/portal/index.html?embedded=1"></iframe>
+    <iframe id="f-assistant" src=""></iframe>
+    <iframe id="f-food"      src=""></iframe>
+  </div>
 </div>
 
 <script>
-const SRCS = {
-  reviews:   '/travellens/portal/index.html',
-  assistant: '/ai/',
-  food:      '/food/',
-};
-const loaded = { reviews: true, assistant: false, food: false };
+// ── Canvas background ─────────────────────────────────
+(function(){
+  var c=document.getElementById('cover-bg'),x=c.getContext('2d');
+  var W,H,t=0,raf;
+  function resize(){W=c.width=innerWidth;H=c.height=innerHeight}
+  function draw(){
+    x.clearRect(0,0,W,H);
+    var d1=Math.sin(t*.00028),d2=Math.cos(t*.00021);
+    var bg=x.createLinearGradient(0,0,W*.7,H);
+    bg.addColorStop(0,'#0D2236');bg.addColorStop(.55,'#081420');bg.addColorStop(1,'#050E16');
+    x.fillStyle=bg;x.fillRect(0,0,W,H);
+    // teal orb
+    x.save();x.translate(W*(.65+d1*.012),H*(.30+d2*.010));
+    var g1=x.createRadialGradient(-W*.08,-H*.09,0,0,0,W*.46);
+    g1.addColorStop(0,'rgba(52,211,153,.55)');g1.addColorStop(.38,'rgba(16,133,96,.40)');
+    g1.addColorStop(.72,'rgba(8,80,56,.28)');g1.addColorStop(1,'rgba(0,0,0,0)');
+    x.fillStyle=g1;x.beginPath();
+    x.ellipse(0,0,W*.40,H*.50,-.22+d1*.018,0,Math.PI*2);x.fill();x.restore();
+    // gold orb
+    x.save();x.translate(W*(.18+d2*.010),H*(.72+d1*.009));
+    var g2=x.createRadialGradient(0,0,0,0,0,W*.28);
+    g2.addColorStop(0,'rgba(232,184,75,.26)');g2.addColorStop(.5,'rgba(180,130,40,.10)');
+    g2.addColorStop(1,'rgba(0,0,0,0)');
+    x.fillStyle=g2;x.beginPath();
+    x.ellipse(0,0,W*.24,H*.28,.3+d2*.014,0,Math.PI*2);x.fill();x.restore();
+    // vignette
+    var vig=x.createRadialGradient(W*.5,H*.5,H*.18,W*.5,H*.5,H*.85);
+    vig.addColorStop(0,'rgba(0,0,0,0)');vig.addColorStop(1,'rgba(0,0,0,.58)');
+    x.fillStyle=vig;x.fillRect(0,0,W,H);
+    t++;raf=requestAnimationFrame(draw);
+  }
+  resize();window.addEventListener('resize',resize);
+  if(window.matchMedia('(prefers-reduced-motion:reduce)').matches){t=60;x.clearRect(0,0,1,1);resize();draw();cancelAnimationFrame(raf);}
+  else draw();
+})();
 
-document.querySelectorAll('.tab').forEach(btn => {
-  btn.addEventListener('click', () => {
-    const tab = btn.dataset.tab;
+// ── Enter Platform ────────────────────────────────────
+document.getElementById('enter-btn').addEventListener('click',function(){
+  var cover=document.getElementById('cover');
+  var plat=document.getElementById('platform');
+  cover.style.opacity='0';
+  setTimeout(function(){
+    cover.style.display='none';
+    plat.style.display='flex';
+    plat.offsetHeight;
+    plat.style.opacity='1';
+  },450);
+});
 
-    // nav
-    document.querySelectorAll('.tab').forEach(b => b.classList.remove('active'));
+// ── Tabs ──────────────────────────────────────────────
+var SRCS={reviews:'/travellens/portal/index.html?embedded=1',assistant:'/ai/',food:'/food/'};
+var loaded={reviews:true,assistant:false,food:false};
+document.querySelectorAll('.p-tab').forEach(function(btn){
+  btn.addEventListener('click',function(){
+    var tab=btn.dataset.tab;
+    document.querySelectorAll('.p-tab').forEach(function(b){b.classList.remove('active')});
     btn.classList.add('active');
-
-    // frames
-    document.querySelectorAll('.frames iframe').forEach(f => f.classList.remove('active'));
-    const frame = document.getElementById('f-' + tab);
+    document.querySelectorAll('.frames iframe').forEach(function(f){f.classList.remove('active')});
+    var frame=document.getElementById('f-'+tab);
     frame.classList.add('active');
-
-    // lazy load
-    if (!loaded[tab]) {
-      frame.src = SRCS[tab];
-      loaded[tab] = true;
-    }
+    if(!loaded[tab]){frame.src=SRCS[tab];loaded[tab]=true;}
   });
 });
 </script>

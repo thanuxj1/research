@@ -1213,3 +1213,13 @@ renderMedia("");
 renderMine();
 selectTab(location.hash.slice(1) || "map");
 </script>
+<!-- embedded=1: hide the masthead when loaded inside the unified portal shell -->
+<style id="embedded-style" media="not all">
+  .masthead { display: none !important }
+  body { padding-top: 0 }
+</style>
+<script>
+if (new URLSearchParams(location.search).get('embedded') === '1') {
+  document.getElementById('embedded-style').media = 'all';
+}
+</script>
