@@ -1,29 +1,29 @@
 {
  "what_this_is": "The first accuracy measured against labels the pipeline had no hand in. Headline is Part A only, per the sampling rule; Part B oversamples contested rows and is reported apart.",
- "caveat": "One annotator, two rows adjudicated by a second reader who saw the first annotator's answers. No inter-annotator agreement exists yet, so this is 'measured against one careful human', not ground truth.",
+ "caveat": "Two independent human passes, the second labelled blind. Cohen's kappa on aspect presence: cleanliness 0.941, safety 0.756, facilities 0.737, roads_access 0.718; bootstrap 95% intervals in reports/agreement.json. Three of four support a substantial-agreement claim on the lower bound; roads_access misses 0.60 by 0.006. Measured against two readers who agree at that level -- not against ground truth, which does not exist for a judgement task.",
  "results": {
   "part_a_headline": {
    "n_rows": 120,
-   "macro_f1": 0.712,
+   "macro_f1": 0.793,
    "per_aspect": {
     "roads_access": {
      "tp": 20,
-     "fp": 20,
+     "fp": 14,
      "fn": 3,
-     "tn": 77,
-     "precision": 0.5,
+     "tn": 83,
+     "precision": 0.588,
      "recall": 0.87,
-     "f1": 0.635,
+     "f1": 0.702,
      "human_positives": 23
     },
     "cleanliness": {
      "tp": 27,
-     "fp": 6,
+     "fp": 5,
      "fn": 1,
-     "tn": 86,
-     "precision": 0.818,
+     "tn": 87,
+     "precision": 0.844,
      "recall": 0.964,
-     "f1": 0.885,
+     "f1": 0.9,
      "human_positives": 28
     },
     "facilities": {
@@ -37,105 +37,105 @@
      "human_positives": 39
     },
     "safety": {
-     "tp": 13,
-     "fp": 20,
-     "fn": 2,
-     "tn": 85,
-     "precision": 0.394,
-     "recall": 0.867,
-     "f1": 0.542,
+     "tp": 11,
+     "fp": 2,
+     "fn": 4,
+     "tn": 103,
+     "precision": 0.846,
+     "recall": 0.733,
+     "f1": 0.786,
      "human_positives": 15
     }
    }
   },
   "part_b_contested": {
    "n_rows": 80,
-   "macro_f1": 0.808,
+   "macro_f1": 0.836,
    "per_aspect": {
     "roads_access": {
-     "tp": 24,
-     "fp": 9,
-     "fn": 0,
-     "tn": 47,
-     "precision": 0.727,
-     "recall": 1.0,
-     "f1": 0.842,
+     "tp": 23,
+     "fp": 8,
+     "fn": 1,
+     "tn": 48,
+     "precision": 0.742,
+     "recall": 0.958,
+     "f1": 0.836,
      "human_positives": 24
     },
     "cleanliness": {
      "tp": 17,
-     "fp": 4,
+     "fp": 1,
      "fn": 0,
-     "tn": 59,
-     "precision": 0.81,
+     "tn": 62,
+     "precision": 0.944,
      "recall": 1.0,
-     "f1": 0.895,
+     "f1": 0.971,
      "human_positives": 17
     },
     "facilities": {
      "tp": 13,
-     "fp": 10,
+     "fp": 9,
      "fn": 2,
-     "tn": 55,
-     "precision": 0.565,
+     "tn": 56,
+     "precision": 0.591,
      "recall": 0.867,
-     "f1": 0.684,
+     "f1": 0.703,
      "human_positives": 15
     },
     "safety": {
-     "tp": 17,
-     "fp": 5,
-     "fn": 3,
-     "tn": 55,
-     "precision": 0.773,
-     "recall": 0.85,
-     "f1": 0.81,
+     "tp": 15,
+     "fp": 1,
+     "fn": 5,
+     "tn": 59,
+     "precision": 0.938,
+     "recall": 0.75,
+     "f1": 0.833,
      "human_positives": 20
     }
    }
   },
   "all_rows": {
    "n_rows": 200,
-   "macro_f1": 0.761,
+   "macro_f1": 0.817,
    "per_aspect": {
     "roads_access": {
-     "tp": 44,
-     "fp": 29,
-     "fn": 3,
-     "tn": 124,
-     "precision": 0.603,
-     "recall": 0.936,
-     "f1": 0.733,
+     "tp": 43,
+     "fp": 22,
+     "fn": 4,
+     "tn": 131,
+     "precision": 0.662,
+     "recall": 0.915,
+     "f1": 0.768,
      "human_positives": 47
     },
     "cleanliness": {
      "tp": 44,
-     "fp": 10,
+     "fp": 6,
      "fn": 1,
-     "tn": 145,
-     "precision": 0.815,
+     "tn": 149,
+     "precision": 0.88,
      "recall": 0.978,
-     "f1": 0.889,
+     "f1": 0.926,
      "human_positives": 45
     },
     "facilities": {
      "tp": 46,
-     "fp": 22,
+     "fp": 21,
      "fn": 8,
-     "tn": 124,
-     "precision": 0.676,
+     "tn": 125,
+     "precision": 0.687,
      "recall": 0.852,
-     "f1": 0.754,
+     "f1": 0.76,
      "human_positives": 54
     },
     "safety": {
-     "tp": 30,
-     "fp": 25,
-     "fn": 5,
-     "tn": 140,
-     "precision": 0.545,
-     "recall": 0.857,
-     "f1": 0.667,
+     "tp": 26,
+     "fp": 3,
+     "fn": 9,
+     "tn": 162,
+     "precision": 0.897,
+     "recall": 0.743,
+     "f1": 0.812,
      "human_positives": 35
     }
    }

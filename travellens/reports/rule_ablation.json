@@ -10,41 +10,41 @@
    "aspects": {
     "cleanliness": {
      "complaint_rate": 0.418,
-     "n_negative": 1769,
-     "n_opinions": 4235
+     "n_negative": 1750,
+     "n_opinions": 4188
     },
     "crowd": {
-     "complaint_rate": 0.149,
-     "n_negative": 600,
-     "n_opinions": 4038
+     "complaint_rate": 0.152,
+     "n_negative": 710,
+     "n_opinions": 4675
     },
     "facilities": {
      "complaint_rate": 0.244,
-     "n_negative": 1290,
-     "n_opinions": 5278
+     "n_negative": 1280,
+     "n_opinions": 5250
     },
     "price_value": {
-     "complaint_rate": 0.467,
-     "n_negative": 2185,
-     "n_opinions": 4681
+     "complaint_rate": 0.506,
+     "n_negative": 2087,
+     "n_opinions": 4125
     },
     "roads_access": {
-     "complaint_rate": 0.288,
-     "n_negative": 1887,
-     "n_opinions": 6542
+     "complaint_rate": 0.297,
+     "n_negative": 1847,
+     "n_opinions": 6228
     },
     "safety": {
-     "complaint_rate": 0.509,
-     "n_negative": 1387,
-     "n_opinions": 2724
+     "complaint_rate": 0.698,
+     "n_negative": 1444,
+     "n_opinions": 2070
     },
     "scenery": {
-     "complaint_rate": 0.061,
-     "n_negative": 1456,
-     "n_opinions": 23952
+     "complaint_rate": 0.089,
+     "n_negative": 2443,
+     "n_opinions": 27529
     }
    },
-   "displayed_scorecards": 1130,
+   "displayed_scorecards": 832,
    "n_destinations": 293
   },
   "no_request_rule": {
@@ -55,41 +55,41 @@
    "aspects": {
     "cleanliness": {
      "complaint_rate": 0.405,
-     "n_negative": 1687,
-     "n_opinions": 4170
+     "n_negative": 1669,
+     "n_opinions": 4124
     },
     "crowd": {
-     "complaint_rate": 0.142,
-     "n_negative": 571,
-     "n_opinions": 4016
+     "complaint_rate": 0.145,
+     "n_negative": 674,
+     "n_opinions": 4648
     },
     "facilities": {
-     "complaint_rate": 0.228,
-     "n_negative": 1181,
-     "n_opinions": 5188
+     "complaint_rate": 0.227,
+     "n_negative": 1171,
+     "n_opinions": 5160
     },
     "price_value": {
-     "complaint_rate": 0.443,
-     "n_negative": 2008,
-     "n_opinions": 4531
+     "complaint_rate": 0.483,
+     "n_negative": 1923,
+     "n_opinions": 3984
     },
     "roads_access": {
-     "complaint_rate": 0.257,
-     "n_negative": 1626,
-     "n_opinions": 6319
+     "complaint_rate": 0.268,
+     "n_negative": 1616,
+     "n_opinions": 6029
     },
     "safety": {
-     "complaint_rate": 0.488,
-     "n_negative": 1285,
-     "n_opinions": 2633
+     "complaint_rate": 0.688,
+     "n_negative": 1401,
+     "n_opinions": 2037
     },
     "scenery": {
-     "complaint_rate": 0.053,
-     "n_negative": 1259,
-     "n_opinions": 23855
+     "complaint_rate": 0.081,
+     "n_negative": 2220,
+     "n_opinions": 27411
     }
    },
-   "displayed_scorecards": 1120,
+   "displayed_scorecards": 823,
    "n_destinations": 293
   },
   "no_safety_recall": {
@@ -100,41 +100,41 @@
    "aspects": {
     "cleanliness": {
      "complaint_rate": 0.418,
-     "n_negative": 1769,
-     "n_opinions": 4235
+     "n_negative": 1750,
+     "n_opinions": 4188
     },
     "crowd": {
-     "complaint_rate": 0.149,
-     "n_negative": 600,
-     "n_opinions": 4038
+     "complaint_rate": 0.152,
+     "n_negative": 710,
+     "n_opinions": 4675
     },
     "facilities": {
      "complaint_rate": 0.244,
-     "n_negative": 1290,
-     "n_opinions": 5278
+     "n_negative": 1280,
+     "n_opinions": 5250
     },
     "price_value": {
-     "complaint_rate": 0.467,
-     "n_negative": 2185,
-     "n_opinions": 4681
+     "complaint_rate": 0.506,
+     "n_negative": 2087,
+     "n_opinions": 4125
     },
     "roads_access": {
-     "complaint_rate": 0.288,
-     "n_negative": 1887,
-     "n_opinions": 6542
+     "complaint_rate": 0.297,
+     "n_negative": 1847,
+     "n_opinions": 6228
     },
     "safety": {
-     "complaint_rate": 0.467,
-     "n_negative": 1172,
-     "n_opinions": 2509
+     "complaint_rate": 0.602,
+     "n_negative": 948,
+     "n_opinions": 1574
     },
     "scenery": {
-     "complaint_rate": 0.061,
-     "n_negative": 1456,
-     "n_opinions": 23952
+     "complaint_rate": 0.089,
+     "n_negative": 2443,
+     "n_opinions": 27529
     }
    },
-   "displayed_scorecards": 1121,
+   "displayed_scorecards": 819,
    "n_destinations": 293
   },
   "no_site_rule": {
@@ -145,41 +145,41 @@
    "aspects": {
     "cleanliness": {
      "complaint_rate": 0.421,
-     "n_negative": 1790,
-     "n_opinions": 4256
+     "n_negative": 1770,
+     "n_opinions": 4208
     },
     "crowd": {
-     "complaint_rate": 0.149,
-     "n_negative": 601,
-     "n_opinions": 4039
+     "complaint_rate": 0.152,
+     "n_negative": 711,
+     "n_opinions": 4676
     },
     "facilities": {
-     "complaint_rate": 0.246,
-     "n_negative": 1300,
-     "n_opinions": 5288
+     "complaint_rate": 0.245,
+     "n_negative": 1290,
+     "n_opinions": 5260
     },
     "price_value": {
-     "complaint_rate": 0.467,
-     "n_negative": 2190,
-     "n_opinions": 4686
+     "complaint_rate": 0.506,
+     "n_negative": 2091,
+     "n_opinions": 4129
     },
     "roads_access": {
-     "complaint_rate": 0.29,
-     "n_negative": 1900,
-     "n_opinions": 6555
+     "complaint_rate": 0.298,
+     "n_negative": 1858,
+     "n_opinions": 6239
     },
     "safety": {
-     "complaint_rate": 0.51,
-     "n_negative": 1389,
-     "n_opinions": 2726
+     "complaint_rate": 0.698,
+     "n_negative": 1444,
+     "n_opinions": 2070
     },
     "scenery": {
-     "complaint_rate": 0.063,
-     "n_negative": 1502,
-     "n_opinions": 23998
+     "complaint_rate": 0.09,
+     "n_negative": 2495,
+     "n_opinions": 27581
     }
    },
-   "displayed_scorecards": 1131,
+   "displayed_scorecards": 834,
    "n_destinations": 293
   },
   "no_rules_at_all": {
@@ -190,41 +190,41 @@
    "aspects": {
     "cleanliness": {
      "complaint_rate": 0.408,
-     "n_negative": 1708,
-     "n_opinions": 4191
+     "n_negative": 1689,
+     "n_opinions": 4144
     },
     "crowd": {
-     "complaint_rate": 0.142,
-     "n_negative": 572,
-     "n_opinions": 4017
+     "complaint_rate": 0.145,
+     "n_negative": 675,
+     "n_opinions": 4649
     },
     "facilities": {
-     "complaint_rate": 0.229,
-     "n_negative": 1190,
-     "n_opinions": 5197
+     "complaint_rate": 0.228,
+     "n_negative": 1180,
+     "n_opinions": 5169
     },
     "price_value": {
-     "complaint_rate": 0.444,
-     "n_negative": 2011,
-     "n_opinions": 4534
+     "complaint_rate": 0.483,
+     "n_negative": 1926,
+     "n_opinions": 3987
     },
     "roads_access": {
-     "complaint_rate": 0.259,
-     "n_negative": 1638,
-     "n_opinions": 6331
+     "complaint_rate": 0.269,
+     "n_negative": 1626,
+     "n_opinions": 6039
     },
     "safety": {
-     "complaint_rate": 0.441,
-     "n_negative": 1064,
-     "n_opinions": 2412
+     "complaint_rate": 0.57,
+     "n_negative": 844,
+     "n_opinions": 1480
     },
     "scenery": {
-     "complaint_rate": 0.055,
-     "n_negative": 1304,
-     "n_opinions": 23900
+     "complaint_rate": 0.083,
+     "n_negative": 2271,
+     "n_opinions": 27462
     }
    },
-   "displayed_scorecards": 1111,
+   "displayed_scorecards": 811,
    "n_destinations": 293
   }
  },
@@ -236,43 +236,43 @@
      "deployed_rate": 0.418,
      "variant_rate": 0.405,
      "delta_pp": -1.3,
-     "delta_negatives": -82
+     "delta_negatives": -81
     },
     "crowd": {
-     "deployed_rate": 0.149,
-     "variant_rate": 0.142,
+     "deployed_rate": 0.152,
+     "variant_rate": 0.145,
      "delta_pp": -0.7,
-     "delta_negatives": -29
+     "delta_negatives": -36
     },
     "facilities": {
      "deployed_rate": 0.244,
-     "variant_rate": 0.228,
-     "delta_pp": -1.6,
+     "variant_rate": 0.227,
+     "delta_pp": -1.7,
      "delta_negatives": -109
     },
     "price_value": {
-     "deployed_rate": 0.467,
-     "variant_rate": 0.443,
-     "delta_pp": -2.4,
-     "delta_negatives": -177
+     "deployed_rate": 0.506,
+     "variant_rate": 0.483,
+     "delta_pp": -2.3,
+     "delta_negatives": -164
     },
     "roads_access": {
-     "deployed_rate": 0.288,
-     "variant_rate": 0.257,
-     "delta_pp": -3.1,
-     "delta_negatives": -261
+     "deployed_rate": 0.297,
+     "variant_rate": 0.268,
+     "delta_pp": -2.9,
+     "delta_negatives": -231
     },
     "safety": {
-     "deployed_rate": 0.509,
-     "variant_rate": 0.488,
-     "delta_pp": -2.1,
-     "delta_negatives": -102
+     "deployed_rate": 0.698,
+     "variant_rate": 0.688,
+     "delta_pp": -1.0,
+     "delta_negatives": -43
     },
     "scenery": {
-     "deployed_rate": 0.061,
-     "variant_rate": 0.053,
+     "deployed_rate": 0.089,
+     "variant_rate": 0.081,
      "delta_pp": -0.8,
-     "delta_negatives": -197
+     "delta_negatives": -223
     }
    },
    "ranking": [
@@ -286,8 +286,8 @@
    ],
    "top_aspect_changes": false,
    "largest_move": "roads_access",
-   "largest_move_pp": -3.1,
-   "scorecards_delta": -10
+   "largest_move_pp": -2.9,
+   "scorecards_delta": -9
   },
   "no_safety_recall": {
    "note": "hedged hazard warnings left as the model read them",
@@ -299,8 +299,8 @@
      "delta_negatives": 0
     },
     "crowd": {
-     "deployed_rate": 0.149,
-     "variant_rate": 0.149,
+     "deployed_rate": 0.152,
+     "variant_rate": 0.152,
      "delta_pp": 0.0,
      "delta_negatives": 0
     },
@@ -311,43 +311,43 @@
      "delta_negatives": 0
     },
     "price_value": {
-     "deployed_rate": 0.467,
-     "variant_rate": 0.467,
+     "deployed_rate": 0.506,
+     "variant_rate": 0.506,
      "delta_pp": 0.0,
      "delta_negatives": 0
     },
     "roads_access": {
-     "deployed_rate": 0.288,
-     "variant_rate": 0.288,
+     "deployed_rate": 0.297,
+     "variant_rate": 0.297,
      "delta_pp": 0.0,
      "delta_negatives": 0
     },
     "safety": {
-     "deployed_rate": 0.509,
-     "variant_rate": 0.467,
-     "delta_pp": -4.2,
-     "delta_negatives": -215
+     "deployed_rate": 0.698,
+     "variant_rate": 0.602,
+     "delta_pp": -9.6,
+     "delta_negatives": -496
     },
     "scenery": {
-     "deployed_rate": 0.061,
-     "variant_rate": 0.061,
+     "deployed_rate": 0.089,
+     "variant_rate": 0.089,
      "delta_pp": 0.0,
      "delta_negatives": 0
     }
    },
    "ranking": [
-    "price_value",
     "safety",
+    "price_value",
     "cleanliness",
     "roads_access",
     "facilities",
     "crowd",
     "scenery"
    ],
-   "top_aspect_changes": true,
+   "top_aspect_changes": false,
    "largest_move": "safety",
-   "largest_move_pp": -4.2,
-   "scorecards_delta": -9
+   "largest_move_pp": -9.6,
+   "scorecards_delta": -13
   },
   "no_site_rule": {
    "note": "reported regulations counted as complaints again",
@@ -356,43 +356,43 @@
      "deployed_rate": 0.418,
      "variant_rate": 0.421,
      "delta_pp": 0.3,
-     "delta_negatives": 21
+     "delta_negatives": 20
     },
     "crowd": {
-     "deployed_rate": 0.149,
-     "variant_rate": 0.149,
+     "deployed_rate": 0.152,
+     "variant_rate": 0.152,
      "delta_pp": 0.0,
      "delta_negatives": 1
     },
     "facilities": {
      "deployed_rate": 0.244,
-     "variant_rate": 0.246,
-     "delta_pp": 0.2,
+     "variant_rate": 0.245,
+     "delta_pp": 0.1,
      "delta_negatives": 10
     },
     "price_value": {
-     "deployed_rate": 0.467,
-     "variant_rate": 0.467,
+     "deployed_rate": 0.506,
+     "variant_rate": 0.506,
      "delta_pp": 0.0,
-     "delta_negatives": 5
+     "delta_negatives": 4
     },
     "roads_access": {
-     "deployed_rate": 0.288,
-     "variant_rate": 0.29,
-     "delta_pp": 0.2,
-     "delta_negatives": 13
+     "deployed_rate": 0.297,
+     "variant_rate": 0.298,
+     "delta_pp": 0.1,
+     "delta_negatives": 11
     },
     "safety": {
-     "deployed_rate": 0.509,
-     "variant_rate": 0.51,
-     "delta_pp": 0.1,
-     "delta_negatives": 2
+     "deployed_rate": 0.698,
+     "variant_rate": 0.698,
+     "delta_pp": 0.0,
+     "delta_negatives": 0
     },
     "scenery": {
-     "deployed_rate": 0.061,
-     "variant_rate": 0.063,
-     "delta_pp": 0.2,
-     "delta_negatives": 46
+     "deployed_rate": 0.089,
+     "variant_rate": 0.09,
+     "delta_pp": 0.1,
+     "delta_negatives": 52
     }
    },
    "ranking": [
@@ -407,7 +407,7 @@
    "top_aspect_changes": false,
    "largest_move": "cleanliness",
    "largest_move_pp": 0.3,
-   "scorecards_delta": 1
+   "scorecards_delta": 2
   },
   "no_rules_at_all": {
    "note": "no hand-written correction anywhere in the polarity path",
@@ -419,55 +419,55 @@
      "delta_negatives": -61
     },
     "crowd": {
-     "deployed_rate": 0.149,
-     "variant_rate": 0.142,
+     "deployed_rate": 0.152,
+     "variant_rate": 0.145,
      "delta_pp": -0.7,
-     "delta_negatives": -28
+     "delta_negatives": -35
     },
     "facilities": {
      "deployed_rate": 0.244,
-     "variant_rate": 0.229,
-     "delta_pp": -1.5,
+     "variant_rate": 0.228,
+     "delta_pp": -1.6,
      "delta_negatives": -100
     },
     "price_value": {
-     "deployed_rate": 0.467,
-     "variant_rate": 0.444,
+     "deployed_rate": 0.506,
+     "variant_rate": 0.483,
      "delta_pp": -2.3,
-     "delta_negatives": -174
+     "delta_negatives": -161
     },
     "roads_access": {
-     "deployed_rate": 0.288,
-     "variant_rate": 0.259,
-     "delta_pp": -2.9,
-     "delta_negatives": -249
+     "deployed_rate": 0.297,
+     "variant_rate": 0.269,
+     "delta_pp": -2.8,
+     "delta_negatives": -221
     },
     "safety": {
-     "deployed_rate": 0.509,
-     "variant_rate": 0.441,
-     "delta_pp": -6.8,
-     "delta_negatives": -323
+     "deployed_rate": 0.698,
+     "variant_rate": 0.57,
+     "delta_pp": -12.8,
+     "delta_negatives": -600
     },
     "scenery": {
-     "deployed_rate": 0.061,
-     "variant_rate": 0.055,
+     "deployed_rate": 0.089,
+     "variant_rate": 0.083,
      "delta_pp": -0.6,
-     "delta_negatives": -152
+     "delta_negatives": -172
     }
    },
    "ranking": [
-    "price_value",
     "safety",
+    "price_value",
     "cleanliness",
     "roads_access",
     "facilities",
     "crowd",
     "scenery"
    ],
-   "top_aspect_changes": true,
+   "top_aspect_changes": false,
    "largest_move": "safety",
-   "largest_move_pp": -6.8,
-   "scorecards_delta": -19
+   "largest_move_pp": -12.8,
+   "scorecards_delta": -21
   }
  }
 }

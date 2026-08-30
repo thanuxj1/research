@@ -1,0 +1,3606 @@
+{
+ "annotator1": [
+  {
+   "segment_id": "dae77a2e06e34fe7_4",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": NaN,
+   "checked": "x"
+  },
+  {
+   "segment_id": "5965793d9908ce27_0",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": NaN,
+   "checked": "x"
+  },
+  {
+   "segment_id": "c3969721be831bb9_11",
+   "roads_access": NaN,
+   "cleanliness": "N",
+   "facilities": "N",
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "1ad24220e81cb4b6_4",
+   "roads_access": NaN,
+   "cleanliness": "X",
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "895d45ee4066fde2_1",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": NaN,
+   "checked": "x"
+  },
+  {
+   "segment_id": "e5368b82bee93f3c_3",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": NaN,
+   "checked": "x"
+  },
+  {
+   "segment_id": "56a317c3aa614f2f_1",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": "P",
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "d2ea3298032075ed_1",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": "N",
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "5630f4916b8e27dd_5",
+   "roads_access": "P",
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "9734743650bf103e_2",
+   "roads_access": NaN,
+   "cleanliness": "N",
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "506efee8331e18d2_6",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": "X",
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "57ec2ce47148e865_3",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": NaN,
+   "checked": "x"
+  },
+  {
+   "segment_id": "c9d02da6f34dc3a5_3",
+   "roads_access": "N",
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "28a696e9b132e62f_1",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": "P",
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "374060dae964988c_0",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": "N",
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "478feb56d2e6dddf_22",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": "P",
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "db166a4b49ef29fc_0",
+   "roads_access": NaN,
+   "cleanliness": "P",
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "ab0d996b5211df68_2",
+   "roads_access": "X",
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "f1972940c2cb8121_3",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": "P",
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "c8dc9655b1752cea_1",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": "P",
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "d006dce8fd99b227_0",
+   "roads_access": "N",
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "b0f583ab5c6076b5_3",
+   "roads_access": "N",
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "bca5eb86305775a5_2",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": "X",
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "948300f12882b1d8_10",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": "N",
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "96db2afd125bf66e_4",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": "P",
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "bae7c7c997fec18b_10",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": "N",
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "465cf0b0e2f1f4b8_1",
+   "roads_access": "X",
+   "cleanliness": NaN,
+   "facilities": "P",
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "445b777a4bd9b7ba_2",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": "P",
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "d2e28fabb6842f1e_2",
+   "roads_access": "P",
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "ca56b8ad4de4d140_6",
+   "roads_access": "P",
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "69844761c9a279f3_0",
+   "roads_access": "X",
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "265419aae8b6d7f2_1",
+   "roads_access": "N",
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "5259b2ff696c8610_5",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": "X",
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "af1dd4423c8f13b2_1",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": "X",
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "b1879e53589bacc0_2",
+   "roads_access": NaN,
+   "cleanliness": "X",
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "36f3b009bf8d05c0_12",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": NaN,
+   "checked": "x"
+  },
+  {
+   "segment_id": "822b2d5d04f36324_1",
+   "roads_access": "P",
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "5abb3bf79cebb7ac_4",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": NaN,
+   "checked": "x"
+  },
+  {
+   "segment_id": "30c1289810cfe24d_5",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": "P",
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "ee94f7852225c703_3",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": "P",
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "d90a2e346cd6ebd0_8",
+   "roads_access": "X",
+   "cleanliness": NaN,
+   "facilities": "P",
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "f4cb967ee46b748b_2",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": "N",
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "f3d6b61e4e5e9414_1",
+   "roads_access": NaN,
+   "cleanliness": "P",
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "2c2c046d7f1c3af2_0",
+   "roads_access": "N",
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "da34f72f7fb130c3_0",
+   "roads_access": "X",
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "8beba836e079796c_2",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": NaN,
+   "checked": "x"
+  },
+  {
+   "segment_id": "d3dfd82a7953a025_19",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": "P",
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "6a3bd691d1eae3c8_3",
+   "roads_access": "P",
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "bc1c6f9b0c7ac98d_4",
+   "roads_access": NaN,
+   "cleanliness": "X",
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "4b2d2d9cd69e372e_5",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": "P",
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "e486d46a8f820000_5",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": "X",
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "13d74e52e8309a84_2",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": NaN,
+   "checked": "x"
+  },
+  {
+   "segment_id": "6b8ec14c2e4eb082_2",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": NaN,
+   "checked": "x"
+  },
+  {
+   "segment_id": "f63c7f8fa3964b6f_15",
+   "roads_access": "X",
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": "X",
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "7a20a8ca69cc5a63_1",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": NaN,
+   "checked": "x"
+  },
+  {
+   "segment_id": "8dec84dd843ce6bb_4",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": "P",
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "cd3abfee57af3c10_2",
+   "roads_access": NaN,
+   "cleanliness": "X",
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "a6f17ab4e7e623a5_6",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": NaN,
+   "checked": "x"
+  },
+  {
+   "segment_id": "1505f9b78527ff87_8",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": "P",
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "01c83b7c9f070809_0",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": NaN,
+   "checked": "x"
+  },
+  {
+   "segment_id": "dc292dc1cfe9a95f_1",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": "P",
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "1bd3f94360c1fff0_2",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": "X",
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "43e2da3daba07c3a_17",
+   "roads_access": NaN,
+   "cleanliness": "P",
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "6e18a73a0840e410_3",
+   "roads_access": "X",
+   "cleanliness": NaN,
+   "facilities": "X",
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "41cbb1e3cf5dd73b_1",
+   "roads_access": NaN,
+   "cleanliness": "N",
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "606525224d0485b3_2",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": NaN,
+   "checked": "x"
+  },
+  {
+   "segment_id": "871de8f3756a233e_1",
+   "roads_access": NaN,
+   "cleanliness": "P",
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "625b6c9e167e6100_1",
+   "roads_access": "N",
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": "N",
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "4b65a71dc42ce645_2",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": NaN,
+   "checked": "x"
+  },
+  {
+   "segment_id": "8e1047892eea88e8_2",
+   "roads_access": "X",
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "7ba137f8fa657398_1",
+   "roads_access": NaN,
+   "cleanliness": "P",
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "e3ddd242fe67470e_0",
+   "roads_access": "N",
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "2be851f89a1e2891_3",
+   "roads_access": "N",
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "1cf2f57efc468416_5",
+   "roads_access": NaN,
+   "cleanliness": "X",
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "3d6af1b5d7a22634_13",
+   "roads_access": "N",
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": "N",
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "4c724c860222dbc3_4",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": NaN,
+   "checked": "x"
+  },
+  {
+   "segment_id": "3f21ff26dbb208e3_2",
+   "roads_access": NaN,
+   "cleanliness": "P",
+   "facilities": "P",
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "f8fe612e72037a32_1",
+   "roads_access": "P",
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "9e5d87caa34e7f07_2",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": NaN,
+   "checked": "x"
+  },
+  {
+   "segment_id": "f40607d6509c5e91_3",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": NaN,
+   "checked": "x"
+  },
+  {
+   "segment_id": "b601938d42bd9e97_5",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": NaN,
+   "checked": "x"
+  },
+  {
+   "segment_id": "946393d680acab16_9",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": "N",
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "cce53abd11482982_1",
+   "roads_access": NaN,
+   "cleanliness": "N",
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "8bc0a26b5d011cfe_1",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": "N",
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "b0ae7d2a37f309d3_3",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": "N",
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "c2ff2995775a2ba2_4",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": "N",
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "2a23f3618e28ea42_0",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": "P",
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "7ee54c548c38a080_3",
+   "roads_access": NaN,
+   "cleanliness": "N",
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "d7cefe162331f383_4",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": "N",
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "e32d0222ed97ecf4_3",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": "P",
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "53382d65556dd8f8_0",
+   "roads_access": "X",
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "d81395c13cc1d7ef_5",
+   "roads_access": NaN,
+   "cleanliness": "X",
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "4d8320d252d49dd4_4",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": NaN,
+   "checked": "x"
+  },
+  {
+   "segment_id": "717de7c840acae6e_4",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": "X",
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "f5facfc167ab81bf_5",
+   "roads_access": "X",
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "af1dff9294ee373c_3",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": NaN,
+   "checked": "x"
+  },
+  {
+   "segment_id": "1d21464e2a7b5546_1",
+   "roads_access": NaN,
+   "cleanliness": "X",
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "0baf85aaea2491a8_0",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": NaN,
+   "checked": "x"
+  },
+  {
+   "segment_id": "a85ea85c1f8c4e87_4",
+   "roads_access": "N",
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": "N",
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "be7a42fc8df618a5_0",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": NaN,
+   "checked": "x"
+  },
+  {
+   "segment_id": "9354c07703dd7270_2",
+   "roads_access": "N",
+   "cleanliness": NaN,
+   "facilities": "P",
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "11d4e096ad9a6a13_4",
+   "roads_access": NaN,
+   "cleanliness": "N",
+   "facilities": "N",
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "a7fc0e4a3341f1ce_4",
+   "roads_access": NaN,
+   "cleanliness": "X",
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "592bac9504ea4442_3",
+   "roads_access": NaN,
+   "cleanliness": "X",
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "42df8257a365c4ff_11",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": "N",
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "52f255ac763da2a8_2",
+   "roads_access": NaN,
+   "cleanliness": "X",
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "105abe4810160f7a_0",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": NaN,
+   "checked": "x"
+  },
+  {
+   "segment_id": "36dbf24367e1d073_5",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": "P",
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "ca8ba6caf7408009_5",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": NaN,
+   "checked": "x"
+  },
+  {
+   "segment_id": "bde4a64f6fb9341e_1",
+   "roads_access": NaN,
+   "cleanliness": "N",
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "49d70720a642fea6_2",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": "N",
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "ba734571828de070_3",
+   "roads_access": "X",
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "6d923b12a8a53e98_1",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": "X",
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "52903dd98c7c77fd_1",
+   "roads_access": "X",
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "9aa33762c2c768c4_7",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": "X",
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "ab7da9c6b48cceb4_3",
+   "roads_access": "P",
+   "cleanliness": NaN,
+   "facilities": "P",
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "53ee81fabf944912_0",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": "X",
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "632e38e3fae8a1e4_0",
+   "roads_access": NaN,
+   "cleanliness": "P",
+   "facilities": "P",
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "340c88db017ad329_5",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": "P",
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "5feaed3fa3fff431_1",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": "P",
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "9316cf978bd8270e_8",
+   "roads_access": "N",
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "180298cbb58638cc_2",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": NaN,
+   "checked": "x"
+  },
+  {
+   "segment_id": "cc05ff9691a5a891_1",
+   "roads_access": NaN,
+   "cleanliness": "P",
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "d91995aa3f97317b_6",
+   "roads_access": NaN,
+   "cleanliness": "X",
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "059d9ef4d153222e_0",
+   "roads_access": "P",
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "d79a304e4de1a953_0",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": "P",
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "9e0d3c4d4907dabc_2",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": "N",
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "df503f5f887a97f2_7",
+   "roads_access": NaN,
+   "cleanliness": "X",
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "b3d3d11b71ac1e2d_7",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": "P",
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "7c408485b6b9fddc_3",
+   "roads_access": NaN,
+   "cleanliness": "N",
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "487fb2e479d86e35_2",
+   "roads_access": "N",
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "f8bbea7b95e5afb6_1",
+   "roads_access": NaN,
+   "cleanliness": "P",
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "9a27b8194fe30abf_0",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": "P",
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "e24366d1bfd82744_0",
+   "roads_access": NaN,
+   "cleanliness": "X",
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "88ed3bd547de1a7f_4",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": NaN,
+   "checked": "x"
+  },
+  {
+   "segment_id": "4febcb0a6ff86fee_1",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": "X",
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "996e9a99b81d3173_14",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": "P",
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "4295041c494fb728_2",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": "P",
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "2c26019999a9b4b5_1",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": NaN,
+   "checked": "x"
+  },
+  {
+   "segment_id": "cb580ef563e5f98e_2",
+   "roads_access": "N",
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": "N",
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "7ccdb8f5a7437bc8_2",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": "X",
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "9513cf45e1dff1da_11",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": "N",
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "8b3f99df7c8575f8_3",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": "N",
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "fb7dfea64385653a_5",
+   "roads_access": NaN,
+   "cleanliness": "P",
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "3b017694801a2cc6_4",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": "P",
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "be53ef8eaeb61b42_3",
+   "roads_access": NaN,
+   "cleanliness": "P",
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "3125c056e11eac38_0",
+   "roads_access": "N",
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "a168f09b15469f4d_2",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": NaN,
+   "checked": "x"
+  },
+  {
+   "segment_id": "14be95b629cf75f1_1",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": "N",
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "e8491b3f8ab6ec36_9",
+   "roads_access": NaN,
+   "cleanliness": "N",
+   "facilities": "X",
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "d90d6fa2bc95b230_2",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": NaN,
+   "checked": "x"
+  },
+  {
+   "segment_id": "0a5ed8b4958fa5f4_3",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": "N",
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "25618534422b295e_4",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": NaN,
+   "checked": "x"
+  },
+  {
+   "segment_id": "49ffa2e32274b217_6",
+   "roads_access": "N",
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "84a2a89b8a03d613_6",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": NaN,
+   "checked": "x"
+  },
+  {
+   "segment_id": "5d8b53898b04dafb_9",
+   "roads_access": NaN,
+   "cleanliness": "X",
+   "facilities": "N",
+   "safety": "N",
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "262ed010288405f9_2",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": "P",
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "83084da1ab3db64f_7",
+   "roads_access": "X",
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "da48360e9148fb44_1",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": NaN,
+   "checked": "x"
+  },
+  {
+   "segment_id": "e3aa6bca3a640f79_4",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": NaN,
+   "checked": "x"
+  },
+  {
+   "segment_id": "7431df6be56f64e9_7",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": "P",
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "69487f18a288aeb4_1",
+   "roads_access": "X",
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "11f4193821620f31_7",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": "N",
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "0521317c32b8602a_1",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": "N",
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "b2f224f83803354e_8",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": "P",
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "d7b79479bfd80b81_0",
+   "roads_access": NaN,
+   "cleanliness": "P",
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "284cbdeea4f404b3_8",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": "N",
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "2e22ca0f736935b1_2",
+   "roads_access": NaN,
+   "cleanliness": "N",
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "79b22ec43496445f_2",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": "N",
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "5d3e62e088f4dadc_2",
+   "roads_access": NaN,
+   "cleanliness": "P",
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "179d4e5afbd2415e_6",
+   "roads_access": NaN,
+   "cleanliness": "P",
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "92b8d552d2b1849e_6",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": "X",
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "c8d242df0e633978_1",
+   "roads_access": "X",
+   "cleanliness": NaN,
+   "facilities": "X",
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "4e4e4f525b2cba5e_2",
+   "roads_access": NaN,
+   "cleanliness": "X",
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "df392a20873bee5e_1",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": "X",
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "bae4d067010fa501_6",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": NaN,
+   "checked": "x"
+  },
+  {
+   "segment_id": "fba5c835028fcc5d_18",
+   "roads_access": "P",
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "c8dfce935d13c201_3",
+   "roads_access": NaN,
+   "cleanliness": "P",
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "cb8358e5d47169a3_2",
+   "roads_access": NaN,
+   "cleanliness": "X",
+   "facilities": NaN,
+   "safety": "N",
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "580ed3262e904a1c_2",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": "P",
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "bdcfd2cfcc4ddfb5_5",
+   "roads_access": "P",
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "0911cdb9d6cd2e9a_1",
+   "roads_access": "P",
+   "cleanliness": "P",
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "d176e51243ce45c0_1",
+   "roads_access": NaN,
+   "cleanliness": "N",
+   "facilities": "N",
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "d3d05b6e8fc618cd_1",
+   "roads_access": "X",
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "6ce686d8443dae98_8",
+   "roads_access": NaN,
+   "cleanliness": "P",
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "763151355ebee4f4_0",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": NaN,
+   "checked": "x"
+  },
+  {
+   "segment_id": "cfa76f16a34d4951_2",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": "N",
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "15720771f88707e2_2",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": NaN,
+   "checked": "x"
+  },
+  {
+   "segment_id": "256e1a2fe4ba8847_2",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": NaN,
+   "checked": "x"
+  },
+  {
+   "segment_id": "ebc1c145abf02d18_9",
+   "roads_access": NaN,
+   "cleanliness": "N",
+   "facilities": "P",
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "83b8b6b3492fbbcd_2",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": NaN,
+   "checked": "x"
+  },
+  {
+   "segment_id": "7b29a431fe8c8dcc_1",
+   "roads_access": "X",
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": "N",
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "703ad7a39dc34116_2",
+   "roads_access": "X",
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "004a1031378e6c44_5",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": NaN,
+   "checked": "x"
+  },
+  {
+   "segment_id": "27b40779606317a4_1",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": NaN,
+   "checked": "x"
+  },
+  {
+   "segment_id": "97fe6c0965ca1fb6_3",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": NaN,
+   "checked": "x"
+  },
+  {
+   "segment_id": "0e9b03d7490ce96b_1",
+   "roads_access": "N",
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "6d185a969b0cb4e2_1",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": "N",
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "731da5f89f78855b_6",
+   "roads_access": "X",
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "46a6f3f86f9f2b4d_1",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": "X",
+   "labelled_by": "human",
+   "checked": "x"
+  }
+ ],
+ "annotator2": [
+  {
+   "segment_id": "dae77a2e06e34fe7_4",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": NaN,
+   "checked": "x"
+  },
+  {
+   "segment_id": "5965793d9908ce27_0",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": NaN,
+   "checked": "x"
+  },
+  {
+   "segment_id": "c3969721be831bb9_11",
+   "roads_access": NaN,
+   "cleanliness": "N",
+   "facilities": "N",
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "1ad24220e81cb4b6_4",
+   "roads_access": NaN,
+   "cleanliness": "X",
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "895d45ee4066fde2_1",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": NaN,
+   "checked": "x"
+  },
+  {
+   "segment_id": "e5368b82bee93f3c_3",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": NaN,
+   "checked": "x"
+  },
+  {
+   "segment_id": "56a317c3aa614f2f_1",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": "P",
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "d2ea3298032075ed_1",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": "N",
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "5630f4916b8e27dd_5",
+   "roads_access": "P",
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "9734743650bf103e_2",
+   "roads_access": NaN,
+   "cleanliness": "N",
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "506efee8331e18d2_6",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": "P",
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "57ec2ce47148e865_3",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": "X",
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "c9d02da6f34dc3a5_3",
+   "roads_access": "P",
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "28a696e9b132e62f_1",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": "P",
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "374060dae964988c_0",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": "N",
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "478feb56d2e6dddf_22",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": NaN,
+   "checked": "x"
+  },
+  {
+   "segment_id": "db166a4b49ef29fc_0",
+   "roads_access": NaN,
+   "cleanliness": "P",
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "ab0d996b5211df68_2",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": NaN,
+   "checked": "x"
+  },
+  {
+   "segment_id": "f1972940c2cb8121_3",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": "P",
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "c8dc9655b1752cea_1",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": "P",
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "d006dce8fd99b227_0",
+   "roads_access": "N",
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "b0f583ab5c6076b5_3",
+   "roads_access": "N",
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "bca5eb86305775a5_2",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": NaN,
+   "checked": "x"
+  },
+  {
+   "segment_id": "948300f12882b1d8_10",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": "N",
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "96db2afd125bf66e_4",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": "X",
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "bae7c7c997fec18b_10",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": "N",
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "465cf0b0e2f1f4b8_1",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": "X",
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "445b777a4bd9b7ba_2",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": "P",
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "d2e28fabb6842f1e_2",
+   "roads_access": "P",
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "ca56b8ad4de4d140_6",
+   "roads_access": "P",
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "69844761c9a279f3_0",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": NaN,
+   "checked": "x"
+  },
+  {
+   "segment_id": "265419aae8b6d7f2_1",
+   "roads_access": "N",
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "5259b2ff696c8610_5",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": NaN,
+   "checked": "x"
+  },
+  {
+   "segment_id": "af1dd4423c8f13b2_1",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": NaN,
+   "checked": "x"
+  },
+  {
+   "segment_id": "b1879e53589bacc0_2",
+   "roads_access": NaN,
+   "cleanliness": "P",
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "36f3b009bf8d05c0_12",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": NaN,
+   "checked": "x"
+  },
+  {
+   "segment_id": "822b2d5d04f36324_1",
+   "roads_access": "P",
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "5abb3bf79cebb7ac_4",
+   "roads_access": "X",
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "30c1289810cfe24d_5",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": "X",
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "ee94f7852225c703_3",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": "P",
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "d90a2e346cd6ebd0_8",
+   "roads_access": "X",
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "f4cb967ee46b748b_2",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": "N",
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "f3d6b61e4e5e9414_1",
+   "roads_access": NaN,
+   "cleanliness": "P",
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "2c2c046d7f1c3af2_0",
+   "roads_access": "N",
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "da34f72f7fb130c3_0",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": NaN,
+   "checked": "x"
+  },
+  {
+   "segment_id": "8beba836e079796c_2",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": NaN,
+   "checked": "x"
+  },
+  {
+   "segment_id": "d3dfd82a7953a025_19",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": "P",
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "6a3bd691d1eae3c8_3",
+   "roads_access": "X",
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "bc1c6f9b0c7ac98d_4",
+   "roads_access": NaN,
+   "cleanliness": "X",
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "4b2d2d9cd69e372e_5",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": "P",
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "e486d46a8f820000_5",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": NaN,
+   "checked": "x"
+  },
+  {
+   "segment_id": "13d74e52e8309a84_2",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": NaN,
+   "checked": "x"
+  },
+  {
+   "segment_id": "6b8ec14c2e4eb082_2",
+   "roads_access": "X",
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "f63c7f8fa3964b6f_15",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": NaN,
+   "checked": "x"
+  },
+  {
+   "segment_id": "7a20a8ca69cc5a63_1",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": NaN,
+   "checked": "x"
+  },
+  {
+   "segment_id": "8dec84dd843ce6bb_4",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": "P",
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "cd3abfee57af3c10_2",
+   "roads_access": NaN,
+   "cleanliness": "X",
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "a6f17ab4e7e623a5_6",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": NaN,
+   "checked": "x"
+  },
+  {
+   "segment_id": "1505f9b78527ff87_8",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": "X",
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "01c83b7c9f070809_0",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": NaN,
+   "checked": "x"
+  },
+  {
+   "segment_id": "dc292dc1cfe9a95f_1",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": "P",
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "1bd3f94360c1fff0_2",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": "N",
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "43e2da3daba07c3a_17",
+   "roads_access": NaN,
+   "cleanliness": "P",
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "6e18a73a0840e410_3",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": "X",
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "41cbb1e3cf5dd73b_1",
+   "roads_access": NaN,
+   "cleanliness": "N",
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "606525224d0485b3_2",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": NaN,
+   "checked": "x"
+  },
+  {
+   "segment_id": "871de8f3756a233e_1",
+   "roads_access": NaN,
+   "cleanliness": "P",
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "625b6c9e167e6100_1",
+   "roads_access": "N",
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": "N",
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "4b65a71dc42ce645_2",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": "P",
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "8e1047892eea88e8_2",
+   "roads_access": "P",
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "7ba137f8fa657398_1",
+   "roads_access": NaN,
+   "cleanliness": "P",
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "e3ddd242fe67470e_0",
+   "roads_access": "N",
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "2be851f89a1e2891_3",
+   "roads_access": "N",
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "1cf2f57efc468416_5",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": NaN,
+   "checked": "x"
+  },
+  {
+   "segment_id": "3d6af1b5d7a22634_13",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": "N",
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "4c724c860222dbc3_4",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": NaN,
+   "checked": "x"
+  },
+  {
+   "segment_id": "3f21ff26dbb208e3_2",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": "P",
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "f8fe612e72037a32_1",
+   "roads_access": "P",
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "9e5d87caa34e7f07_2",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": NaN,
+   "checked": "x"
+  },
+  {
+   "segment_id": "f40607d6509c5e91_3",
+   "roads_access": "P",
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "b601938d42bd9e97_5",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": NaN,
+   "checked": "x"
+  },
+  {
+   "segment_id": "946393d680acab16_9",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": "N",
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "cce53abd11482982_1",
+   "roads_access": NaN,
+   "cleanliness": "N",
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "8bc0a26b5d011cfe_1",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": "N",
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "b0ae7d2a37f309d3_3",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": "N",
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "c2ff2995775a2ba2_4",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": "N",
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "2a23f3618e28ea42_0",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": NaN,
+   "checked": "x"
+  },
+  {
+   "segment_id": "7ee54c548c38a080_3",
+   "roads_access": NaN,
+   "cleanliness": "N",
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "d7cefe162331f383_4",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": "N",
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "e32d0222ed97ecf4_3",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": "P",
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "53382d65556dd8f8_0",
+   "roads_access": "X",
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "d81395c13cc1d7ef_5",
+   "roads_access": NaN,
+   "cleanliness": "X",
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "4d8320d252d49dd4_4",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": NaN,
+   "checked": "x"
+  },
+  {
+   "segment_id": "717de7c840acae6e_4",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": "X",
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "f5facfc167ab81bf_5",
+   "roads_access": "X",
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "af1dff9294ee373c_3",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": NaN,
+   "checked": "x"
+  },
+  {
+   "segment_id": "1d21464e2a7b5546_1",
+   "roads_access": NaN,
+   "cleanliness": "X",
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "0baf85aaea2491a8_0",
+   "roads_access": "P",
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "a85ea85c1f8c4e87_4",
+   "roads_access": "N",
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "be7a42fc8df618a5_0",
+   "roads_access": "X",
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "9354c07703dd7270_2",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": NaN,
+   "checked": "x"
+  },
+  {
+   "segment_id": "11d4e096ad9a6a13_4",
+   "roads_access": NaN,
+   "cleanliness": "N",
+   "facilities": "N",
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "a7fc0e4a3341f1ce_4",
+   "roads_access": NaN,
+   "cleanliness": "X",
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "592bac9504ea4442_3",
+   "roads_access": NaN,
+   "cleanliness": "X",
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "42df8257a365c4ff_11",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": "N",
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "52f255ac763da2a8_2",
+   "roads_access": NaN,
+   "cleanliness": "X",
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "105abe4810160f7a_0",
+   "roads_access": "X",
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "36dbf24367e1d073_5",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": "P",
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "ca8ba6caf7408009_5",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": NaN,
+   "checked": "x"
+  },
+  {
+   "segment_id": "bde4a64f6fb9341e_1",
+   "roads_access": NaN,
+   "cleanliness": "N",
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "49d70720a642fea6_2",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": "N",
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "ba734571828de070_3",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": NaN,
+   "checked": "x"
+  },
+  {
+   "segment_id": "6d923b12a8a53e98_1",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": "P",
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "52903dd98c7c77fd_1",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": "X",
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "9aa33762c2c768c4_7",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": "N",
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "ab7da9c6b48cceb4_3",
+   "roads_access": "P",
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "53ee81fabf944912_0",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": NaN,
+   "checked": "x"
+  },
+  {
+   "segment_id": "632e38e3fae8a1e4_0",
+   "roads_access": NaN,
+   "cleanliness": "P",
+   "facilities": "P",
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "340c88db017ad329_5",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": "P",
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "5feaed3fa3fff431_1",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": NaN,
+   "checked": "x"
+  },
+  {
+   "segment_id": "9316cf978bd8270e_8",
+   "roads_access": "N",
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "180298cbb58638cc_2",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": NaN,
+   "checked": "x"
+  },
+  {
+   "segment_id": "cc05ff9691a5a891_1",
+   "roads_access": NaN,
+   "cleanliness": "P",
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "d91995aa3f97317b_6",
+   "roads_access": NaN,
+   "cleanliness": "X",
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "059d9ef4d153222e_0",
+   "roads_access": "X",
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "d79a304e4de1a953_0",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": "P",
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "9e0d3c4d4907dabc_2",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": "N",
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "df503f5f887a97f2_7",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": NaN,
+   "checked": "x"
+  },
+  {
+   "segment_id": "b3d3d11b71ac1e2d_7",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": "P",
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "7c408485b6b9fddc_3",
+   "roads_access": NaN,
+   "cleanliness": "N",
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "487fb2e479d86e35_2",
+   "roads_access": "N",
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "f8bbea7b95e5afb6_1",
+   "roads_access": NaN,
+   "cleanliness": "P",
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "9a27b8194fe30abf_0",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": "P",
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "e24366d1bfd82744_0",
+   "roads_access": NaN,
+   "cleanliness": "X",
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "88ed3bd547de1a7f_4",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": NaN,
+   "checked": "x"
+  },
+  {
+   "segment_id": "4febcb0a6ff86fee_1",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": NaN,
+   "checked": "x"
+  },
+  {
+   "segment_id": "996e9a99b81d3173_14",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": "P",
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "4295041c494fb728_2",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": NaN,
+   "checked": "x"
+  },
+  {
+   "segment_id": "2c26019999a9b4b5_1",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": NaN,
+   "checked": "x"
+  },
+  {
+   "segment_id": "cb580ef563e5f98e_2",
+   "roads_access": "N",
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": "N",
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "7ccdb8f5a7437bc8_2",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": "P",
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "9513cf45e1dff1da_11",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": "N",
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "8b3f99df7c8575f8_3",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": "N",
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "fb7dfea64385653a_5",
+   "roads_access": NaN,
+   "cleanliness": "P",
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "3b017694801a2cc6_4",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": "P",
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "be53ef8eaeb61b42_3",
+   "roads_access": NaN,
+   "cleanliness": "P",
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "3125c056e11eac38_0",
+   "roads_access": "N",
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "a168f09b15469f4d_2",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": NaN,
+   "checked": "x"
+  },
+  {
+   "segment_id": "14be95b629cf75f1_1",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": "N",
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "e8491b3f8ab6ec36_9",
+   "roads_access": NaN,
+   "cleanliness": "N",
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "d90d6fa2bc95b230_2",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": "P",
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "0a5ed8b4958fa5f4_3",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": "N",
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "25618534422b295e_4",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": NaN,
+   "checked": "x"
+  },
+  {
+   "segment_id": "49ffa2e32274b217_6",
+   "roads_access": "N",
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "84a2a89b8a03d613_6",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": "P",
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "5d8b53898b04dafb_9",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": "N",
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "262ed010288405f9_2",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": "X",
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "83084da1ab3db64f_7",
+   "roads_access": "X",
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "da48360e9148fb44_1",
+   "roads_access": "X",
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "e3aa6bca3a640f79_4",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": NaN,
+   "checked": "x"
+  },
+  {
+   "segment_id": "7431df6be56f64e9_7",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": "P",
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "69487f18a288aeb4_1",
+   "roads_access": "X",
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "11f4193821620f31_7",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": "N",
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "0521317c32b8602a_1",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": "N",
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "b2f224f83803354e_8",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": "P",
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "d7b79479bfd80b81_0",
+   "roads_access": NaN,
+   "cleanliness": "P",
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "284cbdeea4f404b3_8",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": "N",
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "2e22ca0f736935b1_2",
+   "roads_access": NaN,
+   "cleanliness": "N",
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "79b22ec43496445f_2",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": "N",
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "5d3e62e088f4dadc_2",
+   "roads_access": NaN,
+   "cleanliness": "P",
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "179d4e5afbd2415e_6",
+   "roads_access": NaN,
+   "cleanliness": "P",
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "92b8d552d2b1849e_6",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": "X",
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "c8d242df0e633978_1",
+   "roads_access": "X",
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "4e4e4f525b2cba5e_2",
+   "roads_access": NaN,
+   "cleanliness": "X",
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "df392a20873bee5e_1",
+   "roads_access": "P",
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "bae4d067010fa501_6",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": NaN,
+   "checked": "x"
+  },
+  {
+   "segment_id": "fba5c835028fcc5d_18",
+   "roads_access": "P",
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "c8dfce935d13c201_3",
+   "roads_access": NaN,
+   "cleanliness": "P",
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "cb8358e5d47169a3_2",
+   "roads_access": NaN,
+   "cleanliness": "X",
+   "facilities": NaN,
+   "safety": "N",
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "580ed3262e904a1c_2",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": "P",
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "bdcfd2cfcc4ddfb5_5",
+   "roads_access": "X",
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "0911cdb9d6cd2e9a_1",
+   "roads_access": "P",
+   "cleanliness": "P",
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "d176e51243ce45c0_1",
+   "roads_access": NaN,
+   "cleanliness": "N",
+   "facilities": "N",
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "d3d05b6e8fc618cd_1",
+   "roads_access": "X",
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "6ce686d8443dae98_8",
+   "roads_access": NaN,
+   "cleanliness": "P",
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "763151355ebee4f4_0",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": NaN,
+   "checked": "x"
+  },
+  {
+   "segment_id": "cfa76f16a34d4951_2",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": "N",
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "15720771f88707e2_2",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": NaN,
+   "checked": "x"
+  },
+  {
+   "segment_id": "256e1a2fe4ba8847_2",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": NaN,
+   "checked": "x"
+  },
+  {
+   "segment_id": "ebc1c145abf02d18_9",
+   "roads_access": NaN,
+   "cleanliness": "N",
+   "facilities": "P",
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "83b8b6b3492fbbcd_2",
+   "roads_access": "N",
+   "cleanliness": NaN,
+   "facilities": "N",
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "7b29a431fe8c8dcc_1",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": "N",
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "703ad7a39dc34116_2",
+   "roads_access": "X",
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "004a1031378e6c44_5",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": NaN,
+   "checked": "x"
+  },
+  {
+   "segment_id": "27b40779606317a4_1",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": "P",
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "97fe6c0965ca1fb6_3",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": NaN,
+   "checked": "x"
+  },
+  {
+   "segment_id": "0e9b03d7490ce96b_1",
+   "roads_access": "N",
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "6d185a969b0cb4e2_1",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": "N",
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "731da5f89f78855b_6",
+   "roads_access": "X",
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": "human",
+   "checked": "x"
+  },
+  {
+   "segment_id": "46a6f3f86f9f2b4d_1",
+   "roads_access": NaN,
+   "cleanliness": NaN,
+   "facilities": NaN,
+   "safety": NaN,
+   "labelled_by": NaN,
+   "checked": NaN
+  }
+ ]
+}

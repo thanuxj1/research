@@ -47,6 +47,16 @@ DEFAULT_POLARITY_COL = "pol_final"
 # How many example quotes to carry on each aspect node for the dashboard.
 QUOTES_PER_NODE = 14
 
+# Praise carries fewer. Not because praise matters less, but because of what
+# each side is FOR here: the complaint quotes are the evidence behind the
+# number this project reports, and a reader may want to work through them;
+# the praise quotes exist so that number can be checked against its other
+# half, which a handful demonstrates as well as a dozen. Praise is also
+# simply more abundant -- at 14 a side it produced 11,442 quotes against
+# 6,784 complaints and pushed the self-contained page past 5.5 MB, which is
+# a real cost for a file meant to open from a memory stick with no server.
+QUOTES_PER_NODE_POSITIVE = 6
+
 
 def _confidence(n_opinions: int) -> str:
     if n_opinions < C.MIN_MENTIONS_DISPLAY:
@@ -163,12 +173,13 @@ def _aspect_stats(group: pd.DataFrame, pol_col: str) -> Dict:
     }
 
 
-def _quotes(group: pd.DataFrame, pol_col: str, limit: int = QUOTES_PER_NODE) -> List[Dict]:
-    """Complaint quotes -- the evidence behind the number.
+def _quotes(group: pd.DataFrame, pol_col: str, limit: int = QUOTES_PER_NODE,
+            polarity: str = "N") -> List[Dict]:
+    """Example quotes for one polarity -- the evidence behind the number.
 
     Each quote carries the fields the reader needs in order to sort them
     themselves: which period it came from, how long it is, and how strongly the
-    classifier read it as negative.
+    classifier read it.
 
     On that last field: it is the MODEL'S CONFIDENCE, not a severity score.
     Nothing in this corpus states how serious a problem is, and inventing a
@@ -179,16 +190,23 @@ def _quotes(group: pd.DataFrame, pol_col: str, limit: int = QUOTES_PER_NODE) -> 
 
     Selection is longest-first so the retained set is the most informative,
     then the reader re-sorts client-side.
-    """
-    neg = group[group[pol_col] == "N"].copy()
-    if neg.empty:
-        return []
-    neg = neg.assign(_len=neg["segment"].astype(str).str.len())
-    neg = neg.sort_values("_len", ascending=False).head(limit)
 
-    conf_col = "pol_roberta_conf" if "pol_roberta_conf" in neg.columns else None
+    `polarity` selects which side to sample. This used to be hardcoded to "N",
+    which was defensible -- the project reports complaints -- but it meant the
+    dashboard could show a rate built from BOTH sides ("12 complaints, 11
+    praise, 52.2%") while only ever letting a reader read the negative half.
+    A reader cannot check the other half of a number they are shown, and the
+    panel it is quoted at cannot either.
+    """
+    picked = group[group[pol_col] == polarity].copy()
+    if picked.empty:
+        return []
+    picked = picked.assign(_len=picked["segment"].astype(str).str.len())
+    picked = picked.sort_values("_len", ascending=False).head(limit)
+
+    conf_col = "pol_roberta_conf" if "pol_roberta_conf" in picked.columns else None
     out = []
-    for r in neg.itertuples(index=False):
+    for r in picked.itertuples(index=False):
         conf = getattr(r, conf_col, None) if conf_col else None
         out.append({
             "text": r.segment,
@@ -201,17 +219,20 @@ def _quotes(group: pd.DataFrame, pol_col: str, limit: int = QUOTES_PER_NODE) -> 
     return out
 
 
-def build_tree(seg: pd.DataFrame, pol_col: str = DEFAULT_POLARITY_COL,
+def long_table(seg: pd.DataFrame, pol_col: str = DEFAULT_POLARITY_COL,
                sources=None, reviews: Optional[pd.DataFrame] = None,
                use_trained: bool = False, safety_recall: bool = True,
-               site_rule: bool = True) -> Dict:
-    """Build the full Sri Lanka -> district -> destination -> aspect tree.
+               site_rule: bool = True, verbose: bool = True) -> pd.DataFrame:
+    """One row per (segment, aspect), scored by the DEPLOYED chain.
 
-    `sources` optionally restricts the tree to reviews from particular
-    collection batches, e.g. sources=["apify_google_places"] rebuilds the whole
-    dashboard from freshly scraped reviews only, with the training corpus
-    excluded. This makes the strict train/inference separation demonstrable on
-    demand rather than merely asserted.
+    Extracted from build_tree so that anything measuring the published output
+    measures the same rows the published output is built from. This is the
+    same move polarity.aspect_polarity() was: two copies of the per-aspect
+    correction chain had already drifted by 360 verdicts before that shared
+    definition existed, and a reliability study computed on a re-implementation
+    of this table would be reporting the reliability of the re-implementation.
+
+    build_tree() aggregates this. reliability.py resamples it.
     """
     n_col = "u_n_aspects" if "u_n_aspects" in seg.columns else "n_aspects"
     df = seg[(seg[n_col] > 0) & seg[pol_col].notna()].copy()
@@ -222,8 +243,9 @@ def build_tree(seg: pd.DataFrame, pol_col: str = DEFAULT_POLARITY_COL,
         keep = set(reviews.loc[reviews["source"].isin(sources), "review_id"])
         before = len(df)
         df = df[df["review_id"].isin(keep)]
-        print("  source filter {}: {} -> {} segments".format(
-            sources, before, len(df)))
+        if verbose:
+            print("  source filter {}: {} -> {} segments".format(
+                sources, before, len(df)))
 
     # One row per (segment, aspect) pair: a segment tagged with two aspects
     # must be counted once under each.
@@ -258,7 +280,8 @@ def build_tree(seg: pd.DataFrame, pol_col: str = DEFAULT_POLARITY_COL,
         sub = df[df[col]].copy()
         sub["aspect"] = key
         long_rows.append(sub)
-    print("  aspect extractor per aspect: {}".format(chosen))
+    if verbose:
+        print("  aspect extractor per aspect: {}".format(chosen))
     long = pd.concat(long_rows, ignore_index=True)
 
     # The locally trained model (Method F) is attached for comparison but is
@@ -287,50 +310,66 @@ def build_tree(seg: pd.DataFrame, pol_col: str = DEFAULT_POLARITY_COL,
         long = long.merge(tr, on=["segment_id", "aspect"], how="left")
         if use_trained:
             long[pol_col] = long["pol_trained"].fillna(long[pol_col])
-            print("  WARNING: tree built from Method F (trained on weak labels)")
-        else:
+            if verbose:
+                print("  WARNING: tree built from Method F (trained on weak labels)")
+        elif verbose:
             print("  Method F attached for comparison only -- tree uses {}".format(
                 pol_col))
 
-    # Safety recall rule. Applied here rather than in polarity.py because it
-    # depends on WHICH aspect a segment is being counted under -- the same
-    # sentence keeps its ordinary verdict for every other aspect.
-    from .polarity import safety_recall_rule
-    # safety_recall=False exists so the rule can be switched off and the
+    # The deployed per-aspect correction chain: safety recall, then the site
+    # rule. Both live in polarity.aspect_polarity() so that this function and
+    # api.py cannot drift apart -- they had, by 360 verdicts, before that
+    # shared definition existed. Applied here rather than inside
+    # score_corpus() because the chain depends on WHICH aspect a segment is
+    # being counted under: the same sentence keeps its ordinary verdict for
+    # every aspect except safety.
+    #
+    # The two switches exist so either rule can be turned off and the
     # published numbers recomputed without it. A hand-written rule that
     # changes a headline figure has to be answerable for how much it changes
     # it; see ablation.py.
-    if safety_recall and "pol_lexicon" in long.columns:
-        recovered = 0
+    from .polarity import aspect_polarity as _aspect_polarity
+    run_recall = bool(safety_recall) and "pol_lexicon" in long.columns
+    if run_recall or site_rule:
+        recovered = neutralised = 0
         labels = []
         for r in long.itertuples(index=False):
-            lab = getattr(r, pol_col)
-            new, fired = safety_recall_rule(
-                getattr(r, "segment", ""), lab,
-                getattr(r, "aspect", "") == "safety",
-                getattr(r, "pol_lexicon", None))
-            recovered += fired
-            labels.append(new)
+            lab, fired_recall, fired_site = _aspect_polarity(
+                getattr(r, "segment", ""),
+                getattr(r, "aspect", ""),
+                getattr(r, pol_col),
+                getattr(r, "pol_lexicon", None),
+                safety_recall=run_recall,
+                site_rule=bool(site_rule),
+            )
+            recovered += fired_recall
+            neutralised += fired_site
+            labels.append(lab)
         long[pol_col] = labels
-        if recovered:
+        if verbose and recovered:
             print("  safety recall rule: {} hedged warnings recovered".format(recovered))
-
-    # A reported regulation is not a grievance. Applied after the safety
-    # recall so a prohibition that carries a hazard keeps the negative label
-    # the recall rule just gave it.
-    if site_rule:
-        from .polarity import site_rule_is_not_a_complaint
-        neutralised = 0
-        labels = []
-        for r in long.itertuples(index=False):
-            new_lab, fired = site_rule_is_not_a_complaint(
-                getattr(r, "segment", ""), getattr(r, pol_col))
-            neutralised += fired
-            labels.append(new_lab)
-        long[pol_col] = labels
-        if neutralised:
+        if verbose and neutralised:
             print("  site-rule correction: {} regulations no longer counted "
                   "as complaints".format(neutralised))
+
+    return long
+
+
+def build_tree(seg: pd.DataFrame, pol_col: str = DEFAULT_POLARITY_COL,
+               sources=None, reviews: Optional[pd.DataFrame] = None,
+               use_trained: bool = False, safety_recall: bool = True,
+               site_rule: bool = True) -> Dict:
+    """Build the full Sri Lanka -> district -> destination -> aspect tree.
+
+    `sources` optionally restricts the tree to reviews from particular
+    collection batches, e.g. sources=["apify_google_places"] rebuilds the whole
+    dashboard from freshly scraped reviews only, with the training corpus
+    excluded. This makes the strict train/inference separation demonstrable on
+    demand rather than merely asserted.
+    """
+    long = long_table(seg, pol_col=pol_col, sources=sources, reviews=reviews,
+                      use_trained=use_trained, safety_recall=safety_recall,
+                      site_rule=site_rule)
 
     suppressed = {"destination_aspect": 0, "district_aspect": 0}
 
@@ -345,7 +384,12 @@ def build_tree(seg: pd.DataFrame, pol_col: str = DEFAULT_POLARITY_COL,
                 continue
             stats["aspect"] = aspect
             stats["label"] = C.ASPECTS[aspect].label
-            stats["quotes"] = _quotes(agroup, pol_col)
+            stats["quotes"] = _quotes(agroup, pol_col, polarity="N")
+            # Both sides of the rate this node reports. Kept in a separate
+            # key rather than merged into `quotes` so nothing that already
+            # reads `quotes` changes meaning: it still means complaints.
+            stats["quotes_positive"] = _quotes(
+                agroup, pol_col, limit=QUOTES_PER_NODE_POSITIVE, polarity="P")
             aspects[aspect] = stats
 
         complaints = {k: v for k, v in aspects.items() if k in C.COMPLAINT_ASPECTS}
@@ -406,12 +450,51 @@ def build_tree(seg: pd.DataFrame, pol_col: str = DEFAULT_POLARITY_COL,
         ]
         country_aspects[aspect] = stats
 
+    # -- what period this evidence actually covers -------------------------
+    #
+    # The recency band labels ("0-1y", "3-5y") are ages relative to each
+    # batch's own COLLECTION date, not to today -- see clean.recency_bucket
+    # for why that anchor is deliberate. The cost is that they drift: a reader
+    # in 2026 takes "0-1y" to mean the last year, when for this corpus it
+    # means 2022-05 to 2024-03. Publishing the calendar window alongside the
+    # label closes that gap without giving up reproducibility, and states the
+    # single most important limit on every figure below: nothing here is newer
+    # than the last collection date.
+    from .clean import RECENCY_BANDS, corpus_observation_end, evidence_window
+
+    evidence: Dict = {}
+    if reviews is None:
+        try:
+            reviews = pd.read_csv(C.CLEAN_REVIEWS_CSV)
+        except Exception:
+            reviews = None
+    if reviews is not None and "collected_at" in reviews.columns:
+        w_from, w_to = evidence_window(reviews)
+        end = corpus_observation_end(reviews)
+        evidence = {
+            "observation_end": end,
+            "window": [w_from, w_to],
+            "bands": {
+                band: list(evidence_window(reviews, band))
+                for band, _lo, _hi in RECENCY_BANDS
+            },
+            # Filled in by the dashboard build, not frozen here: the age of
+            # this evidence depends on when someone is reading it, and baking
+            # a number into the data file would make it wrong the next day.
+            "band_labels_are_relative_to": "each batch's collection date, not today",
+            "sources_collected_at": sorted(
+                str(x) for x in reviews["collected_at"].dropna().unique()),
+        }
+
     return {
         "country": "Sri Lanka",
         "polarity_method": pol_col,
+        "evidence": evidence,
         "thresholds": {
             "suppress_below": C.MIN_MENTIONS_DISPLAY,
             "low_confidence_below": C.MIN_MENTIONS_CONFIDENT,
+            "max_gathered_quotes": C.MAX_GATHERED_QUOTES,
+            "low_confidence_quote": C.LOW_CONFIDENCE_QUOTE,
         },
         "coverage": {
             "n_districts": len(districts),

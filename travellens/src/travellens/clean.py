@@ -41,8 +41,34 @@ def parse_timespan(value: str) -> Optional[float]:
     return qty * _UNIT_MONTHS[unit]
 
 
+# Band bounds in months, in the order a timeline should read them (oldest
+# first). recency_bucket() below is the single writer of these labels; this
+# tuple is what lets a reader turn one back into a calendar window.
+RECENCY_BANDS = (
+    ("5y+", 60.0, None),
+    ("3-5y", 36.0, 60.0),
+    ("1-3y", 12.0, 36.0),
+    ("0-1y", 0.0, 12.0),
+)
+
+
 def recency_bucket(months: Optional[float]) -> str:
-    """Coarse buckets. Coarse on purpose -- the source precision is low."""
+    """Coarse buckets. Coarse on purpose -- the source precision is low.
+
+    Read the band names carefully: they are ages relative to the batch's own
+    COLLECTION date, not to today. "0-1y" means "within a year of when this
+    review was scraped", and the two batches were scraped on different days
+    (Google 2024-03-25, TripAdvisor 2023-05-20). Anchoring to collection is
+    deliberate -- see tripadvisor.REFERENCE_DATE -- because anchoring to
+    `today` would silently re-bucket every row on every pipeline run and make
+    the published figures irreproducible.
+
+    The cost of that choice is that the labels drift out of date as wall-clock
+    time passes, and a reader who takes "0-1y" to mean "the last year" is
+    misled. evidence_window() exists to close that gap: it converts a band
+    back into the calendar window it actually covers, so the dashboard can
+    show both.
+    """
     if months is None:
         return "unknown"
     if months <= 12:
@@ -52,6 +78,48 @@ def recency_bucket(months: Optional[float]) -> str:
     if months <= 60:
         return "3-5y"
     return "5y+"
+
+
+def evidence_window(reviews, band: Optional[str] = None):
+    """The calendar window a recency band actually covers, as (from, to).
+
+    Both ends are ISO date strings, or (None, None) when the band is empty.
+
+    Derived from each row's own `collected_at` minus its `months_ago`, so the
+    two collection batches are handled without special-casing, and reported as
+    a WINDOW rather than per-row dates. That distinction is the point: "4
+    years ago" carries roughly six months of slack, so a reconstructed date
+    per review would assert precision the source never had, while the span a
+    band covers is a real, checkable property of the corpus.
+
+    Pass band=None for the window across the whole corpus.
+    """
+    import pandas as pd
+
+    df = reviews
+    if band is not None:
+        df = df[df["recency"] == band]
+    if not len(df):
+        return None, None
+
+    collected = pd.to_datetime(df["collected_at"], errors="coerce")
+    months = pd.to_numeric(df["months_ago"], errors="coerce")
+    observed = collected - pd.to_timedelta(months * 30.44, unit="D")
+    observed = observed.dropna()
+    if not len(observed):
+        return None, None
+    return str(observed.min().date()), str(observed.max().date())
+
+
+def corpus_observation_end(reviews) -> Optional[str]:
+    """The last day any batch in this corpus was collected.
+
+    Nothing in the corpus is newer than this, whatever the band labels say.
+    """
+    import pandas as pd
+
+    collected = pd.to_datetime(reviews["collected_at"], errors="coerce").dropna()
+    return str(collected.max().date()) if len(collected) else None
 
 
 # --------------------------------------------------------------------------

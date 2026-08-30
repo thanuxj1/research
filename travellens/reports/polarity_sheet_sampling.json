@@ -1,0 +1,49 @@
+{
+  "what_this_is": "How the polarity labelling sheet was drawn. Kept so the resulting accuracy figures state the sample behind them.",
+  "seed": 20260830,
+  "n_rows": 420,
+  "excluded_gold_segments": 200,
+  "per_aspect": {
+    "scenery": {
+      "available": 32949,
+      "drawn": 80,
+      "sampling": "uniform at random, seed 20260830"
+    },
+    "price_value": {
+      "available": 7733,
+      "drawn": 80,
+      "sampling": "uniform at random, seed 20260830"
+    },
+    "crowd": {
+      "available": 6041,
+      "drawn": 80,
+      "sampling": "uniform at random, seed 20260830"
+    },
+    "roads_access": {
+      "available": 11481,
+      "drawn": 60,
+      "sampling": "uniform at random, seed 20260830"
+    },
+    "safety": {
+      "available": 2291,
+      "drawn": 60,
+      "sampling": "uniform at random, seed 20260830"
+    },
+    "facilities": {
+      "available": 8258,
+      "drawn": 30,
+      "sampling": "uniform at random, seed 20260830"
+    },
+    "cleanliness": {
+      "available": 4442,
+      "drawn": 30,
+      "sampling": "uniform at random, seed 20260830"
+    }
+  },
+  "sampling_rule": "Uniform at random from the (segment, aspect) pairs the deployed pipeline tags, per aspect, excluding segments already in the gold set and segments the source truncated. NOT stratified by the system's predicted verdict: stratifying there would over-weight whatever the system is rare at, and the resulting accuracy could not be generalised to the corpus.",
+  "blind": "The system's verdict is deliberately absent from the sheet.",
+  "files": [
+    "LABEL_THESE_polarity.csv",
+    "LABEL_THESE_polarity.xlsx"
+  ]
+}

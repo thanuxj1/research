@@ -1,6 +1,6 @@
 # LostinSriLanka — Dataset Datasheet
 
-Generated 2026-08-26.
+Generated 2026-08-30.
 
 ## 1. What this is
 
@@ -10,12 +10,12 @@ plain fact about one topic at one place.
 
 | | |
 |---|---|
-| Labelled rows | 99088 |
-| Distinct sentences | 78568 |
-| Destinations | 294 |
+| Labelled rows | 102244 |
+| Distinct sentences | 82969 |
+| Destinations | 293 |
 | Districts | 19 |
 | Aspects | 7 |
-| Complaint / praise / factual | 11812 / 43058 / 29037 |
+| Complaint / praise / factual | 12318 / 45955 / 32002 |
 
 ## 2. Where the reviews came from
 

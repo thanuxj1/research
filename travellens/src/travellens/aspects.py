@@ -30,19 +30,106 @@ _COMPILED: Dict[str, "re.Pattern"] = {
     for key, aspect in C.ASPECTS.items()
 }
 
+# Gated triggers: (trigger, required context), both compiled once. A gated
+# trigger marks the aspect present only when BOTH appear in the same segment --
+# see Aspect.gated for why three safety words needed this.
+_GATED: Dict[str, list] = {
+    key: [(re.compile(t, re.IGNORECASE), re.compile(c, re.IGNORECASE))
+          for t, c in getattr(aspect, "gated", [])]
+    for key, aspect in C.ASPECTS.items()
+}
+
+# Vetoes: patterns that rule the aspect OUT no matter what matched. See
+# Aspect.blocked -- gating is a condition, this is an override, and the two
+# are needed for different failure shapes.
+_BLOCKED: Dict[str, list] = {
+    key: [re.compile(p, re.IGNORECASE) for p in getattr(aspect, "blocked", [])]
+    for key, aspect in C.ASPECTS.items()
+}
+
+
+def _is_blocked(text: str, key: str) -> bool:
+    return any(rx.search(text) for rx in _BLOCKED.get(key, []))
+
+
+# Scenery attribution: the bare feature nouns, and the cues that show one is
+# being looked at rather than merely mentioned. See config.SCENERY_BARE_NOUNS
+# for the measurement that motivates this.
+_SCENERY_BARE = [re.compile(p, re.IGNORECASE)
+                 for p in getattr(C, "SCENERY_BARE_NOUNS", [])]
+_SCENERY_CUE = (re.compile(C.SCENERY_CONTEXT_CUES, re.IGNORECASE)
+                if getattr(C, "SCENERY_CONTEXT_CUES", None) else None)
+# Everything in the scenery lexicon that is NOT a bare noun is itself a cue:
+# "beautiful", "view", "picturesque" all say how the place looks.
+_SCENERY_APPEARANCE = [
+    re.compile(t, re.IGNORECASE) for t in C.ASPECTS["scenery"].triggers
+    if t not in set(getattr(C, "SCENERY_BARE_NOUNS", []))
+]
+
+
+def _scenery_is_bare(text: str) -> bool:
+    """True when scenery's only evidence is a feature noun with nothing in the
+    segment saying the feature was seen, enjoyed or admired."""
+    if any(rx.search(text) for rx in _SCENERY_APPEARANCE):
+        return False
+    if _SCENERY_CUE is not None and _SCENERY_CUE.search(text):
+        return False
+    return any(rx.search(text) for rx in _SCENERY_BARE)
+
 
 def tag_segment(text: str) -> List[str]:
-    """Return every aspect key whose trigger words appear in this text."""
+    """Return every aspect key whose trigger words appear in this text.
+
+    An aspect is present if any plain trigger matches, OR if a gated trigger
+    matches together with its required context -- and in neither case if a
+    blocked pattern vetoes it.
+
+    One cross-aspect rule runs last. Scenery names the features themselves
+    (lake, waterfall, elephant), so the noun fires in sentences that are
+    plainly about something else: "Animal cages should be more cleaned" was a
+    scenery complaint, and so was "Bad smell in some areas close to lake".
+    When scenery's only evidence is a bare noun AND the segment already
+    carries another aspect, the mention is attributed to that other aspect
+    alone. A segment that is only about the lake keeps its scenery tag, and
+    "Beautiful lake but the road is bad" is untouched because "beautiful" is
+    not a bare noun. See config.SCENERY_ATTRIBUTION_RULE.
+    """
     if not isinstance(text, str) or not text:
         return []
-    return [key for key, rx in _COMPILED.items() if rx.search(text)]
+    out = []
+    for key, rx in _COMPILED.items():
+        if _is_blocked(text, key):
+            continue
+        if rx.search(text):
+            out.append(key)
+            continue
+        if any(t.search(text) and c.search(text) for t, c in _GATED.get(key, [])):
+            out.append(key)
+
+    if (getattr(C, "SCENERY_ATTRIBUTION_RULE", False)
+            and "scenery" in out and len(out) > 1
+            and _scenery_is_bare(text)):
+        out = [k for k in out if k != "scenery"]
+    return out
 
 
 def matched_terms(text: str, aspect_key: str) -> List[str]:
     """The actual words that caused a match -- used for error analysis and for
     showing the reader WHY a piece was filed under an aspect."""
+    text = text or ""
+    # Must agree with tag_segment: explaining WHY a segment was filed under an
+    # aspect that was in fact vetoed would be worse than saying nothing.
+    if _is_blocked(text, aspect_key):
+        return []
     rx = _COMPILED[aspect_key]
-    return sorted(set(m.group(0).lower() for m in rx.finditer(text or "")))
+    found = set(m.group(0).lower() for m in rx.finditer(text))
+    # A gated trigger only earns its place in the explanation alongside the
+    # context that admitted it, so the reader can see WHY it counted.
+    for t, c in _GATED.get(aspect_key, []):
+        tm, cm = t.search(text), c.search(text)
+        if tm and cm:
+            found.add(tm.group(0).lower() + " + " + cm.group(0).lower())
+    return sorted(found)
 
 
 def tag_corpus(seg: pd.DataFrame, verbose: bool = True):

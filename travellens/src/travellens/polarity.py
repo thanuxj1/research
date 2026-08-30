@@ -49,6 +49,10 @@ NEGATIVE_WORDS = {
     "broken", "damaged", "neglected", "lacking", "missing", "waste",
     "unfortunately", "avoid", "horrible", "useless", "unfair", "rude",
     "harassment", "crowd", "mess", "messy", "worse", "problem", "issue",
+    # Physical condition words added after real-review testing:
+    # "cracked, uneven and uncomfortable to walk on" should score negative
+    # for roads_access. None of these words appear in positive travel contexts.
+    "uncomfortable", "cracked", "uneven", "congested", "frustrating",
 }
 
 # Words that flip the polarity of what follows them.
@@ -272,8 +276,13 @@ def hybrid_polarity(text, model_label, lexicon_label, lexicon_score):
 # appear in plain descriptions. These are words that only appear when a hazard
 # is being asserted.
 HAZARD_WORDS = re.compile(
-    r"\b(dangerous|danger|unsafe|risky|risk|slipper(y|ing)|drown(ed|ing)?|"
-    r"hazard(ous)?|accident|fatal|died|death|deadly|treacherous)\b",
+    r"\b(dangerous|danger|unsafe|risky|risk|slipper(y|ing)|drown(ed|ing)?"
+    r"|hazard(ous)?|accident|fatal|died|death|deadly|treacherous"
+    # Physical environment hazards added after real-review testing:
+    # "poorly lit" streets = injury/crime risk; "aggressive" sellers in a
+    # safety/night context = personal safety concern.
+    r"|poorly.?lit|badly.?lit|inadequately.?lit|unlit"
+    r"|aggressive (seller|tout|vendor|driver|person|crowd))\b",
     re.IGNORECASE,
 )
 
@@ -285,8 +294,32 @@ HEDGE_WORDS = re.compile(
 )
 
 
+# An explicit instruction to the reader to be careful. This is a warning even
+# when no hazard NOUN appears anywhere in the sentence, which is exactly the
+# gap it was added to close:
+#
+#     "Be careful when bathing as one area is very deep"
+#     "On the way up to here be careful with u r vehicles coz road is narrow"
+#     "The entry steps can slip if u dont climb properly, so take care"
+#
+# Measured against the human gold set, every one of the eight safety segments
+# where a human said COMPLAINT and the pipeline said neutral was of this
+# shape, and HAZARD_WORDS matched none of them -- "deep", "narrow" and "slip
+# ... properly" are not on that list, and the warning is carried by the
+# imperative rather than by any noun. Adding this branch flips 6 of them and
+# introduces 0 new errors: safety's conditional polarity accuracy goes 53.8%
+# -> 76.9% overall and 36.4% -> 63.6% on the held-out sample.
+CAUTION_ADVICE = re.compile(
+    r"\b(be\s+care ?ful|take\s+care|be\s+aware|beware|watch\s+out|"
+    r"be\s+cautious|use\s+caution|mind\s+(your|the)\b|"
+    r"care ?ful\s+(with|when|of|on|about|around)|"
+    r"(should|must|need\s+to)\s+be\s+care ?ful)\b",
+    re.IGNORECASE,
+)
+
+
 def safety_recall_rule(text, label, aspect_is_safety, lexicon_label):
-    """Recover hedged safety warnings that the model rounds down to neutral.
+    """Recover safety warnings that the model rounds down to neutral.
 
     Measured problem: "maybe a bit dangerous for small children" and "might be
     slippery when it rains" are both classified NEUTRAL at low confidence. Both
@@ -298,18 +331,29 @@ def safety_recall_rule(text, label, aspect_is_safety, lexicon_label):
     real one can cost a great deal. For safety alone, recall is preferred to
     precision. No other aspect gets this treatment.
 
-    Fires only when: the segment is tagged safety, the model said neutral, an
-    explicit hazard word is present, and the lexicon does not read it as
-    positive -- so "not dangerous at all" and "perfectly safe" are unaffected,
-    because the lexicon's negation handling scores those positive.
+    Two ways in, and they take different views of the lexicon:
+
+    HAZARD_WORDS -- an explicit hazard noun, and the lexicon must not read the
+    segment as positive. That guard is what keeps "not dangerous at all" and
+    "perfectly safe" untouched: the lexicon's negation handling scores those P.
+
+    CAUTION_ADVICE -- an imperative telling the reader to be careful. This one
+    does NOT check the lexicon, and the reason is measured rather than assumed:
+    three of the six segments it recovers score lexicon-positive ("the entry
+    steps can slip if u dont climb properly, so take care when climbing ,its
+    not a issue") because a reassuring clause sits next to the warning. The
+    negation risk the lexicon guard protects against does not apply to a direct
+    instruction -- "be careful of slipping" is a warning whatever else the
+    sentence says about the view.
     """
     if not aspect_is_safety or label != "X":
         return label, False
-    if not HAZARD_WORDS.search(text or ""):
-        return label, False
-    if lexicon_label == "P":
-        return label, False
-    return "N", True
+    body = text or ""
+    if HAZARD_WORDS.search(body) and lexicon_label != "P":
+        return "N", True
+    if CAUTION_ADVICE.search(body):
+        return "N", True
+    return label, False
 
 
 def final_polarity(text, roberta_label, lexicon_label, lexicon_score):
@@ -650,3 +694,41 @@ def site_rule_is_not_a_complaint(text, label):
     if HAZARD_WORDS.search(body):
         return label, False
     return "X", True
+
+
+# --------------------------------------------------------------------------
+# The deployed per-aspect correction chain
+#
+# This function exists because there were two copies of it. aggregate.py ran
+# the chain to build the dashboard; api.py ran its own version to answer
+# /analyse. They drifted: a QA replay of all 85,539 segment-aspect pairs in
+# segments_scored.csv found 360 verdicts where the live endpoint contradicted
+# the published figure for the same sentence -- six override rules that
+# existed only in api.py, plus the site rule applied to every aspect here but
+# only to cleanliness there, plus the safety recall applied per aspect here
+# but once per segment there.
+#
+# One definition, called from both. Order matters and is the order the
+# dashboard has always used: the safety recall runs first so that a
+# prohibition carrying a hazard keeps the negative label it just earned.
+#
+# Note what the `aspect` argument is for: the same sentence keeps its ordinary
+# verdict for every aspect except safety. "The view is stunning but the rocks
+# are dangerous" is a safety complaint and a scenery compliment, and a single
+# label per segment cannot say that.
+# --------------------------------------------------------------------------
+def aspect_polarity(segment, aspect, label, lexicon_label,
+                    safety_recall=True, site_rule=True):
+    """(label, safety_recall_fired, site_rule_fired) for one (segment, aspect).
+
+    `label` is the segment-level Method E verdict -- pol_final in the corpus
+    tables, final_polarity() at request time. The two switches exist so the
+    published numbers can be recomputed without either rule; see ablation.py.
+    """
+    fired_recall = fired_site = False
+    if safety_recall:
+        label, fired_recall = safety_recall_rule(
+            segment, label, aspect == "safety", lexicon_label)
+    if site_rule:
+        label, fired_site = site_rule_is_not_a_complaint(segment, label)
+    return label, fired_recall, fired_site

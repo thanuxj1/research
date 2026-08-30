@@ -53,7 +53,22 @@ FOCUS_ASPECTS = ["roads_access", "cleanliness", "facilities", "safety"]
 
 PART_A_PER_ASPECT = 30      # 4 x 30 = 120 representative
 PART_B_TOTAL = 80           # disagreement-enriched
-OVERLAP_FOR_AGREEMENT = 60  # second annotator subset
+# Second annotator subset. This was 60, and 60 cannot do the job it exists
+# for. Cohen's kappa on 60 rows at these prevalences carries a 95% confidence
+# interval of roughly [0.48, 0.92] -- it spans "moderate" to "almost perfect"
+# at once, so it cannot support the claim "agreement was substantial" that the
+# reliability section needs to make. Simulated at the observed prevalences
+# (safety is rarest at 0.175 and therefore worst affected):
+#
+#     n=60   kappa 95% CI [0.48, 0.92]   claim k>0.6 unsupported
+#     n=100                [0.55, 0.89]   unsupported
+#     n=150                [0.58, 0.86]   unsupported
+#     n=200                [0.60, 0.84]   supported
+#
+# So the second pass is the whole sample. It costs the annotator more, and it
+# is the difference between having a reliability figure and having a number
+# with no interval anyone can defend.
+OVERLAP_FOR_AGREEMENT = 200
 
 # Columns holding each method's prediction, in method order.
 METHOD_COLS = ["pol_lexicon", "pol_model", "pol_hybrid", "pol_roberta", "pol_final"]
@@ -116,6 +131,11 @@ def build(seg: pd.DataFrame, reviews: pd.DataFrame) -> Dict:
         sheet[aspect] = ""
     sheet["checked"] = ""
     sheet["notes"] = ""
+    # Who produced these labels. Blank on the blank sheet, filled by the person
+    # (or process) that labels it. agreement.py refuses a file that does not
+    # declare, because an undeclared file is how an AI pass ends up reported as
+    # inter-annotator reliability -- which happened once here already.
+    sheet["labelled_by"] = ""
 
     sheet = sheet.sample(frac=1.0, random_state=RANDOM_SEED).reset_index(drop=True)
     sheet.insert(0, "row", range(1, len(sheet) + 1))

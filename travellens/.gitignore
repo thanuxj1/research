@@ -61,3 +61,12 @@ __pycache__/
 # edit a second time and corrupt the template. The template itself is the
 # committed artifact; these were scaffolding.
 scripts/_patch_*.py
+
+# Secrets. Never in git, regardless of what generates them.
+.env
+.env.*
+!.env.example
+
+# Local submission store. Regenerated on first run; user submissions are
+# data the person running it produced, not part of the research corpus.
+user_submissions.db

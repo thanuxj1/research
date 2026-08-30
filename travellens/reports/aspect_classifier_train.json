@@ -1,30 +1,30 @@
 {
   "roads_access": {
-    "positives": 14021,
-    "train_accuracy": 0.928
+    "positives": 13264,
+    "train_accuracy": 0.922
   },
   "facilities": {
     "positives": 8928,
     "train_accuracy": 0.935
   },
   "cleanliness": {
-    "positives": 3578,
-    "train_accuracy": 0.976
+    "positives": 5069,
+    "train_accuracy": 0.953
   },
   "safety": {
-    "positives": 3469,
-    "train_accuracy": 0.938
+    "positives": 2521,
+    "train_accuracy": 0.96
   },
   "price_value": {
-    "positives": 7618,
-    "train_accuracy": 0.956
+    "positives": 8435,
+    "train_accuracy": 0.968
   },
   "crowd": {
-    "positives": 5827,
-    "train_accuracy": 0.966
+    "positives": 7190,
+    "train_accuracy": 0.947
   },
   "scenery": {
-    "positives": 22741,
-    "train_accuracy": 0.93
+    "positives": 40050,
+    "train_accuracy": 0.919
   }
 }

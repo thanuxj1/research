@@ -26,23 +26,400 @@ spot was dangerous.
 
 ## Running it
 
+Two commands.
+
 ```bash
-# one-time
 pip install -r requirements.txt -r requirements-train.txt
 
-# rebuild everything from the corpus (~15 s, model outputs are cached)
-python scripts/10_refresh.py
-
-# load to SQLite
-python scripts/29_load_db.py
-
-# package the citable release
-python scripts/24_release.py
+python scripts/49_build_all.py     # rebuild every artefact, in order
+python scripts/50_launch.py        # check it, then serve all of it
 ```
 
-The dashboard is a single self-contained file: `dashboard/index.html`. No
-server, no database, no internet beyond a web font. Rebuild it with
-`python scripts/08_build_dashboard.py`.
+That serves the whole system on one port, as **one page with three tabs**:
+
+| | |
+|---|---|
+| `http://localhost:8778/` | the app &mdash; **Map**, **Stories & videos**, **Add a review** |
+| `http://localhost:8778/#stories` | any tab is directly linkable |
+| `http://localhost:8778/dashboard` | the map on its own, if you want it standalone |
+| `http://localhost:8778/docs` | the API |
+
+**One process.** The portal calls the API on its own origin, so there is no
+CORS to configure and no second server to remember. It used to be three things
+to start, and a reader who opened `portal/index.html` from disk got a page that
+looked finished and did nothing, with the reason buried in a browser console.
+
+`49_build_all.py` calls the numbered scripts rather than reimplementing them,
+so each stage still has exactly one implementation and any of them can be
+re-run alone (`--only 45` runs just the portal build). It stops at the first
+failure, because later stages read what earlier ones write.
+
+### Preflight
+
+`50_launch.py` checks before it serves, and fixes nothing. Each check compares
+two things that must agree and names the command that reconciles them:
+
+```
+  ok  dashboard is current             built after the tree
+  ok  portal is current                built after the tree
+  ok  evidence threshold               suppress below 10 (reliability says 10 or more)
+  ok  accuracy coverage                7 of 7 aspects measured
+  ok  submission store                 local SQLite (user_submissions.db)
+```
+
+The first two matter most. Both pages are static files with the numbers baked
+in, so rebuilding the tree and forgetting to rebuild a page leaves it showing
+yesterday's figures and looking entirely normal doing it. Nothing downstream
+can catch that; a timestamp comparison can. Run the checks alone with
+`--check`.
+
+**One combination is refused outright.** If `SUBMISSIONS_DATABASE_URL` is set,
+every `POST /analyse` writes to the hosted research corpus. Bound to loopback
+that is a deliberate choice. Bound to `0.0.0.0` it publishes a write endpoint
+into the data this thesis rests on, so `--host` outside loopback with that
+variable set will not start.
+
+### What gets stored, and who can change it
+
+Everything a contributor creates goes to the submissions database and stays
+there across restarts: reviews and their segment analysis, corrections, and
+stories. `SUBMISSIONS_DATABASE_URL` sends them to Postgres; unset, they go to
+`user_submissions.db`. Both paths run the same schema.
+
+| | create | read | update | delete |
+|---|---|---|---|---|
+| review | `POST /analyse` | `GET /reviews`, `GET /reviews/{id}` | — | `POST /reviews/{id}/withdraw` |
+| story | `POST /stories` | `GET /stories` | `PATCH /stories/{id}` | `DELETE /stories/{id}` |
+| correction | `POST /corrections` | `GET /corrections` | — | — |
+
+**Ownership without accounts.** The portal asks for no name and no email, and
+adding a login so an edit button could work would collect more about a
+contributor than their review does. So editing rights ride on a token returned
+once at creation and never stored: only its SHA-256 hash is kept, compared in
+constant time, and required in `X-Manage-Token`. A copy of the database does not
+let anybody edit anyone's content, and rows created before tokens existed are
+unmanageable rather than open to everybody.
+
+**A review is withdrawn, not deleted.** `DELETE` would orphan its segments and
+silently move every figure derived from them with no record that anything had
+been there. Withdrawal stamps `withdrawn_at`, and the row leaves every listing
+and every count -- including the segment counts behind the complaint rates,
+which is why `/stats` joins the two tables. A story is display-only content
+that never entered a calculation, so deleting one really deletes it.
+
+**Nothing vanishes on refresh.** The browser keeps a list of what it has sent,
+with the tokens, in `localStorage`. The *Add a review* tab shows it as **Your
+submissions**, so a review is still on screen tomorrow, with a Withdraw button
+beside it. That list is local -- the server has no idea who you are, which is
+the point -- so clearing site data loses the ability to withdraw. Stories you
+wrote show a Delete button for the same reason and only in the browser that
+wrote them.
+
+### Why the map tab is a frame
+
+The Map tab hosts `dashboard/index.html` in an iframe rather than inlining its
+markup, and that is an engineering decision rather than a shortcut.
+
+The two documents share seven CSS class names -- `.card`, `.wrap`, `.num`,
+`.warn`, `.masthead` and others -- and the dashboard styles bare `body`,
+`table`, `th`, `td`, `button` and `input`. Merged into one document, each would
+silently restyle the other: the dashboard's table rules would land on the
+portal's baseline panel, its `button` and `input` rules on the submission form.
+Framed, each keeps its own stylesheet.
+
+It also keeps `dashboard/index.html` a valid standalone file, which is a
+property this project protects elsewhere -- the map still opens from disk with
+no server at all. `tests/test_app_tabs.py` asserts the collision that justifies
+the frame, so if somebody later inlines the two the test says why not.
+
+The frame gets its `src` only when the Map tab is first opened, so the other
+two tabs do not pay for 3.8 MB they are not showing. The dashboard removes its
+own link back to the portal when it detects it is framed; without that, the
+link would load the whole app inside its own map panel.
+
+### The pages on their own
+
+Both are still self-contained single files, and still work opened directly from
+disk with no server at all -- `dashboard/index.html` fully, and
+`portal/index.html` (the three-tab app) in read-only form until it can reach an
+analyser (point it at one with `?api=http://host:port`). Opened from disk the
+Map tab still works, because the frame path is relative. The dashboard needs no internet beyond a
+web font and the Wikipedia photo lookup, neither of which any figure depends on.
+
+```bash
+python scripts/10_refresh.py       # re-derive from the raw corpus (~15 s, cached)
+python scripts/29_load_db.py       # load to SQLite
+python scripts/24_release.py       # package the citable release
+```
+
+## Evidence thresholds, measured
+
+The dashboard refuses to print a rate below `MIN_MENTIONS_DISPLAY` opinions and
+marks one "low confidence" below `MIN_MENTIONS_CONFIDENT`. Those were **5 and
+15 -- two numbers chosen because they felt about right**, guarding every figure
+on the page.
+
+`scripts/46_reliability.py` measures them. A complaint rate has no ground truth
+-- nobody has ever counted the true cleanliness complaint rate at Kandy Lake --
+so it cannot be validated by comparison. It is validated by **reproducibility**:
+split each destination-aspect cell's opinions in half at random, score each half
+on its own, and see whether the two halves agree. Spearman-Brown corrected,
+averaged over 200 splits, computed within aspect.
+
+| opinions in the cell | cells | reliability | halves land apart by |
+|---|---|---|---|
+| 2-9 | 618 | **0.462** | 26.0 pp |
+| 10-14 | 160 | 0.749 | 16.0 pp |
+| 15-19 | 105 | 0.754 | 14.3 pp |
+| 20-29 | 133 | **0.809** | 11.7 pp |
+| 30-49 | 146 | 0.826 | 9.3 pp |
+| 50-99 | 147 | 0.893 | 6.8 pp |
+| 100+ | 141 | **0.960** | 3.7 pp |
+
+So the thresholds are now **10 and 20**. Below 10 opinions two halves of the
+same place disagree by 26 percentage points and reproduce each other at 0.46 --
+publishing that rate would be publishing noise, and the old threshold of 5 sat
+inside that band. 0.80 is the conventional floor for a confident group-level
+measure, and the bands first clear it at 20-29, not at 15.
+
+**The null.** A reliability figure means nothing without knowing what the same
+procedure returns when there is nothing to find, so the study re-runs with
+verdicts shuffled between cells: **-0.083**, flat in every size bin. Two
+artefacts were caught this way and neither is obvious. Pooling cells across
+aspects returned 0.53 under the null, because scenery sits near 9% and safety
+near 70% and both halves of any cell agree merely by belonging to the same
+aspect -- hence the within-aspect centring. Then an aspect contributing a single
+cell to a subset, left uncentred, acted as a leverage outlier and returned 0.82
+in the 100+ bin. Both are held by `tests/test_reliability.py`.
+
+**What it cost.** 271 of 1,103 destination-aspect cells are no longer shown, and
+the "ok confidence" set falls from 672 to 567. National aspect rates are
+unchanged -- suppression governs what is displayed per destination, not what is
+counted. The remaining counts match the study exactly: 832 published cells
+against 832 cells at n>=10, and 567 confident cells against 567 at n>=20.
+
+**Per aspect, cells of 10+:** crowd 0.855, cleanliness 0.843, safety 0.824,
+price & value 0.816, scenery 0.807, roads & access 0.762, facilities 0.741.
+Every aspect clears 0.74 and five of seven clear 0.80 -- *including the three
+with no gold labels*, since reliability needs no labels. Read reliability
+beside the gap, though: scenery has the smallest gap of any aspect (4.2 pp) and
+scored lowest of all when small cells were included, because every scenery cell
+sits near the same rate and there is almost no between-place variation left to
+reproduce. A low correlation with a small gap means the aspect does not
+discriminate between places, not that the estimate is imprecise.
+
+---
+
+## Accuracy: what the verdict is worth
+
+`reports/gold_evaluation.json` scores whether the right ASPECT was found.
+`scripts/43_evaluate_polarity.py` scores whether a correctly-found aspect got
+the right VERDICT -- and the verdict is what every complaint rate is made of,
+so this is the measurement that caps every accuracy claim in the project.
+
+Part A, the representative sample:
+
+| aspect | vs reader 1 | 95% CI | vs reader 2 | two humans agree |
+|---|---|---|---|---|
+| Cleanliness | 0.852 | [0.704, 0.963] | 0.958 | 0.975 |
+| Facilities | 0.636 | [0.485, 0.788] | 0.679 | 0.811 |
+| Safety | 0.636 | [0.364, 0.909] | 0.778 | 0.958 |
+| **Roads & Access** | **0.421** | [0.211, 0.632] | 0.571 | 0.871 |
+| macro | 0.636 | | **0.747** | 0.904 |
+| **unanimous pairs only** | **0.718** | [0.657, 0.866] | | |
+
+Three things here were free -- they needed no new labelling, only the labels
+already collected:
+
+**Intervals.** Safety's accuracy rests on eleven pairs and its interval spans
+half the scale. Quoted bare, 0.636 reads as knowledge; quoted as
+[0.364, 0.909] it reads as what it is. Claims rest on the lower bound.
+
+**The second reader.** Two people labelled these 200 segments independently and
+both recorded verdicts, not just presence, but the project had only ever scored
+against annotator 1. Against annotator 2 the macro is **0.747**, not 0.636 --
+the same system, a different reader, eleven points apart. That spread is a
+property of the task, and reporting one number without the other hides it.
+
+**The ceiling.** Two humans reading these sentences agree 81% to 98% of the
+time. An accuracy reported against an implicit 100% asks the pipeline to beat
+the people who defined the task. Read against the ceiling, cleanliness at 0.852
+against 0.975 is close; roads at 0.421 against 0.871 is the real defect in this
+project, and both readers agree it is one.
+
+`unanimous_pairs` -- scored only where both readers gave the same verdict -- is
+the fairest single figure at **0.718**, because a pair the two humans split on
+has no defensible right answer to score against.
+
+### Extraction precision, all seven aspects
+
+A second pass over the same 420 pairs asked the question the polarity sheet had
+no room for -- *is this sentence about that topic at all?* -- giving extraction
+precision where the gold set never reached:
+
+| aspect | precision | judged | source |
+|---|---|---|---|
+| Roads & Access | 0.900 | 60 | presence sheet, 1 reader |
+| Crowding & Noise | 0.825 | 80 | presence sheet, 1 reader |
+| Price & Value | 0.812 | 80 | presence sheet, 1 reader |
+| Safety | 0.800 | 60 | presence sheet, 1 reader |
+| Facilities | 0.733 | 30 | presence sheet, 1 reader |
+| Scenery | 0.713 | 80 | presence sheet, 1 reader |
+| Cleanliness | 0.667 | 30 | presence sheet, 1 reader |
+
+Scenery at 0.713 finally puts a number on a problem this project had only
+argued about: roughly three in ten scenery tags are on sentences that are not
+about scenery, which is the "segments about traffic and litter get tagged
+scenery because they contain *lake*" case, measured.
+
+**Precision only, and deliberately so.** The sample holds nothing but pairs the
+pipeline already tagged, so it cannot see a mention the pipeline missed. No
+recall, therefore no F1 -- and a test fails if either is ever manufactured from
+it. `reports/accuracy_all_aspects.json` carries these rows with `recall: null`
+and `f1: null` rather than a number.
+
+**The reader disagreement is here too.** Roads extraction precision is 0.588
+against annotator 1 and 0.900 against the supplementary reader. Same pattern as
+polarity, same direction, same reader.
+
+### All seven aspects, measured
+
+A second sample -- 420 pairs drawn uniformly at random from the pairs the
+deployed pipeline tags, one row per (sentence, topic), labelled blind to the
+system's verdict -- closes the three aspects that had no figure at all:
+
+| aspect | accuracy | 95% CI | n |
+|---|---|---|---|
+| Roads & Access | 0.800 | [0.683, 0.900] | 60 |
+| Scenery | 0.762 | [0.662, 0.850] | 80 |
+| Safety | 0.733 | [0.617, 0.850] | 60 |
+| Crowding & Noise | 0.725 | [0.625, 0.812] | 80 |
+| Facilities | 0.700 | [0.533, 0.867] | 30 |
+| Cleanliness | 0.633 | [0.467, 0.800] | 30 |
+| Price & Value | 0.600 | [0.487, 0.700] | 80 |
+| **macro** | **0.708** | | 420 |
+
+**The reader matters more than the method.** `roads_access` scores 0.421
+against annotator 1 (n=19), 0.571 against annotator 2 (n=19) and 0.800 against
+the supplementary reader (n=60). Both samples are rule-lexicon tagged -- all
+420 supplementary pairs pass the same rule gate the gold pairs do -- so this is
+not a difference of frame. Three readers, three answers, on the same task, and
+the spread between them is wider than the spread between any two *methods* this
+project has compared. That belongs in any write-up of these figures, ahead of
+the figures themselves.
+
+Restricted further to the pairs a human says really **are** about the topic --
+joining the two sheets -- the macro is **0.721**, against 0.708 over everything
+the pipeline tags. The gap between those two is the cost of extraction error in
+polarity terms, and it is small: safety moves 0.733 to 0.833 and scenery 0.762
+to 0.807, but most aspects barely shift. Extraction error is real and is not
+what limits the verdict.
+
+**What the supplementary sample cannot do.** One reader, so no agreement figure
+and no ceiling for the three aspects it alone covers. That reader is also the
+system's author, which is the same class of limitation as open problem #1 --
+mitigated but not removed by the sheet being blind, since the system's verdict
+was never shown and the labelling could not be anchored on the answer being
+tested. A second reader over a subset would close it, the way the focused gold
+set was closed.
+
+Regenerate or extend the sheet with:
+
+```bash
+python scripts/47_polarity_sheet.py    # writes a blank sheet
+```
+
+420 rows, roughly 85 minutes -- one row per (sentence, topic), and the reader
+puts N, P or X in one column. Sampled uniformly at random from the pairs the
+deployed pipeline tags, per aspect, excluding gold-set segments and truncated
+text. Deliberately **not** stratified by the system's predicted verdict, which
+would over-weight whatever the system is rare at and produce an accuracy that
+could not be generalised. The system's own verdict is **not shown** -- this
+project has already been through the version of that mistake where an
+adjudicator saw the answers first.
+
+Fill the `verdict` column, put `human` in `labelled_by`, re-run
+`scripts/43_evaluate_polarity.py`, and the figures appear on their own. Until
+then the report says `"status": "sheet exists but is blank"` rather than
+quietly reporting nothing.
+
+---
+
+## Two interfaces, one pipeline
+
+`dashboard/index.html` reads the corpus out; `portal/index.html` takes new
+evidence in. Both are static single files, built from a template with their
+data injected, and both are scored by the same rule chain -- so a submission
+and a scorecard mean the same thing.
+
+```bash
+python scripts/45_build_portal.py    # writes portal/index.html
+python scripts/41_serve_api.py       # the analyser the portal calls, port 8778
+```
+
+The portal shows a contributor what the pipeline read: one row per opinion
+unit, the words that triggered each category, and the per-aspect verdict --
+alongside the historical baseline for that destination, dated and with `n` on
+every row. The corpus ends at a fixed observation date; a submission is the
+current layer over it, not a correction to it.
+
+**Three of the seven categories are marked "not checked" in that interface**,
+because scenery, price & value and crowding have no human labels behind them.
+That marking is read from `reports/accuracy_all_aspects.json` at build time,
+not typed into the template -- label those aspects, re-run
+`scripts/38_evaluate_against_gold.py` and `scripts/44_accuracy_report.py`,
+rebuild, and the marks come off by themselves. See open problem #1.
+
+### Plain words at the edge
+
+The portal is read by someone on holiday, so it carries no research
+vocabulary: no *aspect*, *polarity*, *opinion unit* or *F1*. Categories get a
+second, friendlier name (`FRIENDLY` in `scripts/45_build_portal.py`), verdicts
+read *a problem / something good / just a fact*, and accuracy is a sentence --
+"when we say this, we get it right about 8 times in 10".
+
+That sentence is built from **precision**, not F1, because precision is the
+number that answers the question it appears to answer: given that we put this
+label on a sentence, how often is it right? F1 mixes in recall, which is about
+the sentences we missed, and cannot honestly be phrased that way. The
+translation happens only at the build step -- nothing in the pipeline is
+renamed.
+
+### When the analysis is wrong
+
+Every category on every sentence carries a **Not right?** button, which posts
+to `POST /corrections`. Contributors are the people best placed to notice that
+"rubbish along the path" was tagged *Roads & Access* -- precision there is
+0.588, so roughly two in five of those tags are wrong.
+
+Corrections are stored with `labelled_by='contributor'`, a provenance
+`agreement.py` **refuses**. That refusal is the design, not an oversight: a
+drive-by correction has no annotation guideline behind it, no second reader,
+and nobody to ask what they meant, so it can never become an accuracy or kappa
+figure without a deliberate human annotation pass. `GET /corrections` is a
+queue for a person to read, and no published number moves because of one.
+`tests/test_contributor_separation.py` holds that.
+
+### Storyboard
+
+`POST /stories` and `GET /stories` take longer write-ups and blog links, shown
+on the portal's second tab alongside the videos and articles already collected
+by `scripts/23_collect.py --what youtube` and `scripts/28_collect_news_targeted.py`.
+
+Storyboard content is **displayed and never counted** -- the existing rule for
+collected media (`tests/test_media_separation.py`), which a visitor's blog post
+inherits because it is the same kind of object.
+
+### Photos
+
+Place photos come from Wikipedia's API, not Google Places. Places photos need
+an API key, and the portal is a static file people copy around, so the key
+would travel with it on somebody's billing account -- the same argument that
+kept a Google tile layer out of the dashboard's map. Wikipedia needs no key,
+allows cross-origin calls, and the images are credited on the page. It is a
+weaker match: sometimes there is no photo, and sometimes it is of the town
+rather than the site, so the caption says the photo is a guide and not
+evidence.
 
 ---
 
@@ -61,18 +438,47 @@ reviews
 
 ### Which extractor handles which aspect
 
-Chosen **per aspect by measurement**, never by preference. Each was evaluated
-on a purpose-built test set measuring precision *and* recall:
+**The deployed pipeline uses the rule lexicon for all seven aspects.** That is
+not what an earlier version of this section said, and the correction matters
+more than the numbers in it, so here is the trace:
 
-| Aspect | Extractor | F1 | Test positives |
-|---|---|---|---|
-| Price & Value | rule lexicon | 0.976 | 21 |
-| Scenery | rule lexicon | 0.906 | 25 |
-| Crowding | rule lexicon | 0.903 | 16 |
-| Cleanliness | rule lexicon | 0.901 | 36 |
-| Roads & Access | trained classifier | 0.914 | 33 |
-| Facilities | trained classifier | 0.773 | 21 |
-| Safety | dedicated classifier | 0.755 | 22 |
+`polarity.py` reads `segments_tagged.csv`, which carries only the rule columns
+`asp_*`, and writes `segments_scored.csv`. `07_aggregate.py` reads that file,
+and `aggregate.long_table` selects an extractor per aspect only if the matching
+column is present -- `tAsp_*` for the trained tagger, `sAsp_*` for the safety
+model, `uAsp_*` for the union. None of them is. They exist in
+`segments_tagged_union.csv`, which nothing downstream reads. So
+`aspects_model.ASPECT_EXTRACTOR`, which names `trained` for roads and
+facilities and `safety_model` for safety, has no effect on the published
+artefact.
+
+Nothing in the published figures is inconsistent -- every number on the
+dashboard is rules-throughout, and the whole tree regenerates byte-identically.
+What was wrong was the claim, not the arithmetic.
+
+The comparison below is still a real result. It is what each extractor scored
+on a purpose-built test set measuring precision *and* recall, and it is why the
+lexicon was preferred for four aspects. It is **not** a description of what runs:
+
+| Aspect | Best extractor measured | F1 | Test positives | Deployed |
+|---|---|---|---|---|
+| Price & Value | rule lexicon | 0.976 | 21 | rule lexicon |
+| Scenery | rule lexicon | 0.906 | 25 | rule lexicon |
+| Crowding | rule lexicon | 0.903 | 16 | rule lexicon |
+| Cleanliness | rule lexicon | 0.901 | 36 | rule lexicon |
+| Roads & Access | trained classifier | 0.914 | 33 | **rule lexicon** |
+| Facilities | trained classifier | 0.773 | 21 | **rule lexicon** |
+| Safety | dedicated classifier | 0.755 | 22 | **rule lexicon** |
+
+Those F1s also come from evaluation sets the assistant labelled itself, and the
+human gold set later showed that self-labelled evaluation flattering precisely
+the components it existed to justify -- see below. Read the three bold rows as
+an untaken option, not as a loss.
+
+Closing the gap means carrying the union and trained columns through the
+polarity stage into `segments_scored.csv`, which would move every published
+figure and requires the extractor choice to be re-justified against the human
+gold set first. Stated here rather than done quietly.
 
 ### Measured against human labels
 
@@ -114,7 +520,8 @@ problem #1.
 ---
 
 The headline finding: **for four of seven aspects the lexicon wins outright**,
-once its vocabulary gaps are fixed. Those gaps — not the method — were the real
+once its vocabulary gaps are fixed -- and the deployed pipeline in fact runs on
+the lexicon for all seven, per the correction above. Those gaps — not the method — were the real
 problem. The safety lexicon had no entry for `safe`, so every warning phrased
 "not safe to swim" was invisible. Patching it moved safety 0.522 → 0.741,
 cleanliness 0.643 → 0.901, price 0.632 → 0.976.
@@ -321,20 +728,27 @@ expected direction: more complaints, fewer stars.
 
 | | rho | n | p |
 |---|---|---|---|
-| **overall complaint rate** | **-0.421** | 254 | <0.001 |
-| Crowding & Noise | -0.370 | 166 | <0.001 |
-| Cleanliness | -0.268 | 152 | 0.0008 |
-| Facilities | -0.236 | 128 | 0.007 |
-| Scenery | -0.209 | 252 | 0.0008 |
-| Price & Value | -0.131 | 142 | 0.12 *(ns)* |
-| Roads & Access | -0.128 | 160 | 0.11 *(ns)* |
-| **Safety** | **-0.087** | 106 | 0.38 *(ns)* |
+| **overall complaint rate** | **-0.440** | 225 | <0.001 |
+| Scenery | -0.315 | 220 | <0.001 |
+| Crowding & Noise | -0.309 | 123 | 0.0005 |
+| Cleanliness | -0.281 | 95 | 0.006 |
+| Facilities | -0.197 | 102 | 0.047 |
+| Price & Value | -0.123 | 89 | 0.25 *(ns)* |
+| Roads & Access | -0.071 | 127 | 0.43 *(ns)* |
+| **Safety** | **+0.091** | 61 | 0.49 *(ns)* |
+
+These are computed over the destination-aspect cells the dashboard actually
+publishes, so they moved when the evidence threshold was raised from 5 opinions
+to 10 (see *Evidence thresholds*, below). Every n is smaller and the overall
+correlation is slightly **stronger** -- dropping the cells that were measured to
+be unreliable removed noise, not signal, which is a small piece of corroboration
+for the threshold in its own right.
 
 Two things worth reading carefully.
 
 **The overall rate holds up.** Destinations this pipeline calls heavily
-complained-about do rate lower with the travelling public, at rho = -0.42
-across 254 places. That is not proof any individual label is right, but a null
+complained-about do rate lower with the travelling public, at rho = -0.44
+across 225 places. That is not proof any individual label is right, but a null
 or positive correlation would have been a serious warning, and it is not what
 came back.
 
@@ -345,7 +759,11 @@ a visitor warns that the current is dangerous and still gives five stars.
 If that is true, a star rating *cannot* track safety complaints, and this
 independent measurement is exactly what you would predict. The same ordering
 appears in both analyses — cleanliness 0.8%, roads 21.2%, safety 55.3%
-contamination, against correlations of -0.27, -0.13 and -0.09.
+contamination, against correlations of -0.28, -0.07 and +0.09. Safety's sign is
+positive here where it was slightly negative before the threshold change; both
+values sit well inside the noise around zero at p≈0.5, which is the claim being
+made. A correlation that changes sign under a routine change of scope is not a
+correlation, and that is the finding.
 
 So the weakest correlation in the table is the strongest argument in the
 project: **for safety, the star rating is measuring something else, which is
@@ -356,7 +774,7 @@ a hand-written rule (open problem #2) and the one with the fewest destinations
 here (n=106). Both readings are live until the human gold set exists.
 
 **Coverage:** our corpus size per destination correlates with the public
-rating count at **rho = 0.709** — the reviews we hold track how busy a place
+rating count at **rho = 0.62** — the reviews we hold track how busy a place
 actually is, rather than over-sampling a convenient subset.
 
 ## The 3D map
@@ -391,13 +809,18 @@ Parliament Building — 3 wrong out of 4.
 
 ```
 src/travellens/     pipeline modules, one per stage
-scripts/            numbered entry points, run in order
+scripts/            numbered entry points; 49 builds all, 50 launches
 reports/            evaluation sets, scores, gold sheets, annotation guidelines
 dashboard/          template.html (source) + index.html (built)
+portal/             template.html (source) + index.html (built)
 release/            citable bundle + DATASHEET.md + SOURCES.md
 data/processed/     working files (mostly gitignored, regenerable)
-tests/              separation guarantees
+tests/              separation and provenance guarantees
 ```
+
+The numbered scripts are the record of how the project was built and every one
+still runs on its own. `49_build_all.py` is the subset that has to run, in the
+order it has to run in.
 
 Every threshold and routing decision is documented **in the code, beside the
 thing it controls**, with the measurement that justified it. If a number looks

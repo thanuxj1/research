@@ -1,0 +1,292 @@
+{
+  "what_this_is": "Split-half reliability of the published destination-aspect complaint rates. There is no ground truth for a complaint rate, so it is validated by reproducibility instead of by comparison: if the rate measures something real about a place, an independent half of the opinions about that place reproduces it.",
+  "reliability_depends_on_spread": "A correlation can only detect variation that exists. Scenery has the SMALLEST half-to-half gap of any aspect -- its two halves land 6.4 percentage points apart, against 22-25 for cleanliness and safety -- yet it scores the lowest reliability, because every scenery cell sits near the same low rate and there is almost no between-place variation left to reproduce. Read the gap and the correlation together: a low correlation with a small gap means the aspect does not discriminate between places, not that the estimate is imprecise.",
+  "how_to_read_it": "spearman_brown is the reliability of the FULL-length published rate, corrected from the half-to-half correlation. 0.70 is the conventional floor for a group-level measure, 0.80 for a confident one. mean_abs_diff_pp is how far apart the two halves land, in percentage points, which is the same figure in the units a reader sees on the dashboard.",
+  "observed": {
+    "n_cells": 1450,
+    "n_splits": 200,
+    "overall": {
+      "n_cells": 1450,
+      "half_to_half_r": 0.4,
+      "spearman_brown": 0.571,
+      "rank_correlation": 0.453,
+      "mean_abs_diff_pp": 17.0
+    },
+    "by_cell_size": {
+      "2-9": {
+        "n_cells": 618,
+        "half_to_half_r": 0.3,
+        "spearman_brown": 0.462,
+        "rank_correlation": 0.312,
+        "mean_abs_diff_pp": 26.0
+      },
+      "10-14": {
+        "n_cells": 160,
+        "half_to_half_r": 0.599,
+        "spearman_brown": 0.749,
+        "rank_correlation": 0.605,
+        "mean_abs_diff_pp": 16.0
+      },
+      "15-19": {
+        "n_cells": 105,
+        "half_to_half_r": 0.605,
+        "spearman_brown": 0.754,
+        "rank_correlation": 0.564,
+        "mean_abs_diff_pp": 14.3
+      },
+      "20-29": {
+        "n_cells": 133,
+        "half_to_half_r": 0.679,
+        "spearman_brown": 0.809,
+        "rank_correlation": 0.669,
+        "mean_abs_diff_pp": 11.7
+      },
+      "30-49": {
+        "n_cells": 146,
+        "half_to_half_r": 0.704,
+        "spearman_brown": 0.826,
+        "rank_correlation": 0.709,
+        "mean_abs_diff_pp": 9.3
+      },
+      "50-99": {
+        "n_cells": 147,
+        "half_to_half_r": 0.807,
+        "spearman_brown": 0.893,
+        "rank_correlation": 0.765,
+        "mean_abs_diff_pp": 6.8
+      },
+      "100+": {
+        "n_cells": 141,
+        "half_to_half_r": 0.922,
+        "spearman_brown": 0.96,
+        "rank_correlation": 0.787,
+        "mean_abs_diff_pp": 3.7
+      }
+    },
+    "cumulative_from": {
+      "n>=2": {
+        "n_cells": 1450,
+        "half_to_half_r": 0.4,
+        "spearman_brown": 0.571,
+        "rank_correlation": 0.453,
+        "mean_abs_diff_pp": 17.0
+      },
+      "n>=10": {
+        "n_cells": 832,
+        "half_to_half_r": 0.675,
+        "spearman_brown": 0.806,
+        "rank_correlation": 0.658,
+        "mean_abs_diff_pp": 10.2
+      },
+      "n>=15": {
+        "n_cells": 672,
+        "half_to_half_r": 0.716,
+        "spearman_brown": 0.834,
+        "rank_correlation": 0.682,
+        "mean_abs_diff_pp": 8.8
+      },
+      "n>=20": {
+        "n_cells": 567,
+        "half_to_half_r": 0.754,
+        "spearman_brown": 0.86,
+        "rank_correlation": 0.728,
+        "mean_abs_diff_pp": 7.8
+      },
+      "n>=30": {
+        "n_cells": 434,
+        "half_to_half_r": 0.792,
+        "spearman_brown": 0.884,
+        "rank_correlation": 0.756,
+        "mean_abs_diff_pp": 6.6
+      },
+      "n>=50": {
+        "n_cells": 288,
+        "half_to_half_r": 0.857,
+        "spearman_brown": 0.923,
+        "rank_correlation": 0.79,
+        "mean_abs_diff_pp": 5.3
+      },
+      "n>=100": {
+        "n_cells": 141,
+        "half_to_half_r": 0.922,
+        "spearman_brown": 0.96,
+        "rank_correlation": 0.787,
+        "mean_abs_diff_pp": 3.7
+      }
+    },
+    "by_aspect": {
+      "roads_access": {
+        "n_cells": 222,
+        "half_to_half_r": 0.439,
+        "spearman_brown": 0.61,
+        "rank_correlation": 0.42,
+        "mean_abs_diff_pp": 17.8
+      },
+      "facilities": {
+        "n_cells": 172,
+        "half_to_half_r": 0.383,
+        "spearman_brown": 0.554,
+        "rank_correlation": 0.455,
+        "mean_abs_diff_pp": 19.1
+      },
+      "cleanliness": {
+        "n_cells": 205,
+        "half_to_half_r": 0.45,
+        "spearman_brown": 0.621,
+        "rank_correlation": 0.456,
+        "mean_abs_diff_pp": 22.1
+      },
+      "safety": {
+        "n_cells": 167,
+        "half_to_half_r": 0.322,
+        "spearman_brown": 0.487,
+        "rank_correlation": 0.348,
+        "mean_abs_diff_pp": 24.6
+      },
+      "price_value": {
+        "n_cells": 173,
+        "half_to_half_r": 0.388,
+        "spearman_brown": 0.559,
+        "rank_correlation": 0.41,
+        "mean_abs_diff_pp": 22.7
+      },
+      "crowd": {
+        "n_cells": 225,
+        "half_to_half_r": 0.5,
+        "spearman_brown": 0.666,
+        "rank_correlation": 0.491,
+        "mean_abs_diff_pp": 13.0
+      },
+      "scenery": {
+        "n_cells": 286,
+        "half_to_half_r": 0.196,
+        "spearman_brown": 0.328,
+        "rank_correlation": 0.467,
+        "mean_abs_diff_pp": 6.4
+      }
+    },
+    "by_aspect_cells_n10_plus": {
+      "roads_access": {
+        "n_cells": 129,
+        "half_to_half_r": 0.615,
+        "spearman_brown": 0.762,
+        "rank_correlation": 0.584,
+        "mean_abs_diff_pp": 12.5
+      },
+      "facilities": {
+        "n_cells": 104,
+        "half_to_half_r": 0.589,
+        "spearman_brown": 0.741,
+        "rank_correlation": 0.599,
+        "mean_abs_diff_pp": 13.0
+      },
+      "cleanliness": {
+        "n_cells": 97,
+        "half_to_half_r": 0.728,
+        "spearman_brown": 0.843,
+        "rank_correlation": 0.748,
+        "mean_abs_diff_pp": 13.5
+      },
+      "safety": {
+        "n_cells": 62,
+        "half_to_half_r": 0.7,
+        "spearman_brown": 0.824,
+        "rank_correlation": 0.615,
+        "mean_abs_diff_pp": 14.5
+      },
+      "price_value": {
+        "n_cells": 91,
+        "half_to_half_r": 0.689,
+        "spearman_brown": 0.816,
+        "rank_correlation": 0.687,
+        "mean_abs_diff_pp": 13.5
+      },
+      "crowd": {
+        "n_cells": 125,
+        "half_to_half_r": 0.746,
+        "spearman_brown": 0.855,
+        "rank_correlation": 0.632,
+        "mean_abs_diff_pp": 9.1
+      },
+      "scenery": {
+        "n_cells": 224,
+        "half_to_half_r": 0.677,
+        "spearman_brown": 0.807,
+        "rank_correlation": 0.513,
+        "mean_abs_diff_pp": 4.2
+      }
+    }
+  },
+  "permutation_null": {
+    "what_this_is": "The identical study with verdicts shuffled between cells inside each aspect. Cell sizes and each aspect's overall complaint rate are unchanged; only the link between a place and its rate is destroyed. Any reliability surviving here is an artefact of the method rather than a property of the data.",
+    "overall": {
+      "n_cells": 1457,
+      "half_to_half_r": -0.04,
+      "spearman_brown": -0.083,
+      "rank_correlation": 0.003,
+      "mean_abs_diff_pp": 20.7
+    },
+    "by_cell_size": {
+      "2-9": {
+        "n_cells": 616,
+        "half_to_half_r": -0.036,
+        "spearman_brown": -0.075,
+        "rank_correlation": -0.016,
+        "mean_abs_diff_pp": 32.6
+      },
+      "10-14": {
+        "n_cells": 149,
+        "half_to_half_r": -0.111,
+        "spearman_brown": -0.25,
+        "rank_correlation": -0.099,
+        "mean_abs_diff_pp": 19.6
+      },
+      "15-19": {
+        "n_cells": 109,
+        "half_to_half_r": 0.012,
+        "spearman_brown": 0.024,
+        "rank_correlation": -0.011,
+        "mean_abs_diff_pp": 15.9
+      },
+      "20-29": {
+        "n_cells": 162,
+        "half_to_half_r": -0.031,
+        "spearman_brown": -0.065,
+        "rank_correlation": -0.017,
+        "mean_abs_diff_pp": 14.0
+      },
+      "30-49": {
+        "n_cells": 139,
+        "half_to_half_r": -0.003,
+        "spearman_brown": -0.005,
+        "rank_correlation": 0.037,
+        "mean_abs_diff_pp": 10.8
+      },
+      "50-99": {
+        "n_cells": 150,
+        "half_to_half_r": -0.111,
+        "spearman_brown": -0.249,
+        "rank_correlation": -0.087,
+        "mean_abs_diff_pp": 7.6
+      },
+      "100+": {
+        "n_cells": 132,
+        "half_to_half_r": -0.053,
+        "spearman_brown": -0.112,
+        "rank_correlation": -0.051,
+        "mean_abs_diff_pp": 4.4
+      }
+    }
+  },
+  "thresholds": {
+    "current_dashboard": {
+      "suppress_below": 5,
+      "low_confidence_below": 15,
+      "note": "Both were chosen, not measured. This study is what measures them."
+    },
+    "acceptable_at_or_above": 10,
+    "acceptable_reliability": 0.806,
+    "good_at_or_above": 10,
+    "good_reliability": 0.806
+  }
+}

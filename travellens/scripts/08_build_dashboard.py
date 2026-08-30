@@ -38,8 +38,25 @@ def main():
     geo_payload = json.dumps(geo, ensure_ascii=True).replace("<", "\\u003c")
 
     template = (DASHBOARD / "template.html").read_text(encoding="utf-8")
+
+    # Sensitivity analysis, shipped as data rather than restated in prose. The
+    # page used to carry "the rate falls 50.9% -> 46.7%" as literal text;
+    # correcting the safety lexicon moved every one of those numbers and the
+    # sentence silently became false. Nothing the page asserts about its own
+    # figures should be un-recomputable.
+    ablation = {}
+    ablation_path = C.REPORTS / "rule_ablation.json"
+    if ablation_path.exists():
+        with open(ablation_path, encoding="utf-8") as fh:
+            _raw = json.load(fh)
+        for _name, _var in (_raw.get("variants") or {}).items():
+            ablation[_name] = {
+                _k: round(_v.get("complaint_rate", 0.0), 4)
+                for _k, _v in (_var.get("aspects") or {}).items()
+            }
+    ablation_payload = json.dumps(ablation, ensure_ascii=True).replace("<", "\\u003c")
     for token in ("__DATA__", "__GEO__", "__MEDIA__", "__LINKS__",
-                  "__COORDS__", "__TERRAIN__"):
+                  "__COORDS__", "__TERRAIN__", "__ABLATION__"):
         if token not in template:
             raise SystemExit("template.html has no {} placeholder".format(token))
 
@@ -147,7 +164,8 @@ def main():
                     .replace("__MEDIA__", media_payload)
                     .replace("__LINKS__", links_payload)
                     .replace("__COORDS__", coords_payload)
-                    .replace("__TERRAIN__", terrain_payload))
+                    .replace("__TERRAIN__", terrain_payload)
+                    .replace("__ABLATION__", ablation_payload))
 
     have = set(tree["districts"])
     poly = set(f["properties"]["district"] for f in geo["features"])

@@ -1,33 +1,33 @@
 {
- "what_this_is": "A SECOND AUTOMATED LABELLER, not a second annotator. An AI assistant labelled the 60-row overlap. It is kept for error analysis and is explicitly NOT inter-annotator agreement.",
- "why_it_is_not_kappa": "Open problem #1 is that every evaluation label was produced by the assistant that built the pipeline. Labels from another assistant do not resolve that -- they reproduce it with a statistic attached, which is worse than no statistic, because it reads as validation. Cohen's kappa reported here would be a claim about two language models agreeing, presented as a claim about human reliability.",
- "may_be_reported_as": "Agreement between the pipeline's labels and an independent automated labeller (0.70), useful only for locating rows where the guidelines are ambiguous. Never as inter-annotator agreement.",
- "human_annotator_2_status": "outstanding -- 60-row blank sheet is ready",
- "measured": {
-  "overlap_rows": 60,
-  "per_aspect": {
-   "roads_access": {
-    "kappa": 0.772,
-    "verdict": "substantial -- acceptable to report",
-    "exact_agreement_pct": 90.0
-   },
-   "facilities": {
-    "kappa": 0.62,
-    "verdict": "substantial -- acceptable to report",
-    "exact_agreement_pct": 80.0
-   },
-   "cleanliness": {
-    "kappa": 0.727,
-    "verdict": "substantial -- acceptable to report",
-    "exact_agreement_pct": 93.3
-   },
-   "safety": {
-    "kappa": 0.679,
-    "verdict": "substantial -- acceptable to report",
-    "exact_agreement_pct": 95.0
-   }
-  },
-  "mean_kappa": 0.7,
-  "overall_verdict": "substantial -- acceptable to report"
- }
+  "what_this_is": "A SECOND AUTOMATED LABELLER, not a second annotator. An AI assistant labelled the 60-row overlap. It is kept for error analysis and is explicitly NOT inter-annotator agreement.",
+  "why_it_is_not_kappa": "Open problem #1 is that every evaluation label was produced by the assistant that built the pipeline. Labels from another assistant do not resolve that -- they reproduce it with a statistic attached, which is worse than no statistic, because it reads as validation. Cohen's kappa reported here would be a claim about two language models agreeing, presented as a claim about human reliability.",
+  "may_be_reported_as": "Agreement between the pipeline's labels and an independent automated labeller (0.70), useful only for locating rows where the guidelines are ambiguous. Never as inter-annotator agreement.",
+  "human_annotator_2_status": "DONE -- a human labelled all 200 rows blind on 2026-08-27. Cohen's kappa is in reports/agreement.json. This automated pass is superseded and is kept only as the record of why an AI second pass is not agreement.",
+  "measured": {
+    "overlap_rows": 60,
+    "per_aspect": {
+      "roads_access": {
+        "kappa": 0.772,
+        "verdict": "substantial -- acceptable to report",
+        "exact_agreement_pct": 90.0
+      },
+      "facilities": {
+        "kappa": 0.62,
+        "verdict": "substantial -- acceptable to report",
+        "exact_agreement_pct": 80.0
+      },
+      "cleanliness": {
+        "kappa": 0.727,
+        "verdict": "substantial -- acceptable to report",
+        "exact_agreement_pct": 93.3
+      },
+      "safety": {
+        "kappa": 0.679,
+        "verdict": "substantial -- acceptable to report",
+        "exact_agreement_pct": 95.0
+      }
+    },
+    "mean_kappa": 0.7,
+    "overall_verdict": "substantial -- acceptable to report"
+  }
 }

@@ -21,12 +21,22 @@ about that aspect, and did the human? Polarity is reported alongside but is
 not part of the headline, because the gold set records a verdict only where
 the human judged the aspect present.
 
-A caveat that belongs on the number
------------------------------------
-One annotator, with two rows adjudicated by a second reader who saw the first
-annotator's answers. That is a gold set, not a measured-reliable one -- Cohen's
-kappa needs an independent blind pass, which is still outstanding. Read these
-figures as "measured against one careful human", not as ground truth.
+What the number rests on
+------------------------
+Two independent human passes over the same 200 segments, the second labelled
+blind -- its sheet carried no answers and no sample_reason. Cohen's kappa on
+aspect presence, with bootstrap 95% intervals (reports/agreement.json):
+
+    cleanliness    0.941  [0.875, 0.986]   almost perfect
+    safety         0.756  [0.621, 0.872]   substantial
+    facilities     0.737  [0.619, 0.838]   substantial
+    roads_access   0.718  [0.594, 0.826]   lower bound just under 0.60
+
+This is a measured-reliable gold set, which the earlier version of this file
+could not claim. Three of four aspects support a "substantial agreement" claim
+on the LOWER bound, which is the bound a claim should rest on; roads_access
+misses it by 0.006 and should be reported that way rather than rounded into
+significance.
 """
 import json
 import sys
@@ -138,10 +148,14 @@ def main():
                 "no hand in. Headline is Part A only, per the sampling rule; "
                 "Part B oversamples contested rows and is reported apart."),
             "caveat": (
-                "One annotator, two rows adjudicated by a second reader who "
-                "saw the first annotator's answers. No inter-annotator "
-                "agreement exists yet, so this is 'measured against one "
-                "careful human', not ground truth."),
+                "Two independent human passes, the second labelled blind. "
+                "Cohen's kappa on aspect presence: cleanliness 0.941, safety "
+                "0.756, facilities 0.737, roads_access 0.718; bootstrap 95% "
+                "intervals in reports/agreement.json. Three of four support a "
+                "substantial-agreement claim on the lower bound; roads_access "
+                "misses 0.60 by 0.006. Measured against two readers who agree "
+                "at that level -- not against ground truth, which does not "
+                "exist for a judgement task."),
             "results": results,
         }, fh, indent=1, ensure_ascii=False)
     print("\n  wrote {}".format(REPORT))
