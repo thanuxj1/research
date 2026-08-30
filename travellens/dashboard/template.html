@@ -4082,3 +4082,9 @@ body.method-in-panel .wrap > footer.foot { display: none; }
   document.documentElement.setAttribute("data-framed", "true");
 })();
 </script>
+<!-- When embedded in the portal's map tab, hide the view header so the map
+     fills the frame without the title, deck and evidence note above it. -->
+<style>
+[data-framed="true"] .view-head { display: none !important }
+[data-framed="true"] .bento    { margin-top: 0 !important }
+</style>
