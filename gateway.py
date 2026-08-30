@@ -283,18 +283,18 @@ html,body{height:100%;overflow:hidden;background:#08111A;
   color:#EFF7F2;margin-right:32px;white-space:nowrap;flex-shrink:0;
 }
 .p-brand .gold{color:#E8B84B}
-.p-tabs{display:flex;height:100%}
+.p-tabs{display:flex;height:100%;gap:2px}
 .p-tab{
-  display:flex;align-items:center;gap:6px;
+  display:flex;align-items:center;gap:7px;
   padding:0 16px;height:100%;
-  background:none;border:none;border-bottom:2px solid transparent;
-  color:rgba(239,247,242,.42);
+  background:none;border:none;border-bottom:3px solid transparent;
+  color:rgba(239,247,242,.50);
   font:500 13px/1 'Inter',system-ui,sans-serif;
   cursor:pointer;white-space:nowrap;
-  transition:color .12s,border-color .12s;
+  transition:color .12s,background .12s,border-color .12s;
 }
-.p-tab:hover{color:rgba(239,247,242,.75)}
-.p-tab.active{color:#E8B84B;border-bottom-color:#E8B84B}
+.p-tab:hover{color:rgba(239,247,242,.85);background:rgba(255,255,255,.05)}
+.p-tab.active{color:#E8B84B;border-bottom-color:#E8B84B;font-weight:600;background:rgba(232,184,75,.08)}
 
 /* ── Frames ─────────────────────────────────────────── */
 .frames{flex:1;position:relative;overflow:hidden}
