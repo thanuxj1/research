@@ -572,8 +572,22 @@ const META      = __META__;
 //      serves the portal itself, and the only one that survives a deploy to
 //      any host other than the one baked in at build time
 //   3. the build-time default, which is what a page opened from disk needs
+// Where to send analysis requests, in priority order:
+//   1. ?api=... on the URL, for pointing a copied file at a running server
+//   2. the origin AND PATH PREFIX this page was served from. The prefix is
+//      the part that matters: the gateway mounts this app at /travellens, so
+//      its API lives at /travellens/analyse, not /analyse. Deriving it from
+//      our own location means one built file works standalone and mounted,
+//      with nothing to configure either way.
+//   3. the build-time default, which is what a page opened from disk needs
+function apiFromLocation() {
+  // This page is always served at <prefix>/portal/index.html, so everything
+  // before /portal is the prefix.
+  const path = location.pathname.replace(/\/portal\/[^/]*$/, "");
+  return location.origin + path;
+}
 const API = (new URLSearchParams(location.search).get("api")
-             || (location.protocol.indexOf("http") === 0 ? location.origin
+             || (location.protocol.indexOf("http") === 0 ? apiFromLocation()
                                                          : META.api_default))
               .replace(/\/+$/, "");
 const $ = (id) => document.getElementById(id);

@@ -1354,15 +1354,22 @@ def _page(name: str):
 
 
 @app.get("/", include_in_schema=False)
-def root():
+def root(request: Request):
     """Land on the portal, at the path its own links assume.
 
     Redirected rather than served in place: the portal links to the dashboard
     as ../dashboard/index.html, which only resolves if the portal is itself at
     /portal/index.html. Serving the same bytes at / would give a page whose
     only outbound link 404s.
+
+    Built from root_path so this app can be mounted under a prefix -- the
+    gateway at the repository root mounts it at /travellens to put all three
+    applications on one origin. A literal "/portal/index.html" would leave the
+    mount and land on the gateway root, a 404 that looks like this app is
+    broken rather than mis-addressed.
     """
-    return RedirectResponse("/portal/index.html")
+    prefix = request.scope.get("root_path", "")
+    return RedirectResponse(prefix + "/portal/index.html")
 
 
 @app.get("/portal/index.html", include_in_schema=False)
