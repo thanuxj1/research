@@ -59,10 +59,9 @@ body {
 
 /* ── Masthead ──────────────────────────────────────── */
 .masthead {
-  background: var(--surface);
-  border-bottom: 1px solid var(--line);
+  background: #0D1B2A;
+  border-bottom: 1px solid rgba(239,247,242,.07);
   position: sticky; top: 0; z-index: 50;
-  box-shadow: var(--shadow-sm);
 }
 .masthead-inner {
   max-width: 1040px; margin: 0 auto; padding: 0 24px;
@@ -71,7 +70,7 @@ body {
 .brand {
   display: flex; align-items: center; gap: 9px;
   font-weight: 800; font-size: 15px; letter-spacing: -.025em;
-  margin: 0; color: var(--ink); line-height: 1;
+  margin: 0; color: #EFF7F2; line-height: 1;
 }
 .brand-mark {
   width: 30px; height: 30px; border-radius: 50%;
@@ -80,29 +79,32 @@ body {
   display: flex; align-items: center; justify-content: center; flex-shrink: 0;
 }
 .brand .name-hi { color: var(--accent-fill); }
-.tagline { color: var(--ink-faint); font-size: 12px; margin: 0; }
+.tagline { color: rgba(239,247,242,.42); font-size: 12px; margin: 0; }
 .masthead a.back {
-  margin-left: auto; color: var(--ink-faint); font-size: 12px;
+  margin-left: auto; color: rgba(239,247,242,.42); font-size: 12px;
   text-decoration: none; transition: color 120ms;
 }
-.masthead a.back:hover { color: var(--ink); }
+.masthead a.back:hover { color: #EFF7F2; }
 
-/* ── Tabs ──────────────────────────────────────────── */
+/* ── Tabs — dark nav bar matching the outer gateway nav */
 .tabs {
-  max-width: 1040px; margin: 0 auto; padding: 0 24px;
-  display: flex; border-top: 1px solid var(--line-soft);
+  background: #0D1B2A;
+  max-width: unset; margin: 0; padding: 0 24px;
+  display: flex;
+  border-top: 1px solid rgba(239,247,242,.06);
+  border-bottom: 1px solid rgba(239,247,242,.07);
 }
 .tab {
   appearance: none; background: transparent; cursor: pointer;
   font-family: var(--f-body); font-size: 13px; font-weight: 500;
-  color: var(--ink-muted); padding: 11px 18px;
+  color: rgba(239,247,242,.42); padding: 11px 18px;
   border: 0; border-bottom: 2px solid transparent;
   margin-bottom: -1px; white-space: nowrap;
   transition: color 120ms, border-color 120ms;
 }
-.tab:hover { color: var(--ink); }
+.tab:hover { color: rgba(239,247,242,.80); }
 .tab[aria-selected="true"] {
-  color: var(--ink); border-bottom-color: var(--accent-fill); font-weight: 600;
+  color: #E8B84B; border-bottom-color: #E8B84B; font-weight: 600;
 }
 .panel[hidden] { display: none; }
 
@@ -1173,7 +1175,7 @@ selectTab(location.hash.slice(1) || "map");
 <!-- embedded=1: hide brand row only, keep sub-tabs visible -->
 <style id="embedded-style" media="not all">
   .masthead-inner { display: none !important }
-  .masthead { box-shadow: none }
+  .masthead { border-bottom: none }
 </style>
 <script>
 if (new URLSearchParams(location.search).get('embedded') === '1') {
