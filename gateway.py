@@ -72,13 +72,12 @@ UPSTREAMS: Dict[str, str] = {
 }
 
 SPAS = {
+    "/ai":   ROOT / "frontend" / "dist",
     "/food": ROOT / "food-assistant" / "frontend" / "dist",
 }
 
-# The main portal (frontend/) is served at / — see portal mount below.
-PORTAL_DIST = ROOT / "frontend" / "dist"
-
 BUILD_HINT = {
+    "/ai":   "cd frontend && npm install && npm run build",
     "/food": "cd food-assistant/frontend && npm install && npm run build",
 }
 
@@ -173,28 +172,24 @@ def build_app(upstreams: Optional[Dict[str, str]] = None):
                 "requirements.txt</code></p>".format(_travellens_error),
                 status_code=503)
 
-    # ------------------------------------------------------- unified portal (React SPA)
-    from fastapi.responses import FileResponse as _FR
-    _portal_index = PORTAL_DIST / "index.html"
-
-    @app.get("/", include_in_schema=False)
+    # ------------------------------------------------------- unified portal
+    @app.get("/", response_class=HTMLResponse, include_in_schema=False)
     def portal():
-        if _portal_index.exists():
-            return _FR(str(_portal_index))
-        return HTMLResponse(
-            "<h1>Portal not built</h1><pre>cd frontend && npm install && npm run build</pre>",
-            status_code=503)
+        return PORTAL_HTML
 
-    # Serve portal static assets (/assets/, /images/)
-    if (PORTAL_DIST / "assets").exists():
-        app.mount("/assets", StaticFiles(directory=str(PORTAL_DIST / "assets")), name="portal-assets")
-    _images_dir = PORTAL_DIST / "images"
-    if _images_dir.exists():
-        app.mount("/images", StaticFiles(directory=str(_images_dir)), name="images")
+    # Slash redirects so /ai and /food bare paths reach the SPA.
+    @app.get("/ai", include_in_schema=False)
+    def _ai_slash():
+        return RedirectResponse("/ai/")
 
     @app.get("/food", include_in_schema=False)
     def _food_slash():
         return RedirectResponse("/food/")
+
+    # AI SPA images
+    _images_dir = ROOT / "frontend" / "dist" / "images"
+    if _images_dir.exists():
+        app.mount("/images", StaticFiles(directory=str(_images_dir)), name="images")
 
     # ------------------------------------------------- built SPAs (last)
     for mount, dist in SPAS.items():
@@ -229,10 +224,10 @@ PORTAL_HTML = """<!doctype html>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>LostinSriLanka</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900&display=swap">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-html,body{height:100%;overflow:hidden;background:#08111A;
+html,body{height:100%;overflow:hidden;background:#06101A;
   font-family:'Inter',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
 
 /* ── Cover ──────────────────────────────────────────── */
@@ -243,71 +238,108 @@ html,body{height:100%;overflow:hidden;background:#08111A;
 }
 #cover-bg{position:absolute;inset:0;width:100%;height:100%}
 .cover-body{
-  position:relative;z-index:1;
-  text-align:center;
-  display:flex;flex-direction:column;align-items:center;gap:20px;
+  position:relative;z-index:1;text-align:center;
+  display:flex;flex-direction:column;align-items:center;gap:22px;
+  padding:0 24px;
 }
 .c-wordmark{
   font-size:clamp(44px,9vw,96px);
-  font-weight:800;letter-spacing:-.035em;color:#EFF7F2;line-height:1;
+  font-weight:900;letter-spacing:-.04em;color:#EFF7F2;line-height:1;
 }
 .c-wordmark .gold{color:#E8B84B}
 .c-sub{
-  font-size:clamp(10px,1.4vw,12px);letter-spacing:.18em;text-transform:uppercase;
-  color:rgba(239,247,242,.38);
+  font-size:clamp(10px,1.3vw,11.5px);letter-spacing:.22em;text-transform:uppercase;
+  color:rgba(239,247,242,.35);font-weight:500;
 }
 .c-stats{
-  display:flex;gap:24px;
-  color:rgba(239,247,242,.48);font-size:12.5px;
+  display:flex;gap:28px;
+  color:rgba(239,247,242,.45);font-size:12.5px;font-weight:500;
 }
-.c-stats b{color:#E8B84B;font-weight:600}
+.c-stats b{color:#E8B84B;font-weight:700}
 #enter-btn{
-  margin-top:6px;display:flex;align-items:center;gap:10px;
-  padding:14px 32px;
+  margin-top:8px;
+  display:inline-flex;align-items:center;gap:10px;
+  padding:13px 32px;
   background:#E8B84B;color:#08111A;
-  border:none;border-radius:6px;
-  font:700 14px/1 'Inter',system-ui,sans-serif;
-  cursor:pointer;letter-spacing:.01em;
-  transition:transform .15s,box-shadow .15s;
+  border:none;border-radius:8px;
+  font:700 13.5px/1 'Inter',system-ui,sans-serif;
+  cursor:pointer;letter-spacing:.02em;
+  transition:transform .18s cubic-bezier(.22,1,.36,1),
+             box-shadow .18s cubic-bezier(.22,1,.36,1);
 }
-#enter-btn:hover{transform:translateY(-2px);box-shadow:0 12px 30px rgba(232,184,75,.42)}
+#enter-btn:hover{
+  transform:translateY(-3px) scale(1.02);
+  box-shadow:0 16px 40px rgba(232,184,75,.38);
+}
 
 /* ── Platform ───────────────────────────────────────── */
 #platform{
   display:none;flex-direction:column;height:100%;
-  opacity:0;transition:opacity .3s ease;
+  opacity:0;transition:opacity .35s ease;
 }
+
+/* nav */
 .p-nav{
-  height:50px;flex-shrink:0;
-  display:flex;align-items:center;padding:0 20px;gap:0;
-  background:#0D1B2A;
-  border-bottom:1px solid rgba(239,247,242,.07);
+  height:54px;flex-shrink:0;
+  display:flex;align-items:center;
+  padding:0 20px;
+  background:linear-gradient(180deg,#0E1E30 0%,#0A1828 100%);
+  box-shadow:0 1px 0 rgba(239,247,242,.06),0 4px 20px rgba(0,0,0,.35);
+  position:relative;z-index:10;
+}
+/* thin gold accent line at very bottom of nav */
+.p-nav::after{
+  content:'';position:absolute;bottom:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent 0%,rgba(232,184,75,.20) 30%,rgba(232,184,75,.20) 70%,transparent 100%);
 }
 .p-brand{
-  font-size:15px;font-weight:800;letter-spacing:-.02em;
-  color:#EFF7F2;margin-right:32px;white-space:nowrap;flex-shrink:0;
+  font-size:15.5px;font-weight:900;letter-spacing:-.03em;
+  color:#EFF7F2;white-space:nowrap;flex-shrink:0;
+  display:flex;align-items:center;gap:0;
 }
 .p-brand .gold{color:#E8B84B}
-.p-tabs{display:flex;height:100%;gap:2px}
+/* vertical separator */
+.p-sep{
+  width:1px;height:18px;
+  background:rgba(239,247,242,.12);
+  margin:0 20px;flex-shrink:0;
+}
+.p-tabs{display:flex;align-items:center;height:100%;gap:3px}
 .p-tab{
-  display:flex;align-items:center;gap:7px;
-  padding:0 16px;height:100%;
-  background:none;border:none;border-bottom:3px solid transparent;
-  color:rgba(239,247,242,.50);
+  display:inline-flex;align-items:center;gap:6px;
+  padding:0 14px;height:36px;
+  background:transparent;border:none;border-radius:8px;
+  color:rgba(239,247,242,.46);
   font:500 13px/1 'Inter',system-ui,sans-serif;
   cursor:pointer;white-space:nowrap;
-  transition:color .12s,background .12s,border-color .12s;
+  transition:color .15s,background .15s,transform .1s;
 }
-.p-tab:hover{color:rgba(239,247,242,.85);background:rgba(255,255,255,.05)}
-.p-tab.active{color:#E8B84B;border-bottom-color:#E8B84B;font-weight:600;background:rgba(232,184,75,.08)}
+.p-tab:hover{
+  color:rgba(239,247,242,.82);
+  background:rgba(255,255,255,.07);
+}
+.p-tab:active{transform:scale(.97)}
+.p-tab.active{
+  color:#E8B84B;
+  background:rgba(232,184,75,.13);
+  font-weight:600;
+}
+.p-tab .tab-dot{
+  width:5px;height:5px;border-radius:50%;
+  background:currentColor;opacity:0;
+  transition:opacity .2s;flex-shrink:0;
+}
+.p-tab.active .tab-dot{opacity:1}
 
 /* ── Frames ─────────────────────────────────────────── */
-.frames{flex:1;position:relative;overflow:hidden}
+.frames{flex:1;position:relative;overflow:hidden;background:#0A1828}
 .frames iframe{
   position:absolute;inset:0;width:100%;height:100%;
-  border:none;display:none;
+  border:none;
+  opacity:0;visibility:hidden;
+  transition:opacity .22s ease;
 }
-.frames iframe.active{display:block}
+.frames iframe.active{opacity:1;visibility:visible}
 </style>
 
 <!-- Cover -->
@@ -329,10 +361,17 @@ html,body{height:100%;overflow:hidden;background:#08111A;
 <div id="platform">
   <nav class="p-nav">
     <div class="p-brand">Lost<span class="gold">in</span>SriLanka</div>
+    <div class="p-sep"></div>
     <div class="p-tabs">
-      <button class="p-tab active" data-tab="reviews">&#128506; Reviews</button>
-      <button class="p-tab" data-tab="assistant">&#10024; AI Assistant</button>
-      <button class="p-tab" data-tab="food">&#127835; Food Guide</button>
+      <button class="p-tab active" data-tab="reviews">
+        <span class="tab-dot"></span>&#128506;&nbsp;Reviews
+      </button>
+      <button class="p-tab" data-tab="assistant">
+        <span class="tab-dot"></span>&#10024;&nbsp;AI Assistant
+      </button>
+      <button class="p-tab" data-tab="food">
+        <span class="tab-dot"></span>&#127835;&nbsp;Food Guide
+      </button>
     </div>
   </nav>
   <div class="frames" id="frames">
@@ -343,8 +382,8 @@ html,body{height:100%;overflow:hidden;background:#08111A;
 </div>
 
 <script>
-// ── Canvas background ─────────────────────────────────
 (function(){
+  /* Canvas background */
   var c=document.getElementById('cover-bg'),x=c.getContext('2d');
   var W,H,t=0,raf;
   function resize(){W=c.width=innerWidth;H=c.height=innerHeight}
@@ -354,58 +393,52 @@ html,body{height:100%;overflow:hidden;background:#08111A;
     var bg=x.createLinearGradient(0,0,W*.7,H);
     bg.addColorStop(0,'#0D2236');bg.addColorStop(.55,'#081420');bg.addColorStop(1,'#050E16');
     x.fillStyle=bg;x.fillRect(0,0,W,H);
-    // teal orb
     x.save();x.translate(W*(.65+d1*.012),H*(.30+d2*.010));
     var g1=x.createRadialGradient(-W*.08,-H*.09,0,0,0,W*.46);
     g1.addColorStop(0,'rgba(52,211,153,.55)');g1.addColorStop(.38,'rgba(16,133,96,.40)');
     g1.addColorStop(.72,'rgba(8,80,56,.28)');g1.addColorStop(1,'rgba(0,0,0,0)');
-    x.fillStyle=g1;x.beginPath();
-    x.ellipse(0,0,W*.40,H*.50,-.22+d1*.018,0,Math.PI*2);x.fill();x.restore();
-    // gold orb
+    x.fillStyle=g1;x.beginPath();x.ellipse(0,0,W*.40,H*.50,-.22+d1*.018,0,Math.PI*2);x.fill();x.restore();
     x.save();x.translate(W*(.18+d2*.010),H*(.72+d1*.009));
     var g2=x.createRadialGradient(0,0,0,0,0,W*.28);
-    g2.addColorStop(0,'rgba(232,184,75,.26)');g2.addColorStop(.5,'rgba(180,130,40,.10)');
-    g2.addColorStop(1,'rgba(0,0,0,0)');
-    x.fillStyle=g2;x.beginPath();
-    x.ellipse(0,0,W*.24,H*.28,.3+d2*.014,0,Math.PI*2);x.fill();x.restore();
-    // vignette
+    g2.addColorStop(0,'rgba(232,184,75,.26)');g2.addColorStop(.5,'rgba(180,130,40,.10)');g2.addColorStop(1,'rgba(0,0,0,0)');
+    x.fillStyle=g2;x.beginPath();x.ellipse(0,0,W*.24,H*.28,.3+d2*.014,0,Math.PI*2);x.fill();x.restore();
     var vig=x.createRadialGradient(W*.5,H*.5,H*.18,W*.5,H*.5,H*.85);
     vig.addColorStop(0,'rgba(0,0,0,0)');vig.addColorStop(1,'rgba(0,0,0,.58)');
     x.fillStyle=vig;x.fillRect(0,0,W,H);
     t++;raf=requestAnimationFrame(draw);
   }
   resize();window.addEventListener('resize',resize);
-  if(window.matchMedia('(prefers-reduced-motion:reduce)').matches){t=60;x.clearRect(0,0,1,1);resize();draw();cancelAnimationFrame(raf);}
+  if(window.matchMedia('(prefers-reduced-motion:reduce)').matches){t=60;draw();cancelAnimationFrame(raf);}
   else draw();
-})();
 
-// ── Enter Platform ────────────────────────────────────
-document.getElementById('enter-btn').addEventListener('click',function(){
-  var cover=document.getElementById('cover');
-  var plat=document.getElementById('platform');
-  cover.style.opacity='0';
-  setTimeout(function(){
-    cover.style.display='none';
-    plat.style.display='flex';
-    plat.offsetHeight;
-    plat.style.opacity='1';
-  },450);
-});
-
-// ── Tabs ──────────────────────────────────────────────
-var SRCS={reviews:'/travellens/portal/index.html?embedded=1',assistant:'/ai/',food:'/food/'};
-var loaded={reviews:true,assistant:false,food:false};
-document.querySelectorAll('.p-tab').forEach(function(btn){
-  btn.addEventListener('click',function(){
-    var tab=btn.dataset.tab;
-    document.querySelectorAll('.p-tab').forEach(function(b){b.classList.remove('active')});
-    btn.classList.add('active');
-    document.querySelectorAll('.frames iframe').forEach(function(f){f.classList.remove('active')});
-    var frame=document.getElementById('f-'+tab);
-    frame.classList.add('active');
-    if(!loaded[tab]){frame.src=SRCS[tab];loaded[tab]=true;}
+  /* Enter Platform */
+  document.getElementById('enter-btn').addEventListener('click',function(){
+    var cover=document.getElementById('cover');
+    var plat=document.getElementById('platform');
+    cover.style.opacity='0';
+    setTimeout(function(){
+      cover.style.display='none';
+      plat.style.display='flex';
+      plat.offsetHeight;
+      plat.style.opacity='1';
+    },450);
   });
-});
+
+  /* Tabs */
+  var SRCS={reviews:'/travellens/portal/index.html?embedded=1',assistant:'/ai/',food:'/food/'};
+  var loaded={reviews:true,assistant:false,food:false};
+  document.querySelectorAll('.p-tab').forEach(function(btn){
+    btn.addEventListener('click',function(){
+      var tab=btn.dataset.tab;
+      document.querySelectorAll('.p-tab').forEach(function(b){b.classList.remove('active')});
+      btn.classList.add('active');
+      document.querySelectorAll('.frames iframe').forEach(function(f){f.classList.remove('active')});
+      var frame=document.getElementById('f-'+tab);
+      frame.classList.add('active');
+      if(!loaded[tab]){frame.src=SRCS[tab];loaded[tab]=true;}
+    });
+  });
+})();
 </script>
 """
 

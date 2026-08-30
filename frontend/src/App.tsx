@@ -1,5 +1,4 @@
 import { useState, useRef, useEffect } from "react";
-import FloatingMenu from "./components/ui/liquid-morph-floating-menu";
 
 type Tab = "reviews" | "assistant" | "food";
 
@@ -88,11 +87,76 @@ function CoverPage({ onEnter }: { onEnter: () => void }) {
   );
 }
 
+// ── Nav bar ────────────────────────────────────────────────────────────────
+
+const TABS: { id: Tab; label: string; icon: string }[] = [
+  { id: "reviews",   label: "Reviews",      icon: "🗺" },
+  { id: "assistant", label: "AI Assistant", icon: "✨" },
+  { id: "food",      label: "Food Guide",   icon: "🍛" },
+];
+
+function NavBar({ active, onSelect }: { active: Tab; onSelect: (t: Tab) => void }) {
+  return (
+    <nav style={{
+      height: 52, flexShrink: 0,
+      display: "flex", alignItems: "center",
+      padding: "0 24px", gap: 0,
+      background: "#0D1B2A",
+      borderBottom: "none",
+      boxShadow: "none",
+      position: "relative", zIndex: 100,
+    }}>
+      {/* Brand */}
+      <span style={{
+        fontSize: 15.5, fontWeight: 800, letterSpacing: "-0.025em",
+        color: "#EFF7F2", whiteSpace: "nowrap", flexShrink: 0,
+        fontFamily: "'Inter', system-ui, sans-serif",
+      }}>
+        Lost<span style={{ color: "#E8B84B" }}>in</span>SriLanka
+      </span>
+
+      {/* Separator */}
+      <div style={{
+        width: 1, height: 18, background: "rgba(239,247,242,0.12)",
+        margin: "0 20px", flexShrink: 0,
+      }} />
+
+      {/* Tabs */}
+      <div style={{ display: "flex", alignItems: "stretch", height: "100%", gap: 0 }}>
+        {TABS.map(({ id, label, icon }) => {
+          const isActive = active === id;
+          return (
+            <button
+              key={id}
+              onClick={() => onSelect(id)}
+              style={{
+                display: "inline-flex", alignItems: "center", gap: 6,
+                padding: "0 15px", height: "100%",
+                border: "none", borderBottom: `3px solid ${isActive ? "#E8B84B" : "transparent"}`,
+                borderRadius: 0,
+                background: isActive ? "rgba(232,184,75,0.07)" : "transparent",
+                color: isActive ? "#E8B84B" : "rgba(239,247,242,0.48)",
+                fontSize: 13,
+                fontWeight: isActive ? 600 : 500,
+                cursor: "pointer", whiteSpace: "nowrap",
+                fontFamily: "'Inter', system-ui, sans-serif",
+                transition: "color 0.13s, background 0.13s, border-color 0.13s",
+              }}
+            >
+              <span style={{ fontSize: 13 }}>{icon}</span>
+              <span>{label}</span>
+            </button>
+          );
+        })}
+      </div>
+    </nav>
+  );
+}
+
 // ── Portal ─────────────────────────────────────────────────────────────────
 
 function Portal() {
   const [activeTab, setActiveTab] = useState<Tab>("reviews");
-  const [menuOpen, setMenuOpen] = useState(false);
   const [loaded, setLoaded] = useState<Record<Tab, boolean>>({
     reviews: true,
     assistant: false,
@@ -104,65 +168,54 @@ function Portal() {
     setActiveTab(tab);
   };
 
-  const menuItems = [
-    { label: "Reviews",  onClick: () => activate("reviews") },
-    { label: "AI Guide", onClick: () => activate("assistant") },
-    { label: "Food",     onClick: () => activate("food") },
-  ];
-
   return (
-    <div className="fixed inset-0 bg-[#0D1B2A]">
-      {/* Reviews */}
-      <iframe
-        src="/travellens/portal/index.html"
-        title="Reviews"
-        style={{
-          position: "absolute", inset: 0, width: "100%", height: "100%",
-          border: "none", zIndex: activeTab === "reviews" ? 10 : 0,
-          visibility: activeTab === "reviews" ? "visible" : "hidden",
-          pointerEvents: activeTab === "reviews" ? "auto" : "none",
-        }}
-      />
+    <div style={{ display: "flex", flexDirection: "column", height: "100vh", background: "#0D1B2A" }}>
+      <NavBar active={activeTab} onSelect={activate} />
 
-      {/* AI Assistant — inline component */}
-      {loaded.assistant && (
-        <div
-          className="absolute inset-0 overflow-auto bg-[#060c17]"
-          style={{
-            zIndex: activeTab === "assistant" ? 10 : 0,
-            visibility: activeTab === "assistant" ? "visible" : "hidden",
-            pointerEvents: activeTab === "assistant" ? "auto" : "none",
-          }}
-        >
-          {/* @ts-ignore — existing .jsx component */}
-          <AIComponent />
-        </div>
-      )}
-
-      {/* Food Guide */}
-      {loaded.food && (
+      {/* Content area */}
+      <div style={{ flex: 1, position: "relative", overflow: "hidden" }}>
+        {/* Reviews */}
         <iframe
-          src="/food/"
-          title="Food Guide"
+          src="/travellens/portal/index.html?embedded=1"
+          title="Reviews"
           style={{
             position: "absolute", inset: 0, width: "100%", height: "100%",
-            border: "none", zIndex: activeTab === "food" ? 10 : 0,
-            visibility: activeTab === "food" ? "visible" : "hidden",
-            pointerEvents: activeTab === "food" ? "auto" : "none",
+            border: "none", zIndex: activeTab === "reviews" ? 10 : 0,
+            visibility: activeTab === "reviews" ? "visible" : "hidden",
+            pointerEvents: activeTab === "reviews" ? "auto" : "none",
           }}
         />
-      )}
 
-      {/* Transparent overlay prevents iframes from stealing clicks when menu is open */}
-      {menuOpen && (
-        <div
-          className="fixed inset-0"
-          style={{ zIndex: 50 }}
-          onMouseDown={() => setMenuOpen(false)}
-        />
-      )}
+        {/* AI Assistant — inline component */}
+        {loaded.assistant && (
+          <div
+            style={{
+              position: "absolute", inset: 0, overflowY: "auto",
+              background: "#060c17",
+              zIndex: activeTab === "assistant" ? 10 : 0,
+              visibility: activeTab === "assistant" ? "visible" : "hidden",
+              pointerEvents: activeTab === "assistant" ? "auto" : "none",
+            }}
+          >
+            {/* @ts-ignore */}
+            <AIComponent />
+          </div>
+        )}
 
-      <FloatingMenu items={menuItems} onOpenChange={setMenuOpen} />
+        {/* Food Guide */}
+        {loaded.food && (
+          <iframe
+            src="/food/"
+            title="Food Guide"
+            style={{
+              position: "absolute", inset: 0, width: "100%", height: "100%",
+              border: "none", zIndex: activeTab === "food" ? 10 : 0,
+              visibility: activeTab === "food" ? "visible" : "hidden",
+              pointerEvents: activeTab === "food" ? "auto" : "none",
+            }}
+          />
+        )}
+      </div>
     </div>
   );
 }
