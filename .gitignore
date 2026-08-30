@@ -1,6 +1,11 @@
 # Environment Variables & Secrets
 .env
 .env.*
+# ...but example files carry no secrets and are the documented way to tell
+# somebody what to set. backend/.env.example and travellens/.env.example
+# were already tracked only because they predate the rule above; this makes
+# that deliberate rather than accidental.
+!.env.example
 backend/.env
 backend/.env.*
 
