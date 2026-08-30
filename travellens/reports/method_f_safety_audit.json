@@ -1,0 +1,45 @@
+{
+  "note": "Method F was trained on star-derived weak labels. This report is the evidence for NOT deploying it.",
+  "by_aspect": {
+    "safety": {
+      "n_segments": 900,
+      "E_complaints": 302,
+      "F_complaints": 163,
+      "E_complaints_flipped_to_praise_by_F": 167,
+      "flip_rate_pct": 55.3,
+      "examples_flipped": [
+        "Careful with this one lady dealer, she's bad luck, ripped everyone off.",
+        "We need to reach .5 km down plus falls is so far from where we reached and dangerous tooo",
+        "A bit risky , especially if someone accidentally falls or knocks on it.",
+        "but don't bath in beach because it's dangerous.",
+        "but it is very risky."
+      ]
+    },
+    "cleanliness": {
+      "n_segments": 900,
+      "E_complaints": 359,
+      "F_complaints": 549,
+      "E_complaints_flipped_to_praise_by_F": 3,
+      "flip_rate_pct": 0.8,
+      "examples_flipped": [
+        "Best place to visit if your around Galle and need to hang out with some friends or family with sun and sea .if your visiting pleas",
+        "Please don't throw plastic bottles bags etc and please keep the area clean",
+        "Lovely place❤️but campers please keep in your mind not to pollute this place"
+      ]
+    },
+    "roads_access": {
+      "n_segments": 900,
+      "E_complaints": 104,
+      "F_complaints": 177,
+      "E_complaints_flipped_to_praise_by_F": 22,
+      "flip_rate_pct": 21.2,
+      "examples_flipped": [
+        "Only downside is that the guy at the parking lot tries to scam you by charging more.",
+        "It was a rainy day and few roads inside the park was flooded.",
+        "We need to reach .5 km down plus falls is so far from where we reached and dangerous tooo",
+        "Due to that reason parking is difficult.",
+        "Nice place, need to build a safety fence on sides of the walking path as there are sign boards to be aware of crocodiles"
+      ]
+    }
+  }
+}

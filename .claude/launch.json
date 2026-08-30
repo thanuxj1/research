@@ -1,0 +1,36 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "travellens",
+      "runtimeExecutable": "python",
+      "runtimeArgs": [
+        "travellens/scripts/50_launch.py"
+      ],
+      "port": 8778,
+      "autoPort": false
+    },
+    {
+      "name": "travellens-dashboard",
+      "runtimeExecutable": "python",
+      "runtimeArgs": [
+        "travellens/scripts/31_serve_dashboard.py"
+      ],
+      "port": 8777,
+      "autoPort": true
+    },
+    {
+      "name": "travellens-portal",
+      "runtimeExecutable": "python",
+      "runtimeArgs": [
+        "-m",
+        "http.server",
+        "8792",
+        "--directory",
+        "travellens"
+      ],
+      "port": 8792,
+      "url": "http://localhost:8792"
+    }
+  ]
+}

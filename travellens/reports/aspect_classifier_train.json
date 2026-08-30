@@ -1,0 +1,30 @@
+{
+  "roads_access": {
+    "positives": 13264,
+    "train_accuracy": 0.922
+  },
+  "facilities": {
+    "positives": 8928,
+    "train_accuracy": 0.935
+  },
+  "cleanliness": {
+    "positives": 5069,
+    "train_accuracy": 0.953
+  },
+  "safety": {
+    "positives": 2521,
+    "train_accuracy": 0.96
+  },
+  "price_value": {
+    "positives": 8435,
+    "train_accuracy": 0.968
+  },
+  "crowd": {
+    "positives": 7190,
+    "train_accuracy": 0.947
+  },
+  "scenery": {
+    "positives": 40050,
+    "train_accuracy": 0.919
+  }
+}

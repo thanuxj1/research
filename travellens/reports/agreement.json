@@ -1,0 +1,77 @@
+{
+  "n_rows_in_both": 200,
+  "join_key": "segment_id",
+  "presence": {
+    "roads_access": {
+      "kappa": 0.718,
+      "lo": 0.594,
+      "hi": 0.826,
+      "n": 200,
+      "percent_agreement": 90.0,
+      "interpretation_of_lower_bound": "moderate",
+      "supports_substantial_claim": false
+    },
+    "cleanliness": {
+      "kappa": 0.941,
+      "lo": 0.875,
+      "hi": 0.986,
+      "n": 200,
+      "percent_agreement": 98.0,
+      "interpretation_of_lower_bound": "almost perfect",
+      "supports_substantial_claim": true
+    },
+    "facilities": {
+      "kappa": 0.737,
+      "lo": 0.619,
+      "hi": 0.838,
+      "n": 200,
+      "percent_agreement": 90.0,
+      "interpretation_of_lower_bound": "substantial",
+      "supports_substantial_claim": true
+    },
+    "safety": {
+      "kappa": 0.756,
+      "lo": 0.621,
+      "hi": 0.872,
+      "n": 200,
+      "percent_agreement": 93.5,
+      "interpretation_of_lower_bound": "substantial",
+      "supports_substantial_claim": true
+    }
+  },
+  "polarity": {
+    "roads_access": {
+      "kappa": 0.79,
+      "lo": 0.606,
+      "hi": 0.954,
+      "n": 36,
+      "percent_agreement": 86.1,
+      "interpretation_of_lower_bound": "substantial"
+    },
+    "cleanliness": {
+      "kappa": 0.963,
+      "lo": 0.883,
+      "hi": 1.0,
+      "n": 41,
+      "percent_agreement": 97.6,
+      "interpretation_of_lower_bound": "almost perfect"
+    },
+    "facilities": {
+      "kappa": 0.68,
+      "lo": 0.448,
+      "hi": 0.868,
+      "n": 41,
+      "percent_agreement": 82.9,
+      "interpretation_of_lower_bound": "moderate"
+    },
+    "safety": {
+      "kappa": 0.653,
+      "lo": 0.0,
+      "hi": 1.0,
+      "n": 25,
+      "percent_agreement": 96.0,
+      "interpretation_of_lower_bound": "slight"
+    }
+  },
+  "caveat": "Cohen's kappa between two independent human readers. Claims must rest on the LOWER bound of the interval, not the point estimate."
+}

@@ -1,0 +1,177 @@
+[
+ {
+  "row": 2,
+  "aspect": "roads_access",
+  "human": "(blank)",
+  "automated": "X",
+  "piece": "When you climb up the stairs."
+ },
+ {
+  "row": 4,
+  "aspect": "cleanliness",
+  "human": "X",
+  "automated": "N",
+  "piece": "Avoid littering.🍃🇱🇰🫶❤️ …"
+ },
+ {
+  "row": 13,
+  "aspect": "facilities",
+  "human": "(blank)",
+  "automated": "P",
+  "piece": "The area is too big to cover on foot in a single day and, whilst bicycles and TukTuks are easy and cheap to hi"
+ },
+ {
+  "row": 14,
+  "aspect": "facilities",
+  "human": "P",
+  "automated": "N",
+  "piece": "and also it has the first rubber plantain ruins to exhibit .it is getting more attractive when the flower bloo"
+ },
+ {
+  "row": 16,
+  "aspect": "facilities",
+  "human": "P",
+  "automated": "X",
+  "piece": "So my advice would be go to the north entrance, go early, get an official guide with binoculars and spend more"
+ },
+ {
+  "row": 18,
+  "aspect": "roads_access",
+  "human": "X",
+  "automated": "(blank)",
+  "piece": "Around 10 km walking better to carry a water bottle."
+ },
+ {
+  "row": 19,
+  "aspect": "facilities",
+  "human": "P",
+  "automated": "(blank)",
+  "piece": "The beach itself was quite sheltered from the wind and had plenty of shade."
+ },
+ {
+  "row": 20,
+  "aspect": "facilities",
+  "human": "P",
+  "automated": "(blank)",
+  "piece": "You can visit Sigiriya museum at the ticket counter and it`s worth to visit before climb the Sigiriya Rock."
+ },
+ {
+  "row": 23,
+  "aspect": "facilities",
+  "human": "X",
+  "automated": "(blank)",
+  "piece": "Btw you should bring a water bottle"
+ },
+ {
+  "row": 25,
+  "aspect": "facilities",
+  "human": "P",
+  "automated": "X",
+  "piece": "flanked by every different flavor or bar, restaurant, cafe."
+ },
+ {
+  "row": 27,
+  "aspect": "roads_access",
+  "human": "X",
+  "automated": "(blank)",
+  "piece": "We stopped in Koslanda and followed a local guide to the top of the waterfall."
+ },
+ {
+  "row": 27,
+  "aspect": "facilities",
+  "human": "P",
+  "automated": "X",
+  "piece": "We stopped in Koslanda and followed a local guide to the top of the waterfall."
+ },
+ {
+  "row": 33,
+  "aspect": "facilities",
+  "human": "X",
+  "automated": "(blank)",
+  "piece": "If you can bring the water bottle with you, it is very useful ."
+ },
+ {
+  "row": 35,
+  "aspect": "cleanliness",
+  "human": "X",
+  "automated": "N",
+  "piece": "Please Keep it clean ."
+ },
+ {
+  "row": 38,
+  "aspect": "roads_access",
+  "human": "(blank)",
+  "automated": "X",
+  "piece": "It's completely off the beaten track n a real surfing spot."
+ },
+ {
+  "row": 41,
+  "aspect": "roads_access",
+  "human": "X",
+  "automated": "P",
+  "piece": "We had hired a Tuk Tuk on the Main Road, from where the side road leads to the Ticket counter and driver, Mahi"
+ },
+ {
+  "row": 41,
+  "aspect": "facilities",
+  "human": "P",
+  "automated": "X",
+  "piece": "We had hired a Tuk Tuk on the Main Road, from where the side road leads to the Ticket counter and driver, Mahi"
+ },
+ {
+  "row": 46,
+  "aspect": "safety",
+  "human": "(blank)",
+  "automated": "N",
+  "piece": "People keep touching statues all over without a thought about the current situation."
+ },
+ {
+  "row": 47,
+  "aspect": "facilities",
+  "human": "P",
+  "automated": "X",
+  "piece": "Food is available from the guest houses or restaurants along the main road running behind the beach."
+ },
+ {
+  "row": 49,
+  "aspect": "cleanliness",
+  "human": "X",
+  "automated": "N",
+  "piece": "SO DON'T POLLUTE IT."
+ },
+ {
+  "row": 51,
+  "aspect": "safety",
+  "human": "X",
+  "automated": "(blank)",
+  "piece": "We also saw a few terrapins swimming around and were told there are crocodiles too."
+ },
+ {
+  "row": 54,
+  "aspect": "roads_access",
+  "human": "X",
+  "automated": "N",
+  "piece": "If we got blown up on this road, it was all worth it-died on the road to Arugam Bay, chasing a wave, what an e"
+ },
+ {
+  "row": 54,
+  "aspect": "safety",
+  "human": "X",
+  "automated": "N",
+  "piece": "If we got blown up on this road, it was all worth it-died on the road to Arugam Bay, chasing a wave, what an e"
+ },
+ {
+  "row": 57,
+  "aspect": "cleanliness",
+  "human": "X",
+  "automated": "N",
+  "piece": "please do not pollute the environment of the waterfall"
+ },
+ {
+  "row": 59,
+  "aspect": "facilities",
+  "human": "P",
+  "automated": "X",
+  "piece": "The guide said this would lead to better sightings"
+ }
+]

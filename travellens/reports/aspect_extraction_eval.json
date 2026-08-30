@@ -1,0 +1,71 @@
+{
+  "warning": "AUTHOR-LABELLED developer test set",
+  "overall": {
+    "word list (rules)": {
+      "precision": 0.818,
+      "recall": 0.714,
+      "f1": 0.763,
+      "tp": 45,
+      "fp": 10,
+      "fn": 18
+    },
+    "meaning model": {
+      "precision": 0.667,
+      "recall": 0.571,
+      "f1": 0.615,
+      "tp": 36,
+      "fp": 18,
+      "fn": 27
+    },
+    "rules + meaning": {
+      "precision": 0.667,
+      "recall": 0.889,
+      "f1": 0.762,
+      "tp": 56,
+      "fp": 28,
+      "fn": 7
+    },
+    "TRAINED MODEL": {
+      "precision": 0.725,
+      "recall": 0.921,
+      "f1": 0.811,
+      "tp": 58,
+      "fp": 22,
+      "fn": 5
+    },
+    "trained + rules": {
+      "precision": 0.694,
+      "recall": 0.937,
+      "f1": 0.797,
+      "tp": 59,
+      "fp": 26,
+      "fn": 4
+    }
+  },
+  "per_topic": {
+    "roads_access": {
+      "rules": 0.786,
+      "union": 0.912,
+      "trained": 0.914,
+      "trained_or_rules": 0.901
+    },
+    "cleanliness": {
+      "rules": 0.8,
+      "union": 0.706,
+      "trained": 0.75,
+      "trained_or_rules": 0.706
+    },
+    "facilities": {
+      "rules": 0.737,
+      "union": 0.627,
+      "trained": 0.773,
+      "trained_or_rules": 0.766
+    },
+    "safety": {
+      "rules": 0.667,
+      "union": 0.545,
+      "trained": 0.462,
+      "trained_or_rules": 0.462
+    }
+  }
+}

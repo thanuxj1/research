@@ -1,0 +1,7 @@
+sri_lanka_districts.geojson
+---------------------------
+Source : thejeshgn/srilanka -- electoral_districts_map
+Derived: GADM 2.7 LKA_adm1, simplified
+Licence: CC-BY
+Note   : 22 polygons. This project has review data for 12 of them; the
+         remaining 10 are rendered as "no data" (hatched), never as zero.

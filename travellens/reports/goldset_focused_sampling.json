@@ -1,0 +1,33 @@
+{
+  "random_seed": 42,
+  "focus_aspects": [
+    "roads_access",
+    "cleanliness",
+    "facilities",
+    "safety"
+  ],
+  "excluded_aspects": [
+    "price_value",
+    "crowd",
+    "scenery"
+  ],
+  "methods_compared": [
+    "pol_lexicon",
+    "pol_model",
+    "pol_hybrid",
+    "pol_roberta",
+    "pol_final"
+  ],
+  "total_rows": 200,
+  "part_A_representative": 120,
+  "part_B_disagreement": 80,
+  "overlap_for_agreement": 60,
+  "estimated_minutes": 46,
+  "distinct_destinations": 113,
+  "distinct_districts": 17,
+  "usage_rule": "Headline accuracy and macro-F1 are computed on Part A only. Part B is a deliberately enriched sample of contested cases and is reported separately for method comparison and error analysis. The two parts must never be pooled into a single accuracy figure.",
+  "files": {
+    "annotator1": "E:\\research\\travellens\\reports\\goldset_focused_annotator1.csv",
+    "annotator2": "E:\\research\\travellens\\reports\\goldset_focused_annotator2.csv"
+  }
+}

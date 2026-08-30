@@ -1,0 +1,32 @@
+{
+  "cleanliness": {
+    "precision": 0.914,
+    "recall": 0.889,
+    "f1": 0.901,
+    "positives": 36
+  },
+  "price_value": {
+    "precision": 1.0,
+    "recall": 0.952,
+    "f1": 0.976,
+    "positives": 21
+  },
+  "crowd": {
+    "precision": 0.933,
+    "recall": 0.875,
+    "f1": 0.903,
+    "positives": 16
+  },
+  "scenery": {
+    "precision": 0.857,
+    "recall": 0.96,
+    "f1": 0.906,
+    "positives": 25
+  },
+  "safety": {
+    "precision": 0.625,
+    "recall": 0.909,
+    "f1": 0.741,
+    "positives": 22
+  }
+}

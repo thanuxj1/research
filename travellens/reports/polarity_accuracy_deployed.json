@@ -1,0 +1,65 @@
+{
+  "what_this_is": "Polarity accuracy of the DEPLOYED system (Method E + correction rules), measured through the live API, against human labels. Never measured before this run -- prior reports scored aspect presence only, never whether the polarity call on a correctly identified aspect matches a human's judgement.",
+  "aspects": {
+    "roads_access": {
+      "conditional_accuracy": 0.4,
+      "conditional_n": 40,
+      "end_to_end_accuracy": 0.34,
+      "end_to_end_n": 47,
+      "confusion_human_to_system": {
+        "P->X": 6,
+        "X->P": 4,
+        "N->X": 10,
+        "P->P": 4,
+        "X->X": 9,
+        "N->N": 3,
+        "X->N": 4
+      }
+    },
+    "cleanliness": {
+      "conditional_accuracy": 0.636,
+      "conditional_n": 44,
+      "end_to_end_accuracy": 0.622,
+      "end_to_end_n": 45,
+      "confusion_human_to_system": {
+        "N->N": 11,
+        "X->X": 3,
+        "P->P": 14,
+        "X->N": 11,
+        "X->P": 2,
+        "P->X": 3
+      }
+    },
+    "facilities": {
+      "conditional_accuracy": 0.587,
+      "conditional_n": 46,
+      "end_to_end_accuracy": 0.5,
+      "end_to_end_n": 54,
+      "confusion_human_to_system": {
+        "N->N": 4,
+        "P->P": 17,
+        "N->P": 1,
+        "X->X": 6,
+        "P->X": 9,
+        "N->X": 3,
+        "X->N": 3,
+        "X->P": 1,
+        "P->N": 2
+      }
+    },
+    "safety": {
+      "conditional_accuracy": 0.56,
+      "conditional_n": 25,
+      "end_to_end_accuracy": 0.4,
+      "end_to_end_n": 35,
+      "confusion_human_to_system": {
+        "N->N": 14,
+        "X->N": 1,
+        "N->X": 7,
+        "N->P": 1,
+        "P->N": 1,
+        "X->P": 1
+      }
+    }
+  }
+}

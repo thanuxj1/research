@@ -1,0 +1,21 @@
+{
+  "reviews_with_rating": 16149,
+  "discarded_3_star": 2165,
+  "segments_in_rated_reviews": 26954,
+  "tier1_single_segment": 4125,
+  "tier2_extreme_rating": 12274,
+  "dropped_unattributable": 10555,
+  "dropped_contrast": 303,
+  "tier3_factual_neutral": 669,
+  "after_balancing": {
+    "N": 390,
+    "P": 390,
+    "X": 260
+  },
+  "by_tier": {
+    "tier2_extreme": 589,
+    "tier3_factual_rule": 260,
+    "tier1_single": 191
+  },
+  "weak_examples": 1040
+}

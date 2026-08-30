@@ -1,0 +1,6 @@
+{
+  "safety": {
+    "positives": 1323,
+    "train_accuracy": 0.947
+  }
+}

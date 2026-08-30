@@ -1,0 +1,4084 @@
+<meta charset="utf-8">
+<title>LostinSriLanka</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+
+<style>
+/* ---------------------------------------------------------------- tokens */
+:root {
+  /* ── Field-report palette ─────────────────────────────────────────────
+     Warm paper, not blue-grey. Slate (#F1F5F9) is the default of every SaaS
+     dashboard built since 2020, and it made this read as an admin panel when
+     the content is closer to a scientific report. A warm off-white reads as
+     a printed page, which is what this is: something an examiner reads, and
+     something whose figures end up printed on paper anyway.
+
+     One saturated colour, and it belongs to the data. Terracotta rather than
+     alarm red -- these are complaints about footpaths and toilets, not
+     emergencies, and a screaming red would misrepresent the finding. The
+     accent is a deep teal used ONLY for interaction, quiet enough that it
+     never competes with the complaint ramp for attention.                */
+  --paper:       #FCFBF7;
+  --ground:      #FCFBF7;
+  --surface:     #FFFFFF;
+  --surface-2:   #F4F2EA;
+  --line:        #DFDBCD;
+  --line-soft:   #EAE7DC;
+  --ink:         #16150F;
+  --ink-muted:   #5F5C50;
+  /* #837F70 measured 3.87:1 on this paper -- under AA, and it was carrying
+     19 real labels ("19 districts", "16.7%"). Muted is a tone, not an excuse
+     to stop being readable. */
+  --ink-faint:   #726E5E;
+  --accent:      #1F5C57;
+  --accent-soft: #E4EFEC;
+  --accent-fill: #1F5C57;
+  --accent-on-fill: #FCFBF7;
+  --accent-text: #1A4E4A;
+  --critical:    #B04A2F;
+  --critical-soft:#F6EAE4;
+  --good:        #4A6B45;
+  --good-soft:   #E8EFE5;
+  --warn:        #9A6B18;
+  --warn-soft:   #F6EEDC;
+  --shadow:      none;
+
+  /* Brand, from the logo: near-black ground, white wordmark, gold "in". The
+     gold is confined to the masthead. It is NOT promoted to --accent, because
+     accent already carries semantic weight alongside --warn (amber), and two
+     ambers in one interface makes "warning" stop meaning anything. */
+  --brand-ink:  #1C1C1F;
+  --brand-ink2: #2E2E34;
+  --brand-gold: #F5C842;
+
+  --f-display: "Source Serif 4", Georgia, serif;
+  --f-body:    "Inter", system-ui, sans-serif;
+  --f-mono:    "IBM Plex Mono", ui-monospace, monospace;
+}
+/* The OS dark preference no longer flips this page. The dashboard is a light
+   document: a whitish ground is what the reader asked for, and it is also the
+   better default for a paper-bound thesis, where every figure will be printed
+   on white anyway. The dark palette is kept and still applies to
+   :root[data-theme="dark"], so nothing was thrown away -- it simply is not
+   chosen automatically by whatever the machine happens to be set to. */
+:root[data-theme="dark"] {
+  /* The theme's own values. It is a dark-first system. */
+  --ground:      #14130E;
+  --surface:     #1C1B15;
+  --surface-2:   #262419;
+  --line:        #38352A;
+  --line-soft:   #2B2921;
+  --ink:         #F2EFE6;
+  --ink-muted:   #ABA694;
+  --ink-faint:   #8A8677;
+  --accent:      #6FBFB2;
+  --accent-soft: rgba(111,191,178,.16);
+  --accent-fill: #6FBFB2;
+  --accent-on-fill: #14130E;
+  --accent-text: #6FBFB2;
+  --critical:    #D9714F;
+  --critical-soft:rgba(217,113,79,.18);
+  --good:        #8FB07F;
+  --good-soft:   rgba(143,176,127,.18);
+  --warn:        #D3A03C;
+  --warn-soft:   rgba(211,160,60,.18);
+  --shadow:      none;
+}
+
+/* ---------------------------------------------------------------- base */
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--ground);
+  color: var(--ink);
+  font-family: var(--f-body);
+  font-size: 14.5px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+.wrap { max-width: 1140px; margin: 0 auto; padding: 0 24px 80px; }
+
+/* ---------------------------------------------------------------- header */
+.masthead {
+  border-bottom: 1px solid var(--line);
+  background: linear-gradient(105deg, var(--brand-ink) 0%, var(--brand-ink2) 60%, var(--brand-ink) 100%);
+  padding: 26px 0 22px;
+  margin-bottom: 28px;
+}
+.masthead-inner {
+  max-width: 1140px; margin: 0 auto; padding: 0 24px;
+  display: flex; align-items: baseline; gap: 16px; flex-wrap: wrap;
+}
+.brand {
+  font-family: var(--f-display); font-weight: 700; font-size: 28px;
+  letter-spacing: -.03em; margin: 0; color: #FFFFFF; line-height: 1;
+}
+.brand span { color: var(--brand-gold); }
+.tagline {
+  color: rgba(255,255,255,.62); font-size: 12.5px; margin: 0;
+  font-family: var(--f-display); font-weight: 600;
+  letter-spacing: .04em; text-transform: uppercase;
+}
+.corpus-note {
+  margin-left: auto; font-family: var(--f-mono); font-size: 12.5px;
+  color: rgba(255,255,255,.42); letter-spacing: .02em;
+}
+
+/* ---------------------------------------------------------------- breadcrumb */
+.crumbs {
+  display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+  font-family: var(--f-mono); font-size: 12.5px;
+  margin-bottom: 22px;
+}
+.crumb {
+  background: none; border: 0; padding: 3px 0; cursor: pointer;
+  font: inherit; color: var(--accent); text-decoration: none;
+  border-bottom: 1px solid transparent;
+}
+.crumb:hover { border-bottom-color: var(--accent); }
+.crumb:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+.crumb[aria-current="page"] { color: var(--ink); cursor: default; }
+.crumb-sep { color: var(--ink-faint); }
+
+/* ---------------------------------------------------------------- headings */
+.view-head { margin-bottom: 20px; }
+h2.view-title {
+  font-family: var(--f-display); font-weight: 600; font-size: 28px;
+  letter-spacing: -.015em; margin: 0 0 5px; text-wrap: balance;
+}
+.view-meta {
+  font-family: var(--f-mono); font-size: 12.5px; color: var(--ink-muted);
+  display: flex; gap: 14px; flex-wrap: wrap;
+}
+h3.section-title {
+  font-family: var(--f-display); font-weight: 600; font-size: 12.5px;
+  text-transform: uppercase; letter-spacing: .09em; color: var(--ink-muted);
+  margin: 0 0 12px;
+}
+.section { margin-bottom: 34px; }
+
+/* ---------------------------------------------------------------- aspect rows */
+.aspects { display: flex; flex-direction: column; gap: 2px; }
+.aspect-row {
+  display: grid;
+  grid-template-columns: 168px 1fr 62px 74px 96px;
+  align-items: center; gap: 14px;
+  padding: 11px 14px;
+  background: var(--surface);
+  border: 1px solid var(--line-soft);
+  border-radius: 3px;
+  text-align: left; width: 100%; font: inherit; color: inherit;
+  cursor: pointer;
+}
+.aspect-row:hover { border-color: var(--accent); }
+.aspect-row:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.aspect-row.is-static { cursor: default; }
+.aspect-row.is-static:hover { border-color: var(--line-soft); }
+.aspect-name { font-weight: 500; font-size: 14.5px; display: flex; align-items: center; gap: 7px; }
+
+.bar-track { height: 22px; display: flex; border-radius: 2px; overflow: hidden; background: var(--surface-2); }
+.bar-neg { background: var(--critical); }
+.bar-pos { background: var(--good); }
+
+.rate {
+  font-family: var(--f-mono); font-size: 14.5px; font-weight: 600;
+  font-variant-numeric: tabular-nums; text-align: right;
+}
+.counts {
+  font-family: var(--f-mono); font-size: 12.5px; color: var(--ink-muted);
+  font-variant-numeric: tabular-nums; text-align: right; white-space: nowrap;
+}
+
+.chip {
+  font-family: var(--f-mono); font-size: 11px; font-weight: 600;
+  text-transform: uppercase; letter-spacing: .06em;
+  padding: 2px 5px; border-radius: 2px; white-space: nowrap;
+}
+.chip-low  { background: var(--warn-soft); color: var(--warn); }
+.chip-ctrl { background: var(--accent-soft); color: var(--accent); }
+/* Timeline sparkline. Dot AREA is proportional to the number of opinions
+   behind each point, so a rate resting on 3 reviews reads as a small dot
+   and one resting on 60 reads as a large one. The uncertainty sits in the
+   mark itself rather than in a footnote. */
+.spark { display: block; overflow: visible; }
+.spark-line { fill: none; stroke: var(--ink-faint); stroke-width: 1.4; }
+.spark-dot { stroke: var(--surface); stroke-width: 1.2; }
+.spark-axis { stroke: var(--line); stroke-width: 1; stroke-dasharray: 2 3; }
+.tl-table { width: 100%; border-collapse: collapse; font-size: 12.5px; margin: 6px 0 2px; }
+.tl-table th, .tl-table td { padding: 4px 9px; text-align: right;
+  font-family: var(--f-mono); font-variant-numeric: tabular-nums;
+  border-bottom: 1px solid var(--line-soft); }
+.tl-table th:first-child, .tl-table td:first-child { text-align: left; }
+.tl-table th { font-size: 11px; text-transform: uppercase; letter-spacing: .06em;
+  color: var(--ink-muted); font-weight: 600; }
+
+/* ---------------------------------------------------------------- ranked lists */
+.rank-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(258px, 1fr)); gap: 12px; }
+.rank-card {
+  background: var(--surface); border: 1px solid var(--line-soft);
+  border-radius: 3px; padding: 14px 16px;
+}
+.rank-card h4 {
+  font-family: var(--f-display); font-size: 12.5px; font-weight: 600;
+  margin: 0 0 10px; display: flex; justify-content: space-between; gap: 10px;
+}
+.rank-card h4 em { font-style: normal; font-family: var(--f-mono); font-size: 11px; color: var(--ink-muted); font-weight: 400; }
+.rank-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 5px; }
+.rank-item { display: flex; align-items: center; gap: 9px; font-size: 12.5px; }
+.rank-item button {
+  background: none; border: 0; padding: 0; font: inherit; color: var(--accent);
+  cursor: pointer; text-align: left; flex: 1; min-width: 0;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.rank-item button:hover { text-decoration: underline; }
+.rank-item span.plain { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.rank-n {
+  font-family: var(--f-mono); font-size: 12.5px; font-variant-numeric: tabular-nums;
+  color: var(--critical); font-weight: 600; min-width: 34px; text-align: right;
+}
+
+/* ---------------------------------------------------------------- destination table */
+.dest-table { width: 100%; border-collapse: collapse; font-size: 14.5px; }
+.dest-table th {
+  font-family: var(--f-display); font-size: 11px; text-transform: uppercase;
+  letter-spacing: .07em; color: var(--ink-muted); font-weight: 600;
+  text-align: left; padding: 8px 12px; border-bottom: 1px solid var(--line);
+}
+.dest-table th.num, .dest-table td.num { text-align: right; font-family: var(--f-mono); font-variant-numeric: tabular-nums; }
+.dest-table td { padding: 9px 12px; border-bottom: 1px solid var(--line-soft); }
+.dest-table tbody tr:hover { background: var(--surface); }
+.dest-table button {
+  background: none; border: 0; padding: 0; font: inherit; color: var(--accent);
+  cursor: pointer; text-align: left;
+}
+.dest-table button:hover { text-decoration: underline; }
+.table-scroll { overflow-x: auto; background: var(--surface); border: 1px solid var(--line-soft); border-radius: 3px; }
+
+/* ---------------------------------------------------------- source links */
+.srclinks {
+  display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+  font-family: var(--f-mono); font-size: 12.5px; color: var(--ink-muted);
+  margin: -8px 0 20px;
+}
+.srclinks a { color: var(--accent); text-decoration: none; border-bottom: 1px solid transparent; }
+.srclinks a:hover { border-bottom-color: var(--accent); }
+.srclinks a:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+.srclinks .warn { color: var(--ink-faint); }
+
+/* ------------------------------------------------------- storyboard media */
+.story-note {
+  border-left: 3px solid var(--accent); background: var(--accent-soft);
+  padding: 11px 16px; border-radius: 0 3px 3px 0; margin-bottom: 14px;
+  font-size: 12.5px; color: var(--ink);
+}
+.story-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(272px, 1fr)); gap: 12px; }
+.story-card {
+  background: var(--surface); border: 1px solid var(--line-soft);
+  border-radius: 4px; padding: 13px 15px; display: flex; flex-direction: column; gap: 7px;
+}
+.story-card a.story-title {
+  font-weight: 600; font-size: 14.5px; color: var(--ink); text-decoration: none;
+  line-height: 1.4;
+}
+.story-card a.story-title:hover { color: var(--accent); text-decoration: underline; }
+.story-card a.story-title:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.story-head { display: flex; align-items: center; gap: 7px; flex-wrap: wrap; }
+.story-kind {
+  font-family: var(--f-mono); font-size: 11px; font-weight: 600; text-transform: uppercase;
+  letter-spacing: .06em; padding: 2px 6px; border-radius: 2px;
+}
+.story-kind.youtube { background: var(--critical-soft); color: var(--critical); }
+.story-kind.reddit  { background: var(--warn-soft);     color: var(--warn); }
+.story-kind.news    { background: var(--accent-soft);   color: var(--accent); }
+.story-src { font-family: var(--f-mono); font-size: 11px; color: var(--ink-muted); }
+/* Marks a publisher we cannot place in Sri Lanka. Muted, not alarming: the
+   item is context, and most foreign coverage here is ordinary travel writing.
+   It has to be legible enough that the reader never mistakes it for local. */
+.story-foreign {
+  font-family: var(--f-mono); font-size: 11px; letter-spacing: .04em;
+  color: var(--ink-muted); border: 1px solid currentColor; border-radius: 3px;
+  padding: 0 4px; margin-left: 6px; white-space: nowrap; opacity: .85;
+}
+.story-snip { font-size: 12.5px; color: var(--ink-muted); line-height: 1.5; }
+.story-foot {
+  font-family: var(--f-mono); font-size: 11px; color: var(--ink-faint);
+  display: flex; gap: 9px; flex-wrap: wrap; margin-top: auto; padding-top: 4px;
+}
+
+/* ---------------------------------------------------------------- quotes */
+/* Says where a gathered (not natively stored) quote list came from. Quiet on
+   purpose -- it fires on most district- and country-level aspect views, so
+   it reads as a caption, not a caveat needing the reader's alarm. */
+.quote-provenance {
+  font-family: var(--f-mono); font-size: 11px; color: var(--ink-faint);
+  margin: 0 0 10px;
+}
+/* Complaint/praise switch, and the plain statement of what is on screen.
+   The note is not small print: "showing complaints only" is the single
+   most misreadable thing about this panel, so it sits at full body size
+   next to the control that changes it. */
+.quote-side {
+  display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+  margin: 0 0 10px;
+}
+.quote-side button {
+  font-family: var(--f-mono); font-size: 11px; padding: 5px 11px;
+  background: var(--surface); color: var(--ink-muted);
+  border: 1px solid var(--line); border-radius: 2px; cursor: pointer;
+}
+.quote-side button:hover:not(:disabled) { border-color: var(--accent); color: var(--ink); }
+.quote-side button[aria-pressed="true"] {
+  background: var(--accent-fill); border-color: var(--accent-fill);
+  color: var(--accent-on-fill);
+}
+.quote-side button:disabled { opacity: .45; cursor: default; }
+.quote-side-note {
+  flex: 1 1 100%; font-size: 12.5px; color: var(--ink-muted); line-height: 1.5;
+}
+
+/* A quote the classifier was near a coin flip on. Marked, never hidden --
+   filtering the model's own uncertainty out would make the evidence look
+   more settled than it is. */
+.quote-flag {
+  display: inline-block; margin-right: 7px;
+  font-family: var(--f-mono); font-size: 10px; text-transform: uppercase;
+  letter-spacing: .06em; padding: 1px 5px; border-radius: 2px;
+  background: var(--warn-soft); color: var(--warn); vertical-align: 1px;
+}
+.quote.is-low-conf { border-left-style: dashed; }
+/* Praise reads in the good colour, so the side you are on is obvious at a
+   glance and not only from the pressed button above. */
+.quote.is-praise { border-left-color: var(--good); }
+
+.quotes { display: flex; flex-direction: column; gap: 10px; }
+.quote {
+  background: var(--surface); border: 1px solid var(--line-soft);
+  border-left: 3px solid var(--critical);
+  border-radius: 0 3px 3px 0; padding: 11px 15px;
+  font-size: 14.5px; line-height: 1.6;
+}
+.quote-controls {
+  display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+  margin: 0 0 12px; font-family: var(--f-mono); font-size: 11px;
+  color: var(--ink-muted);
+}
+.quote-controls button {
+  font: inherit; padding: 3px 9px; border-radius: 2px; cursor: pointer;
+  background: var(--surface); color: var(--ink-muted);
+  border: 1px solid var(--line);
+}
+.quote-controls button:hover { border-color: var(--accent); color: var(--ink); }
+.quote-controls button[aria-pressed="true"] {
+  background: var(--accent-fill); border-color: var(--accent-fill); color: #F8FAFC;
+}
+.quote-controls button[aria-pressed="true"],
+.aspect-picker button[aria-pressed="true"],
+.view-switch button[aria-pressed="true"] {
+  background: var(--accent-fill);
+  border-color: var(--accent-fill);
+  color: #F8FAFC;
+}
+.quote-controls .sep { color: var(--ink-faint); padding: 0 2px; }
+.quote-band {
+  font-family: var(--f-mono); font-size: 11px; color: var(--ink-faint);
+  border: 1px solid var(--line-soft); border-radius: 2px; padding: 1px 5px;
+  margin-right: 7px;
+}
+.quote-meta {
+  font-family: var(--f-mono); font-size: 11px; color: var(--ink-faint);
+  margin-top: 6px; letter-spacing: .02em;
+}
+.quote-panel { margin-top: 14px; }
+
+/* ---------------------------------------------------------------- notices */
+.notice {
+  background: var(--surface); border: 1px solid var(--line-soft);
+  border-left: 3px solid var(--warn);
+  padding: 12px 16px; border-radius: 0 3px 3px 0;
+  font-size: 12.5px; color: var(--ink-muted); margin-bottom: 24px;
+}
+.notice strong { color: var(--ink); font-weight: 600; }
+.empty { color: var(--ink-muted); font-size: 14.5px; font-style: italic; padding: 10px 0; }
+
+.legend {
+  display: flex; gap: 18px; flex-wrap: wrap; align-items: center;
+  font-family: var(--f-mono); font-size: 11px; color: var(--ink-muted);
+  margin-bottom: 12px;
+}
+
+/* ---------------------------------------------------------------- map */
+.map-shell {
+  display: grid; grid-template-columns: minmax(0, 300px) 1fr; gap: 20px;
+  background: var(--surface); border: 1px solid var(--line-soft);
+  border-radius: 3px; padding: 18px 20px;
+}
+/* Fixed height with preserveAspectRatio letterboxing: Sri Lanka's 1:1.7
+   footprint would otherwise force an 800px-tall column. */
+.map-svg { width: 100%; height: auto; display: block; }
+.map-region {
+  stroke: var(--surface); stroke-width: .9; cursor: pointer;
+  transition: fill-opacity .12s ease;
+}
+.map-region:hover { stroke: var(--ink); stroke-width: 1.6; }
+.map-region:focus-visible { outline: 2px solid var(--accent); }
+.map-region.no-data { cursor: not-allowed; }
+.map-side { display: flex; flex-direction: column; gap: 14px; min-width: 0; }
+.aspect-picker { display: flex; flex-wrap: wrap; gap: 5px; }
+.aspect-picker button {
+  font-family: var(--f-mono); font-size: 11px; padding: 4px 9px;
+  background: var(--surface); color: var(--ink-muted);
+  border: 1px solid var(--line); border-radius: 2px; cursor: pointer;
+}
+.aspect-picker button:hover { border-color: var(--accent); color: var(--ink); }
+.aspect-picker button[aria-pressed="true"] {
+  background: var(--accent-fill); border-color: var(--accent-fill); color: #F8FAFC;
+}
+
+.scale-bar { display: flex; height: 9px; border-radius: 2px; overflow: hidden; }
+.scale-bar i { flex: 1; }
+.scale-ends {
+  display: flex; justify-content: space-between;
+  font-family: var(--f-mono); font-size: 11px; color: var(--ink-faint); margin-top: 4px;
+}
+/* The readout's own rules live in the layout layer below; it is a one-line
+   strip now rather than a 92px stacked block, and the old grid/right-aligned
+   dl here out-specified the new flex layout. */
+.nodata-note {
+  font-size: 12.5px; color: var(--ink-faint); line-height: 1.5;
+  display: flex; gap: 7px; align-items: flex-start;
+}
+.nodata-swatch {
+  width: 16px; height: 16px; flex: none; border: 1px solid var(--line);
+  border-radius: 2px; margin-top: 1px;
+}
+.hatch-swatch {
+  background: repeating-linear-gradient(45deg,
+    var(--surface-2) 0 2px, var(--line) 2px 3px, var(--surface-2) 3px 5px);
+}
+.map-region.below-threshold { stroke: var(--line); stroke-dasharray: 2 2; }
+
+/* Selection. The clicked district keeps a visible outline and everything else
+   fades back, so the map answers "where am I" while the panels below answer
+   "what is here". Without this the map simply disappeared on navigation and
+   the spatial context went with it. */
+.map-region.is-selected, .map3d-ground.is-selected {
+  stroke: var(--ink); stroke-width: 2.2; }
+.map-region.is-dimmed, .map3d-ground.is-dimmed { opacity: .32; }
+.map-pin.is-dimmed, .map3d-col-cap.is-dimmed, .map3d-col-side.is-dimmed { opacity: .22; }
+.map-selected-note {
+  font-family: var(--f-mono); font-size: 11px; color: var(--ink-muted);
+  display: flex; align-items: center; gap: 8px; margin-bottom: 10px;
+}
+.map-selected-note button {
+  font: inherit; padding: 3px 9px; border-radius: 2px; cursor: pointer;
+  background: var(--surface); color: var(--accent); border: 1px solid var(--line);
+}
+.map-selected-note button:hover { border-color: var(--accent); }
+
+/* Destination pins. Radius scales with the square root of the review count so
+   AREA reflects sample size; fill shows the complaint rate for the aspect the
+   map is coloured by. Only destinations with coordinates appear -- neither
+   review corpus carried any, so these come from OpenStreetMap and cover a
+   subset. The legend says so, because an absent pin must not read as an
+   absent problem. */
+.map-pin { stroke: var(--surface); stroke-width: .8; cursor: pointer; }
+.map-pin:hover { stroke: var(--ink); stroke-width: 1.6; }
+.map-pin:focus-visible { outline: 2px solid var(--accent); }
+.pin-toggle { margin-left: auto; }
+
+/* ---------------------------------------------------------------- 3D map */
+#map-canvas {
+  display: block; width: 100%; border-radius: 3px;
+  background: transparent; cursor: grab; touch-action: none;
+}
+#map-canvas:active { cursor: grabbing; }
+.map3d-hint {
+  font-family: var(--f-mono); font-size: 11px; color: var(--ink-faint);
+  text-align: center; margin-top: 6px; letter-spacing: .03em;
+}
+.map3d-legend {
+  display: flex; flex-wrap: wrap; gap: 12px 20px; align-items: center;
+  margin-top: 10px; font-family: var(--f-mono); font-size: 11px;
+  color: var(--ink-muted);
+}
+.map3d-legend .key { display: flex; align-items: center; gap: 6px; }
+.map3d-ramp {
+  width: 96px; height: 9px; border-radius: 2px; border: 1px solid var(--line);
+}
+.map3d-ramp.rate {
+  background: linear-gradient(90deg, var(--surface-2), var(--critical));
+}
+.map3d-ramp.relief {
+  background: linear-gradient(90deg, var(--surface-2), var(--ink-faint));
+}
+.map3d-swatch-col {
+  width: 2px; height: 15px; background: var(--critical); display: inline-block;
+}
+.map3d-note {
+  font-size: 11px; color: var(--ink-faint); margin-top: 8px; line-height: 1.5;
+}
+.map3d-ground {
+  stroke: var(--surface); stroke-width: .6; cursor: pointer;
+  transition: fill-opacity .12s ease;
+}
+.map3d-ground:hover { stroke: var(--ink); stroke-width: 1.5; }
+.map3d-ground:focus-visible { outline: 2px solid var(--accent); }
+.map3d-ground.no-data { cursor: not-allowed; }
+.map3d-ground.no-data:hover { stroke: var(--surface); stroke-width: .6; }
+.map3d-col-side { stroke: none; }
+.map3d-col-cap { stroke: var(--surface); stroke-width: .6; cursor: pointer; }
+.map3d-col-cap:hover { stroke: var(--ink); stroke-width: 1.4; }
+.map3d-col-cap:focus-visible { outline: 2px solid var(--accent); }
+.view-switch { display: flex; gap: 5px; }
+.view-switch button {
+  font-family: var(--f-mono); font-size: 11px; padding: 4px 10px;
+  background: var(--surface); color: var(--ink-muted);
+  border: 1px solid var(--line); border-radius: 2px; cursor: pointer;
+}
+.view-switch button[aria-pressed="true"] {
+  background: var(--accent-fill); border-color: var(--accent-fill); color: #F8FAFC;
+}
+/* Removed: this forced dark text onto the accent in dark mode. With the
+   deeper --accent-fill that reads at 2.5:1. Light text is used in both
+   schemes now, which is the whole reason --accent-fill exists. */
+@media (prefers-reduced-motion: reduce) { .map3d-rotating { animation: none !important; } }
+@media (max-width: 780px) {
+  .map-shell { grid-template-columns: 1fr; }
+}
+.legend i { display: inline-block; width: 9px; height: 9px; border-radius: 1px; margin-right: 5px; vertical-align: baseline; }
+
+footer.foot {
+  border-top: 1px solid var(--line); margin-top: 46px; padding-top: 18px;
+  font-size: 12.5px; color: var(--ink-faint); line-height: 1.7;
+}
+footer.foot code { font-family: var(--f-mono); font-size: 11px; }
+
+/* A fixed-column, hide-the-chart rule used to live here for narrow
+   viewports. It predates the aspect row's later redesign into a fluid,
+   container-queried layout (grid-template-areas, no hardcoded column
+   widths -- see the "Aspect rows, fluid" block below) and was never
+   removed when that shipped. The two systems disagreed: this one
+   unconditionally deleted the sparkline and the complaint/praise counts
+   below 720px of BROWSER width, while the container-query system
+   independently decides, from the PANEL's own width, whether there is
+   room to show them on one line. A user on a laptop with the window not
+   maximized -- an extremely ordinary way to hit 720px -- lost the timeline
+   chart outright, not just cramped, because this rule ran first and won.
+   The fluid layout already degrades correctly on its own; this was purely
+   fighting it. */
+@media (max-width: 720px) {
+  h2.view-title { font-size: 21px; }
+}
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+
+
+/* ═══════════════════════════════════════════════════════════════════════
+   EDITORIAL LAYER
+
+   The diagnosis this replaces: every block on the page was a rounded,
+   filled, bordered, blurred card. Prose in a card, caveats in a card, a
+   table in a card, cards inside cards. That is the vocabulary of an admin
+   panel, and this is not one -- it is a report about a place, mostly made
+   of writing, with one strong data object in it.
+
+   So: containers are removed from everything that is text. Space and a
+   hairline do the separating. Only the map and the table keep a surface,
+   because they are objects on the page rather than passages of it.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* ── Type ───────────────────────────────────────────────────────────────
+   A serif for headings against a sans for everything else. Two sans faces
+   at four sizes gave the page no voice at all -- everything whispered in
+   the same register. The scale is widely spaced on purpose: 13 / 15 / 20 /
+   27 / 44 has real jumps in it, so hierarchy is felt rather than measured. */
+:root {
+  --t-micro: 12px;
+  --t-small: 13.5px;
+  --t-body:  16px;
+  --t-lead:  20px;
+  --t-h2:    27px;
+  --t-h1:    44px;
+}
+body {
+  background: var(--paper);
+  font-size: var(--t-body);
+  line-height: 1.65;
+  letter-spacing: -.003em;
+}
+h1, h2, .view-title {
+  font-family: var(--f-display);
+  font-weight: 600;
+  letter-spacing: -.02em;
+  line-height: 1.12;
+}
+/* Specificity note: the original sheet styles these as h2.view-title and
+   h3.section-title (0,1,1). A bare .section-title (0,1,0) loses, which is
+   why the first pass rendered a 27px heading at 12.5px. Matched rather than
+   fought with !important. */
+h2.view-title, .view-title { font-size: var(--t-h1); margin: 0 0 4px; }
+h3.section-title, h3, .section-title {
+  font-family: var(--f-display);
+  font-weight: 600;
+  font-size: var(--t-h2);
+  letter-spacing: -.015em;
+  line-height: 1.2;
+  text-transform: none;
+  color: var(--ink);
+}
+/* Prose gets a measure. 100+ characters a line is where reading breaks
+   down, and several of these passages are long. */
+.notice, .section > p, .story-note, .map3d-note, .section-note { max-width: 68ch; }
+
+/* Figures use tabular numerals so columns of numbers line up and a changing
+   value does not make the row jitter. */
+.num, .view-meta, .dest-table, .aspect-row, code, .corpus-note,
+.scale-ends, .map3d-legend { font-variant-numeric: tabular-nums; }
+
+/* ── The one label device ───────────────────────────────────────────────
+   Small, letterspaced, muted. Used for eyebrows above content and nothing
+   else, so it keeps meaning something. */
+.section-label, .scale-ends span, .map3d-legend .key, .view-meta {
+  font-family: var(--f-mono);
+  font-size: var(--t-micro);
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+/* ── Containers removed ─────────────────────────────────────────────────
+   Sections become passages: no fill, no border, no radius, no shadow. They
+   are separated by air and a hairline, which is how a document separates
+   things. */
+.section {
+  background: none;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  padding: 0;
+  margin: 0 0 64px;
+}
+.section + .section { padding-top: 56px; border-top: 1px solid var(--line-soft); }
+
+/* The key finding is a pull-quote, not an alert box. */
+.notice {
+  background: none;
+  border: 0;
+  border-left: 2px solid var(--critical);
+  border-radius: 0;
+  box-shadow: none;
+  padding: 2px 0 2px 22px;
+  margin: 0 0 56px;
+  font-size: var(--t-body);
+  color: var(--ink-muted);
+}
+.notice strong { color: var(--ink); font-weight: 600; }
+
+/* Objects, not passages: the map and the table keep a surface. */
+.map-shell, .table-scroll {
+  background: var(--surface);
+  border: 1px solid var(--line-soft);
+  border-radius: 4px;
+  box-shadow: none;
+}
+.story-card {
+  background: none;
+  border: 0;
+  border-top: 1px solid var(--line-soft);
+  border-radius: 0;
+  padding: 18px 0 0;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+/* ── Controls ───────────────────────────────────────────────────────────
+   Pills and chips everywhere read as an app. These are quieter: text-first,
+   with the selected one carrying the only fill on the page besides the map. */
+.aspect-picker button, .view-switch button, .quote-controls button {
+  background: none;
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  font-family: var(--f-mono);
+  font-size: var(--t-micro);
+  letter-spacing: .04em;
+  color: var(--ink-muted);
+  padding: 6px 12px;
+}
+.aspect-picker button:hover, .view-switch button:hover, .quote-controls button:hover {
+  border-color: var(--ink-faint);
+  color: var(--ink);
+}
+.aspect-picker button[aria-pressed="true"],
+.view-switch button[aria-pressed="true"],
+.quote-controls button[aria-pressed="true"] {
+  background: var(--accent-fill);
+  border-color: var(--accent-fill);
+  color: var(--accent-on-fill);
+}
+
+/* ── Rhythm ─────────────────────────────────────────────────────────────
+   One measure of air, used consistently. Dense data feels calm when the
+   space around it is generous and regular. */
+.wrap { max-width: 1200px; padding: 0 40px 120px; }
+.view-head { margin: 0 0 44px; }
+.view-meta { display: flex; gap: 20px; margin-top: 10px; }
+
+/* ── Focus ──────────────────────────────────────────────────────────── */
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 2px; }
+
+/* ── Bento, restated as an editorial two-column ─────────────────────────
+   Kept, because reading the map beside its commentary is genuinely better
+   than scrolling between them. But the tiles are no longer cards -- they
+   are columns of a page, divided by a rule. */
+.bento { display: block; }
+@media (min-width: 1080px) {
+  .bento {
+    display: grid;
+    grid-template-columns: minmax(0, 1.45fr) minmax(0, 1fr);
+    column-gap: 56px;
+    row-gap: 56px;
+    align-items: start;
+  }
+  .bento-note { grid-column: 2; grid-row: 1; margin: 0; }
+  .bento-hero { grid-column: 1; grid-row: 1 / span 2; margin: 0; padding: 0; border: 0; }
+  .bento-side { grid-column: 2; grid-row: 2; margin: 0; padding: 0; border: 0; }
+  .bento-wide {
+    grid-column: 1 / -1; grid-row: 3; margin: 0;
+    padding-top: 56px; border-top: 1px solid var(--line-soft);
+  }
+  /* .map-shell is its own two-column grid with a fixed control rail. Inside
+     the narrower hero the rail would leave the map a sliver, so it unstacks
+     -- but unstacking put 531px of legend and caveats ABOVE the map, which
+     meant scrolling past half a screen of instructions to reach the thing
+     they describe. The map goes first; how to read it follows. */
+  .bento-hero .map-shell { grid-template-columns: minmax(0, 1fr); }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   PANEL & MOTION
+
+   Motion here has one job: to show where something came from. A page that
+   rises 10px and fades has told you it replaced the one before it; a row
+   that arrives 30ms after its neighbour has told you it belongs to a list.
+   Nothing bounces, nothing spins, nothing lasts longer than 400ms. Movement
+   that draws attention to itself is the opposite of what a reading interface
+   wants -- and every rule here is switched off under prefers-reduced-motion,
+   where the end state is identical and only the journey is skipped.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+.panel { display: flex; flex-direction: column; gap: 24px; }
+
+/* Tabs: a rule with a travelling underline, not a row of pills. */
+.panel-tabs {
+  display: flex; gap: 26px;
+  border-bottom: 1px solid var(--line-soft);
+}
+.panel-tabs button {
+  appearance: none; background: none; border: 0; cursor: pointer;
+  padding: 0 0 12px; margin-bottom: -1px;
+  font-family: var(--f-mono); font-size: var(--t-micro);
+  letter-spacing: .08em; text-transform: uppercase;
+  color: var(--ink-faint);
+  border-bottom: 2px solid transparent;
+  transition: color .18s ease, border-color .18s ease;
+}
+.panel-tabs button:hover { color: var(--ink); }
+.panel-tabs button[aria-selected="true"] {
+  color: var(--ink); border-bottom-color: var(--critical);
+}
+
+.panel-pages { position: relative; }
+.panel-page { display: none; }
+.panel-page.is-active { display: block; }
+
+@media (prefers-reduced-motion: no-preference) {
+  .panel-page.enter { animation: pageIn .28s cubic-bezier(.2,.8,.2,1) both; }
+  @keyframes pageIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to   { opacity: 1; transform: none; }
+  }
+  /* Rows arrive in sequence. --i is set in JS and capped at 14, so a long
+     list never turns into a wait. */
+  .aspect-row, .district-row, .stat-tile {
+    animation: rowIn .34s cubic-bezier(.2,.8,.2,1) both;
+    animation-delay: calc(var(--i, 0) * 26ms);
+  }
+  @keyframes rowIn {
+    from { opacity: 0; transform: translateY(6px); }
+    to   { opacity: 1; transform: none; }
+  }
+  /* Bars grow from nothing rather than appearing at length. */
+  .dr-bar i, .ar-bar i { animation: barIn .5s cubic-bezier(.2,.8,.2,1) both;
+                         animation-delay: calc(var(--i, 0) * 26ms + 60ms); }
+  @keyframes barIn { from { transform: scaleX(0); } to { transform: none; } }
+}
+
+/* ── District list ──────────────────────────────────────────────────── */
+.district-list { list-style: none; margin: 0; padding: 0; }
+.district-row button {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  grid-template-areas: "name pct" "meta pct" "bar bar" "top top";
+  gap: 2px 12px;
+  width: 100%; text-align: left; cursor: pointer;
+  background: none; border: 0; border-bottom: 1px solid var(--line-soft);
+  padding: 14px 0;
+  transition: background .16s ease, padding-left .16s ease;
+}
+.district-row button:hover {
+  background: var(--surface-2);
+  padding-left: 10px;
+}
+.dr-name { grid-area: name; font-weight: 600; color: var(--ink); font-size: 15px; }
+.dr-meta { grid-area: meta; font-size: var(--t-micro); color: var(--ink-faint);
+           font-family: var(--f-mono); }
+.dr-pct  { grid-area: pct; align-self: center; font-family: var(--f-mono);
+           font-size: 17px; color: var(--critical); font-variant-numeric: tabular-nums; }
+.dr-top  { grid-area: top; font-size: var(--t-small); color: var(--ink-muted); }
+.dr-bar  { grid-area: bar; height: 3px; background: var(--line-soft);
+           border-radius: 2px; margin: 6px 0 4px; overflow: hidden; }
+.dr-bar i { display: block; height: 100%; background: var(--critical);
+            transform-origin: left center; }
+
+/* ── District preview ───────────────────────────────────────────────── */
+.detail-eyebrow {
+  font-family: var(--f-mono); font-size: var(--t-micro);
+  letter-spacing: .1em; text-transform: uppercase; color: var(--ink-faint);
+}
+.detail-name { font-family: var(--f-display); font-size: 34px; font-weight: 600;
+               letter-spacing: -.02em; margin: 6px 0 4px; line-height: 1.1; }
+.detail-sub { font-family: var(--f-mono); font-size: var(--t-micro);
+              color: var(--ink-faint); margin: 0; }
+.detail-figure { margin: 26px 0 20px; padding: 20px 0;
+                 border-top: 1px solid var(--line-soft);
+                 border-bottom: 1px solid var(--line-soft); }
+.detail-big { display: block; font-family: var(--f-display); font-size: 52px;
+              font-weight: 600; line-height: 1; color: var(--critical);
+              font-variant-numeric: tabular-nums; letter-spacing: -.03em; }
+.detail-figure-label { display: block; margin-top: 8px; font-size: var(--t-small);
+                       color: var(--ink-muted); max-width: 34ch; }
+.detail-aspects { list-style: none; margin: 0 0 24px; padding: 0; }
+.detail-aspects .aspect-row {
+  display: grid; grid-template-columns: 1fr 90px 44px;
+  align-items: center; gap: 12px;
+  padding: 9px 0; border-bottom: 1px solid var(--line-soft);
+  font-size: var(--t-small);
+}
+.ar-bar { height: 3px; background: var(--line-soft); border-radius: 2px; overflow: hidden; }
+.ar-bar i { display: block; height: 100%; background: var(--critical);
+            transform-origin: left center; }
+.ar-pct { text-align: right; font-family: var(--f-mono);
+          font-variant-numeric: tabular-nums; color: var(--ink-muted); }
+.detail-open {
+  appearance: none; cursor: pointer;
+  background: none; border: 1px solid var(--line);
+  border-radius: 2px; padding: 10px 16px;
+  font-family: var(--f-mono); font-size: var(--t-micro);
+  letter-spacing: .06em; color: var(--ink);
+  transition: border-color .16s ease, background .16s ease;
+}
+.detail-open:hover { border-color: var(--accent); background: var(--accent-soft); }
+
+/* ═══════════════════════════════════════════════════════════════════════
+   LAYOUT — a document that scrolls, with the answer pinned beside the map
+
+   What this replaces, and why it had to go. The previous pass locked the
+   page to the window: html/body overflow:hidden, .wrap at a fixed
+   calc(100vh - 52px), and three independent scroll regions nested inside it
+   (the panel, the map's legend rail, and the district views). The intent was
+   right -- see the map, click a district, read the answer without hunting for
+   it. The mechanism was wrong, and it failed four ways:
+
+   1. It overlapped, badly. footer.foot is a flex sibling of #view inside that
+      fixed-height .wrap, and nothing let it shrink -- its automatic minimum
+      size is its content. So the footer claimed its full 480px of prose while
+      #view collapsed to 70px, and the 1088px map inside #view overflowed and
+      painted straight through the footer text. Measured at 1280x720: wrap
+      668px, view 70px, bento 0px, hero 1133px. Every laptop shorter than
+      about 1000px got the same wreck.
+   2. Three nested scrollers means the reader never knows what the wheel is
+      about to move, and a flick begun in the legend stops dead instead of
+      carrying the page.
+   3. overflow:hidden on body breaks find-in-page past the visible slice,
+      Home/End, and printing -- and every figure here ends up printed in a
+      thesis.
+   4. Anything below the fold stopped being lower down and started being
+      unreachable.
+
+   So the document scrolls, once, the way a document does. The map and the
+   panel are a two-column grid and the PANEL is sticky: it stays beside the
+   map as you read, which is the original goal, delivered without pretending
+   a report is an application shell.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* The header block was spending 295px before the first row of content. A
+   44px title does not need 44px of air above and below it as well. */
+.view-head { margin: 0 0 28px; }
+
+/* Inside the app's Map tab the page starts at its content, not at a heading
+   that duplicates the one above the frame. */
+:root[data-framed="true"] .wrap { padding-top: 20px; }
+
+/* The other half of the system. The portal links here; without a way back
+   these are two documents rather than one product. */
+.masthead-inner a.to-portal {
+  margin-left: auto; color: rgba(255,255,255,.72); font-size: 12.5px;
+  text-decoration: none; border-bottom: 1px solid rgba(255,255,255,.28);
+  white-space: nowrap;
+}
+.masthead-inner a.to-portal:hover { color: #fff; }
+
+
+/* A photograph of the place, fetched from Wikipedia when the reader opens a
+   destination. This is the one thing on the page that touches the network
+   beyond the web font, and it is worth being explicit about why that is
+   allowed here when a Google tile layer was refused for the map.
+
+   The refusal was never about the network. It was about a KEY: a Places or
+   Maps key would have to ship inside this file, which gets emailed around and
+   handed to examiners, on somebody's billing account. Wikipedia's API needs no
+   key and allows cross-origin calls, so nothing secret travels with the page.
+
+   And it stays outside the guarantee that matters. Every number, quote and
+   ranking renders from the embedded payload before this request is made; if it
+   fails, times out, or the reader is offline, the figure simply does not
+   appear and nothing else on the page changes. A photograph is also not
+   evidence about a destination -- the caption says so -- so nothing here can
+   contradict a measurement. */
+.dest-photo { margin: 0 0 20px; }
+.dest-photo img {
+  width: 100%; max-height: 260px; object-fit: cover; display: block;
+  border-radius: 3px; border: 1px solid var(--line);
+}
+.dest-photo figcaption {
+  font-size: 12px; color: var(--ink-faint); margin-top: 6px;
+}
+.dest-photo a { color: var(--ink-faint); }
+.view-title { font-size: 38px; }
+.view-meta { gap: 16px; margin-top: 8px; }
+.wrap { padding-top: 28px; }
+
+/* The masthead stays a wordmark: the tagline and the corpus counts were
+   repeating what the page title says two lines below. */
+.masthead { padding: 0; }
+.masthead-inner {
+  display: flex; align-items: center;
+  height: 52px; padding: 0 40px;
+  max-width: none;
+}
+.brand { font-size: 19px; margin: 0; letter-spacing: -.01em; }
+.tagline, .corpus-note { display: none; }
+
+/* ── The map, bounded ───────────────────────────────────────────────────
+   This is the one element that would otherwise size itself from Sri Lanka's
+   1:1.7 footprint and run past 1000px, which is what let it swallow the
+   viewport-fit layout. A window-relative clamp keeps it inside a short
+   screen and usable on a tall one. draw3D() computes the canvas height from
+   the same numbers rather than from its parent's clientHeight -- that
+   measurement was circular (the canvas was also what gave the parent its
+   height) and had already grown the canvas to 4351px once. */
+/* Sized from what is LEFT, not from a fraction of the window. A vh fraction
+   grows with the viewport at the same time as everything else, so the page
+   never converges on fitting -- it needed a 1175px-tall window. Subtracting
+   the chrome instead means the map takes exactly the room that remains, and
+   the page fits from roughly 900px of viewport height upward. The floor
+   keeps it legible on a short window; below that the page scrolls, which is
+   the fallback rather than the design. */
+.map-svg { height: auto; }
+
+@media (min-width: 1080px) {
+  .bento {
+    display: grid;
+    grid-template-columns: minmax(0, 0.72fr) minmax(0, 1fr);
+    column-gap: 44px;
+    align-items: start;
+  }
+  .bento-hero { grid-column: 1; grid-row: 1; margin: 0; padding: 0; border: 0; }
+
+  /* The panel travels with the reader. Clicking a district low on the map
+     used to change content that was by then above the fold. One sticky
+     region, not three scrollers -- and it scrolls internally only when its
+     own page is taller than the window. */
+  .bento-panel {
+    grid-column: 2; grid-row: 1; margin: 0;
+    position: sticky; top: 20px;
+    max-height: calc(100vh - 40px);
+    display: flex; flex-direction: column; gap: 20px;
+  }
+  .panel-pages {
+    flex: 1 1 auto; min-height: 0;
+    overflow-y: auto; overscroll-behavior: contain;
+    padding-right: 6px;
+  }
+  .panel-pages::-webkit-scrollbar { width: 3px; }
+  .panel-pages::-webkit-scrollbar-thumb { background: var(--line); border-radius: 2px; }
+  .panel-pages::-webkit-scrollbar-track { background: transparent; }
+
+  /* Inside the narrower hero column a 300px control rail would leave the map
+     a sliver, so the shell stacks. Map first: putting half a screen of
+     reading instructions above the figure they describe is the wrong order. */
+  .bento-hero .map-shell { padding: 14px 16px; }
+}
+
+/* Below the two-column breakpoint nothing sticks and nothing is a grid --
+   but the map still comes before its legend, and before the panel. Reading
+   531px of caveats to reach the thing they annotate is the same mistake in
+   a narrower window. */
+@media (max-width: 1079px) {
+  .bento { display: flex; flex-direction: column; gap: 44px; }
+  .bento-hero  { order: 1; }
+  .bento-panel { order: 2; }
+}
+@media (max-width: 780px) {
+  .map-shell > #map-svg-host { order: -1; }
+  .map-shell { padding: 14px 16px; }
+  .wrap { padding-left: 20px; padding-right: 20px; }
+  .masthead-inner { padding: 0 20px; }
+  .view-title { font-size: 30px; }
+}
+
+/* ── The method is not an afterthought ──────────────────────────────────
+   These paragraphs are the limitations and the method -- the part an
+   examiner reads hardest, and the part the fixed-height layout crushed.
+   They were also running the full 1200px column at 16px: about 140
+   characters a line, roughly double the readable measure. */
+footer.foot {
+  margin-top: 72px; padding-top: 30px;
+  border-top: 1px solid var(--line);
+  font-size: var(--t-small);
+  line-height: 1.65;
+  color: var(--ink-muted);
+}
+footer.foot p { max-width: 68ch; margin: 0 0 15px; }
+footer.foot p:last-child { margin-bottom: 0; }
+footer.foot strong, footer.foot em { color: var(--ink); }
+/* ── The method, once ───────────────────────────────────────────────────
+   The country view carries the method and limitations in a panel tab, so the
+   document footer that authored them is hidden there -- otherwise the reader
+   meets the same 900px of prose twice and the tab appears to do nothing. The
+   district and destination views have no panel, so the footer does its
+   original job on those. */
+body.method-in-panel .wrap > footer.foot { display: none; }
+
+/* Inside the panel the measure is already the column, so the 68ch cap does
+   nothing but the type still needs setting -- these paragraphs arrive as
+   bare <p> and would otherwise render at browser default. */
+.panel-page[data-page="method"] p {
+  max-width: none;
+  font-size: var(--t-small);
+  line-height: 1.6;
+  color: var(--ink-muted);
+  margin: 0 0 14px;
+}
+.panel-page[data-page="method"] p:last-child { margin-bottom: 0; }
+.panel-page[data-page="method"] strong,
+.panel-page[data-page="method"] em { color: var(--ink); }
+.panel-page[data-page="method"] code {
+  font-family: var(--f-mono); font-size: var(--t-micro);
+}
+
+/* Five tabs in a ~450px column will not always fit on one line. Wrapping is
+   the safety net rather than a horizontal scroller: a tablist that scrolls
+   sideways hides tabs behind an affordance readers do not notice. */
+.panel-tabs { gap: 6px 22px; flex-wrap: wrap; }
+.panel-tabs button { flex: 0 0 auto; }
+/* The shell is a grid, so the map column stretched to match the taller
+   control rail beside it -- 191px of blank surface under the island at
+   tablet widths. Neither column has any reason to fill the other's height. */
+.map-shell { align-items: start; }
+
+/* Groups in the rail: heading, then its controls. The inline margins these
+   replace were repeated on four elements and disagreed with each other. */
+.map-group > .section-title { margin: 0 0 7px; }
+
+/* Below the map the four caveats ran as one 400px stack, so getting past the
+   legend was most of a screen of scrolling. They are short and independent,
+   so they pair up where there is width. Nothing is hidden to achieve it. */
+.map-notes { display: grid; gap: 14px; }
+@media (min-width: 1080px) {
+  .bento-hero .map-notes { grid-template-columns: 1fr 1fr; column-gap: 26px; }
+}
+/* ── Pager ──────────────────────────────────────────────────────────────
+   Quiet, and at the FOOT of the list it pages -- the reader meets it having
+   run out of items, which is the moment the control is wanted. It states
+   position in words ("7-12 of 19 districts") rather than leaving a
+   scrollbar to imply it. */
+.paged { display: flex; flex-direction: column; }
+.pager {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 12px; margin-top: 16px; padding-top: 12px;
+  border-top: 1px solid var(--line-soft);
+}
+.pager-status {
+  font-family: var(--f-mono); font-size: var(--t-micro);
+  color: var(--ink-faint); letter-spacing: .04em;
+  font-variant-numeric: tabular-nums;
+}
+.pager-step {
+  appearance: none; cursor: pointer;
+  background: none; border: 1px solid var(--line); border-radius: 2px;
+  padding: 6px 12px; color: var(--ink);
+  font-family: var(--f-mono); font-size: var(--t-micro); letter-spacing: .04em;
+  transition: border-color .16s ease, background .16s ease;
+}
+.pager-step:hover:not(:disabled) { border-color: var(--accent); background: var(--accent-soft); }
+/* Disabled, not hidden: a control that vanishes at the end of a range moves
+   the one beside it, and the reader's aim goes with it. */
+.pager-step:disabled { opacity: .38; cursor: default; }
+
+/* ── Map disclosure ─────────────────────────────────────────────────── */
+.map-help > summary {
+  cursor: pointer; list-style: none;
+  display: flex; align-items: center; gap: 10px;
+  font-family: var(--f-mono); font-size: var(--t-micro);
+  letter-spacing: .08em; text-transform: uppercase;
+  color: var(--ink-muted);
+  padding: 8px 0; border-top: 1px solid var(--line-soft);
+}
+.map-help > summary::-webkit-details-marker { display: none; }
+.map-help > summary::before {
+  content: "+"; font-size: 14px; line-height: 1; color: var(--ink-faint);
+}
+.map-help[open] > summary::before { content: "2"; }
+.map-help > summary:hover { color: var(--ink); }
+.map-help > summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+.map-help-n {
+  margin-left: auto; color: var(--ink-faint); text-transform: none; letter-spacing: .02em;
+}
+.map-help .map-notes { padding: 12px 0 4px; }
+
+
+@media (min-width: 1080px) {
+  /* A fixed panel height, not one that follows its content. The tabs sit at
+     the top of this box, and a box that resizes per tab moves them -- so the
+     control you just used walks away from the pointer between clicks. Pages
+     shorter than the box simply leave air; the tab row never moves. */
+  .bento-panel { height: min(calc(100vh - 40px), 660px); max-height: none; }
+}
+/* ── Readout ────────────────────────────────────────────────────────────
+   A strip immediately beneath the map: near the pointer, and incapable of
+   covering the figure it describes. It replaced a corner overlay that sat on
+   the island, because Sri Lanka is drawn centred in a letterboxed box and
+   there is no empty corner to put a panel in. */
+.map-readout {
+  display: flex; align-items: baseline; flex-wrap: wrap; gap: 4px 18px;
+  min-height: 0; margin: 0; padding: 10px 2px 0;
+  border-top: 1px solid var(--line-soft);
+}
+.ro-name { font-family: var(--f-display); font-size: 15px; font-weight: 600; }
+.ro-hint { font-size: var(--t-small); color: var(--ink-faint); }
+.ro-stats {
+  display: flex; flex-wrap: wrap; gap: 4px 18px; margin: 0;
+  font-size: var(--t-small);
+}
+.ro-stats > div { display: flex; align-items: baseline; gap: 6px; }
+.ro-stats dt { color: var(--ink-faint); }
+.ro-stats dd {
+  margin: 0; font-family: var(--f-mono); font-variant-numeric: tabular-nums;
+  color: var(--ink);
+}
+.ro-stats b { color: var(--critical); font-weight: 600; }
+
+/* The seven aspect buttons wrapped to two rows at the hero's width. Trimming
+   the horizontal padding fits them on one, which is 36px off the fold. */
+/* The footer is the source of the method text, not a thing on screen: every
+   view now has a Method tab holding the same words. It is kept in the DOM
+   rather than deleted because it is what prints -- a panel tab cannot be
+   printed, and this page's figures end up in a thesis. */
+.wrap > footer.foot { display: none; }
+.wrap { padding-bottom: 32px; }
+
+/* The leaf view has no second column, so its panel takes the width and caps
+   its height the way the bento panel does -- one scroll region inside the
+   page rather than a page that scrolls. */
+@media (min-width: 1080px) {
+  .panel-solo {
+    display: flex; flex-direction: column;
+    height: min(calc(100vh - 210px), 640px);
+  }
+  .panel-solo .panel-pages {
+    flex: 1 1 auto; min-height: 0;
+    overflow-y: auto; overscroll-behavior: contain; padding-right: 6px;
+  }
+  .panel-solo .panel-pages::-webkit-scrollbar { width: 3px; }
+  .panel-solo .panel-pages::-webkit-scrollbar-thumb { background: var(--line); border-radius: 2px; }
+  /* Prose in a full-width panel still needs a measure. */
+  .panel-solo .panel-page > p,
+  .panel-solo .story-note,
+  .panel-solo .page-lede { max-width: 68ch; }
+}
+.page-lede { color: var(--ink-muted); margin: 0 0 18px; }
+
+
+/* Print: the panel's tabs mean only one page is on screen, which would print
+   as a fragment. On paper every page is laid out in full and the footer --
+   the authored method -- comes back. */
+@media print {
+  .wrap > footer.foot { display: block; }
+  .panel-tabs, .pager, .map-help > summary { display: none; }
+  .panel-page { display: block !important; }
+  .panel-pages, .panel-solo, .bento-panel { overflow: visible !important; height: auto !important; max-height: none !important; }
+  .bento { display: block !important; }
+}
+/* ── Figure caption row ─────────────────────────────────────────────── */
+.map-head {
+  display: flex; align-items: baseline; justify-content: space-between;
+  gap: 10px 24px; flex-wrap: wrap; margin: 0 0 12px;
+}
+.map-head .section-title { margin: 0; }
+.map-head-tools { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.pin-btn {
+  appearance: none; cursor: pointer;
+  background: none; border: 1px solid var(--line); border-radius: 2px;
+  padding: 4px 10px; color: var(--ink-muted);
+  font-family: var(--f-mono); font-size: var(--t-micro); letter-spacing: .04em;
+}
+.pin-btn:hover { border-color: var(--ink-faint); color: var(--ink); }
+.pin-btn[aria-pressed="true"] {
+  background: var(--accent-fill); border-color: var(--accent-fill); color: var(--accent-on-fill);
+}
+/* The crumb trail is hidden on the country view; keep its space collapsed. */
+.crumbs[hidden] { display: none; }
+.view-head { margin: 0 0 20px; }
+/* ── The map, un-letterboxed ────────────────────────────────────────────
+   The complaint was that the map looked tiny, and it was: the island drew
+   155px wide inside a 585px box. Sri Lanka is 420x705 in the projection --
+   a tall, narrow shape -- and it was being placed in a short, wide box, so
+   preserveAspectRatio letterboxed it to the HEIGHT and left ~430px of empty
+   surface either side. Height is also the scarce resource here, so the map
+   could only ever grow into the dimension there was least of.
+
+   Both halves are fixed together. The box now carries the island's own
+   aspect, so nothing is letterboxed; and the ~430px of dead width becomes
+   the control rail, which used to sit BELOW the map adding its height to
+   the very budget that was starving it. The map roughly doubles in each
+   direction and the page gets shorter at the same time. */
+#map-svg-host { min-width: 0; }
+/* The FLAT map only. Width capped so the height it implies never exceeds the
+   panel beside it: the panel already sets the row's height, so anything
+   shorter is free space the map may as well take -- anything taller would
+   start driving the page height, which is the thing being kept off the fold.
+   The canvas is sized in draw3D() instead, because the 3D view is a
+   different shape and cannot share this box. */
+.map-svg {
+  display: block; margin: 0 auto;
+  /* The map is the page's subject, so it is sized first and the rest of the
+     layout is fitted around it. 700px tall -> 417 wide at the island's own
+     0.5957 aspect, which is what the column beside the rail was widened to
+     hold. Below ~800px of viewport it steps down rather than forcing the
+     page taller still. */
+  width: min(100%, max(240px, calc(min(100vh - 100px, 700px) * 0.5957)));
+  aspect-ratio: 420 / 705; height: auto;
+}
+#map-canvas { display: block; margin: 0 auto; }
+
+/* ── Rail ───────────────────────────────────────────────────────────────
+   A column beside the map rather than a stack beneath it. */
+.map-side { gap: 16px; }
+
+/* Readout reads as a column here, not a strip: label left, figure right, the
+   way a small table of values wants to be read in a narrow measure. */
+.map-readout {
+  display: block; margin: 0; min-height: 0;
+  padding-top: 12px; border-top: 1px solid var(--line-soft);
+}
+.ro-name {
+  display: block; font-family: var(--f-display);
+  font-size: 15px; font-weight: 600; margin-bottom: 6px;
+}
+.ro-hint { font-size: var(--t-small); color: var(--ink-faint); }
+.ro-stats {
+  display: grid; grid-template-columns: 1fr auto;
+  gap: 3px 12px; margin: 0; font-size: var(--t-small);
+}
+.ro-stats > div { display: contents; }
+.ro-stats dt { color: var(--ink-faint); }
+.ro-stats dd {
+  margin: 0; text-align: right;
+  font-family: var(--f-mono); font-variant-numeric: tabular-nums; color: var(--ink);
+}
+.ro-stats b { color: var(--critical); font-weight: 600; }
+
+/* Stacked, the map still leads and the rail follows. */
+@media (max-width: 780px) {
+  .map-shell { grid-template-columns: 1fr; }
+  .map-side { margin-top: 4px; }
+}
+/* ── 3D view: a landscape figure, so a landscape card ───────────────────
+   The rail sits beside the flat map because a 0.6-aspect island leaves a
+   column of width doing nothing. The 3D island is the opposite shape -- 1.6
+   wide per unit tall -- so beside a rail it was squeezed to ~330px inside a
+   600px-tall card, which is the "map is tiny" this fixes. In this view the
+   rail goes below and becomes a band, and the canvas takes the full width. */
+@media (min-width: 1080px) {
+  .bento-hero .map-shell.is-3d { grid-template-columns: minmax(0, 1fr); }
+}
+.map-shell.is-3d .map-side {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 14px 28px; align-items: start;
+  margin-top: 14px; padding-top: 14px;
+  border-top: 1px solid var(--line-soft);
+}
+.map-shell.is-3d .map-help { grid-column: 1 / -1; }
+
+/* The hint and legend the 3D view prints under its canvas are centred on the
+   canvas, not stretched across the card. */
+/* The 3D legend, relocated into the rail band. */
+.map3d-aside { grid-column: 1 / -1; }
+/* ── Rail controls ──────────────────────────────────────────────────────
+   Labels in the rail use the sheet's own small-label device rather than the
+   27px display face a .section-title carries -- that is the size for a
+   figure caption, not for the label on a dropdown. */
+.group-label {
+  display: block; margin: 0 0 6px;
+  font-family: var(--f-mono); font-size: var(--t-micro);
+  letter-spacing: .08em; text-transform: uppercase; color: var(--ink-faint);
+}
+.map-select {
+  appearance: none; width: 100%; cursor: pointer;
+  background: var(--surface); color: var(--ink);
+  border: 1px solid var(--line); border-radius: 2px;
+  padding: 7px 28px 7px 10px;
+  font-family: var(--f-mono); font-size: var(--t-micro); letter-spacing: .04em;
+  background-image: linear-gradient(45deg, transparent 50%, var(--ink-faint) 50%),
+                    linear-gradient(135deg, var(--ink-faint) 50%, transparent 50%);
+  background-position: right 13px center, right 8px center;
+  background-size: 5px 5px, 5px 5px;
+  background-repeat: no-repeat;
+}
+.map-select:hover { border-color: var(--ink-faint); }
+.map-select:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+/* In 3D the flat scale bar is a duplicate: map3d-legend carries the same
+   complaint-rate ramp plus the keys only this view needs. */
+.map-shell.is-3d .scale-block { display: none; }
+
+/* The 3D key reads as a list in the rail, not a centred banner. */
+.map3d-legend { justify-content: flex-start; text-align: left; margin-top: 0; gap: 6px 18px; }
+.map3d-aside .map-help > summary { border-top: 0; margin-top: 4px; }
+.map3d-note { margin: 8px 0 0; max-width: 68ch; }
+.map3d-hint { text-align: center; }
+/* -- The finding -------------------------------------------------------
+   The page's answer, given the weight of an answer. The old version had a
+   400px paragraph doing this job at body size, with the result as a clause
+   inside it -- everything at one weight is the same as no hierarchy at all.
+   Four levels here, each doing one thing: eyebrow says what this is, lede
+   states the result in words, the figure states it as a number, and the
+   ranked bars put it in the context of every other topic. */
+.finding-eyebrow {
+  margin: 0 0 10px;
+  font-family: var(--f-mono); font-size: var(--t-micro);
+  letter-spacing: .12em; text-transform: uppercase; color: var(--critical);
+}
+.finding-lede {
+  margin: 0 0 22px;
+  font-family: var(--f-display); font-size: 24px; font-weight: 600;
+  line-height: 1.25; letter-spacing: -.015em; color: var(--ink);
+  text-wrap: balance;
+}
+.finding-lede strong { color: var(--critical); font-weight: 600; }
+
+.big-stat {
+  display: flex; align-items: baseline; gap: 16px; flex-wrap: wrap;
+  padding: 18px 0 20px;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line-soft);
+}
+.big-stat-n {
+  font-family: var(--f-display); font-size: 60px; font-weight: 600;
+  line-height: .95; letter-spacing: -.035em; color: var(--critical);
+  font-variant-numeric: tabular-nums;
+}
+.big-stat-said {
+  flex: 1 1 200px; min-width: 0;
+  font-size: var(--t-small); line-height: 1.55; color: var(--ink-muted);
+}
+
+/* The places the finding actually points at. A result with no address is a
+   statistic; naming the districts turns it into somewhere to go, and each
+   one is the link that takes you there. */
+.lede-places { margin: 20px 0 22px; }
+.lede-places h4 {
+  margin: 0 0 9px;
+  font-family: var(--f-mono); font-size: var(--t-micro);
+  letter-spacing: .08em; text-transform: uppercase; color: var(--ink-faint);
+  font-weight: 400;
+}
+.lede-place-row { display: flex; flex-wrap: wrap; gap: 7px; }
+.lede-place {
+  appearance: none; cursor: pointer;
+  display: inline-flex; align-items: baseline; gap: 8px;
+  background: none; border: 1px solid var(--line); border-radius: 2px;
+  padding: 6px 10px; color: var(--ink);
+  font-family: var(--f-body); font-size: var(--t-small);
+  transition: border-color .16s ease, background .16s ease;
+}
+.lede-place span {
+  font-family: var(--f-mono); font-size: var(--t-micro);
+  color: var(--critical); font-variant-numeric: tabular-nums;
+}
+.lede-place:hover { border-color: var(--accent); background: var(--accent-soft); }
+
+.finding-second {
+  margin: 0 0 26px; font-size: var(--t-small);
+  line-height: 1.6; color: var(--ink-muted); max-width: 62ch;
+}
+.finding-second strong { color: var(--ink); }
+
+.rank-head {
+  margin: 0 0 10px;
+  font-family: var(--f-mono); font-size: var(--t-micro);
+  letter-spacing: .08em; text-transform: uppercase; color: var(--ink-faint);
+  font-weight: 400;
+}
+.rank-bars { list-style: none; margin: 0 0 24px; padding: 0; }
+.rank-row button {
+  display: grid; grid-template-columns: 1fr 34px;
+  grid-template-areas: "label val" "track track";
+  align-items: center; gap: 4px 12px;
+  width: 100%; text-align: left; cursor: pointer;
+  background: none; border: 0; border-bottom: 1px solid var(--line-soft);
+  padding: 9px 0;
+  transition: background .16s ease, padding-left .16s ease;
+}
+.rank-row button:hover { background: var(--surface-2); padding-left: 8px; }
+.rank-label { grid-area: label; font-size: var(--t-small); color: var(--ink); }
+.rank-val {
+  grid-area: val; text-align: right;
+  font-family: var(--f-mono); font-size: var(--t-small);
+  font-variant-numeric: tabular-nums; color: var(--ink-muted);
+}
+.rank-track {
+  grid-area: track; height: 4px; border-radius: 2px;
+  background: var(--line-soft); overflow: hidden;
+}
+.rank-track i {
+  display: block; height: 100%; background: var(--critical);
+  transform-origin: left center;
+}
+/* The control is drawn in the control's colour. Its whole job is to look
+   unlike the others, and colouring it terracotta like a complaint would
+   have undone the point it exists to make. */
+.rank-row.is-control .rank-track i { background: var(--good); }
+.rank-row.is-control .rank-label { color: var(--ink-muted); }
+
+.finding-caveat > summary { border-top: 1px solid var(--line-soft); }
+.finding-caveat p {
+  font-size: var(--t-small); line-height: 1.6; color: var(--ink-muted);
+  margin: 10px 0 0; max-width: 64ch;
+}
+.finding-caveat strong { color: var(--ink); }
+
+/* The deck under the page title: what this is built from, once, in a
+   sentence -- replacing four totals nobody could act on. */
+.view-deck {
+  margin: 8px 0 0; max-width: 58ch;
+  font-size: var(--t-small); line-height: 1.55; color: var(--ink-muted);
+}
+/* The staleness line. Deliberately not styled as a warning banner: it is a
+   permanent property of the corpus, not an incident, and a red box would be
+   dismissed as chrome within a week of looking at it. */
+.evidence-note {
+  margin: 10px 0 0;
+  max-width: 62ch;
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--muted, #6b7280);
+  border-left: 2px solid var(--rule, #d8ded9);
+  padding-left: 10px;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .rank-row { animation: rowIn .34s cubic-bezier(.2,.8,.2,1) both;
+              animation-delay: calc(var(--i, 0) * 26ms); }
+  .rank-track i { animation: barIn .5s cubic-bezier(.2,.8,.2,1) both;
+                  animation-delay: calc(var(--i, 0) * 26ms + 60ms); }
+}
+/* -- Aspect rows, fluid ------------------------------------------------
+   These were laid out as `168px 1fr 62px 74px 96px`. Four hardcoded columns
+   plus gaps need 456px; inside the panel the row gets 378px. Grid resolves
+   that by taking the space out of the only flexible column -- so the BAR
+   collapsed to 0px and the row still overflowed by 92px, cutting off the
+   sparkline. The legend immediately above it read "bar length = volume of
+   discussion", describing something that was not being drawn.
+
+   Nothing here is a fixed width any more. The row is defined by areas, so it
+   stacks into the width it is given, and a container query -- not a viewport
+   one -- decides when there is room for a single line. The component sits in
+   a panel whose width depends on the layout rather than on the window, so
+   the window is the wrong thing to ask. */
+.panel-pages, .quote-panel { container-type: inline-size; }
+
+.aspect-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-areas:
+    "name   rate"
+    "bar    bar"
+    "counts spark";
+  align-items: center;
+  gap: 6px 12px;
+  padding: 11px 12px;
+  width: 100%;
+}
+.aspect-name  { grid-area: name; min-width: 0; }
+.bar-wrap     { grid-area: bar; display: block; width: 100%; }
+.rate         { grid-area: rate; }
+.counts       { grid-area: counts; text-align: left; }
+.spark-cell   { grid-area: spark; justify-self: end; display: flex; }
+
+/* The bar keeps its meaning: length is share of the busiest topic's volume,
+   and it is now a percentage of a full-width row rather than of a dead cell. */
+.bar-track { height: 12px; min-width: 2px; }
+
+/* Wide enough for one line: name, bar, rate, counts, spark. Still no fixed
+   widths -- the bar takes what is left after the text has what it needs. */
+@container (min-width: 560px) {
+  .aspect-row {
+    grid-template-columns: minmax(7rem, 12rem) minmax(0, 1fr) auto auto auto;
+    grid-template-areas: "name bar rate counts spark";
+    gap: 14px;
+  }
+  .counts { text-align: right; }
+  .bar-track { height: 18px; }
+}
+
+/* The detail preview's own compact rows -- same treatment, same reason. */
+.detail-aspects .aspect-row {
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-areas: "name pct" "bar bar";
+  gap: 4px 12px; padding: 9px 0;
+}
+.detail-aspects .ar-bar { grid-area: bar; }
+.detail-aspects .ar-label { grid-area: name; min-width: 0; }
+.detail-aspects .ar-pct { grid-area: pct; }
+@container (min-width: 560px) {
+  .detail-aspects .aspect-row {
+    grid-template-columns: minmax(0, 1fr) minmax(4rem, 8rem) auto;
+    grid-template-areas: "name bar pct";
+  }
+}
+/* -- Rail, under the map in every view ---------------------------------
+   It used to sit beside the flat map and below the 3D one. Two layouts for
+   one component, and the beside version forced the hero column wide enough
+   for map + rail, which is what squeezed the panel to 384px and made its
+   rows overflow. The hero is now only as wide as the map itself, so there is
+   no dead width to fill and the rail can be a band underneath -- the same
+   band in both views. */
+@media (min-width: 1080px) {
+  .bento-hero .map-side {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 14px 24px; align-items: start;
+    margin-top: 14px; padding-top: 14px;
+    border-top: 1px solid var(--line-soft);
+  }
+  .bento-hero .map-side .map-help,
+  .bento-hero .map-side .map3d-aside { grid-column: 1 / -1; }
+}
+</style>
+
+<header class="masthead">
+  <div class="masthead-inner">
+    <h1 class="brand">Lost<span>in</span>SriLanka</h1>
+      <a class="to-portal" href="../portal/index.html">Share what you found &rarr;</a>
+    </div>
+</header>
+
+<main class="wrap">
+  <nav class="crumbs" id="crumbs" aria-label="Breadcrumb"></nav>
+  <div id="view"></div>
+
+  <footer class="foot">
+    <p><strong>How to read this.</strong> Bar length shows how much visitors discussed an aspect; the red share shows how much of that discussion was negative. Aspects with fewer than 5 opinions are not shown at all — three complaints is an anecdote, not a finding. Aspects with 5–14 opinions carry a <span class="chip chip-low">low</span> flag.</p>
+    <p><strong>Important limitation.</strong> Complaint rate is the share of <em>expressed opinions</em> that are negative — not the share of visitors who had a problem. People rarely write reviews praising a road that simply worked, so every aspect is biased toward complaint once mentioned. Read these rates <em>comparatively between destinations</em>, never as an absolute risk.</p>
+    <p><strong>Two corpora, two audiences.</strong> <code>30,705</code> Google Maps reviews (collected March 2024; 236 destinations; predominantly local reviewers; no star ratings; relative timestamps only) and <code>16,149</code> TripAdvisor reviews (2011–2023; 76 locations; overwhelmingly international reviewers — UK, Australia and India account for most of them; star-rated; absolute dates). <strong>46,854 reviews in total.</strong> The two populations are kept separable, because what local and international visitors complain about is a question this data can answer rather than something to average away.</p>
+
+    <p><strong>Coverage.</strong> 19 of 22 districts. Monaragala, Puttalam and the Vanni have no reviews in either corpus and are drawn hatched — that means <em>not measured</em>, never <em>no complaints</em>.</p>
+
+    <p><strong>Change over time.</strong> A complaint stays in the data long after the problem is fixed &mdash; a road repaired in 2022 is still described as broken by every review written before it. The small chart on each row shows the complaint rate in four periods &mdash; up to 2018, 2019&ndash;20, 2021&ndash;22 and 2023&ndash;24 &mdash; oldest on the left, and the size of each dot shows how many opinions that point rests on. A dramatic-looking swing built on four reviews therefore <em>looks</em> like four reviews. Click any aspect for the same figures as a table.</p>
+
+    <p>We also tested whether old reviews should simply be given less weight, and concluded they should not. The correlation between a destination&rsquo;s historical complaint rate and its current one is about 0.6 and <em>flat</em> from one year out to seven &mdash; a 2017 rate predicts the 2024 rate as well as a 2023 rate does. Age alone does not make a review less informative here, so down-weighting it would discard valid evidence. No decay is applied and no verdict is issued; the rates are shown and the reader judges.</p>
+
+    <p><strong>Method.</strong> Reviews are split into single-opinion segments, tagged by aspect, then classified as complaint / praise / factual by a three-class transformer with a documented domain correction. Aspect and polarity labels are generated automatically and carry error. All seven aspects are now measured against human labels, but not to the same standard: roads, cleanliness, facilities and safety against a 200-segment gold set read independently by two people, and price, crowding and scenery against a 420-pair sample read by one, which yields extraction precision and polarity accuracy but no recall and no agreement figure. Every published rate also carries a split-half reliability of 0.81 or better at the evidence threshold used here; see reports/reliability.json.</p>
+  </footer>
+</main>
+
+<script type="application/json" id="tree-data">__DATA__</script>
+<script type="application/json" id="geo-data">__GEO__</script>
+<script type="application/json" id="media-data">__MEDIA__</script>
+<script type="application/json" id="links-data">__LINKS__</script>
+<script type="application/json" id="coords-data">__COORDS__</script>
+<script type="application/json" id="terrain-data">__TERRAIN__</script>
+<script type="application/json" id="ablation-data">__ABLATION__</script>
+<script>
+(function () {
+  "use strict";
+  var TREE = JSON.parse(document.getElementById("tree-data").textContent);
+  var GEO = JSON.parse(document.getElementById("geo-data").textContent);
+  var TERRAIN = JSON.parse(document.getElementById("terrain-data").textContent);
+  var MEDIA = JSON.parse(document.getElementById("media-data").textContent);
+  var LINKS = JSON.parse(document.getElementById("links-data").textContent);
+  var COORDS = JSON.parse(document.getElementById("coords-data").textContent);
+  /* Sensitivity analysis, read from reports/rule_ablation.json at build time.
+     The caveat below used to state these figures as literal text; correcting
+     the safety lexicon moved all of them and the sentence became quietly
+     wrong. A page must not assert a number it cannot recompute. */
+  var ABLATION = (function () {
+    var el = document.getElementById("ablation-data");
+    try { return el ? JSON.parse(el.textContent) : {}; } catch (e) { return {}; }
+  })();
+  var view = document.getElementById("view");
+  var crumbs = document.getElementById("crumbs");
+  var state = { district: null, destination: null, openAspect: null };
+  /* Read once at boot. The footer is the authored source of the method and
+     limitations; the country panel renders the same string into its Method
+     tab, and nothing else ever writes it. */
+  var METHOD_HTML = (function () {
+    var f = document.querySelector("footer.foot");
+    return f ? f.innerHTML : "";
+  })();
+
+  var COMPLAINT_ORDER = ["roads_access","price_value","safety","facilities","cleanliness","crowd","scenery"];
+
+  /* The country panel's pages, in tab order. One declaration so the button,
+     the section, the id pair and the keyboard order cannot drift apart --
+     which is how the previous markup ended up with a "detail" section that
+     no tab owned. `transient` means the tab is revealed by an action rather
+     than being there from the start. */
+  var PANEL_PAGES = [
+    { id: "finding",   label: "Finding" },
+    { id: "aspects",   label: "Aspects" },
+    { id: "districts", label: "Districts" },
+    { id: "method",    label: "Method" },
+    { id: "detail",    label: "District", transient: true }
+  ];
+  function panelAttrs(id) {
+    return ' role="tabpanel" id="page-' + id + '"' +
+           ' aria-labelledby="tab-' + id + '" tabindex="0"';
+  }
+
+  /* ── One panel, every view ─────────────────────────────────────────────
+     Only the country view was ever paged. The district view was four
+     stacked sections running 4592px -- six and a half screens with no way
+     to jump between them -- and the destination view 2635px. Both are the
+     same shape of content as the country view (parallel sections a reader
+     picks between, not a sequence they read through), so both become the
+     same object: pages behind a tablist. */
+  function buildPanel(pages, opts) {
+    opts = opts || {};
+    var active = opts.active || pages[0].id;
+    return '<div class="panel ' + (opts.cls || "bento-panel") + '">' +
+      '<div class="panel-tabs" role="tablist" aria-label="' +
+        (opts.label || "Sections") + '">' +
+        pages.map(function (t) {
+          return '<button role="tab" id="tab-' + t.id + '" data-page="' + t.id + '"' +
+            ' aria-controls="page-' + t.id + '"' +
+            ' aria-selected="' + (t.id === active) + '"' +
+            ' tabindex="' + (t.id === active ? "0" : "-1") + '"' +
+            (t.transient ? ' hidden' : '') + '>' + t.label + '</button>';
+        }).join("") +
+      '</div>' +
+      '<div class="panel-pages">' +
+        pages.map(function (t) {
+          return '<section class="panel-page' + (t.id === active ? " is-active" : "") +
+            '" data-page="' + t.id + '"' + panelAttrs(t.id) + '>' +
+            (t.html || "") + '</section>';
+        }).join("") +
+      '</div></div>';
+  }
+
+  /* ── Paging long lists ─────────────────────────────────────────────────
+     A list taller than its container is a list you hunt through. These page
+     instead: the reader moves a known distance, the container never grows,
+     and the position is stated rather than guessed from a scrollbar. Page
+     size is per-list because a table row and a district card are not the
+     same height.
+
+     Items arrive as an array of ready HTML strings, so this knows nothing
+     about what it is paging -- districts, table rows, quotes and media
+     cards all use it unchanged. */
+  var PAGER = {};   /* key -> zero-based page index, survives re-renders */
+  var PAGED = {};   /* key -> { items, per, before, after, noun } */
+
+  function pagedList(key, items, per, opts) {
+    opts = opts || {};
+    PAGED[key] = { items: items, per: per, before: opts.before || "",
+                   after: opts.after || "", noun: opts.noun || "items" };
+    var last = Math.max(1, Math.ceil(items.length / per)) - 1;
+    /* Clamp rather than reset: coming back to a list should return you to
+       the page you left, unless that page no longer exists. */
+    if (!(PAGER[key] >= 0)) PAGER[key] = 0;
+    if (PAGER[key] > last) PAGER[key] = last;
+    return '<div class="paged" data-paged="' + key + '">' +
+      '<div class="paged-body" data-paged-body="' + key + '">' + pageSlice(key) + '</div>' +
+      pagerBar(key) + '</div>';
+  }
+
+  function pageSlice(key) {
+    var d = PAGED[key], i = PAGER[key] * d.per;
+    return d.before + d.items.slice(i, i + d.per).join("") + d.after;
+  }
+
+  function pagerBar(key) {
+    var d = PAGED[key], n = d.items.length;
+    var total = Math.max(1, Math.ceil(n / d.per));
+    if (total < 2) return "";            /* no pager for a single page */
+    var p = PAGER[key];
+    return '<nav class="pager" data-pager-bar="' + key + '" aria-label="' +
+        d.noun + ' pagination">' +
+      '<button class="pager-step" data-pager="' + key + '" data-pager-step="-1"' +
+        (p === 0 ? ' disabled' : '') + '>&larr; Prev</button>' +
+      '<span class="pager-status" role="status">' +
+        (p * d.per + 1) + '&ndash;' + Math.min(n, (p + 1) * d.per) +
+        ' of ' + n + ' ' + d.noun + '</span>' +
+      '<button class="pager-step" data-pager="' + key + '" data-pager-step="1"' +
+        (p >= total - 1 ? ' disabled' : '') + '>Next &rarr;</button>' +
+    '</nav>';
+  }
+
+  document.addEventListener("click", function (ev) {
+    var b = ev.target.closest("[data-pager]");
+    if (!b || b.disabled) return;
+    var key = b.dataset.pager, d = PAGED[key];
+    if (!d) return;
+    var last = Math.max(1, Math.ceil(d.items.length / d.per)) - 1;
+    PAGER[key] = Math.min(last, Math.max(0, PAGER[key] + Number(b.dataset.pagerStep)));
+    var body = document.querySelector('[data-paged-body="' + key + '"]');
+    var bar = document.querySelector('[data-pager-bar="' + key + '"]');
+    if (body) { body.innerHTML = pageSlice(key); stagger(body); countUp(body); }
+    if (bar) bar.outerHTML = pagerBar(key);
+    /* A new page starts at its own top, not at the offset the last one left. */
+    var scroller = b.closest(".panel-pages");
+    if (scroller) scroller.scrollTop = 0;
+    /* Keep the keyboard in the pager. The button just pressed may have become
+       disabled at the end of the range, which would drop focus to the body. */
+    var same = document.querySelector('[data-pager="' + key +
+      '"][data-pager-step="' + b.dataset.pagerStep + '"]');
+    if (same && !same.disabled) same.focus();
+    else {
+      var alt = document.querySelector('[data-pager="' + key + '"]:not([disabled])');
+      if (alt) alt.focus();
+    }
+  });
+
+  function esc(s) {
+    return String(s == null ? "" : s)
+      .replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+  }
+  function pct(r) { return r == null ? "--" : Math.round(r * 1000) / 10 + "%"; }
+  function titleCase(s) { return s.replace(/\b\w/g, function (c) { return c.toUpperCase(); }); }
+
+  function sortAspects(obj) {
+    return Object.keys(obj).sort(function (a, b) {
+      var ia = COMPLAINT_ORDER.indexOf(a), ib = COMPLAINT_ORDER.indexOf(b);
+      if (ia !== ib) return (ia < 0 ? 99 : ia) - (ib < 0 ? 99 : ib);
+      return b.localeCompare(a);
+    });
+  }
+
+  /* An aspect row encodes both required numbers in one mark:
+     bar WIDTH  = volume of discussion (relative to the busiest aspect here)
+     red SHARE  = how negative that discussion was                         */
+  function aspectRow(a, maxOpinions, clickable) {
+    var total = a.n_opinions || 1;
+    var width = Math.max(4, Math.round(100 * total / (maxOpinions || 1)));
+    var negShare = Math.round(100 * a.n_negative / total);
+    var chip = a.confidence === "low"
+      ? ' <span class="chip chip-low" title="5-14 opinions only">low</span>' : "";
+    if (a.aspect === "scenery") {
+      chip += ' <span class="chip chip-ctrl" title="Positive control aspect: verifies the model is not labelling everything negative">control</span>';
+    }
+    return '<button class="aspect-row' + (clickable ? "" : " is-static") + '"' +
+        (clickable ? ' data-aspect="' + esc(a.aspect) + '"' : ' disabled') + '>' +
+      '<span class="aspect-name">' + esc(a.label) + chip + '</span>' +
+      '<span class="bar-wrap">' +
+        '<span class="bar-track" style="width:' + width + '%" ' +
+          'title="' + a.n_negative + ' complaints, ' + a.n_positive + ' praise">' +
+          '<span class="bar-neg" style="width:' + negShare + '%"></span>' +
+          '<span class="bar-pos" style="width:' + (100 - negShare) + '%"></span>' +
+        '</span>' +
+      '</span>' +
+      '<span class="rate">' + pct(a.complaint_rate) + '</span>' +
+      '<span class="counts">' + a.n_negative + ' / ' + a.n_positive + '</span>' +
+      '<span class="spark-cell">' + sparkline(a.timeline) + '</span>' +
+    '</button>';
+  }
+
+
+  /* Year labels derived from the data rather than assumed. Each corpus stores
+     review age relative to its own collection date (Google March 2024,
+     TripAdvisor May 2023); converting back gives the spans below, which fall on
+     clean year boundaries. Approximate, because Google records age in coarse
+     steps ("4 years ago") rather than as a date. */
+  /* Band labels are DERIVED, not written by hand.
+     The hardcoded map that used to sit here read
+       {"5y+":"up to 2018","3-5y":"2019–2020","1-3y":"2021–2022","0-1y":"2023–2024"}
+     and every entry was about a year late, because the band names are ages
+     relative to each batch's own collection date (Google 2024-03-25,
+     TripAdvisor 2023-05-20) rather than to any calendar year. The real
+     windows, computed from the corpus in aggregate.py, are:
+       5y+ 2011-03→2018-05, 3-5y 2018-05→2020-05,
+       1-3y 2020-05→2022-05, 0-1y 2022-05→2024-03.
+     Deriving them means they cannot go stale again when the corpus grows. */
+  var BAND_LABEL = (function () {
+    var bands = (TREE.evidence && TREE.evidence.bands) || {};
+    var out = {}, yr = function (d) { return d ? String(d).slice(0, 4) : null; };
+    ["5y+", "3-5y", "1-3y", "0-1y"].forEach(function (b) {
+      var w = bands[b], a = yr(w && w[0]), z = yr(w && w[1]);
+      out[b] = (a && z) ? (a === z ? a : a + "–" + z) : b;
+    });
+    return out;
+  })();
+
+  /* One line, on the front page, saying what period this is a picture of.
+     Rendered from the corpus's own collection dates rather than asserted. */
+  function evidenceNote() {
+    var ev = TREE.evidence;
+    if (!ev || !ev.window || !ev.window[0]) return "";
+    var age = evidenceAge();
+    var span = String(ev.window[0]).slice(0, 4) + "–" +
+               String(ev.window[1]).slice(0, 4);
+    var when = new Date(ev.observation_end + "T00:00:00Z")
+      .toLocaleDateString(undefined, { year: "numeric", month: "long" });
+    return '<p class="evidence-note">Evidence spans ' + span +
+      ' and ends with the last collection in ' + when +
+      (age ? ', ' + age.text + ' ago' : '') +
+      '. Nothing here reflects conditions since. The age bands below are ' +
+      'measured from collection, not from today.</p>';
+  }
+
+  /* How old is the newest evidence, right now, in the reader's browser?
+     Computed at render time and never stored: an age baked into the data file
+     is wrong the day after it is written. */
+  function evidenceAge() {
+    var end = TREE.evidence && TREE.evidence.observation_end;
+    if (!end) return null;
+    var months = (Date.now() - new Date(end + "T00:00:00Z").getTime())
+                 / (1000 * 60 * 60 * 24 * 30.44);
+    if (!isFinite(months) || months < 0) return null;
+    var years = months / 12;
+    return {
+      end: end,
+      months: months,
+      text: years >= 1 ? (years < 1.6 ? "about a year"
+                          : (Math.round(years * 10) / 10) + " years")
+                       : Math.round(months) + " months"
+    };
+  }
+
+  /* Complaint rate across the four periods, oldest on the left.
+     Dot radius scales with the SQUARE ROOT of the opinion count so that area,
+     not radius, is proportional to sample size -- the standard convention, and
+     the one that stops a big dot from overstating its weight. Bands with no
+     opinions are absent; nothing is interpolated across a gap. */
+  function sparkline(tl) {
+    if (!tl || !tl.length) return "";
+    var pts = tl.filter(function (t) { return t.n_opinions > 0 && t.rate !== null; });
+    if (pts.length < 2) return '<svg class="spark" width="88" height="26"></svg>';
+    var W = 88, H = 26, PAD = 6;
+    var maxN = Math.max.apply(null, pts.map(function (p) { return p.n_opinions; }));
+    var xs = {}, order = ["5y+", "3-5y", "1-3y", "0-1y"];
+    order.forEach(function (b, i) { xs[b] = PAD + i * (W - 2 * PAD) / 3; });
+    var y = function (r) { return H - PAD - r * (H - 2 * PAD); };
+    var d = pts.map(function (p, i) {
+      return (i ? "L" : "M") + xs[p.band].toFixed(1) + " " + y(p.rate).toFixed(1);
+    }).join("");
+    var dots = pts.map(function (p) {
+      var r = 1.6 + 3.4 * Math.sqrt(p.n_opinions / maxN);
+      var col = p.rate >= 0.5 ? "var(--critical)" : "var(--good)";
+      return '<circle class="spark-dot" cx="' + xs[p.band].toFixed(1) + '" cy="' +
+        y(p.rate).toFixed(1) + '" r="' + r.toFixed(1) + '" fill="' + col + '"></circle>';
+    }).join("");
+    var title = pts.map(function (p) {
+      return (BAND_LABEL[p.band] || p.band) + ": " + Math.round(100 * p.rate) +
+        "% of " + p.n_opinions + " opinions";
+    }).join(" \u2014 ");
+    return '<svg class="spark" width="' + W + '" height="' + H + '" role="img" ' +
+      'aria-label="complaint rate over time">' +
+      '<title>' + esc(title) + ' (oldest left, newest right; dot size = number of opinions)</title>' +
+      '<line class="spark-axis" x1="0" y1="' + y(0.5).toFixed(1) + '" x2="' + W +
+      '" y2="' + y(0.5).toFixed(1) + '"></line>' +
+      '<path class="spark-line" d="' + d + '"></path>' + dots + '</svg>';
+  }
+
+  /* The same timeline as a table, shown in the evidence panel. The chart gives
+     the shape; the table gives the actual counts, so nobody has to estimate a
+     value off a 26-pixel graphic. */
+
+  function timelineTable(tl) {
+    if (!tl) return "";
+    var rows = tl.filter(function (t) { return t.n_opinions > 0; });
+    if (rows.length < 2) return "";
+    return '<table class="tl-table"><thead><tr><th>Years</th>' +
+      '<th>Complaints</th><th>Praise</th><th>Complaint rate</th></tr></thead><tbody>' +
+      rows.map(function (t) {
+        return '<tr><td>' + (BAND_LABEL[t.band] || t.band) + '</td><td>' +
+          t.n_negative + '</td><td>' + t.n_positive + '</td><td>' +
+          Math.round(100 * t.rate) + '%</td></tr>';
+      }).join("") + '</tbody></table>' +
+      '<p style="font-size:12px;color:var(--ink-muted);margin:4px 0 0">Oldest first. Years are ' +
+      'approximate &mdash; Google records review age in coarse steps rather than as a date. ' +
+      'Read the rate, not the counts &mdash; a later row can show more complaints ' +
+      'simply because more people wrote reviews that year.</p>';
+  }
+
+  function aspectBlock(aspects, clickable) {
+    var keys = sortAspects(aspects);
+    if (!keys.length) return '<p class="empty">No aspect reached the 5-opinion threshold here.</p>';
+    var max = 0;
+    keys.forEach(function (k) { max = Math.max(max, aspects[k].n_opinions || 0); });
+    return '<div class="legend">' +
+        '<span><i style="background:var(--critical)"></i>complaints</span>' +
+        '<span><i style="background:var(--good)"></i>praise</span>' +
+        '<span>bar length = volume of discussion</span>' +
+        '<span>right column = complaints / praise</span>' +
+        '<span>far right = rate over time, oldest left, dot size = sample</span>' +
+      '</div><div class="aspects">' +
+      keys.map(function (k) { return aspectRow(aspects[k], max, clickable); }).join("") +
+      '</div>';
+  }
+
+  /* Evidence quotes, sortable and filterable by the reader.
+     Sorting is done here rather than server-side so the whole retained set stays
+     available -- a reader looking for RECENT complaints should not be shown only
+     the longest ones and told that is what people said. */
+  var QUOTE_STATE = { sort: "newest", band: "all", side: "N" };
+  var BAND_ORDER = { "5y+": 0, "3-5y": 1, "1-3y": 2, "0-1y": 3 };
+
+  /* Below this the classifier was close to a coin flip on which way the
+     segment read. Such quotes are still shown -- hiding them would quietly
+     inflate how certain the evidence looks -- but they are marked, because
+     rendering a 42%-confidence call identically to an 87% one invites the
+     reader to weigh them equally. From the payload, not a literal here. */
+  var LOW_CONF = (function () {
+    var v = (TREE.thresholds || {}).low_confidence_quote;
+    if (typeof v !== "number") {
+      // Same rule as GATHERED_QUOTE_CAP: no silent literal. A default here
+      // would mark quotes against a threshold config.py never set, and look
+      // like it worked. 0 marks nothing, which is visibly wrong rather
+      // than invisibly wrong.
+      console.warn("thresholds.low_confidence_quote missing from payload -- " +
+                   "rebuild the dashboard (scripts/08_build_dashboard.py)");
+      return 0;
+    }
+    return v;
+  })();
+
+  /* Which quote list a node carries for the currently selected side. The
+     complaint list stays on `.quotes` -- unchanged meaning for anything
+     that already read it -- and praise lives beside it. */
+  function quotesFor(a, side) {
+    return (side === "P" ? a.quotes_positive : a.quotes) || [];
+  }
+
+  function sortQuotes(quotes) {
+    var q = quotes.slice();
+    if (QUOTE_STATE.band !== "all") {
+      q = q.filter(function (x) { return x.band === QUOTE_STATE.band; });
+    }
+    var by = QUOTE_STATE.sort;
+    q.sort(function (a, b) {
+      if (by === "newest") return (BAND_ORDER[b.band] || 0) - (BAND_ORDER[a.band] || 0);
+      if (by === "oldest") return (BAND_ORDER[a.band] || 0) - (BAND_ORDER[b.band] || 0);
+      if (by === "strongest") return (b.conf || 0) - (a.conf || 0);
+      return (b.len || 0) - (a.len || 0);   /* most detailed */
+    });
+    return q;
+  }
+
+  function quoteControls(a) {
+    var side = QUOTE_STATE.side;
+    var bands = {};
+    quotesFor(a, side).forEach(function (q) { if (q.band) bands[q.band] = (bands[q.band] || 0) + 1; });
+    /* "Most clearly negative" is wrong when the praise side is showing --
+       it is the same underlying field (model confidence in ITS OWN call),
+       so it reads as "most clearly positive" there. */
+    var strongestLabel = side === "P" ? "Most clearly positive" : "Most clearly negative";
+    var sorts = [["newest", "Newest first"], ["oldest", "Oldest first"],
+                 ["strongest", strongestLabel], ["detailed", "Most detailed"]];
+    var html = '<div class="quote-controls"><span>Sort</span>' +
+      sorts.map(function (p) {
+        return '<button data-qsort="' + p[0] + '" aria-pressed="' +
+          (QUOTE_STATE.sort === p[0]) + '">' + p[1] + '</button>';
+      }).join("");
+    var order = ["0-1y", "1-3y", "3-5y", "5y+"].filter(function (b) { return bands[b]; });
+    if (order.length > 1) {
+      html += '<span class="sep">|</span><span>Period</span>' +
+        '<button data-qband="all" aria-pressed="' + (QUOTE_STATE.band === "all") + '">All</button>' +
+        order.map(function (b) {
+          return '<button data-qband="' + b + '" aria-pressed="' +
+            (QUOTE_STATE.band === b) + '">' + (BAND_LABEL[b] || b) +
+            ' (' + bands[b] + ')</button>';
+        }).join("");
+    }
+    return html + '</div>';
+  }
+
+  /* Complaint/praise switch plus a plain statement of what is on screen.
+
+     The panel above shows a rate built from BOTH sides ("12 complaints, 11
+     praise, 52.2%") but only ever let a reader read the negative half, and
+     nothing said so -- the tab is called "Aspects", not "Complaints". A
+     reader could reasonably take the quotes for a sample of reviews and
+     conclude a place is worse than the data says. Both sides are readable
+     now, and the header states the split either way. */
+  function quoteSideSwitch(a) {
+    var nNeg = (a.quotes || []).length;
+    var nPos = (a.quotes_positive || []).length;
+    var side = QUOTE_STATE.side;
+    var total = (a.n_negative || 0) + (a.n_positive || 0);
+    var shown = side === "P" ? (a.n_positive || 0) : (a.n_negative || 0);
+    var word = side === "P" ? "praise" : "complaints";
+
+    return '<div class="quote-side">' +
+      '<button data-qside="N" aria-pressed="' + (side === "N") + '"' +
+        (nNeg ? "" : " disabled") + '>Complaints' +
+        (nNeg ? ' (' + nNeg + ')' : ' (0)') + '</button>' +
+      '<button data-qside="P" aria-pressed="' + (side === "P") + '"' +
+        (nPos ? "" : " disabled") + '>Praise' +
+        (nPos ? ' (' + nPos + ')' : ' (0)') + '</button>' +
+      '<span class="quote-side-note">Showing ' + word + ' only &mdash; ' +
+        shown.toLocaleString() + ' of ' + total.toLocaleString() +
+        ' opinions on this topic. The rate above counts both.</span>' +
+    '</div>';
+  }
+
+  function quoteBlock(a) {
+    var side = QUOTE_STATE.side;
+    var all = quotesFor(a, side);
+    var noun = side === "P" ? "praise" : "complaint";
+    if (!all.length) {
+      return quoteSideSwitch(a) +
+        '<p class="empty">No ' + noun + ' quotes stored for this aspect.</p>';
+    }
+    var q = sortQuotes(all);
+    var body = q.length
+      ? q.map(function (x) {
+          var low = typeof x.conf === "number" && x.conf < LOW_CONF;
+          return '<blockquote class="quote' + (side === "P" ? " is-praise" : "") +
+              (low ? " is-low-conf" : "") + '">' +
+            (x.band ? '<span class="quote-band">' + esc(BAND_LABEL[x.band] || x.band) + '</span>' : "") +
+            (low ? '<span class="quote-flag" title="The classifier was near a ' +
+                   'coin flip on this one. Shown, not hidden -- but weigh it ' +
+                   'accordingly.">uncertain</span>' : "") +
+            esc(x.text) +
+            '<div class="quote-meta">' + esc(x.destination) + ' &middot; review ' +
+            esc(x.review_id) + (x.conf ? ' &middot; classifier confidence ' +
+            Math.round(100 * x.conf) + '%' : "") + '</div></blockquote>';
+        }).join("")
+      : '<p class="empty">No ' + noun + 's stored from that period.</p>';
+    return quoteSideSwitch(a) + quoteControls(a) + '<div class="quotes">' + body + '</div>';
+  }
+
+  /* ------------------------------------------------------------ map
+     Equirectangular projection, drawn as inline SVG. Sri Lanka spans about
+     4 degrees of latitude, so a plain lon/lat projection with a cos(lat)
+     width correction is accurate enough at this scale and needs no library.
+
+     Districts we have no reviews for are hatched, NEVER shaded pale. Pale
+     would read as "few complaints"; the truth is "never measured".         */
+  /* Island aspect, from the projection's viewBox (420 x 705). Shared by the
+     stylesheet and the 3D canvas so the two views occupy an identical box. */
+  var MAP_AR = 420 / 705;
+  /* The isometric view's shape. Measured, not guessed: with the default
+     camera the fit spans about 520 x 490 world units -- the island
+     foreshortens in depth, but frameFit also reserves 110 units of headroom
+     above it for the tallest complaint column, which brings the frame back
+     towards square. 1.62 left the drawn island using 60% of the canvas
+     width; 1.3 is close enough to the content that both axes fill. */
+  var ISO_AR = 1.3;
+  var MAP_ASPECT = "roads_access";
+  var PROJ = null;
+
+  function project() {
+    if (PROJ) return PROJ;
+    var minLon = 180, maxLon = -180, minLat = 90, maxLat = -90;
+    GEO.features.forEach(function (f) {
+      eachRing(f, function (ring) {
+        ring.forEach(function (p) {
+          if (p[0] < minLon) minLon = p[0];
+          if (p[0] > maxLon) maxLon = p[0];
+          if (p[1] < minLat) minLat = p[1];
+          if (p[1] > maxLat) maxLat = p[1];
+        });
+      });
+    });
+    var W = 420;
+    var kx = Math.cos((minLat + maxLat) / 2 * Math.PI / 180);
+    var H = W * ((maxLat - minLat) / ((maxLon - minLon) * kx));
+    PROJ = {
+      W: W, H: H,
+      x: function (lon) { return (lon - minLon) / (maxLon - minLon) * W; },
+      y: function (lat) { return (maxLat - lat) / (maxLat - minLat) * H; }
+    };
+    return PROJ;
+  }
+
+  function eachRing(feature, fn) {
+    var g = feature.geometry;
+    if (g.type === "Polygon") g.coordinates.forEach(fn);
+    else if (g.type === "MultiPolygon") g.coordinates.forEach(function (poly) { poly.forEach(fn); });
+  }
+
+  function featurePath(feature) {
+    var p = project(), d = "";
+    eachRing(feature, function (ring) {
+      ring.forEach(function (pt, i) {
+        d += (i ? "L" : "M") + p.x(pt[0]).toFixed(1) + " " + p.y(pt[1]).toFixed(1);
+      });
+      d += "Z";
+    });
+    return d;
+  }
+
+  function mapValues(aspectKey) {
+    var vals = {};
+    Object.keys(TREE.districts).forEach(function (name) {
+      var a = TREE.districts[name].aspects[aspectKey];
+      if (a && a.complaint_rate != null) {
+        vals[name] = { rate: a.complaint_rate, neg: a.n_negative, pos: a.n_positive,
+                       conf: a.confidence, label: a.label };
+      }
+    });
+    return vals;
+  }
+
+
+  /* Look up one aspect's stats for a destination, wherever it sits in the tree. */
+  function destAspect(dest, aspectKey) {
+    var names = Object.keys(TREE.districts);
+    for (var i = 0; i < names.length; i++) {
+      var d = TREE.districts[names[i]].destinations[dest];
+      if (d && d.aspects && d.aspects[aspectKey]) return d.aspects[aspectKey];
+    }
+    return null;
+  }
+
+  /* Which district a destination sits in. The coordinates file carries one,
+     but the tree is authoritative -- OSM sometimes files a place under a
+     different district than the corpus does (Sembuwatta: Kandy vs Matale). */
+  function destDistrict(dest) {
+    var names = Object.keys(TREE.districts);
+    for (var i = 0; i < names.length; i++) {
+      if (TREE.districts[names[i]].destinations[dest]) return names[i];
+    }
+    return null;
+  }
+
+  var SHOW_PINS = true;
+
+
+  /* ------------------------------------------------------------ 3D terrain
+     A heightfield renderer on a canvas. No mapping library and no tile
+     server: the page has to open from a memory stick with no network, so the
+     elevation is collected once (NASA SRTM 30m, public domain) and embedded
+     as a 64x96 grid of integers -- about 30 KB, less than a single map tile.
+
+     What is drawn, in order:
+       1. the terrain, one quad per grid cell, shaded by slope so the central
+          highlands and the Knuckles range read as landforms
+       2. a complaint-rate tint on the cells belonging to each district, so
+          the choropleth is painted ON the terrain rather than floating over it
+       3. district boundaries, draped by sampling terrain height along them
+       4. one column per destination: HEIGHT is complaint count, COLOUR is
+          complaint rate
+
+     Honest caveats, stated in the legend too:
+       * vertical relief is exaggerated about 12x. At true scale a 2.5 km peak
+         on a 400 km island is invisible. Any 3D map you have seen does this;
+         few admit it.
+       * perspective makes distant columns smaller and lets near ones hide far
+         ones, so heights cannot be compared across depth. The flat map
+         remains the one to read values from. Both are driven by identical
+         data.
+       * the canvas cannot be reached by keyboard. Every district is also a
+         button in the list below the map, which can -- the 3D view adds a way
+         in, it does not remove one.                                        */
+  var MAP_MODE = "flat";          /* "flat" | "iso" */
+  var SELECTED_DISTRICT = null;
+
+  /* Camera. cx/cy are the look-at point in map units; yaw and pitch are
+     radians; zoom is a plain multiplier. */
+  var CAM = { yaw: 0.62, pitch: 0.48, zoom: 1, cx: 0, cy: 0 };
+  var CAM_FROM = null, CAM_TO = null, CAM_T0 = 0, CAM_MS = 900;
+  var SPIN = true, RAF = null, DRAG = null, MOVED = 0;
+  var HOVER_DISTRICT = null;
+  /* Which district the camera is currently framed on. Compared against
+     SELECTED_DISTRICT so the fly-to happens however the selection was
+     made -- clicking the map, clicking the list, or the breadcrumb. */
+  var CAM_FOCUS = null;
+  var HITS = [];                  /* screen polygons for click testing */
+
+  /* Vertical exaggeration. Named, not hidden, because it is a claim about the
+     picture rather than about the data. 22x is chosen so the central massif
+     and the Knuckles read as distinct landforms at the default pitch; below
+     about 15x the island looks flat and the terrain earns nothing. */
+  var RELIEF = 22;
+
+  function reduceMotion() {
+    return !!(window.matchMedia &&
+              window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+  }
+
+  function cssVar(name) {
+    return getComputedStyle(document.documentElement)
+      .getPropertyValue(name).trim() || "#888";
+  }
+
+  /* #rrggbb -> [r,g,b]. The palette is authored in hex in one place, so the
+     canvas reads the same tokens the rest of the page does and follows the
+     light/dark switch without a second definition. */
+  function rgb(hex) {
+    var h = hex.replace("#", "");
+    if (h.length === 3) h = h[0] + h[0] + h[1] + h[1] + h[2] + h[2];
+    var n = parseInt(h, 16);
+    return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
+  }
+  function mix(a, b, t) {
+    return [Math.round(a[0] + (b[0] - a[0]) * t),
+            Math.round(a[1] + (b[1] - a[1]) * t),
+            Math.round(a[2] + (b[2] - a[2]) * t)];
+  }
+  function css(c, alpha) {
+    return "rgba(" + c[0] + "," + c[1] + "," + c[2] + "," +
+           (alpha === undefined ? 1 : alpha) + ")";
+  }
+
+  /* ---------------------------------------------------------- terrain prep */
+  var TERRA = null;
+
+  function pointInRing(lon, lat, ring) {
+    var inside = false;
+    for (var i = 0, j = ring.length - 1; i < ring.length; j = i++) {
+      var xi = ring[i][0], yi = ring[i][1], xj = ring[j][0], yj = ring[j][1];
+      if (((yi > lat) !== (yj > lat)) &&
+          (lon < (xj - xi) * (lat - yi) / (yj - yi) + xi)) inside = !inside;
+    }
+    return inside;
+  }
+
+  function prepTerrain() {
+    if (TERRA !== null) return TERRA;
+    if (!TERRAIN || !TERRAIN.z || !TERRAIN.z.length || !TERRAIN.z[0]) {
+      TERRA = false;                       /* no grid -> flat plane fallback */
+      return TERRA;
+    }
+    var p = project();
+    var cols = TERRAIN.cols, rows = TERRAIN.rows, z = TERRAIN.z;
+    var xs = TERRAIN.lons.map(function (lon) { return p.x(lon); });
+    var ys = TERRAIN.lats.map(function (lat) { return p.y(lat); });
+
+    var maxZ = 1, i, j;
+    for (j = 0; j < rows; j++) {
+      for (i = 0; i < cols; i++) if (z[j][i] > maxZ) maxZ = z[j][i];
+    }
+    /* Metres -> map units, then exaggerated. */
+    var vs = (p.W * 0.075 / maxZ) * RELIEF / 12;
+
+    /* Which district each cell falls in. Done once: 6,144 cells against 22
+       polygons is far too slow to repeat every frame, and it never changes. */
+    var bounds = GEO.features.map(function (f) {
+      var b = [180, 90, -180, -90], rings = [];
+      eachRing(f, function (ring) {
+        rings.push(ring);
+        ring.forEach(function (pt) {
+          if (pt[0] < b[0]) b[0] = pt[0];
+          if (pt[1] < b[1]) b[1] = pt[1];
+          if (pt[0] > b[2]) b[2] = pt[0];
+          if (pt[1] > b[3]) b[3] = pt[1];
+        });
+      });
+      return { name: f.properties.district, box: b, rings: rings };
+    });
+
+    var owner = new Array(rows);
+    for (j = 0; j < rows; j++) {
+      owner[j] = new Array(cols);
+      var lat = TERRAIN.lats[j];
+      for (i = 0; i < cols; i++) {
+        var lon = TERRAIN.lons[i], hit = null;
+        for (var k = 0; k < bounds.length; k++) {
+          var b = bounds[k];
+          if (lon < b.box[0] || lon > b.box[2] || lat < b.box[1] || lat > b.box[3]) continue;
+          for (var r = 0; r < b.rings.length; r++) {
+            if (pointInRing(lon, lat, b.rings[r])) { hit = b.name; break; }
+          }
+          if (hit) break;
+        }
+        owner[j][i] = hit;
+      }
+    }
+
+    /* Slope shading. A cell's brightness comes from the angle between its
+       surface normal and a light from the north-west -- the convention that
+       makes ridges read as ridges rather than as valleys. */
+    var shade = new Array(rows);
+    var stepX = Math.abs(xs[1] - xs[0]) || 1, stepY = Math.abs(ys[1] - ys[0]) || 1;
+    for (j = 0; j < rows; j++) {
+      shade[j] = new Array(cols);
+      for (i = 0; i < cols; i++) {
+        var zl = z[j][Math.max(0, i - 1)], zr = z[j][Math.min(cols - 1, i + 1)];
+        var zu = z[Math.max(0, j - 1)][i], zd = z[Math.min(rows - 1, j + 1)][i];
+        var nx = (zl - zr) * vs / (2 * stepX), ny = (zu - zd) * vs / (2 * stepY);
+        var len = Math.sqrt(nx * nx + ny * ny + 1);
+        /* light direction, normalised */
+        var lx = -0.55, ly = -0.55, lz = 0.63;
+        var d = (nx * lx + ny * ly + lz) / len;
+        shade[j][i] = Math.max(0, Math.min(1, 0.5 + d * 0.95));
+      }
+    }
+
+    TERRA = { cols: cols, rows: rows, xs: xs, ys: ys, z: z, vs: vs,
+              owner: owner, shade: shade, maxZ: maxZ };
+    return TERRA;
+  }
+
+  /* --------------------------------------------------------------- camera */
+  /* CAM.cx/cy are an OFFSET from the middle of the map, not absolute map
+     coordinates. Treating them as absolute put the camera at the map's corner
+     and pushed the island off the right edge of the canvas. */
+  function camProject(x, y, zz, out) {
+    var pj = project();
+    var dx = x - pj.W / 2 - CAM.cx, dy = y - pj.H / 2 - CAM.cy;
+    var c = Math.cos(CAM.yaw), s = Math.sin(CAM.yaw);
+    var rx = dx * c - dy * s, ry = dx * s + dy * c;
+    out[0] = rx * CAM.zoom;
+    out[1] = (ry * Math.sin(CAM.pitch) - zz) * CAM.zoom;
+    out[2] = ry;                            /* depth, larger = nearer */
+    return out;
+  }
+
+  function districtCentre(name) {
+    var p = project(), sx = 0, sy = 0, n = 0;
+    GEO.features.forEach(function (f) {
+      if (f.properties.district !== name) return;
+      eachRing(f, function (ring) {
+        ring.forEach(function (pt) { sx += p.x(pt[0]); sy += p.y(pt[1]); n++; });
+      });
+    });
+    return n ? { x: sx / n, y: sy / n } : null;
+  }
+
+  function easeInOut(t) {
+    return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+  }
+
+  /* Fly the camera somewhere. Instant when the reader has asked for reduced
+     motion -- they still get the destination, just not the journey. */
+  function flyTo(target, ms) {
+    if (reduceMotion()) {
+      for (var k in target) if (target.hasOwnProperty(k)) CAM[k] = target[k];
+      CAM_TO = null;
+      draw3D();
+      return;
+    }
+    CAM_FROM = { yaw: CAM.yaw, pitch: CAM.pitch, zoom: CAM.zoom,
+                 cx: CAM.cx, cy: CAM.cy };
+    CAM_TO = target;
+    CAM_MS = ms || 900;
+    CAM_T0 = performance.now();
+    startLoop();
+  }
+
+  function flyToDistrict(name) {
+    var p = project();
+    if (!name) {
+      flyTo({ cx: 0, cy: 0, zoom: 1, pitch: 0.55 }, 850);
+      return;
+    }
+    var c = districtCentre(name);
+    if (!c) return;
+    /* Yaw is left alone: spinning the country to face the reader is
+       disorienting when they only asked to look at one district. */
+    /* 1.75x rather than tighter: the district has to arrive with its
+       neighbours and its complaint columns still in frame, or the reader
+       loses both the context and the data they flew in to see. */
+    flyTo({ cx: c.x - p.W / 2, cy: c.y - p.H / 2, zoom: 1.75, pitch: 0.6 }, 950);
+  }
+
+  /* Measures the projected extent of the island at the current yaw/pitch,
+     ignoring pan and zoom, and returns the scale that fits it plus the centre
+     to align on. Sampled rather than exhaustive: every 3rd boundary vertex is
+     more than enough to bound a shape, and this runs every frame. */
+  var FIT_SAMPLE = null;
+
+  function frameFit(p, t) {
+    if (!FIT_SAMPLE) {
+      FIT_SAMPLE = [];
+      GEO.features.forEach(function (f) {
+        eachRing(f, function (ring) {
+          for (var i = 0; i < ring.length; i += 3) {
+            var x = p.x(ring[i][0]), y = p.y(ring[i][1]);
+            FIT_SAMPLE.push([x, y, sampleZ(t, x, y)]);
+          }
+        });
+      });
+    }
+    var c = Math.cos(CAM.yaw), s2 = Math.sin(CAM.yaw), sp = Math.sin(CAM.pitch);
+    var x0 = 1e9, y0 = 1e9, x1 = -1e9, y1 = -1e9;
+    for (var i = 0; i < FIT_SAMPLE.length; i++) {
+      var dx = FIT_SAMPLE[i][0] - p.W / 2, dy = FIT_SAMPLE[i][1] - p.H / 2;
+      var rx = dx * c - dy * s2, ry = dx * s2 + dy * c;
+      var sy = ry * sp - FIT_SAMPLE[i][2];
+      if (rx < x0) x0 = rx;
+      if (rx > x1) x1 = rx;
+      if (sy < y0) y0 = sy;
+      if (sy > y1) y1 = sy;
+    }
+    /* Headroom above the terrain for the tallest complaint column. */
+    y0 -= 110;
+    var spanX = Math.max(1, x1 - x0), spanY = Math.max(1, y1 - y0);
+    /* Measure the CANVAS, both axes. This read the host's width while the
+       canvas had its own, narrower width -- so the fit solved for a frame
+       wider than the one being drawn into and zoomed out to suit, which is
+       part of why the island came out small inside a large card. */
+    var cv = document.getElementById("map-canvas");
+    var w = cv && cv.clientWidth > 40 ? cv.clientWidth : 640;
+    var h = cv && cv.clientHeight > 40 ? cv.clientHeight : Math.round(w / ISO_AR);
+    return {
+      scale: Math.min(w * 0.92 / spanX, h * 0.92 / spanY),
+      mx: (x0 + x1) / 2,
+      my: (y0 + y1) / 2
+    };
+  }
+
+  /* ---------------------------------------------------------------- render */
+  function draw3D() {
+    var cv = document.getElementById("map-canvas");
+    if (!cv) return;
+    var host = cv.parentNode;
+    var dpr = Math.min(window.devicePixelRatio || 1, 2);
+    var wCss = host.clientWidth || 640;
+    /* When the map sits in a height-constrained column -- the viewport-fit
+       layout -- fill it. Deriving height from width there produced a canvas
+       shorter than its own container and a band of empty space under the
+       island. Falls back to the 0.72 ratio when nothing constrains it. */
+    /* The map is no longer letterboxed: its box is the island's own aspect
+       (viewBox 420x705, so 0.5957 wide per unit tall), which is why the flat
+       map went from a 155px island in a 585px box to one that fills it.
+       The canvas mirrors that box exactly.
+
+       Width is capped so the resulting HEIGHT stays inside the fold budget,
+       and it is derived from the host's WIDTH plus the window -- never from
+       any height the canvas itself contributes, which is the loop that once
+       grew this to 4351px. */
+    /* The 3D view is a different SHAPE from the flat one. Seen from a raised
+       camera the island foreshortens to roughly 1.6 wide per unit tall, where
+       the flat map is 0.6 -- so putting both in one box wastes most of it in
+       whichever view it does not suit. It was the 3D view losing: a ~330px
+       island adrift in a 600px-tall card. Each view now carries its own
+       aspect, and in 3D the rail moves below so the canvas takes the full
+       width (see .map-shell.is-3d). */
+    var budget = Math.max(200, Math.min(window.innerHeight - 160, 545));
+    wCss = Math.min(wCss, budget * ISO_AR);
+    var hCss = Math.round(wCss / ISO_AR);
+    if (cv.width !== Math.round(wCss * dpr) || cv.height !== Math.round(hCss * dpr)) {
+      cv.width = Math.round(wCss * dpr);
+      cv.height = Math.round(hCss * dpr);
+      cv.style.width = wCss + "px";
+      cv.style.height = hCss + "px";
+    }
+    var ctx = cv.getContext("2d");
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.clearRect(0, 0, wCss, hCss);
+
+    var p = project();
+    var t = prepTerrain();
+    var vals = mapValues(MAP_ASPECT);
+
+    /* Framing. A fixed scale cannot work: as the island rotates its projected
+       width swings between its narrow and its diagonal extent, and terrain
+       plus columns add height that depends on the pitch. So the extent is
+       measured first -- with the pan and zoom neutralised -- and the scale
+       and origin derived from it. That keeps the country fully in frame at
+       every angle instead of sliding off an edge mid-spin. */
+    var fitInfo = frameFit(p, t);
+    var fit = fitInfo.scale * CAM.zoom;
+    /* The centring correction uses the BASE scale, not the zoomed one. It
+       compensates for the projection being asymmetric about the map centre
+       (terrain rises, and headroom is reserved above for the columns), which
+       is a fixed screen-space offset. Multiplying it by zoom made it grow
+       with the zoom and pushed a flown-to district off the canvas. */
+    var ox = wCss / 2 - fitInfo.mx * fitInfo.scale;
+    var oy = hCss / 2 - fitInfo.my * fitInfo.scale;
+
+    var land = rgb(cssVar("--surface-2"));
+    var high = rgb(cssVar("--ink-faint"));
+    var crit = rgb(cssVar("--critical"));
+    var line = rgb(cssVar("--ink-muted"));
+    var acc = rgb(cssVar("--accent"));
+
+    var q = [0, 0, 0];
+    function scr(x, y, zz) {
+      camProject(x, y, zz, q);
+      return [ox + q[0] * fit, oy + q[1] * fit, q[2]];
+    }
+
+    HITS = [];
+
+    if (t) {
+      /* Painter's order without a sort: on a regular grid the correct
+         far-to-near sequence is fixed by the sign of the rotated basis, so
+         the iteration direction is chosen and the whole grid draws in one
+         pass. Sorting 6,000 quads every frame would cost more than the
+         drawing does. */
+      var c = Math.cos(CAM.yaw), s = Math.sin(CAM.yaw);
+      var iStart = s > 0 ? 0 : t.cols - 2, iEnd = s > 0 ? t.cols - 1 : -1, iStep = s > 0 ? 1 : -1;
+      var jStart = c > 0 ? 0 : t.rows - 2, jEnd = c > 0 ? t.rows - 1 : -1, jStep = c > 0 ? 1 : -1;
+
+      for (var j = jStart; j !== jEnd; j += jStep) {
+        for (var i = iStart; i !== iEnd; i += iStep) {
+          var z00 = t.z[j][i], z10 = t.z[j][i + 1],
+              z01 = t.z[j + 1][i], z11 = t.z[j + 1][i + 1];
+          /* Sea is drawn, but flat and unshaded -- a rippling ocean would be
+             decoration competing with the data. */
+          var isSea = (z00 <= 0 && z10 <= 0 && z01 <= 0 && z11 <= 0);
+          if (isSea) continue;
+
+          var a = scr(t.xs[i], t.ys[j], z00 * t.vs);
+          var b2 = scr(t.xs[i + 1], t.ys[j], z10 * t.vs);
+          var d2 = scr(t.xs[i + 1], t.ys[j + 1], z11 * t.vs);
+          var e2 = scr(t.xs[i], t.ys[j + 1], z01 * t.vs);
+
+          var sh = t.shade[j][i];
+          var alt = Math.min(1, z00 / (t.maxZ * 0.8));
+          var base = mix(land, high, alt * 0.55);
+          base = mix([0, 0, 0], base, 0.35 + sh * 0.75);
+
+          var owner = t.owner[j][i];
+          var v = owner ? vals[owner] : null;
+          if (v) {
+            /* The choropleth, painted onto the ground itself. */
+            base = mix(base, crit, 0.16 + 0.46 * v.rate);
+          }
+          var dim = SELECTED_DISTRICT && owner !== SELECTED_DISTRICT;
+          var hot = HOVER_DISTRICT && owner === HOVER_DISTRICT;
+          var alpha = dim ? 0.34 : 1;
+          if (hot && !dim) base = mix(base, acc, 0.22);
+
+          ctx.fillStyle = css(base, alpha);
+          ctx.beginPath();
+          ctx.moveTo(a[0], a[1]);
+          ctx.lineTo(b2[0], b2[1]);
+          ctx.lineTo(d2[0], d2[1]);
+          ctx.lineTo(e2[0], e2[1]);
+          ctx.closePath();
+          ctx.fill();
+        }
+      }
+    }
+
+    /* District boundaries, draped over the terrain. Also the click targets. */
+    GEO.features.forEach(function (f) {
+      var name = f.properties.district;
+      var v = vals[name];
+      var poly = [];
+      eachRing(f, function (ring) {
+        var pts = ring.map(function (pt) {
+          var x = p.x(pt[0]), y = p.y(pt[1]);
+          return scr(x, y, sampleZ(t, x, y));
+        });
+        poly.push(pts);
+      });
+      HITS.push({ name: name, rings: poly, hasData: !!v });
+
+      var sel = name === SELECTED_DISTRICT;
+      ctx.lineWidth = sel ? 2.4 : (name === HOVER_DISTRICT ? 1.8 : 0.9);
+      ctx.strokeStyle = sel ? css(acc, 1)
+        : (v ? css(line, 0.75) : css(line, 0.4));
+      poly.forEach(function (pts) {
+        ctx.beginPath();
+        pts.forEach(function (pt, k) {
+          if (k) ctx.lineTo(pt[0], pt[1]); else ctx.moveTo(pt[0], pt[1]);
+        });
+        ctx.closePath();
+        ctx.stroke();
+      });
+
+      /* No data must never read as "few complaints", so it is hatched here
+         exactly as it is on the flat map -- never shaded pale. */
+      if (!v) {
+        ctx.save();
+        ctx.beginPath();
+        poly.forEach(function (pts) {
+          pts.forEach(function (pt, k) {
+            if (k) ctx.lineTo(pt[0], pt[1]); else ctx.moveTo(pt[0], pt[1]);
+          });
+          ctx.closePath();
+        });
+        ctx.clip();
+        ctx.strokeStyle = css(line, 0.20);
+        ctx.lineWidth = 0.8;
+        var bb = ringBounds(poly);
+        for (var g = bb.x0 - bb.y1; g < bb.x1; g += 11) {
+          ctx.beginPath();
+          ctx.moveTo(g, bb.y0);
+          ctx.lineTo(g + (bb.y1 - bb.y0), bb.y1);
+          ctx.stroke();
+        }
+        ctx.restore();
+      }
+    });
+
+    /* Destination columns, far to near. */
+    var cols = [], maxN = 1;
+    Object.keys(COORDS).forEach(function (dest) {
+      var rec = destAspect(dest, MAP_ASPECT);
+      if (rec && rec.n_negative) maxN = Math.max(maxN, rec.n_negative);
+    });
+    Object.keys(COORDS).forEach(function (dest) {
+      var rec = destAspect(dest, MAP_ASPECT);
+      if (!rec || !rec.n_negative || rec.complaint_rate === null) return;
+      var co = COORDS[dest];
+      var x = p.x(co.lon), y = p.y(co.lat);
+      var gz = sampleZ(t, x, y);
+      /* Square root, so one busy place cannot tower over and hide the rest. */
+      var h = (8 + 90 * Math.sqrt(rec.n_negative / maxN));
+      var b0 = scr(x, y, gz);
+      var b1 = scr(x, y, gz + h);
+      cols.push({ b0: b0, b1: b1, dest: dest, rec: rec, depth: b0[2] });
+    });
+    cols.sort(function (u, v2) { return u.depth - v2.depth; });
+
+    cols.forEach(function (cl) {
+      var dimmed = SELECTED_DISTRICT && destDistrict(cl.dest) !== SELECTED_DISTRICT;
+      var a = dimmed ? 0.2 : (0.5 + 0.5 * cl.rec.complaint_rate);
+      var w = 1.6 * Math.max(0.6, CAM.zoom * 0.7);
+      ctx.strokeStyle = css(crit, a * 0.55);
+      ctx.lineWidth = w;
+      ctx.beginPath();
+      ctx.moveTo(cl.b0[0], cl.b0[1]);
+      ctx.lineTo(cl.b1[0], cl.b1[1]);
+      ctx.stroke();
+      ctx.fillStyle = css(crit, a);
+      ctx.beginPath();
+      ctx.arc(cl.b1[0], cl.b1[1],
+              (1.8 + 2.4 * cl.rec.complaint_rate) * Math.max(0.7, CAM.zoom * 0.8),
+              0, Math.PI * 2);
+      ctx.fill();
+    });
+  }
+
+  function ringBounds(poly) {
+    var x0 = 1e9, y0 = 1e9, x1 = -1e9, y1 = -1e9;
+    poly.forEach(function (pts) {
+      pts.forEach(function (pt) {
+        if (pt[0] < x0) x0 = pt[0];
+        if (pt[1] < y0) y0 = pt[1];
+        if (pt[0] > x1) x1 = pt[0];
+        if (pt[1] > y1) y1 = pt[1];
+      });
+    });
+    return { x0: x0, y0: y0, x1: x1, y1: y1 };
+  }
+
+  /* Terrain height at an arbitrary map point, bilinear. Used to sit district
+     borders and destination columns ON the ground instead of at sea level. */
+  function sampleZ(t, x, y) {
+    if (!t) return 0;
+    var fx = (x - t.xs[0]) / (t.xs[t.cols - 1] - t.xs[0]) * (t.cols - 1);
+    var fy = (y - t.ys[0]) / (t.ys[t.rows - 1] - t.ys[0]) * (t.rows - 1);
+    if (!isFinite(fx) || !isFinite(fy)) return 0;
+    var i = Math.max(0, Math.min(t.cols - 2, Math.floor(fx)));
+    var j = Math.max(0, Math.min(t.rows - 2, Math.floor(fy)));
+    var tx = Math.max(0, Math.min(1, fx - i)), ty = Math.max(0, Math.min(1, fy - j));
+    var z = t.z[j][i] * (1 - tx) * (1 - ty) + t.z[j][i + 1] * tx * (1 - ty) +
+            t.z[j + 1][i] * (1 - tx) * ty + t.z[j + 1][i + 1] * tx * ty;
+    return Math.max(0, z) * t.vs;
+  }
+
+  /* ----------------------------------------------------------- animation */
+  function tick(now) {
+    RAF = null;
+    var busy = false;
+
+    if (CAM_TO) {
+      var k = Math.min(1, (now - CAM_T0) / CAM_MS);
+      var e = easeInOut(k);
+      for (var key in CAM_TO) {
+        if (CAM_TO.hasOwnProperty(key)) {
+          CAM[key] = CAM_FROM[key] + (CAM_TO[key] - CAM_FROM[key]) * e;
+        }
+      }
+      if (k >= 1) CAM_TO = null; else busy = true;
+    } else if (SPIN && !DRAG && !SELECTED_DISTRICT && !reduceMotion()) {
+      CAM.yaw += 0.0035;
+      busy = true;
+    }
+
+    draw3D();
+    if (busy && MAP_MODE === "iso") startLoop();
+  }
+
+  function startLoop() {
+    if (RAF === null && MAP_MODE === "iso") RAF = requestAnimationFrame(tick);
+  }
+  function stopLoop() {
+    if (RAF !== null) { cancelAnimationFrame(RAF); RAF = null; }
+    CAM_TO = null;
+  }
+
+  /* ---------------------------------------------------------- interaction */
+  function hitDistrict(px, py) {
+    for (var i = HITS.length - 1; i >= 0; i--) {
+      var h = HITS[i];
+      for (var r = 0; r < h.rings.length; r++) {
+        var pts = h.rings[r], inside = false;
+        for (var a = 0, b = pts.length - 1; a < pts.length; b = a++) {
+          var xi = pts[a][0], yi = pts[a][1], xj = pts[b][0], yj = pts[b][1];
+          if (((yi > py) !== (yj > py)) &&
+              (px < (xj - xi) * (py - yi) / (yj - yi) + xi)) inside = !inside;
+        }
+        if (inside) return h;
+      }
+    }
+    return null;
+  }
+
+  function bindCanvas(cv) {
+    if (cv.dataset.bound) return;
+    cv.dataset.bound = "1";
+
+    cv.addEventListener("pointerdown", function (ev) {
+      DRAG = { x: ev.clientX, y: ev.clientY, yaw: CAM.yaw, pitch: CAM.pitch };
+      MOVED = 0;
+      CAM_TO = null;
+      /* Capture keeps a drag alive if the pointer leaves the canvas. It can
+         throw for a pointer the browser no longer considers active, and an
+         exception here would abandon the drag it was meant to protect. */
+      try { cv.setPointerCapture(ev.pointerId); } catch (e) {}
+    });
+
+    cv.addEventListener("pointermove", function (ev) {
+      var r = cv.getBoundingClientRect();
+      if (DRAG) {
+        var dx = ev.clientX - DRAG.x, dy = ev.clientY - DRAG.y;
+        MOVED = Math.max(MOVED, Math.abs(dx) + Math.abs(dy));
+        CAM.yaw = DRAG.yaw + dx * 0.008;
+        /* Pitch is clamped: past vertical the heightfield turns inside out. */
+        CAM.pitch = Math.max(0.18, Math.min(1.15, DRAG.pitch + dy * 0.005));
+        startLoop();
+        return;
+      }
+      var h = hitDistrict(ev.clientX - r.left, ev.clientY - r.top);
+      var name = h ? h.name : null;
+      if (name !== HOVER_DISTRICT) {
+        HOVER_DISTRICT = name;
+        /* A district with no reviews cannot be opened, so it must not offer a
+           pointer. The flat map already says 'not-allowed' here; the two
+           views have to agree about what is clickable. */
+        cv.style.cursor = !h ? "grab" : (h.hasData ? "pointer" : "not-allowed");
+        setReadout(h && h.hasData ? name : null);
+        startLoop();
+      }
+    });
+
+    function endDrag(ev) {
+      if (!DRAG) return;
+      var wasClick = MOVED < 5;
+      DRAG = null;
+      if (wasClick) {
+        var r = cv.getBoundingClientRect();
+        var h = hitDistrict(ev.clientX - r.left, ev.clientY - r.top);
+        if (h && h.hasData) selectDistrict(h.name);
+        else if (!h) selectDistrict(null);
+      }
+      startLoop();
+    }
+    cv.addEventListener("pointerup", endDrag);
+    cv.addEventListener("pointercancel", function () { DRAG = null; });
+
+    cv.addEventListener("pointerleave", function () {
+      if (HOVER_DISTRICT) { HOVER_DISTRICT = null; setReadout(null); startLoop(); }
+    });
+
+    cv.addEventListener("wheel", function (ev) {
+      ev.preventDefault();
+      CAM_TO = null;
+      CAM.zoom = Math.max(0.6, Math.min(6, CAM.zoom * (ev.deltaY > 0 ? 0.9 : 1.1)));
+      startLoop();
+    }, { passive: false });
+  }
+
+  /* Selecting from the 3D map does the same thing selecting from the flat map
+     does, plus the camera move. One selection model, two ways to reach it. */
+  function selectDistrict(name) {
+    /* Route through the page's own navigation rather than setting the
+       highlight directly. Clicking a district on the map has to mean exactly
+       what clicking it in the list below means -- open it -- or the 3D view
+       becomes a second, subtly different way to move around the same data.
+       render() sets SELECTED_DISTRICT from state and redraws the map. */
+    if (state.district === name) { flyToDistrict(name); return; }
+    /* On the country view, a map click previews in the panel and keeps the
+       map where it is. Navigating away from the thing you just clicked is
+       what made this feel abrupt. */
+    if (!state.district && name && showDistrictPreview(name)) {
+      SELECTED_DISTRICT = name;
+      SPIN = false;
+      flyToDistrict(name);
+      renderMapAny();
+      return;
+    }
+    state.district = name || null;
+    state.destination = null;
+    /* render() jumps to the top of the page, which is right when you clicked a
+       name in a list and wrong when you clicked the map: the camera would fly
+       somewhere you can no longer see. Keep the reader where they were. */
+    var keep = window.scrollY;
+    render();
+    window.scrollTo({ top: keep, behavior: "auto" });
+  }
+
+  function renderMap3D() {
+    var host = document.getElementById("map-svg-host");
+    if (!host) return;
+    if (!host.querySelector("#map-canvas")) {
+      host.innerHTML =
+        '<canvas id="map-canvas" role="img" aria-label="Three-dimensional ' +
+        'terrain map of complaint rates by district"></canvas>' +
+        '<div class="map3d-hint">drag to orbit &middot; scroll to zoom &middot; ' +
+        'click a district to fly to it</div>';
+    }
+    /* The 3D legend and its caveat used to stack under the canvas -- 181px
+       of the card spent on text directly below the figure, squeezing the
+       figure itself. They are legend content and the rail is the legend, so
+       they live there and the canvas keeps the height. */
+    var side = document.querySelector(".map-side");
+    if (side && !document.getElementById("map3d-aside")) {
+      var aside = document.createElement("div");
+      aside.id = "map3d-aside";
+      aside.className = "map3d-aside";
+      aside.innerHTML =
+        '<div class="map3d-legend" id="map3d-legend"></div>' +
+        /* The relief-exaggeration caveat is four lines of prose that a reader
+           needs once. Folded, like the flat map's four notes, and for the
+           same reason: it was standing between the figure and everything
+           else. The KEY above it stays open -- a key you have to click to
+           see is not a key. */
+        '<details class="map-help"><summary>About the 3D view' +
+        '<span class="map-help-n">1 note</span></summary>' +
+        '<p class="map3d-note" id="map3d-note"></p></details>';
+      side.appendChild(aside);
+    }
+    var cv = host.querySelector("#map-canvas");
+    bindCanvas(cv);
+    prepTerrain();
+    if (CAM_FOCUS !== SELECTED_DISTRICT) {
+      CAM_FOCUS = SELECTED_DISTRICT;
+      SPIN = !SELECTED_DISTRICT;
+      flyToDistrict(SELECTED_DISTRICT);
+    }
+    draw3D();
+
+    var sc = document.getElementById("scale-ends");
+    if (sc) {
+      sc.innerHTML = '<span>ground tint = complaint rate</span>' +
+        '<span>column height = number of complaints</span>';
+    }
+
+    /* Legend. Every visual channel on the map is named here, including the
+       two that are choices rather than measurements: the relief is
+       exaggerated, and a district with no reviews is hatched rather than
+       shaded, because pale would read as "few complaints" when the truth is
+       "never measured". */
+    var lg = document.getElementById("map3d-legend");
+    if (lg) {
+      lg.innerHTML =
+        '<span class="key"><span class="map3d-ramp rate"></span>' +
+          'complaint rate, low to high</span>' +
+        '<span class="key"><span class="map3d-ramp relief"></span>' +
+          'ground height, sea level to ' + (TERRA ? TERRA.maxZ : 0) + '&thinsp;m</span>' +
+        '<span class="key"><span class="map3d-swatch-col"></span>' +
+          'column = complaints at one destination</span>' +
+        '<span class="key">diagonal hatch = no reviews collected</span>';
+    }
+    var nt = document.getElementById("map3d-note");
+    if (nt) {
+      nt.innerHTML = 'Relief is exaggerated about ' + RELIEF + '&times; &mdash; at ' +
+        'true scale a 2&thinsp;km peak on a 400&thinsp;km island is invisible. ' +
+        'Depth also shrinks far columns and lets near ones hide them, so heights ' +
+        'are not comparable across the map; the flat view is the one to read ' +
+        'numbers from. Terrain: ' + esc(TERRAIN.source || 'none') + '.';
+    }
+    setReadout(null);
+  }
+
+  function renderMapAny() {
+    var shell = document.querySelector(".map-shell");
+    if (shell) shell.classList.toggle("is-3d", MAP_MODE === "iso");
+    if (MAP_MODE === "iso") { renderMap3D(); startLoop(); }
+    else { stopLoop(); renderMap(); }
+  }
+
+  /* The 3D map is a bitmap: it does not reflow. Nothing listened for resize,
+     so widening the window left the island drawn at its old pixel size and
+     stretched by CSS. Debounced, because resize fires continuously. */
+  var resizeTimer = null;
+  window.addEventListener("resize", function () {
+    if (resizeTimer) clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(function () {
+      if (MAP_MODE === "iso" && document.getElementById("map-canvas")) draw3D();
+    }, 120);
+  });
+
+
+  function renderMap() {
+    var host = document.getElementById("map-svg-host");
+    if (!host) return;
+    /* The 3D legend belongs to the 3D view only. */
+    var stale = document.getElementById("map3d-aside");
+    if (stale) stale.parentNode.removeChild(stale);
+    var p = project();
+    var vals = mapValues(MAP_ASPECT);
+    var rates = Object.keys(vals).map(function (k) { return vals[k].rate; });
+    var lo = rates.length ? Math.min.apply(null, rates) : 0;
+    var hi = rates.length ? Math.max.apply(null, rates) : 1;
+    var span = (hi - lo) || 1;
+
+    var paths = GEO.features.map(function (f) {
+      var name = f.properties.district;
+      var v = vals[name];
+      var d = featurePath(f);
+      var known = TREE.districts[name];
+
+      /* Three states, deliberately distinct. Collapsing the middle one into
+         either neighbour would misinform: "we never looked" and "we looked
+         and found too little to report" are different claims. */
+      if (!known) {
+        return '<path class="map-region no-data" d="' + d + '" fill="url(#hatch)" ' +
+          'tabindex="-1"><title>' + esc(name) + ' — no reviews collected</title></path>';
+      }
+      if (!v) {
+        return '<path class="map-region below-threshold" d="' + d + '" ' +
+          'fill="var(--surface-2)" data-district="' + esc(name) + '" ' +
+          'data-map-hover="' + esc(name) + '" tabindex="0" role="button">' +
+          '<title>' + esc(name) + ' — ' + known.n_reviews + ' reviews collected, but fewer than ' +
+          TREE.thresholds.suppress_below + ' opinions about this aspect</title></path>';
+      }
+      var op = (0.14 + 0.78 * (v.rate - lo) / span).toFixed(3);
+      var cls = "map-region" + (SELECTED_DISTRICT
+        ? (name === SELECTED_DISTRICT ? " is-selected" : " is-dimmed") : "");
+      return '<path class="' + cls + '" d="' + d + '" fill="var(--critical)" ' +
+        'fill-opacity="' + op + '" data-district="' + esc(name) + '" ' +
+        'data-map-hover="' + esc(name) + '" tabindex="0" role="button">' +
+        '<title>' + esc(name) + ': ' + pct(v.rate) + ' complaint rate (' +
+        v.neg + ' complaints, ' + v.pos + ' praise)</title></path>';
+    }).join("");
+
+    // Destination pins for the aspect currently colouring the map.
+    var pins = "";
+    if (SHOW_PINS) {
+      var withCoords = Object.keys(COORDS).filter(function (d) {
+        var rec = destAspect(d, MAP_ASPECT);
+        return rec && rec.complaint_rate !== null;
+      });
+      var maxRev = 1;
+      withCoords.forEach(function (d) {
+        var rec = destAspect(d, MAP_ASPECT);
+        maxRev = Math.max(maxRev, rec.n_opinions || 1);
+      });
+      pins = withCoords.map(function (d) {
+        var c = COORDS[d], rec = destAspect(d, MAP_ASPECT);
+        var cx = p.x(c.lon), cy = p.y(c.lat);
+        var r = 1.8 + 4.2 * Math.sqrt((rec.n_opinions || 1) / maxRev);
+        var op = (0.35 + 0.6 * rec.complaint_rate).toFixed(2);
+        var pinCls = "map-pin" + (SELECTED_DISTRICT &&
+          (COORDS[d].district || destDistrict(d)) !== SELECTED_DISTRICT ? " is-dimmed" : "");
+        return '<circle class="' + pinCls + '" cx="' + cx.toFixed(1) + '" cy="' + cy.toFixed(1) +
+          '" r="' + r.toFixed(1) + '" fill="var(--critical)" fill-opacity="' + op + '" ' +
+          'data-destination="' + esc(d) + '" tabindex="0" role="button">' +
+          '<title>' + esc(d) + ': ' + pct(rec.complaint_rate) + ' of ' +
+          rec.n_opinions + ' opinions</title></circle>';
+      }).join("");
+    }
+
+    host.innerHTML =
+      '<svg class="map-svg" viewBox="0 0 ' + p.W + ' ' + Math.round(p.H) + '" ' +
+        'role="img" aria-label="Complaint rate by district">' +
+        '<defs><pattern id="hatch" width="5" height="5" patternUnits="userSpaceOnUse" ' +
+          'patternTransform="rotate(45)">' +
+          '<rect width="5" height="5" fill="var(--surface-2)"></rect>' +
+          '<line x1="0" y1="0" x2="0" y2="5" stroke="var(--line)" stroke-width="1.6"></line>' +
+        '</pattern></defs>' + paths + pins + '</svg>';
+
+    var sc = document.getElementById("scale-ends");
+    if (sc) sc.innerHTML = '<span>' + pct(lo) + '</span><span>' + pct(hi) + '</span>';
+
+    setReadout(null);
+  }
+
+  /* One line under the map, not a panel over it.
+
+     This was a 92px block at the very bottom of the control rail, which meant
+     hovering a district printed its numbers roughly 400px below the pointer.
+     Moving it onto the figure fixed the distance and created a worse problem:
+     Sri Lanka is drawn centred in a letterboxed box, so a corner panel sat on
+     the island itself. A strip directly beneath the map is close to the
+     pointer AND cannot occlude anything -- and at one line it is smaller than
+     the block it replaces. */
+  function setReadout(name) {
+    var box = document.getElementById("map-readout");
+    if (!box) return;
+    var vals = mapValues(MAP_ASPECT);
+    if (!name || !vals[name]) {
+      var withData = Object.keys(vals).length;
+      box.innerHTML = '<span class="ro-hint">Hover or tap a district &mdash; ' +
+        withData + ' of ' + GEO.features.length + ' have review data. ' +
+        'Shaded by <strong>' + esc(C_LABEL(MAP_ASPECT)) + '</strong>.</span>';
+      return;
+    }
+    var v = vals[name];
+    var d = TREE.districts[name];
+    var stat = function (label, value) {
+      return '<div><dt>' + label + '</dt><dd>' + value + '</dd></div>';
+    };
+    box.innerHTML =
+      '<strong class="ro-name">' + esc(name) + '</strong>' +
+      '<dl class="ro-stats">' +
+        stat("Complaint rate", '<b>' + pct(v.rate) + '</b>') +
+        stat("Complaints", v.neg) +
+        stat("Praise", v.pos) +
+        stat("Destinations", d.n_destinations) +
+        stat("Reviews", d.n_reviews.toLocaleString()) +
+      '</dl>';
+  }
+
+  function C_LABEL(key) {
+    return (TREE.aspects[key] || {}).label || key;
+  }
+
+  function mapBlock(title) {
+    /* A select, not a segmented group. Seven options is past the count a
+       button group serves well, and in a 210px rail they wrapped to five
+       rows -- ~180px of height for one single-choice control, next to a map
+       whose size is limited by exactly that height. A native select is one
+       row, keyboard-operable, and labelled. */
+    var picker = COMPLAINT_ORDER.filter(function (k) { return TREE.aspects[k]; })
+      .map(function (k) {
+        return '<option value="' + esc(k) + '"' +
+          (k === MAP_ASPECT ? ' selected' : '') + '>' + esc(C_LABEL(k)) + '</option>';
+      }).join("");
+    /* The figure's caption row was 32px of type with 400px of empty space
+       beside it, while the view switch and the destination toggle sat below
+       the map taking 68px of their own. They are small controls about the
+       figure, so they belong on its caption line. Nothing is hidden -- two
+       blocks become one row, and the fold moves up 68px. */
+    return '<div class="map-head">' +
+        '<h3 class="section-title">' + esc(title || "Where complaints concentrate") + '</h3>' +
+        '<div class="map-head-tools">' +
+          '<div class="view-switch">' +
+            '<button data-map-mode="flat" aria-pressed="' + (MAP_MODE === "flat") + '">Flat map</button>' +
+            '<button data-map-mode="iso" aria-pressed="' + (MAP_MODE === "iso") + '">3D, rotating</button>' +
+          '</div>' +
+          /* The destination toggle used to sit under the "Colour the map by"
+             heading, inside the same .aspect-picker group as the seven aspect
+             buttons -- so it read as an eighth thing you could colour by. It
+             is a different control doing a different job, and it now says so. */
+          '<button class="pin-btn" data-pin-toggle aria-pressed="' + SHOW_PINS + '">' +
+            'Destination dots</button>' +
+        '</div>' +
+      '</div>' +
+      '<div class="map-shell">' +
+      '<div id="map-svg-host"></div>' +
+      /* The rail's markup used to open a <div> around the "View" heading and
+         never close it until the very end, so every control, caveat and the
+         readout were nested inside it and .map-side had exactly one child --
+         which quietly disabled the flex column gap it declares. Each group is
+         its own element now, and the four caveats share a wrapper so they can
+         run two-abreast instead of as one 400px stack. */
+      '<div class="map-side">' +
+        '<div class="map-group">' +
+          '<label class="group-label" for="map-aspect">Colour the map by</label>' +
+          '<select class="map-select" id="map-aspect">' + picker + '</select>' +
+        '</div>' +
+        '<div class="scale-block"><div class="scale-bar">' +
+          '<i style="background:var(--critical);opacity:.14"></i>' +
+          '<i style="background:var(--critical);opacity:.33"></i>' +
+          '<i style="background:var(--critical);opacity:.52"></i>' +
+          '<i style="background:var(--critical);opacity:.72"></i>' +
+          '<i style="background:var(--critical);opacity:.92"></i></div>' +
+          '<div class="scale-ends" id="scale-ends"></div></div>' +
+        /* Collapsed by default. These four notes are reference -- read once,
+           consulted rarely -- but they held 258px of permanent height directly
+           under the map, which is most of why the country view ran past the
+           fold. <details> is the native disclosure: no script, keyboard
+           operable, and find-in-page opens it to reveal a match inside.
+           Nothing is removed, only folded. */
+        '<details class="map-help"><summary>How to read this map' +
+        '<span class="map-help-n">4 notes</span></summary>' +
+        '<div class="map-notes">' +
+        '<div class="nodata-note"><span class="nodata-swatch hatch-swatch"></span>' +
+        '<span><strong>Hatched: no reviews collected.</strong> Not zero complaints. ' +
+        'Monaragala, Puttalam and the Vanni are absent from both corpora.</span></div>' +
+        '<div class="nodata-note"><span class="nodata-swatch" style="background:var(--accent-soft);border-color:var(--accent)"></span>' +
+        '<span><strong>Reading values?</strong> Use the flat map. In the 3D view ' +
+        'perspective shrinks distant columns and near ones hide far ones, so two ' +
+        'heights cannot be compared reliably. Both views show identical data.</span></div>' +
+        '<div class="nodata-note"><span class="nodata-swatch" style="background:var(--critical);opacity:.6;border-radius:50%"></span>' +
+        '<span><strong>Dots are destinations.</strong> Size = number of opinions, ' +
+        'shade = complaint rate for the selected topic. Only places with known ' +
+        'coordinates appear; neither review dataset recorded any, so these come ' +
+        'from OpenStreetMap and cover part of the corpus. A missing dot means ' +
+        'no coordinates, not no problem.</span></div>' +
+        '<div class="nodata-note"><span class="nodata-swatch" style="background:var(--surface-2)"></span>' +
+        '<span><strong>Plain grey: below threshold.</strong> Reviews exist, but fewer than ' +
+        TREE.thresholds.suppress_below + ' opinions about this aspect — too few to report.</span></div>' +
+        '</div></details>' +
+        '<div class="map-readout" id="map-readout"></div>' +
+      '</div>' +
+      /* The readout used to be the last item in the rail -- so hovering a
+         district printed its numbers roughly 400px below the pointer, off
+         screen as often as not. It belongs on the figure it reads. */
+    '</div>';
+  }
+
+  /* ------------------------------------------------------------ views */
+  /* -- The finding ------------------------------------------------------
+     This page's opening move used to be a 400px paragraph. The result it
+     exists to report -- one topic draws complaint far more often than any
+     other -- was a clause inside it, wrapped in an italic aside about
+     rule_ablation.json. A reader had to parse methodology to reach the
+     answer.
+
+     So the answer is stated first, as a number, and everything that
+     qualifies it sits underneath or folds away. Every figure is derived at
+     render time: prose that restates a number goes stale the moment the
+     corpus is rebuilt, and the stale copy is the one the reader believes. */
+  function findingRows() {
+    return Object.keys(TREE.aspects).map(function (k) {
+      var a = TREE.aspects[k];
+      return { key: k, label: a.label, rate: a.complaint_rate,
+               neg: a.n_negative, pos: a.n_positive, op: a.n_opinions,
+               worst: (a.worst_districts || []).slice(0, 3) };
+    }).filter(function (r) {
+      return r.rate !== null && r.rate !== undefined;
+    }).sort(function (a, b) { return b.rate - a.rate; });
+  }
+
+  /* How far does the headline move when the hand-written correction rules are
+     switched off? Every figure comes from the ablation report, so this cannot
+     drift away from the numbers it describes -- which is precisely what
+     happened to the sentence it replaces. */
+  function ablationNote(top) {
+    var dep = ABLATION.deployed || {};
+    var off = ABLATION.no_safety_recall || {};
+    var none = ABLATION.no_rules_at_all || {};
+    if (dep[top.key] === undefined) return "";
+
+    function leader(v) {
+      var best = null;
+      Object.keys(v || {}).forEach(function (k) {
+        if (best === null || v[k] > v[best]) best = k;
+      });
+      return best;
+    }
+    var survives = leader(off) === top.key && leader(none) === top.key;
+
+    var out = '<p><strong>How much of this rests on the correction rules?</strong> ';
+    if (off[top.key] !== undefined) {
+      out += 'Switching off the ' + esc(top.label.toLowerCase()) +
+        ' recall rule moves the rate ' + pct(dep[top.key]) + ' &rarr; ' +
+        pct(off[top.key]) + '; ';
+    }
+    if (none[top.key] !== undefined) {
+      out += 'switching off all three leaves it at ' + pct(none[top.key]) + '. ';
+    }
+    out += survives
+      ? '<strong>' + esc(top.label) + ' ranks first under every one of those ' +
+        'variants</strong>, so the finding does not depend on any single rule.'
+      : 'The ranking does <strong>not</strong> survive every variant, so this ' +
+        'finding depends on the rules and must be read with that in mind.';
+    out += ' Their impact is measured (reports/rule_ablation.json); their ' +
+      'accuracy is not, because that needs polarity ground truth the project ' +
+      'does not yet have.</p>';
+    return out;
+  }
+  function findingPage() {
+    var rows = findingRows();
+    if (!rows.length) return "";
+    var top = rows[0];
+    /* Rate and count answer different questions, and the old copy conflated
+       them: roads leads on how MUCH is said, price & value on how many
+       complaints there are, safety on how often a mention turns negative. */
+    var byCount = rows.slice().sort(function (a, b) { return b.neg - a.neg; })[0];
+    var control = rows.filter(function (r) { return r.key === "scenery"; })[0];
+    var lower = top.label.toLowerCase();
+
+    var worst = top.worst.map(function (w) {
+      return '<button class="lede-place" data-district="' + esc(w.district) + '">' +
+        esc(w.district) + '<span>' + w.n_negative + '</span></button>';
+    }).join("");
+
+    return '' +
+      '<p class="finding-eyebrow">The finding</p>' +
+      '<p class="finding-lede">Of everything visitors discuss, <strong>' +
+        esc(lower) + '</strong> turns negative most often.</p>' +
+
+      '<div class="big-stat">' +
+        '<span class="big-stat-n" data-count="' + (top.rate * 100).toFixed(1) +
+          '" data-count-dec="1" data-count-suffix="%">' + pct(top.rate) + '</span>' +
+        '<span class="big-stat-said">of the ' + top.op.toLocaleString() +
+          ' opinions about ' + esc(lower) + ' are complaints &mdash; ' +
+          top.neg.toLocaleString() + ' against ' + top.pos.toLocaleString() +
+          ' praise.</span>' +
+      '</div>' +
+
+      (worst ? '<div class="lede-places"><h4>Worst districts for ' + esc(lower) +
+        '</h4><div class="lede-place-row">' + worst + '</div></div>' : "") +
+
+      '<p class="finding-second">A high <em>rate</em> is not the same as many ' +
+        'complaints. By sheer count the leader is <strong>' + esc(byCount.label) +
+        '</strong> with ' + byCount.neg.toLocaleString() +
+        ' &mdash; it is simply raised far more often.</p>' +
+
+      '<h4 class="rank-head">Every topic, by complaint rate</h4>' +
+      '<ol class="rank-bars">' +
+      rows.map(function (r, i) {
+        return '<li class="rank-row' + (r.key === "scenery" ? " is-control" : "") +
+          '" style="--i:' + i + '">' +
+          '<button data-aspect="' + esc(r.key) + '">' +
+            '<span class="rank-label">' + esc(r.label) +
+              (r.key === "scenery" ? ' <span class="chip chip-ctrl">control</span>' : '') +
+            '</span>' +
+            '<span class="rank-track"><i style="width:' +
+              Math.max(1, r.rate * 100).toFixed(1) + '%"></i></span>' +
+            '<span class="rank-val">' + pct(r.rate) + '</span>' +
+          '</button></li>';
+      }).join("") +
+      '</ol>' +
+
+      '<details class="map-help finding-caveat"><summary>What could undermine this' +
+        '<span class="map-help-n">2 notes</span></summary>' +
+        (control ? '<p><strong>' + esc(control.label) + ' is a positive control.</strong> ' +
+          'Its complaint rate of ' + pct(control.rate) + ' is the evidence that the ' +
+          'classifier is not simply labelling everything negative.</p>' : '') +
+        ablationNote(top) +
+      '</details>';
+  }
+
+  function renderCountry() {
+    var c = TREE.coverage;
+    var districts = Object.keys(TREE.districts).sort(function (a, b) {
+      return TREE.districts[b].n_reviews - TREE.districts[a].n_reviews;
+    });
+
+    var rows = districts.map(function (d, i) {
+      var n = TREE.districts[d];
+      var top = n.top_complaint ? (n.aspects[n.top_complaint] || {}).label : "—";
+      var rate = n.top_complaint ? (n.aspects[n.top_complaint] || {}).complaint_rate : null;
+      var pctText = rate === null || rate === undefined ? "" : Math.round(rate * 100) + "%";
+      var w = rate ? Math.max(3, Math.round(rate * 100)) : 0;
+      return '<li class="district-row" style="--i:' + (i % 6) + '">' +
+        '<button data-district="' + esc(d) + '">' +
+          '<span class="dr-name">' + esc(d) + '</span>' +
+          '<span class="dr-meta">' + n.n_destinations + ' destinations &middot; ' +
+            n.n_reviews.toLocaleString() + ' reviews</span>' +
+          '<span class="dr-bar"><i style="width:' + w + '%"></i></span>' +
+          '<span class="dr-top">' + esc(top || "—") + '</span>' +
+          '<span class="dr-pct">' + pctText + '</span>' +
+        '</button></li>';
+    });
+
+    var pages = [
+      { id: "finding",   label: "Finding",   html: findingPage() },
+      { id: "aspects",   label: "Aspects",
+        html: aspectBlock(TREE.aspects, true) +
+              '<div id="quote-panel" class="quote-panel"></div>' },
+      { id: "districts", label: "Districts",
+        html: pagedList("country-districts", rows, 6,
+              { before: '<ol class="district-list">', after: '</ol>',
+                noun: "districts" }) },
+      { id: "method",    label: "Method",    html: METHOD_HTML },
+      { id: "detail",    label: "District",  html: "", transient: true }
+    ];
+
+    view.innerHTML =
+      /* The masthead already says LostinSriLanka; an h2 reading "Sri Lanka"
+         directly under it said nothing twice. And a row of four raw totals --
+         districts, destinations, reviews, aspect mentions -- is scale, not
+         information: there is nothing a reader can do with any of them. The
+         title now states what the page is FOR, and the deck says what it is
+         built from, in one sentence that reads. */
+      '<div class="view-head"><h2 class="view-title">Where visitors complain</h2>' +
+      '<p class="view-deck">' + c.n_reviews.toLocaleString() + ' reviews of ' +
+        c.n_destinations + ' places across ' + c.n_districts +
+        ' districts, read for what went wrong &mdash; and where.</p>' +
+      /* Stated on the front page, not buried in a methods note. Every rate on
+         this dashboard describes a period that ended when collection stopped,
+         and a reader deciding anything today needs that in the same glance as
+         the headline. */
+      evidenceNote() + '</div>' +
+
+      '<div class="bento">' +
+      buildPanel(pages, { label: "Country views" }) +
+      '<div class="section bento-hero">' + mapBlock() + '</div>' +
+      '</div>';
+  }
+
+  /* The district view was four stacked sections running 4592px -- the map,
+     the aspect profile, the hotspot cards and a 30-row destination table, in
+     one column, with no way to reach the table except to scroll past
+     everything above it. They are parallel sections, not a sequence, so they
+     become pages of the same panel the country view uses, beside the same
+     map. */
+  function renderDistrict(name) {
+    var d = TREE.districts[name];
+    var dests = Object.keys(d.destinations).sort(function (a, b) {
+      return d.destinations[b].top_complaint_n - d.destinations[a].top_complaint_n;
+    });
+    var cards = sortAspects(d.aspects).filter(function (k) {
+      return k !== "scenery" && (d.aspects[k].worst_destinations || []).length;
+    }).slice(0, 4).map(function (k) {
+      var a = d.aspects[k];
+      return '<div class="rank-card"><h4>' + esc(a.label) + ' <em>worst places</em></h4><ul class="rank-list">' +
+        a.worst_destinations.map(function (w) {
+          return '<li class="rank-item"><span class="rank-n">' + w.n_negative + '</span>' +
+            '<button data-destination="' + esc(w.destination) + '">' + esc(w.destination) + '</button></li>';
+        }).join("") + '</ul></div>';
+    }).join("");
+
+    var rows = dests.map(function (x) {
+      var n = d.destinations[x];
+      var top = n.top_complaint ? (n.aspects[n.top_complaint] || {}).label : "—";
+      return '<tr><td><button data-destination="' + esc(x) + '">' + esc(x) + '</button></td>' +
+        '<td class="num">' + n.n_reviews + '</td><td>' + esc(top || "—") + '</td>' +
+        '<td class="num">' + (n.top_complaint_n || 0) + '</td></tr>';
+    });
+
+    var pages = [
+      { id: "aspects", label: "Aspects",
+        html: aspectBlock(d.aspects, true) +
+              '<div id="quote-panel" class="quote-panel"></div>' }
+    ];
+    if (cards) {
+      pages.push({ id: "hotspots", label: "Hotspots",
+        html: '<div class="rank-grid">' + cards + '</div>' });
+    }
+    pages.push({ id: "places", label: "Destinations",
+      /* Keyed by district. A shared key meant opening a 14-destination
+         district while page 2 of a 30-destination one was current landed you
+         on its rows 9-16 -- a page you never asked for. Per-district keys
+         also mean coming back to a district returns you where you were. */
+      html: pagedList("district-places:" + name, rows, 8, {
+        before: '<div class="table-scroll"><table class="dest-table">' +
+          '<thead><tr><th>Destination</th><th class="num">Reviews</th>' +
+          '<th>Top complaint</th><th class="num">Complaints</th></tr></thead><tbody>',
+        after: '</tbody></table></div>',
+        noun: "destinations" }) });
+    pages.push({ id: "method", label: "Method", html: METHOD_HTML });
+
+    view.innerHTML =
+      '<div class="view-head"><h2 class="view-title">' + esc(name) + '</h2>' +
+      '<div class="view-meta"><span>' + d.n_destinations + ' destinations</span>' +
+      '<span>' + d.n_reviews.toLocaleString() + ' reviews</span></div></div>' +
+
+      '<div class="bento">' +
+      buildPanel(pages, { label: esc(name) + " sections" }) +
+      '<div class="section bento-hero">' +
+        '<div class="map-selected-note">' +
+          '<span>Showing <strong>' + esc(name) + '</strong> on the map</span>' +
+          '<button data-nav="country">Back to all districts</button></div>' +
+        mapBlock(name + " in context") + '</div>' +
+      '</div>';
+  }
+
+  /* Storyboard: videos, threads and news articles about this destination.
+     Rendered in its own panel, from its own data file, and NEVER counted --
+     see media.py for why. A YouTube title is written to attract clicks, a
+     Reddit thread is one person, and a news article covers the unusual by
+     definition. None of those is a measurement of what a visit is like.
+
+     Note on previews: the published page runs under a strict content policy
+     that blocks third-party images and embedded players, so these are text
+     cards linking out rather than thumbnails or inline video. */
+  var KIND_LABEL = { youtube: "Video", reddit: "Discussion", news: "News" };
+
+  function storyboard(dest) {
+    var items = (MEDIA[dest] || []);
+    if (!items.length) return null;
+    var order = { news: 0, youtube: 1, reddit: 2 };
+    items = items.slice().sort(function (a, b) {
+      var k = (order[a.kind] || 9) - (order[b.kind] || 9);
+      return k !== 0 ? k : String(b.published || "").localeCompare(String(a.published || ""));
+    });
+    var cards = items.map(function (m) {
+      var asp = (m.aspects || "").split("|").filter(Boolean).map(function (a) {
+        return (TREE.aspects[a] || {}).label || a;
+      });
+      return '<div class="story-card">' +
+        '<div class="story-head">' +
+          '<span class="story-kind ' + esc(m.kind) + '">' + esc(KIND_LABEL[m.kind] || m.kind) + '</span>' +
+          '<span class="story-src">' + esc(m.source_name || "") + '</span>' +
+          (m.kind === "news" && m.local === false
+            ? '<span class="story-foreign" title="Publisher is not a Sri Lankan' +
+              ' outlet. Shown for context; check it against a local source.">' +
+              'non-local source</span>'
+            : "") +
+        '</div>' +
+        '<a class="story-title" href="' + esc(m.url) + '" target="_blank" rel="noopener noreferrer">' +
+          esc(m.title) + '</a>' +
+        (m.snippet ? '<p class="story-snip">' + esc(String(m.snippet).slice(0, 180)) +
+          (String(m.snippet).length > 180 ? '&hellip;' : '') + '</p>' : "") +
+        '<div class="story-foot">' +
+          (m.published ? '<span>' + esc(m.published) + '</span>' : "") +
+          (asp.length ? '<span>' + esc(asp.join(", ")) + '</span>' : "") +
+        '</div>' +
+      '</div>';
+    });
+    /* Returns the pieces rather than a finished section: the destination view
+       pages these cards, so it needs them as a list, not as one block. */
+    return { count: items.length, cards: cards,
+      note: '<div class="story-note"><strong>Context only &mdash; none of this is counted.</strong> ' +
+      'These items are linked, not analysed. They do not affect any complaint rate, ' +
+      'count or ranking on this page. A video title is written to attract viewers, a ' +
+      'forum thread is one traveller, and a news report covers the unusual by definition &mdash; ' +
+      'none of which measures what an ordinary visit is like. Items are collected by ' +
+      'searching for each destination by name, and a search matches loosely, so an ' +
+      'item is shown only if its own text names the place &mdash; roughly half are ' +
+      'withheld on that test. What survives can still come from anywhere: items from ' +
+      'outlets that are not recognisably Sri Lankan are marked <em>non-local ' +
+      'source</em> rather than hidden.</div>' };
+  }
+
+
+  /* Source links for a destination.
+     These reach the PLACE, not the individual review. Neither source dataset
+     preserved a review URL, and a Google Maps review permalink cannot be
+     reconstructed without a place id and a review id -- so a per-quote link
+     would have to be invented. The wording says which guarantee is on offer,
+     because "source" implying a permalink when it is a search would be worse
+     than offering nothing. */
+  function sourceLinks(dest) {
+    var rec = LINKS[dest];
+    if (!rec || !rec.links) return "";
+    var keys = Object.keys(rec.links);
+    if (!keys.length) return "";
+    return '<div class="srclinks"><span>Find this place on</span>' +
+      keys.map(function (k) {
+        return '<a href="' + esc(rec.links[k].url) + '" target="_blank" ' +
+          'rel="noopener noreferrer">' + esc(rec.links[k].label) + '</a>';
+      }).join('<span class="warn">&middot;</span>') +
+      '<span class="warn">&mdash; links to the destination, not to individual ' +
+      'reviews: the source datasets did not preserve review URLs</span></div>';
+  }
+
+  /* The leaf view. No map -- one destination is one coordinate, and a map of
+     a single dot earns none of the height it costs. Same panel as everywhere
+     else, full width because there is no second column to share with. */
+  function renderDestination(district, name) {
+    var n = TREE.districts[district].destinations[name];
+    var story = storyboard(name);
+    var links = sourceLinks(name);
+
+    var pages = [
+      { id: "aspects", label: "Aspects",
+        html: '<p class="page-lede">Select an aspect to read the evidence behind it.</p>' +
+              aspectBlock(n.aspects, true) +
+              '<div id="quote-panel" class="quote-panel"></div>' }
+    ];
+    if (story) {
+      pages.push({ id: "elsewhere", label: "Elsewhere",
+        html: story.note +
+              pagedList("dest-story:" + name, story.cards, 4, {
+                before: '<div class="story-grid">', after: '</div>',
+                noun: "items" }) });
+    }
+    if (links) pages.push({ id: "sources", label: "Sources", html: links });
+    pages.push({ id: "method", label: "Method", html: METHOD_HTML });
+
+    view.innerHTML =
+      '<div class="view-head"><h2 class="view-title">' + esc(name) + '</h2>' +
+      '<div class="view-meta"><span>' + esc(district) + '</span>' +
+      '<span>' + n.n_reviews.toLocaleString() + ' reviews</span>' +
+      '<span>' + n.aspects_shown + ' aspects above threshold</span></div></div>' +
+      buildPanel(pages, { cls: "panel-solo", label: esc(name) + " sections" });
+
+    destPhoto(name);
+  }
+
+  /* ------------------------------------------------------- place photograph */
+  /* Requested lazily, per destination, and cached for the session. Failure is
+     silent by design: the panel is already complete and correct without it, so
+     an error message here would report a problem the reader does not have. */
+  var PHOTO_CACHE = {};
+
+  function destPhoto(name) {
+    var head = view.querySelector(".view-head");
+    if (!head) return;
+
+    /* Cached, including a cached null: a destination Wikipedia has no photo
+       for should be asked about once per session, not once per visit to its
+       panel. paintPhoto treats a null hit as "draw nothing". */
+    if (PHOTO_CACHE[name] !== undefined) return paintPhoto(head, name, PHOTO_CACHE[name]);
+
+    var url = "https://en.wikipedia.org/w/api.php?action=query&format=json" +
+              "&origin=*&generator=search&gsrlimit=1&gsrsearch=" +
+              encodeURIComponent(name + " Sri Lanka") +
+              "&prop=pageimages&piprop=thumbnail&pithumbsize=800";
+
+    fetch(url).then(function (r) { return r.json(); }).then(function (d) {
+      var pages = (d.query && d.query.pages) || {};
+      var hit = null;
+      Object.keys(pages).forEach(function (k) {
+        var pg = pages[k];
+        if (!hit && pg.thumbnail && pg.thumbnail.source) {
+          hit = { src: pg.thumbnail.source, title: pg.title };
+        }
+      });
+      PHOTO_CACHE[name] = hit;
+      paintPhoto(view.querySelector(".view-head"), name, hit);
+    }).catch(function () { PHOTO_CACHE[name] = null; });
+  }
+
+  function paintPhoto(head, name, hit) {
+    /* The reader may have navigated away while the request was in flight.
+       Checking the heading still names this destination stops a photo of
+       Ella landing on Sigiriya's panel. */
+    if (!hit || !head) return;
+    var title = head.querySelector(".view-title");
+    if (!title || title.textContent !== name) return;
+    if (head.querySelector(".dest-photo")) return;
+
+    var fig = document.createElement("figure");
+    fig.className = "dest-photo";
+    fig.innerHTML =
+      '<img alt="' + esc(name) + '" src="' + esc(hit.src) + '">' +
+      "<figcaption>Photograph from Wikipedia — " +
+      '<a href="https://en.wikipedia.org/wiki/' +
+      encodeURIComponent(hit.title) + '" target="_blank" rel="noopener">' +
+      esc(hit.title) + "</a>. Illustration only: it is not evidence about " +
+      "this destination and enters no figure on this page.</figcaption>";
+    head.appendChild(fig);
+  }
+
+  /* ------------------------------------------------------------ aspect drill */
+  var LAST_ASPECT = null;
+
+  /* Real review text was only ever attached to a DESTINATION's aspect node
+     -- TREE.districts[d].aspects[key] and TREE.aspects[key] (the district
+     and country rollups) carry every statistic EXCEPT .quotes. That made
+     "no reviews show" the normal experience: the only place a reader could
+     ever see an example sentence was after drilling into one specific
+     destination. Everywhere else -- the whole Aspects tab at country
+     level, every district's Aspects tab -- showed "No complaint quotes
+     stored for this aspect", which reads as broken even though every
+     number above it is real.
+
+     Nothing needs re-aggregating in the pipeline to fix this: the quotes
+     already exist, several destinations down, in data already sitting in
+     the browser. This walks to them, following the same "worst first"
+     ranking already shown in the rank-card beside it -- so the quotes a
+     reader sees are led by the places actually driving the number, not by
+     JSON key order. Capped, because a country-level aspect can span
+     hundreds of destinations and dumping all of them would replace one
+     failure (nothing) with another (an unreadable wall of text). */
+  /* From config.MAX_GATHERED_QUOTES via the payload's thresholds block --
+     the same place suppress_below and low_confidence_below come from. Not
+     a literal here: every threshold this page renders against should be
+     traceable to config.py, or the two drift and the dashboard starts
+     quietly disagreeing with the pipeline that produced its numbers. */
+  var GATHERED_QUOTE_CAP = (function () {
+    var v = (TREE.thresholds || {}).max_gathered_quotes;
+    if (typeof v !== "number") {
+      // No silent literal fallback. A default here would mean a stale
+      // payload renders against a number config.py knows nothing about,
+      // which is the exact drift this indirection exists to prevent --
+      // and it would look like it worked. Say so instead.
+      console.warn("thresholds.max_gathered_quotes missing from payload -- " +
+                   "rebuild the dashboard (scripts/08_build_dashboard.py)");
+      return Infinity;   // show everything rather than silently truncate
+    }
+    return v;
+  })();
+
+  function collectQuotes(a, level, districtName, key, side) {
+    side = side || "N";
+    var own = quotesFor(a, side);
+    if (own.length) {
+      return { quotes: own, gathered: false };
+    }
+    var merged = [], sources = 0;
+    function pull(destinations, order) {
+      for (var i = 0; i < order.length && merged.length < GATHERED_QUOTE_CAP; i++) {
+        var destAspect = ((destinations[order[i]] || {}).aspects || {})[key];
+        var qs = destAspect ? quotesFor(destAspect, side) : [];
+        if (qs.length) { sources++; merged = merged.concat(qs); }
+      }
+    }
+    if (level === "district") {
+      var district = TREE.districts[districtName];
+      var names = Object.keys(district.destinations);
+      var ranked = (a.worst_destinations || []).map(function (w) { return w.destination; });
+      var rest = names.filter(function (n) { return ranked.indexOf(n) === -1; });
+      pull(district.destinations, ranked.concat(rest));
+    } else if (level === "country") {
+      var districtsRanked = (a.worst_districts || []).map(function (w) { return w.district; });
+      for (var j = 0; j < districtsRanked.length && merged.length < GATHERED_QUOTE_CAP; j++) {
+        var d = TREE.districts[districtsRanked[j]];
+        if (!d) continue;
+        var da = d.aspects[key] || {};
+        var order = (da.worst_destinations || []).map(function (w) { return w.destination; });
+        pull(d.destinations, order.length ? order : Object.keys(d.destinations));
+      }
+    }
+    return {
+      quotes: merged.slice(0, GATHERED_QUOTE_CAP),
+      gathered: true,
+      sources: sources,
+      truncated: merged.length > GATHERED_QUOTE_CAP,
+    };
+  }
+
+  function showAspect(key) {
+    LAST_ASPECT = key;
+    /* The ranked bars on the Finding page link to the same evidence the
+       Aspects page holds. Without this the quotes were written into a panel
+       page that was not on screen, so the click appeared to do nothing. */
+    var ap = document.querySelector('.panel-page[data-page="aspects"]');
+    if (ap && !ap.classList.contains("is-active")) showPage("aspects");
+    var panel = document.getElementById("quote-panel");
+    if (!panel) return;
+    var level = state.destination ? "destination" : (state.district ? "district" : "country");
+    var a;
+    if (state.destination) a = TREE.districts[state.district].destinations[state.destination].aspects[key];
+    else if (state.district) a = TREE.districts[state.district].aspects[key];
+    else a = TREE.aspects[key];
+    if (!a) return;
+
+    var extra = "";
+    if (a.worst_districts) {
+      extra = '<div class="rank-card" style="margin-bottom:12px"><h4>Districts driving this <em>complaint count</em></h4><ul class="rank-list">' +
+        a.worst_districts.slice(0, 6).map(function (w) {
+          return '<li class="rank-item"><span class="rank-n">' + w.n_negative + '</span>' +
+            '<button data-district="' + esc(w.district) + '">' + esc(w.district) + '</button></li>';
+        }).join("") + '</ul></div>';
+    } else if (a.worst_destinations) {
+      extra = '<div class="rank-card" style="margin-bottom:12px"><h4>Places driving this <em>complaint count</em></h4><ul class="rank-list">' +
+        a.worst_destinations.slice(0, 6).map(function (w) {
+          return '<li class="rank-item"><span class="rank-n">' + w.n_negative + '</span>' +
+            '<button data-destination="' + esc(w.destination) + '">' + esc(w.destination) + '</button></li>';
+        }).join("") + '</ul></div>';
+    }
+
+    /* Both sides are gathered, not just the one currently selected: the
+       side switch has to show a truthful count on the button the reader
+       has NOT pressed yet, or "Praise (0)" would sit there greyed out on
+       every district- and country-level aspect purely because nobody had
+       clicked it. */
+    var pickedN = collectQuotes(a, level, state.district, key, "N");
+    var pickedP = collectQuotes(a, level, state.district, key, "P");
+    var picked = QUOTE_STATE.side === "P" ? pickedP : pickedN;
+    var effectiveAspect = a;
+    var provenance = "";
+    if (pickedN.gathered || pickedP.gathered) {
+      // Same object, quote lists swapped in -- quoteBlock()/quoteControls()
+      // read them through quotesFor(), so nothing about those functions
+      // needed to change for this to work.
+      effectiveAspect = Object.assign({}, a, {
+        quotes: pickedN.quotes,
+        quotes_positive: pickedP.quotes,
+      });
+      if (picked.gathered && picked.quotes.length) {
+        provenance = '<p class="quote-provenance">Gathered from ' + picked.sources +
+          ' destination' + (picked.sources === 1 ? "" : "s") + ' in ' +
+          (level === "country" ? "the districts" : esc(state.district)) +
+          ' driving this number' +
+          (picked.truncated ? ", capped at " + GATHERED_QUOTE_CAP + " of more available" : "") +
+          '.</p>';
+      }
+    }
+
+    panel.innerHTML =
+      '<h3 class="section-title" style="margin-top:22px">' + esc(a.label) +
+      ' &mdash; ' + a.n_negative + ' complaints, ' + a.n_positive + ' praise, rate ' + pct(a.complaint_rate) + '</h3>' +
+      timelineTable(a.timeline) + extra + provenance + quoteBlock(effectiveAspect);
+    panel.scrollIntoView({ behavior: "smooth", block: "nearest" });
+  }
+
+  /* ------------------------------------------------------------ routing */
+  function renderCrumbs() {
+    var parts = ['<button class="crumb"' + (state.district ? "" : ' aria-current="page"') + ' data-nav="country">Sri Lanka</button>'];
+    if (state.district) {
+      parts.push('<span class="crumb-sep">&rsaquo;</span>');
+      parts.push('<button class="crumb"' + (state.destination ? "" : ' aria-current="page"') +
+        ' data-nav="district" data-district="' + esc(state.district) + '">' + esc(state.district) + '</button>');
+    }
+    if (state.destination) {
+      parts.push('<span class="crumb-sep">&rsaquo;</span>');
+      parts.push('<button class="crumb" aria-current="page">' + esc(state.destination) + '</button>');
+    }
+    crumbs.innerHTML = parts.join(" ");
+    /* On the country view the trail is one non-navigable crumb reading
+       "Sri Lanka", directly above an <h1> reading "Sri Lanka". A breadcrumb
+       with nowhere to go is not navigation, it is 28px of restatement. */
+    crumbs.hidden = !state.district && !state.destination;
+  }
+
+
+  /* ═══════════════════════════════════════════════════════════════════
+     PANEL: pages instead of scroll, and motion that carries meaning
+     ═══════════════════════════════════════════════════════════════════ */
+
+  /* Every animation here is gated. A reader who has asked their system for
+     less motion gets the same information with none of the movement -- the
+     end state is identical, only the transition is skipped. */
+  function motionOK() {
+    return !(window.matchMedia &&
+             window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+  }
+
+  function showPage(name) {
+    var pages = document.querySelectorAll(".panel-page");
+    var tabs = document.querySelectorAll(".panel-tabs [data-page]");
+    var found = false;
+    pages.forEach(function (p) {
+      var on = p.dataset.page === name;
+      if (on) found = true;
+      p.classList.toggle("is-active", on);
+      if (on && motionOK()) {
+        /* Re-trigger the entrance: remove, force reflow, re-add. Without the
+           reflow the browser coalesces both class changes and nothing moves. */
+        p.classList.remove("enter");
+        void p.offsetWidth;
+        p.classList.add("enter");
+        stagger(p);
+      }
+      /* Outside the motion branch on purpose. countUp is what writes the
+         real figure -- the markup ships a "0.0%" placeholder for it to
+         animate away from. While this sat inside `if (motionOK())`, anyone
+         with reduced-motion set read a district's headline complaint rate
+         as 0.0% permanently. A disabled animation must still deliver the
+         value; it just delivers it instantly. */
+      if (on) countUp(p);
+    });
+    tabs.forEach(function (t) {
+      var on = t.dataset.page === name;
+      t.setAttribute("aria-selected", on ? "true" : "false");
+      /* Roving tabindex: exactly one tab is in the document tab order, and
+         it is the selected one. Without this every tab was a separate Tab
+         stop, so reaching the panel content meant pressing Tab past all of
+         them. */
+      t.tabIndex = on ? 0 : -1;
+      /* The district tab appears the moment there is a district to show. */
+      if (on && t.hidden) t.hidden = false;
+    });
+    return found;
+  }
+
+  /* Left/Right/Home/End move between tabs, which is how a tablist is
+     expected to work and how a screen-reader user will try to drive it.
+     Nothing handled keys before, so the arrows just scrolled the page. */
+  document.addEventListener("keydown", function (ev) {
+    var tab = ev.target.closest && ev.target.closest(".panel-tabs [role=tab]");
+    if (!tab) return;
+    var keys = { ArrowLeft: -1, ArrowRight: 1, Home: "first", End: "last" };
+    var k = keys[ev.key];
+    if (k === undefined) return;
+    var list = [].slice.call(
+      document.querySelectorAll(".panel-tabs [role=tab]")
+    ).filter(function (t) { return !t.hidden; });
+    if (!list.length) return;
+    var i = list.indexOf(tab);
+    var next = k === "first" ? 0
+             : k === "last"  ? list.length - 1
+             : (i + k + list.length) % list.length;
+    ev.preventDefault();
+    showPage(list[next].dataset.page);
+    list[next].focus();
+  });
+
+  /* Rows arrive in sequence rather than all at once. The delay is capped:
+     past ~400ms a stagger stops reading as choreography and starts reading
+     as the page being slow. */
+  function stagger(scope) {
+    var rows = scope.querySelectorAll(".aspect-row, .district-row, .stat-tile");
+    for (var i = 0; i < rows.length; i++) {
+      rows[i].style.setProperty("--i", Math.min(i, 14));
+    }
+  }
+
+  /* Figures count up to their value. Only for the big headline numbers --
+     doing it to every number on the page would be noise, and a percentage
+     you cannot read while it moves is worse than one that simply appears. */
+  function countUp(scope) {
+    scope.querySelectorAll("[data-count]").forEach(function (el) {
+      var target = parseFloat(el.dataset.count);
+      if (isNaN(target)) return;
+      var dec = (el.dataset.countDec | 0);
+      var suffix = el.dataset.countSuffix || "";
+      if (!motionOK()) {                      /* straight to the answer */
+        el.textContent = target.toFixed(dec) + suffix;
+        return;
+      }
+      var t0 = performance.now(), dur = 520;
+      function frame(now) {
+        var k = Math.min(1, (now - t0) / dur);
+        var eased = 1 - Math.pow(1 - k, 3);
+        el.textContent = (target * eased).toFixed(dec) + suffix;
+        if (k < 1) requestAnimationFrame(frame);
+        else el.textContent = target.toFixed(dec) + suffix;   /* land exactly */
+      }
+      requestAnimationFrame(frame);
+    });
+  }
+
+  /* Selecting on the map fills a preview page rather than navigating away.
+     Losing the map you just clicked -- and the mental place you were in --
+     is the thing that made the old behaviour feel abrupt. The full district
+     view is still one click further, for when the reader actually wants it. */
+  function showDistrictPreview(name) {
+    var host = document.getElementById("page-detail");
+    if (!host) return false;
+    var d = TREE.districts[name];
+    if (!d) return false;
+    var aspects = Object.keys(d.aspects || {}).map(function (k) {
+      return { key: k, label: (d.aspects[k] || {}).label || k,
+               rate: (d.aspects[k] || {}).complaint_rate,
+               n: (d.aspects[k] || {}).n_negative };
+    }).filter(function (a) { return a.rate !== null && a.rate !== undefined; })
+      .sort(function (a, b) { return b.rate - a.rate; });
+
+    var top = aspects[0];
+    host.innerHTML =
+      '<div class="detail-head">' +
+        '<span class="detail-eyebrow">District</span>' +
+        '<h3 class="detail-name">' + esc(name) + '</h3>' +
+        '<p class="detail-sub">' + d.n_destinations + ' destinations &middot; ' +
+          d.n_reviews.toLocaleString() + ' reviews</p>' +
+      '</div>' +
+      (top ? '<div class="detail-figure">' +
+        '<span class="detail-big" data-count="' + (top.rate * 100).toFixed(1) +
+          '" data-count-dec="1" data-count-suffix="%">' + pct(top.rate) + '</span>' +
+        '<span class="detail-figure-label">' + esc(top.label) +
+          ' &mdash; highest complaint rate here</span></div>' : "") +
+      /* These used to be bare <li>, styled to look exactly like the
+         clickable .aspect-row buttons used everywhere else on the page
+         (same class, same bars, same hover styling) but wired to nothing --
+         no data-aspect, not even focusable. A row that looks interactive
+         and is not is a worse bug than one that plainly is not
+         interactive: the reader tries it, expecting what every other
+         .aspect-row on this page does, and nothing happens. Real <button>s
+         now, and clicking one goes straight to that aspect's evidence in
+         the district's full view -- not a half-state where the preview
+         tries to show quotes while still labelled as a preview. */
+      '<ul class="detail-aspects">' +
+        aspects.slice(0, 7).map(function (a, i) {
+          return '<li style="--i:' + i + '">' +
+            '<button class="aspect-row" data-district="' + esc(name) +
+              '" data-open-aspect="' + esc(a.key) + '">' +
+            '<span class="ar-label">' + esc(a.label) + '</span>' +
+            '<span class="ar-bar"><i style="width:' +
+              Math.max(2, Math.round(a.rate * 100)) + '%"></i></span>' +
+            '<span class="ar-pct">' + Math.round(a.rate * 100) + '%</span></button></li>';
+        }).join("") +
+      '</ul>' +
+      '<button class="detail-open" data-district="' + esc(name) + '">' +
+        'Open ' + esc(name) + ' in full &rarr;</button>';
+    showPage("detail");
+    /* The panel scrolls internally. Without this the preview opened at
+       whatever offset the previous page left behind -- typically half-way
+       down, so the district's name was above the visible area. */
+    var pagesBox = document.querySelector(".panel-pages");
+    if (pagesBox) pagesBox.scrollTop = 0;
+    /* If the panel is not on screen -- a click low on a tall map -- bring it
+       to the reader rather than making them hunt for the answer. */
+    var panel = document.querySelector(".bento-panel");
+    if (panel) {
+      var box = panel.getBoundingClientRect();
+      if (box.top < 0 || box.top > window.innerHeight * 0.6) {
+        panel.scrollIntoView({ behavior: motionOK() ? "smooth" : "auto",
+                               block: "start" });
+      }
+    }
+    return true;
+  }
+
+  document.addEventListener("click", function (ev) {
+    var tab = ev.target.closest(".panel-tabs [data-page]");
+    if (tab) { showPage(tab.dataset.page); }
+  });
+
+  /* Rebuild the CURRENT view because a map control changed, then put the
+     reader back where they were: same panel page, same scroll offset inside
+     it, and the district preview restored if one was open.
+
+     It used to call renderCountry() unconditionally, which was fine while the
+     country view was the only one with a map. The district view has the same
+     flat/3D switch and destination toggle now, so pressing either there would
+     have thrown the reader back to the country view. */
+  function rerenderKeepingPlace() {
+    var openTab = document.querySelector(".panel-tabs [aria-selected=true]");
+    var page = openTab ? openTab.dataset.page : null;
+    var pages = document.querySelector(".panel-pages");
+    var scrollTop = pages ? pages.scrollTop : 0;
+    var district = SELECTED_DISTRICT;
+    var y = window.scrollY;
+
+    if (state.destination) renderDestination(state.district, state.destination);
+    else if (state.district) { renderDistrict(state.district); renderMapAny(); }
+    else { renderCountry(); renderMapAny(); }
+
+    if (page === "detail" && district && !state.district) showDistrictPreview(district);
+    else if (page) showPage(page);
+    else primeActivePage();
+    var after = document.querySelector(".panel-pages");
+    if (after) after.scrollTop = scrollTop;
+    window.scrollTo({ top: y, behavior: "auto" });
+  }
+
+  /* The page a view opens on never went through showPage(), so it never got
+     the entrance treatment the other pages get -- the finding's headline
+     figure sat at "0.0%" until you clicked away and back. Anything rendered
+     as already-active has to be primed explicitly. */
+  function primeActivePage() {
+    var page = document.querySelector(".panel-page.is-active");
+    if (!page) return;
+    stagger(page);
+    countUp(page);
+  }
+
+  function render() {
+    renderCrumbs();
+    SELECTED_DISTRICT = state.district || null;
+    /* Every view carries the method and limitations in a Method tab now, so
+       the document footer is never the copy on screen -- it stays in the DOM
+       purely as the authored source that METHOD_HTML was read from, and as
+       what prints. Leaving it visible put the same 900px of prose under every
+       view and was most of what the district view's remaining height was. */
+    if (state.destination) renderDestination(state.district, state.destination);
+    else if (state.district) { renderDistrict(state.district); renderMapAny(); }
+    else { renderCountry(); renderMapAny(); }
+    primeActivePage();
+    window.scrollTo({ top: 0, behavior: "auto" });
+  }
+
+  function findDistrictOf(dest) {
+    var names = Object.keys(TREE.districts);
+    for (var i = 0; i < names.length; i++) {
+      if (TREE.districts[names[i]].destinations[dest]) return names[i];
+    }
+    return null;
+  }
+
+  /* renderMapAny, not renderMap: changing the aspect while the 3D view is
+     open used to draw the flat SVG into the same host and silently replace
+     the canvas. */
+  document.addEventListener("change", function (ev) {
+    if (ev.target && ev.target.id === "map-aspect") {
+      MAP_ASPECT = ev.target.value;
+      renderMapAny();
+    }
+  });
+
+  document.addEventListener("mouseover", function (ev) {
+    var t = ev.target.closest("[data-map-hover]");
+    if (t) setReadout(t.dataset.mapHover);
+  });
+
+  document.addEventListener("click", function (ev) {
+    var qs = ev.target.closest("[data-qsort],[data-qband],[data-qside]");
+    if (qs) {
+      if (qs.dataset.qsort) QUOTE_STATE.sort = qs.dataset.qsort;
+      if (qs.dataset.qband) QUOTE_STATE.band = qs.dataset.qband;
+      if (qs.dataset.qside) {
+        QUOTE_STATE.side = qs.dataset.qside;
+        /* Period counts are per-side, so a band filter chosen on one side
+           can select nothing at all on the other -- which reads as "no
+           praise here" when the truth is "no praise from 2019-2020". Reset
+           to All on a side switch rather than show a misleading empty. */
+        QUOTE_STATE.band = "all";
+      }
+      if (LAST_ASPECT) showAspect(LAST_ASPECT);
+      return;
+    }
+    /* Switching to the 3D view, or toggling the destination dots, used to
+       call renderCountry() bare -- which rebuilds the panel and drops you
+       back on "Finding". If you had a district open, or were half-way down
+       the aspect list, that work was simply gone. The map control is not a
+       navigation event; it must leave the reading position alone. */
+    var modeBtn = ev.target.closest("[data-map-mode]");
+    if (modeBtn) {
+      MAP_MODE = modeBtn.dataset.mapMode;
+      return rerenderKeepingPlace();
+    }
+    if (ev.target.closest("[data-pin-toggle]")) {
+      SHOW_PINS = !SHOW_PINS;
+      return rerenderKeepingPlace();
+    }
+
+    var t = ev.target.closest("[data-nav],[data-district],[data-destination],[data-aspect]");
+    if (!t) return;
+    if (t.dataset.nav === "country") { state = { district: null, destination: null }; return render(); }
+    if (t.dataset.destination) {
+      var dist = state.district || findDistrictOf(t.dataset.destination);
+      if (!dist) return;
+      state.district = dist; state.destination = t.dataset.destination;
+      return render();
+    }
+    if (t.dataset.district && t.dataset.openAspect) {
+      /* From the district PREVIEW's own aspect list -- open the district in
+         full and land straight on that aspect's evidence, rather than
+         trying to show quotes while the panel is still labelled "preview"
+         (the preview never carried a quote-panel host to render them into,
+         and the country Aspects tab beside it shows COUNTRY bars, which
+         would have made an odd hybrid: country-wide bars, one district's
+         quotes). One consistent destination for this click instead. */
+      state.district = t.dataset.district;
+      state.destination = null;
+      render();
+      showAspect(t.dataset.openAspect);
+      return;
+    }
+    if (t.dataset.district) {
+      /* One gesture, one meaning. Clicking a district on the FLAT map used to
+         navigate away -- the map you had just been reading vanished -- while
+         clicking the same district on the 3D map previewed it in the panel,
+         because only the 3D view routed through selectDistrict(). Two
+         behaviours for the same click on the same data is exactly what
+         selectDistrict() was written to prevent.
+
+         So on the country view every district click previews: map, 3D map and
+         the Districts list alike. "Open <name> in full" is the deliberate way
+         to leave, and it carries .detail-open so it still navigates. */
+      var full = t.classList.contains("detail-open") || state.district;
+      if (!full) return selectDistrict(t.dataset.district);
+      state.district = t.dataset.district; state.destination = null;
+      return render();
+    }
+    if (t.dataset.aspect) return showAspect(t.dataset.aspect);
+  });
+
+  var corpusNote = document.getElementById("corpus-note");
+  if (corpusNote) corpusNote.textContent =
+    TREE.coverage.n_reviews.toLocaleString() + " reviews · " +
+    TREE.coverage.n_destinations + " destinations · " +
+    TREE.coverage.n_districts + " districts";
+
+  render();
+})();
+</script>
+
+<script>
+/* This page is both a standalone document and the contents of the app's Map
+   tab. Inside the frame the tab bar above already offers the portal, and a
+   second link to it would load the whole app inside its own map panel. So the
+   link is for the standalone case only. Removed rather than hidden, so it does
+   not sit in the accessibility tree either. */
+(function () {
+  var framed;
+  try { framed = window.top !== window.self; }
+  catch (e) { framed = true; }   /* cross-origin access denied means framed */
+  if (!framed) return;
+  var link = document.querySelector("a.to-portal");
+  if (link && link.parentNode) link.parentNode.removeChild(link);
+
+  /* The app already shows this brand and its tab bar directly above the
+     frame. Repeating the masthead inside it reads as a page embedded in a
+     page rather than as one tab of one product, and costs ~90px of the
+     reader's vertical space to say something already on screen. */
+  var head = document.querySelector(".masthead");
+  if (head && head.parentNode) head.parentNode.removeChild(head);
+  document.documentElement.setAttribute("data-framed", "true");
+})();
+</script>

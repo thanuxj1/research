@@ -1,0 +1,1182 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LostinSriLanka</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+
+<style>
+/* ----------------------------------------------------------------- tokens
+   Same field-report palette as the dashboard, deliberately. These are two
+   faces of one system -- the portal takes evidence in, the dashboard reads
+   it out -- and a second visual language would suggest two products. */
+:root {
+  --paper:       #FCFBF7;
+  --ground:      #FCFBF7;
+  --surface:     #FFFFFF;
+  --surface-2:   #F4F2EA;
+  --line:        #DFDBCD;
+  --line-soft:   #EAE7DC;
+  --ink:         #16150F;
+  --ink-muted:   #5F5C50;
+  --ink-faint:   #726E5E;
+  --accent:      #1F5C57;
+  --accent-soft: #E4EFEC;
+  --accent-fill: #1F5C57;
+  --accent-on-fill: #FCFBF7;
+  --accent-text: #1A4E4A;
+  --critical:    #B04A2F;
+  --critical-soft:#F6EAE4;
+  --good:        #4A6B45;
+  --good-soft:   #E8EFE5;
+  --warn:        #9A6B18;
+  --warn-soft:   #F6EEDC;
+
+  --brand-ink:  #1C1C1F;
+  --brand-ink2: #2E2E34;
+  --brand-gold: #F5C842;
+
+  --f-display: "Source Serif 4", Georgia, serif;
+  --f-body:    "Inter", system-ui, sans-serif;
+  --f-mono:    "IBM Plex Mono", ui-monospace, monospace;
+}
+:root[data-theme="dark"] {
+  --ground:      #14130E;
+  --surface:     #1C1B15;
+  --surface-2:   #262419;
+  --line:        #38352A;
+  --line-soft:   #2B2921;
+  --ink:         #F2EFE6;
+  --ink-muted:   #ABA694;
+  --ink-faint:   #8A8677;
+  --accent:      #6FBFB2;
+  --accent-soft: rgba(111,191,178,.16);
+  --accent-fill: #6FBFB2;
+  --accent-on-fill: #14130E;
+  --accent-text: #6FBFB2;
+  --critical:    #D9714F;
+  --critical-soft:rgba(217,113,79,.18);
+  --good:        #8FB07F;
+  --good-soft:   rgba(143,176,127,.18);
+  --warn:        #D3A03C;
+  --warn-soft:   rgba(211,160,60,.18);
+}
+
+* { box-sizing: border-box; }
+
+/* Everything on this page that a visitor can type into is rendered somewhere,
+   and an unbroken run of characters -- a long URL, a pasted token, 220 x's --
+   has no break opportunity, so the browser widens the container rather than
+   wrap. Measured before this rule: a 220-character word took one story card
+   from 467px to 1681px and pushed the whole page 765px wider than the
+   viewport, giving the page a horizontal scrollbar and pushing the layout out
+   of alignment.
+
+   `anywhere` rather than `break-word`: break-word will not shrink an element's
+   intrinsic minimum width, so a grid or flex child still blows out its track.
+   The `word-break` line below it is the fallback for browsers that do not
+   know `anywhere`. */
+.story h3, .story p.body, .story .meta,
+.seg-text, .why, .finding .cat,
+.media-item, .media-item a, .media-item .src,
+.mine-row .where, .baseline-head, td, th, .pill, .newplace {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+/* A grid child's default min-width is its content, so a long word inside one
+   column can still push the whole grid wider than its parent even with
+   wrapping enabled. This is the other half of the fix. */
+.cols > * { min-width: 0; }
+body {
+  margin: 0; background: var(--ground); color: var(--ink);
+  font-family: var(--f-body); font-size: 15px; line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+.wrap { max-width: 1040px; margin: 0 auto; padding: 0 24px 80px; }
+
+/* ----------------------------------------------------------------- header */
+.masthead {
+  background: linear-gradient(105deg, var(--brand-ink) 0%, var(--brand-ink2) 60%, var(--brand-ink) 100%);
+  padding: 26px 0 0; margin-bottom: 28px;
+}
+.masthead-inner {
+  max-width: 1040px; margin: 0 auto; padding: 0 24px;
+  display: flex; align-items: baseline; gap: 16px; flex-wrap: wrap;
+}
+.brand {
+  font-family: var(--f-display); font-weight: 700; font-size: 28px;
+  letter-spacing: -.03em; margin: 0; color: #FFFFFF; line-height: 1;
+}
+.brand span { color: var(--brand-gold); }
+.tagline {
+  color: rgba(255,255,255,.62); font-size: 12.5px; margin: 0;
+  font-family: var(--f-display); font-weight: 600;
+}
+.masthead a.back {
+  margin-left: auto; color: rgba(255,255,255,.72); font-size: 12.5px;
+  text-decoration: none; border-bottom: 1px solid rgba(255,255,255,.28);
+}
+.masthead a.back:hover { color: #fff; }
+
+/* -------------------------------------------------------------------- tabs */
+.tabs {
+  max-width: 1040px; margin: 20px auto 0; padding: 0 24px;
+  display: flex; gap: 4px;
+}
+.tab {
+  appearance: none; background: transparent; border: 0; cursor: pointer;
+  font-family: var(--f-body); font-size: 14px; font-weight: 500;
+  color: rgba(255,255,255,.6); padding: 10px 16px;
+  border-bottom: 2px solid transparent; border-radius: 0;
+}
+.tab:hover { color: rgba(255,255,255,.9); }
+.tab[aria-selected="true"] {
+  color: #fff; border-bottom-color: var(--brand-gold);
+}
+.panel[hidden] { display: none; }
+
+/* ------------------------------------------------------------------ intro */
+.lede {
+  font-family: var(--f-display); font-size: 20px; line-height: 1.45;
+  max-width: 60ch; margin: 0 0 10px;
+}
+.sub { color: var(--ink-muted); max-width: 66ch; margin: 0 0 22px; font-size: 14px; }
+
+.status {
+  display: inline-flex; align-items: center; gap: 7px; font-size: 12.5px;
+  padding: 4px 11px; border-radius: 999px;
+  border: 1px solid var(--line); background: var(--surface); color: var(--ink-muted);
+  margin-bottom: 22px;
+}
+.dot { width: 7px; height: 7px; border-radius: 50%; background: var(--ink-faint); }
+.status.up   .dot { background: var(--good); }
+.status.down .dot { background: var(--critical); }
+
+/* ------------------------------------------------------------------- grid */
+.cols { display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1.1fr); gap: 22px; align-items: start; }
+@media (max-width: 880px) { .cols { grid-template-columns: 1fr; } }
+
+.card {
+  background: var(--surface); border: 1px solid var(--line);
+  border-radius: 4px; padding: 20px;
+}
+.card + .card { margin-top: 18px; }
+h2 {
+  font-family: var(--f-display); font-size: 17px; font-weight: 600;
+  margin: 0 0 3px; letter-spacing: -.01em;
+}
+.hint { color: var(--ink-faint); font-size: 13px; margin: 0 0 16px; }
+
+/* ------------------------------------------------------------------- form */
+label { display: block; font-size: 13px; font-weight: 500; color: var(--ink-muted);
+        margin: 0 0 5px; }
+input, select, textarea {
+  width: 100%; font-family: var(--f-body); font-size: 15px; color: var(--ink);
+  background: var(--paper); border: 1px solid var(--line); border-radius: 3px;
+  padding: 10px 11px;
+}
+textarea { min-height: 130px; resize: vertical; line-height: 1.55; }
+input:focus, select:focus, textarea:focus {
+  outline: 2px solid var(--accent); outline-offset: -1px; border-color: var(--accent);
+}
+.field { margin-bottom: 15px; }
+.counter { font-family: var(--f-mono); font-size: 11px; color: var(--ink-faint);
+           text-align: right; margin-top: 4px; }
+.counter.bad { color: var(--critical); }
+.newplace {
+  display: none; margin-top: 6px; font-size: 12.5px; color: var(--accent-text);
+  background: var(--accent-soft); border-radius: 3px; padding: 6px 9px;
+}
+.newplace.show { display: block; }
+
+button {
+  font-family: var(--f-body); font-size: 15px; font-weight: 500;
+  background: var(--accent-fill); color: var(--accent-on-fill);
+  border: 1px solid var(--accent-fill); border-radius: 3px;
+  padding: 11px 18px; cursor: pointer;
+}
+button:hover:not(:disabled) { filter: brightness(1.1); }
+button:disabled { opacity: .45; cursor: not-allowed; }
+button.ghost { background: transparent; color: var(--accent-text); border-color: var(--line); }
+button.tiny {
+  font-size: 12px; padding: 3px 9px; background: transparent;
+  color: var(--accent-text); border-color: var(--line); font-weight: 400;
+}
+
+.err {
+  background: var(--critical-soft); border: 1px solid var(--critical);
+  color: var(--critical); border-radius: 3px; padding: 10px 12px;
+  font-size: 14px; margin-top: 14px;
+}
+.ok {
+  background: var(--good-soft); border: 1px solid var(--good);
+  color: var(--good); border-radius: 3px; padding: 10px 12px;
+  font-size: 14px; margin-top: 14px;
+}
+
+/* ----------------------------------------------------------------- result */
+.placeholder { color: var(--ink-faint); font-size: 14px; font-style: italic; }
+
+.seg { border-top: 1px solid var(--line-soft); padding: 16px 0; }
+.seg:first-of-type { border-top: 0; padding-top: 4px; }
+.seg-text { font-family: var(--f-display); font-size: 16px; line-height: 1.45; margin: 0 0 10px; }
+.seg-none { color: var(--ink-faint); font-size: 13px; font-style: italic; }
+
+.finding {
+  border: 1px solid var(--line); border-radius: 3px;
+  padding: 9px 11px; margin: 0 0 8px; background: var(--surface-2);
+}
+.finding.N { background: var(--critical-soft); border-color: var(--critical); }
+.finding.P { background: var(--good-soft);     border-color: var(--good); }
+.finding-top { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; }
+.finding .cat { font-weight: 600; font-size: 14.5px; }
+.finding .verdict { font-size: 14px; }
+.finding.N .verdict { color: var(--critical); font-weight: 600; }
+.finding.P .verdict { color: var(--good); font-weight: 600; }
+.finding .conf { font-size: 12px; color: var(--ink-faint); width: 100%; }
+.finding.unchecked .conf { color: var(--warn); }
+.finding .why { font-size: 12px; color: var(--ink-faint); width: 100%; }
+.finding .fixbtn { margin-left: auto; }
+
+.fixer { width: 100%; margin-top: 9px; padding-top: 9px; border-top: 1px dashed var(--line); }
+.fixer[hidden] { display: none; }
+.fixer p { margin: 0 0 7px; font-size: 13px; color: var(--ink-muted); }
+.fixer .opts { display: flex; gap: 6px; flex-wrap: wrap; }
+.fixed { font-size: 13px; color: var(--good); margin: 8px 0 0; }
+
+.note {
+  background: var(--surface-2); border-left: 2px solid var(--line);
+  padding: 11px 13px; font-size: 13px; color: var(--ink-muted);
+  margin-top: 16px;
+}
+.note strong { color: var(--ink); font-weight: 600; }
+.note.warn { background: var(--warn-soft); border-left-color: var(--warn); }
+
+/* --------------------------------------------------------------- baseline */
+.baseline-head { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+.pill {
+  font-size: 12px; padding: 2px 8px;
+  border: 1px solid var(--line); border-radius: 999px; color: var(--ink-muted);
+}
+table { width: 100%; border-collapse: collapse; font-size: 14px; }
+th {
+  text-align: left; font-size: 11.5px; text-transform: uppercase; letter-spacing: .04em;
+  color: var(--ink-faint); font-weight: 500; padding: 0 8px 6px 0;
+  border-bottom: 1px solid var(--line);
+}
+td { padding: 8px 8px 8px 0; border-bottom: 1px solid var(--line-soft); vertical-align: middle; }
+td.num { font-family: var(--f-mono); text-align: right; padding-right: 12px; white-space: nowrap; }
+.bar { height: 6px; background: var(--surface-2); border-radius: 999px; overflow: hidden; min-width: 60px; }
+.bar > i { display: block; height: 100%; background: var(--critical); }
+.thin { color: var(--warn); }
+.unchecked-tag { color: var(--warn); font-size: 11.5px; white-space: nowrap; }
+
+/* ------------------------------------------------------------------ photo */
+.photo { margin: 0 0 14px; }
+.photo img {
+  width: 100%; max-height: 220px; object-fit: cover;
+  border-radius: 3px; border: 1px solid var(--line); display: block;
+}
+.photo figcaption { font-size: 11.5px; color: var(--ink-faint); margin-top: 5px; }
+.photo a { color: var(--ink-faint); }
+
+/* ------------------------------------------------------------- storyboard */
+.story {
+  border: 1px solid var(--line); border-radius: 4px; padding: 15px 17px;
+  margin-bottom: 12px; background: var(--surface);
+}
+.story h3 { font-family: var(--f-display); font-size: 16px; margin: 0 0 3px; font-weight: 600; }
+.story .meta { font-size: 12px; color: var(--ink-faint); margin: 0 0 8px; }
+.story p.body { margin: 0; font-size: 14px; white-space: pre-wrap; }
+.story a { color: var(--accent-text); }
+
+.media-item {
+  display: flex; gap: 10px; align-items: baseline;
+  padding: 9px 0; border-bottom: 1px solid var(--line-soft); font-size: 14px;
+}
+.media-item .kind {
+  font-size: 10.5px; text-transform: uppercase; letter-spacing: .05em;
+  border: 1px solid var(--line); border-radius: 2px; padding: 1px 6px;
+  color: var(--ink-faint); white-space: nowrap;
+}
+.media-item a { color: var(--ink); text-decoration: none; }
+.media-item a:hover { text-decoration: underline; }
+.media-item .src { color: var(--ink-faint); font-size: 12px; }
+
+/* ------------------------------------------------------------------ frame
+   The map tab hosts the dashboard in a frame rather than inlining its markup.
+   That is an engineering decision, not a shortcut: the two documents share
+   seven class names (.card, .wrap, .num, .warn ...) and the dashboard styles
+   bare `body`, `table`, `th`, `td`, `button` and `input`. Merged into one
+   document each would silently restyle the other -- the portal's forms and
+   the dashboard's tables both. Framed, each keeps its own stylesheet, and
+   dashboard/index.html stays a valid standalone file, which is a property
+   this project has deliberately protected elsewhere. */
+.frame-wrap {
+  border: 1px solid var(--line); border-radius: 4px; overflow: hidden;
+  background: var(--surface);
+}
+#map-frame {
+  display: block; width: 100%; border: 0;
+  /* A starting value only. The real height is set in JS from where the frame
+     actually lands on the page, because a CSS guess at the header and intro
+     height is wrong the moment either wraps to another line -- and being wrong
+     by any amount puts a second scrollbar on the outer page beside the
+     dashboard's own. */
+  height: 70vh; min-height: 420px;
+}
+
+/* ------------------------------------------------------------------- mine */
+.mine-row {
+  display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;
+  padding: 10px 0; border-bottom: 1px solid var(--line-soft); font-size: 14px;
+}
+.mine-row:last-child { border-bottom: 0; }
+.mine-row .where { font-weight: 500; }
+.mine-row .when { color: var(--ink-faint); font-size: 12px; }
+.mine-row .act { margin-left: auto; display: flex; gap: 6px; }
+.mine-row.gone { opacity: .55; }
+.mine-row.gone .where { text-decoration: line-through; }
+
+footer {
+  margin-top: 44px; padding-top: 18px; border-top: 1px solid var(--line);
+  color: var(--ink-faint); font-size: 13px; max-width: 76ch;
+}
+footer p { margin: 0 0 10px; }
+code { font-family: var(--f-mono); font-size: 12.5px; background: var(--surface-2);
+       padding: 1px 5px; border-radius: 2px; }
+</style>
+
+<div class="masthead">
+  <div class="masthead-inner">
+    <h1 class="brand">Lost<span>in</span>SriLanka</h1>
+    <p class="tagline">What visitors report about Sri Lanka&rsquo;s destinations</p>
+  </div>
+  <div class="tabs" role="tablist">
+    <button class="tab" role="tab" id="tab-map" aria-selected="true"
+            aria-controls="panel-map">Map</button>
+    <button class="tab" role="tab" id="tab-stories" aria-selected="false"
+            aria-controls="panel-stories">Stories &amp; videos</button>
+    <button class="tab" role="tab" id="tab-share" aria-selected="false"
+            aria-controls="panel-share">Add a review</button>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <!-- ============================================================== MAP -->
+  <section class="panel" id="panel-map" role="tabpanel" aria-labelledby="tab-map">
+    <p class="lede">Every destination in the study, and what visitors complain
+      about there.</p>
+    <p class="sub">__N_REVIEWS__ reviews from __N_DESTINATIONS__ places across
+      __N_DISTRICTS__ districts, sorted into seven everyday topics. Click a
+      district or a dot to read the evidence behind any number.</p>
+    <div class="frame-wrap">
+      <iframe id="map-frame" title="Destination map and findings"
+              loading="lazy" referrerpolicy="no-referrer"></iframe>
+    </div>
+  </section>
+
+  <!-- ============================================================ SHARE -->
+  <section class="panel" id="panel-share" role="tabpanel" aria-labelledby="tab-share" hidden>
+
+    <p class="lede">Was the road broken? Were the toilets locked? Was there
+      rubbish, or a crowd, or something that felt unsafe? Write it in your own
+      words.</p>
+    <p class="sub">We read what you write and sort it into everyday topics —
+      one line at a time — so the people who look after these places can see
+      what keeps going wrong. <strong>If we get it wrong, you can fix it.</strong>
+      We also show you what earlier visitors said, from __N_REVIEWS__ older
+      reviews collected up to __OBS_END__.</p>
+
+    <div class="status" id="status"><span class="dot"></span><span id="status-text">connecting…</span></div>
+
+    <div class="cols">
+      <div>
+        <div class="card">
+          <h2>Your experience</h2>
+          <p class="hint">No name, no email, no account. Just what happened and where.</p>
+
+          <form id="form" autocomplete="off">
+            <div class="field">
+              <label for="destination">Which place?</label>
+              <input id="destination" name="destination" list="destinations"
+                     placeholder="Start typing, e.g. Kandy Lake"
+                     minlength="2" maxlength="200" required>
+              <datalist id="destinations"></datalist>
+              <div class="newplace" id="newplace"></div>
+            </div>
+
+            <div class="field">
+              <label for="district">Which district is it in?</label>
+              <select id="district" name="district" required></select>
+            </div>
+
+            <div class="field">
+              <label for="text">What happened?</label>
+              <textarea id="text" name="text" minlength="10" maxlength="__MAX_CHARS__"
+                placeholder="The path down to the beach is broken and there was rubbish everywhere, but the view is worth it."
+                required></textarea>
+              <div class="counter" id="counter">0 / __MAX_CHARS__</div>
+            </div>
+
+            <button type="submit" id="submit">Send it</button>
+            <button type="button" class="ghost" id="example">Show me an example</button>
+          </form>
+          <div id="error"></div>
+        </div>
+
+        <div class="card" id="mine-card" hidden>
+          <div class="baseline-head">
+            <h2 style="margin-bottom:0">Your submissions</h2>
+            <span class="pill" id="mine-pill"></span>
+          </div>
+          <p class="hint">Kept in this browser so they are still here when you
+            come back. Nobody else sees this list.</p>
+          <div id="mine-body"></div>
+        </div>
+
+        <div class="card" id="baseline-card">
+          <div class="baseline-head">
+            <h2 style="margin-bottom:0">What earlier visitors said</h2>
+            <span class="pill" id="baseline-pill">no place chosen yet</span>
+          </div>
+          <p class="hint" id="baseline-hint">Type a place above and we will show
+            you what people reported there before.</p>
+          <figure class="photo" id="photo" hidden></figure>
+          <div id="baseline-body"></div>
+        </div>
+      </div>
+
+      <div>
+        <div class="card">
+          <h2>What we understood</h2>
+          <p class="hint">We split what you wrote into separate points, and show
+            the words that made us pick each topic — so you can see exactly why,
+            and tell us when we are wrong.</p>
+          <div id="result"><p class="placeholder">Nothing yet. Write something on the left.</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================================== STORIES -->
+  <section class="panel" id="panel-stories" role="tabpanel" aria-labelledby="tab-stories" hidden>
+
+    <p class="lede">Longer stories, blog posts and videos about places in
+      Sri Lanka.</p>
+    <p class="sub">Anything here is for reading and watching only. Stories are
+      <strong>never counted</strong> in any of the numbers on this site — the
+      same rule the collected news articles and videos already follow.</p>
+
+    <div class="cols">
+      <div>
+        <div class="card">
+          <h2>Add your story</h2>
+          <p class="hint">A trip write-up, a blog post, anything longer than a
+            quick comment.</p>
+          <form id="story-form" autocomplete="off">
+            <div class="field">
+              <label for="story-title">Title</label>
+              <input id="story-title" maxlength="200" minlength="3" required
+                     placeholder="Two days walking around Ella">
+            </div>
+            <div class="field">
+              <label for="story-place">Which place? (optional)</label>
+              <input id="story-place" list="destinations" maxlength="200"
+                     placeholder="Ella Rock">
+            </div>
+            <div class="field">
+              <label for="story-district">District (optional)</label>
+              <select id="story-district"></select>
+            </div>
+            <div class="field">
+              <label for="story-body">Your story</label>
+              <textarea id="story-body" minlength="30" maxlength="20000" required
+                placeholder="Write as much as you like…"></textarea>
+            </div>
+            <div class="field">
+              <label for="story-url">Link to a blog post or video (optional)</label>
+              <input id="story-url" maxlength="500" placeholder="https://…">
+            </div>
+            <div class="field">
+              <label for="story-author">Your name or nickname (optional)</label>
+              <input id="story-author" maxlength="100" placeholder="A traveller">
+            </div>
+            <button type="submit" id="story-submit">Publish story</button>
+          </form>
+          <div id="story-msg"></div>
+        </div>
+      </div>
+
+      <div>
+        <div class="card">
+          <h2>Stories from visitors</h2>
+          <p class="hint">Newest first.</p>
+          <div id="stories"><p class="placeholder">Loading…</p></div>
+        </div>
+
+        <div class="card">
+          <div class="baseline-head">
+            <h2 style="margin-bottom:0">Videos and articles we collected</h2>
+            <span class="pill" id="media-pill">all places</span>
+          </div>
+          <p class="hint">Gathered from YouTube and news sites, by searching for
+            each destination by name. Shown here, never counted.</p>
+          <div class="field" style="margin-bottom:14px">
+            <label for="media-place">Filter by place</label>
+            <input id="media-place" list="media-destinations" maxlength="200"
+                   placeholder="Type a place, or leave blank for a mixture">
+            <datalist id="media-destinations"></datalist>
+          </div>
+          <div id="media-body"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <p><strong>How much to trust what we say.</strong> Every topic has been
+      checked by hand, but not all to the same standard, and the difference is
+      worth knowing. __CHECKED_TWO__ were checked by <strong>two people reading
+      independently</strong>, so we also know how often two humans agree with
+      each other. __CHECKED_ONE__ were checked by <strong>one person</strong>,
+      which gives us a number but nothing to check that number against.
+      __UNCHECKED_SENTENCE__</p>
+    <p>Photos come from Wikipedia and are shown with credit. They are a guide to
+      the place, not evidence about it, and sometimes there is no photo or the
+      wrong one.</p>
+    <p>The analyser runs at <code id="api-url"></code>. Start it with
+      <code>python scripts/41_serve_api.py</code>. Add
+      <code>?api=http://host:port</code> to this page's address to point it
+      somewhere else.</p>
+  </footer>
+</div>
+
+<script>
+"use strict";
+
+const ASPECTS   = __ASPECTS__;
+const DISTRICTS = __DISTRICTS__;
+const BASELINE  = __BASELINE__;
+const MEDIA     = __MEDIA__;
+const META      = __META__;
+
+// The API base is a query parameter with a build-time default, because this
+// page is a static file that gets handed around exactly like the dashboard.
+// Hardcoding one host would make it work on one machine.
+// Where to send analysis requests, in priority order:
+//   1. ?api=... on the URL, for pointing a copied file at a running server
+//   2. the origin that served this page -- the normal case once the API
+//      serves the portal itself, and the only one that survives a deploy to
+//      any host other than the one baked in at build time
+//   3. the build-time default, which is what a page opened from disk needs
+const API = (new URLSearchParams(location.search).get("api")
+             || (location.protocol.indexOf("http") === 0 ? location.origin
+                                                         : META.api_default))
+              .replace(/\/+$/, "");
+const $ = (id) => document.getElementById(id);
+$("api-url").textContent = API;
+
+const esc = (s) => String(s == null ? "" : s)
+  .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+  .replace(/"/g, "&quot;");
+
+// Plain words for the three verdicts. The pipeline calls these N / P / X and
+// the research calls them negative / positive / neutral; a visitor is told
+// what they actually mean.
+const VERDICT = { negative: "a problem", positive: "something good",
+                  neutral: "just a fact" };
+const CODE    = { negative: "N", positive: "P", neutral: "X" };
+
+const byKey = {};
+ASPECTS.forEach(a => { byKey[a.key] = a; });
+
+// ------------------------------------------------------------------- mine
+// What this browser has sent, and the tokens that prove it sent them.
+//
+// There are no accounts here on purpose -- the portal asks for no name and no
+// email -- so "your submissions" cannot come from the server: it has no idea
+// who you are. It comes from this list, and the server holds the content. That
+// is also the whole fix for the complaint that a review vanished on refresh:
+// it was always saved, there was simply nothing on screen that remembered it.
+//
+// Tokens live here and nowhere else. Clearing site data means losing the
+// ability to withdraw, which is the honest cost of not asking who you are.
+const STORE_KEY = "lsl_mine_v1";
+
+function loadMine() {
+  try {
+    const raw = localStorage.getItem(STORE_KEY);
+    const v = raw ? JSON.parse(raw) : null;
+    return (v && v.reviews && v.stories) ? v : { reviews: [], stories: {} };
+  } catch (e) {
+    return { reviews: [], stories: {} };   // private mode, or corrupt entry
+  }
+}
+
+function saveMine(mine) {
+  try { localStorage.setItem(STORE_KEY, JSON.stringify(mine)); }
+  catch (e) { /* storage full or blocked: the submission still went through */ }
+}
+
+let MINE = loadMine();
+
+function rememberReview(res) {
+  if (!res.stored || !res.manage_token) return;
+  MINE.reviews.unshift({
+    id: res.review_id, token: res.manage_token,
+    destination: res.destination, district: res.district,
+    at: res.submitted_at, points: res.segments.length
+  });
+  MINE.reviews = MINE.reviews.slice(0, 50);
+  saveMine(MINE);
+  renderMine();
+}
+
+function renderMine() {
+  const card = $("mine-card"), body = $("mine-body");
+  if (!MINE.reviews.length) { card.hidden = true; return; }
+  card.hidden = false;
+  $("mine-pill").textContent = MINE.reviews.length +
+    (MINE.reviews.length === 1 ? " review" : " reviews");
+
+  body.innerHTML = MINE.reviews.map(r =>
+    '<div class="mine-row' + (r.withdrawn ? " gone" : "") + '" data-id="' +
+      esc(r.id) + '">' +
+      '<span class="where">' + esc(r.destination) + "</span>" +
+      '<span class="when">' + esc((r.at || "").slice(0, 10)) +
+        " · " + r.points + " point" + (r.points === 1 ? "" : "s") +
+        (r.withdrawn ? " · withdrawn" : "") + "</span>" +
+      '<span class="act">' +
+        (r.withdrawn ? "" :
+          '<button type="button" class="tiny" data-withdraw="' + esc(r.id) +
+          '">Withdraw</button>') +
+      "</span>" +
+    "</div>").join("");
+}
+
+$("mine-body").addEventListener("click", async (e) => {
+  const btn = e.target.closest("[data-withdraw]");
+  if (!btn) return;
+  const id = btn.getAttribute("data-withdraw");
+  const rec = MINE.reviews.find(r => r.id === id);
+  if (!rec) return;
+  if (!confirm("Withdraw this review? It stops counting towards every figure "
+               + "on the site. This cannot be undone from here.")) return;
+  btn.disabled = true;
+  try {
+    const r = await fetch(API + "/reviews/" + encodeURIComponent(id) + "/withdraw",
+                          { method: "POST",
+                            headers: { "X-Manage-Token": rec.token } });
+    if (!r.ok) throw new Error("HTTP " + r.status);
+    rec.withdrawn = true;
+    saveMine(MINE);
+    renderMine();
+  } catch (err) {
+    btn.disabled = false;
+    alert("That did not go through. " + err.message);
+  }
+});
+
+// -------------------------------------------------------------------- tabs
+const TABS = ["map", "stories", "share"];
+
+function selectTab(name) {
+  if (TABS.indexOf(name) === -1) name = TABS[0];
+  TABS.forEach(t => {
+    const on = t === name;
+    $("tab-" + t).setAttribute("aria-selected", on ? "true" : "false");
+    $("panel-" + t).hidden = !on;
+  });
+  // The map is 3.8 MB of embedded data. Pointing the frame at it only when
+  // the tab is first opened keeps the other two tabs instant, and the browser
+  // keeps it loaded afterwards, so switching back is free.
+  if (name === "map") {
+    const f = $("map-frame");
+    if (!f.getAttribute("src")) f.setAttribute("src", "../dashboard/index.html");
+    // Back to the top before measuring, so the frame starts where it is drawn
+    // and the tab does not open half-scrolled after reading another one.
+    window.scrollTo(0, 0);
+    sizeFrame();
+  }
+  if (name === "stories") loadStories();
+  // In the address bar so a tab can be linked to, and survives a reload --
+  // otherwise every refresh silently returns the reader to the first tab.
+  if (location.hash.slice(1) !== name) {
+    history.replaceState(null, "", "#" + name);
+  }
+}
+// Fit the frame to whatever room is left below it, so the dashboard's own
+// scrollbar is the only one on this tab. Measured rather than assumed: the
+// masthead and the intro paragraph both change height with the window width.
+function sizeFrame() {
+  const f = $("map-frame");
+  if (!f || $("panel-map").hidden) return;
+  // getBoundingClientRect().top is relative to the current scroll position, so
+  // measuring it while the page is scrolled down gives a negative top and a
+  // frame taller than the window -- which is how the frame ended up starting
+  // 81px above the viewport. Its position in the DOCUMENT is what matters, and
+  // that is the offset plus the current scroll.
+  const docTop = f.getBoundingClientRect().top + window.scrollY;
+  f.style.height = Math.max(420, window.innerHeight - docTop - 24) + "px";
+}
+window.addEventListener("resize", sizeFrame);
+
+TABS.forEach(t => $("tab-" + t).addEventListener("click", () => selectTab(t)));
+window.addEventListener("hashchange", () => selectTab(location.hash.slice(1)));
+
+// --------------------------------------------------------------- reference
+const districtOptions = (blank) =>
+  '<option value="">' + blank + "</option>" +
+  DISTRICTS.map(d => '<option value="' + esc(d.name) + '">' + esc(d.name) +
+    "</option>").join("");
+$("district").innerHTML = districtOptions("Choose a district…");
+$("story-district").innerHTML = districtOptions("(not sure)");
+
+$("destinations").innerHTML = Object.keys(BASELINE).sort()
+  .map(d => '<option value="' + esc(d) + '">').join("");
+$("media-destinations").innerHTML = Object.keys(MEDIA).sort()
+  .map(d => '<option value="' + esc(d) + '">').join("");
+
+// ----------------------------------------------------------------- health
+fetch(API + "/health")
+  .then(r => r.ok ? r.json() : Promise.reject(new Error("HTTP " + r.status)))
+  .then(() => {
+    $("status").className = "status up";
+    $("status-text").textContent = "Ready — we can read your review right now.";
+  })
+  .catch(() => {
+    $("status").className = "status down";
+    // Naming the command matters here. This message is what a reader sees
+    // when the portal is opened from disk, or served by the static-file
+    // server on another port -- both of which look like a finished page that
+    // silently does nothing.
+    $("status-text").textContent =
+      "No analyser at " + API + " -- run: python scripts/50_launch.py";
+  });
+
+// ---------------------------------------------------------------- counter
+const ta = $("text");
+ta.addEventListener("input", () => {
+  const n = ta.value.trim().length;
+  $("counter").textContent = n + " / " + META.max_chars;
+  $("counter").className = "counter" + (n > 0 && n < 10 ? " bad" : "");
+});
+
+$("example").addEventListener("click", () => {
+  $("destination").value = META.example.destination;
+  $("district").value = META.example.district;
+  ta.value = META.example.text;
+  ta.dispatchEvent(new Event("input"));
+  $("destination").dispatchEvent(new Event("input"));
+});
+
+// ------------------------------------------------------------------ photo
+// Wikipedia rather than Google Maps. A Google Places photo needs an API key,
+// and this page is a static file people copy around -- the key would travel
+// with it, on somebody's billing account. The dashboard already refused a
+// Google tile layer for exactly that reason. Wikipedia's API needs no key,
+// allows cross-origin calls (origin=*), and the images are credited.
+const photoCache = {};
+function showPhoto(place) {
+  const fig = $("photo");
+  if (!place) { fig.hidden = true; fig.innerHTML = ""; return; }
+  if (photoCache[place] !== undefined) return paintPhoto(photoCache[place], place);
+
+  const url = "https://en.wikipedia.org/w/api.php?action=query&format=json" +
+    "&origin=*&generator=search&gsrlimit=1&gsrsearch=" +
+    encodeURIComponent(place + " Sri Lanka") +
+    "&prop=pageimages&piprop=thumbnail&pithumbsize=560";
+
+  fetch(url)
+    .then(r => r.json())
+    .then(d => {
+      const pages = (d.query && d.query.pages) || {};
+      const first = Object.keys(pages).map(k => pages[k])
+        .find(p => p.thumbnail && p.thumbnail.source);
+      const hit = first
+        ? { src: first.thumbnail.source, title: first.title }
+        : null;
+      photoCache[place] = hit;
+      paintPhoto(hit, place);
+    })
+    .catch(() => { photoCache[place] = null; paintPhoto(null, place); });
+}
+function paintPhoto(hit, place) {
+  const fig = $("photo");
+  if (!hit || $("destination").value.trim() !== place) {
+    fig.hidden = true; fig.innerHTML = ""; return;
+  }
+  fig.innerHTML =
+    '<img alt="' + esc(place) + '" src="' + esc(hit.src) + '">' +
+    "<figcaption>Photo from Wikipedia — " +
+    '<a href="https://en.wikipedia.org/wiki/' +
+    encodeURIComponent(hit.title) + '" target="_blank" rel="noopener">' +
+    esc(hit.title) + "</a>. Shown as a guide, not as evidence.</figcaption>";
+  fig.hidden = false;
+}
+
+// --------------------------------------------------------------- baseline
+// Every row carries how many comments it rests on. The middle place-and-topic
+// cell in this corpus holds about 20, and a percentage without its count
+// invites 1-out-of-3 being read as a solid 33%.
+function renderBaseline(name) {
+  const place = (name || "").trim();
+  const rec = BASELINE[place];
+  const pill = $("baseline-pill"), hint = $("baseline-hint"), body = $("baseline-body");
+  const isNew = place.length >= 2 && !rec;
+
+  $("newplace").className = "newplace" + (isNew ? " show" : "");
+  if (isNew) {
+    $("newplace").textContent =
+      "We have no earlier reviews for “" + place + "”. That is fine — " +
+      "send it anyway and you will be the first to put it on the map.";
+  }
+
+  showPhoto(place.length >= 2 ? place : "");
+
+  if (!rec) {
+    pill.textContent = isNew ? "a new place" : "no place chosen yet";
+    hint.textContent = isNew
+      ? "Nobody has reported this place before, so there is nothing to compare against yet."
+      : "Type a place above and we will show you what people reported there before.";
+    body.innerHTML = "";
+    return;
+  }
+
+  if ($("district").value === "") $("district").value = rec.district;
+
+  pill.textContent = rec.district + " · " + rec.reviews + " earlier reviews";
+  hint.textContent = "From reviews written up to " + META.observation_end +
+                     ". This is the past, not today.";
+
+  const rows = ASPECTS.map(a => {
+    const s = rec.aspects[a.key];
+    if (!s) return "";
+    const pct = Math.round(s.rate * 1000) / 10;
+    const thin = s.n < 30;
+    return "<tr>" +
+      "<td>" + esc(a.label) +
+        (a.plain_accuracy == null
+          ? ' <span class="unchecked-tag">not checked</span>' : "") +
+      "</td>" +
+      '<td style="width:80px"><span class="bar"><i style="width:' +
+        Math.min(100, pct) + '%"></i></span></td>' +
+      '<td class="num">' + pct.toFixed(0) + "%</td>" +
+      '<td class="num' + (thin ? " thin" : "") + '">' + s.n + "</td>" +
+      "</tr>";
+  }).join("");
+
+  body.innerHTML =
+    "<table><thead><tr><th>Topic</th><th></th>" +
+    "<th class='num'>said it was a problem</th>" +
+    "<th class='num'>comments</th></tr></thead><tbody>" + rows + "</tbody></table>" +
+    '<div class="note">Where the comment count is <span class="thin">amber</span>, ' +
+    "fewer than 30 people mentioned it. Treat that as a hint, not a fact.</div>";
+}
+$("destination").addEventListener("input", (e) => renderBaseline(e.target.value));
+
+// ---------------------------------------------------------------- analyse
+function confidenceLine(key) {
+  const a = byKey[key];
+  if (!a || a.plain_accuracy === null || a.plain_accuracy === undefined) {
+    return { cls: " unchecked",
+             text: "We have not checked how good we are at spotting this one yet." };
+  }
+  return { cls: "", text: a.plain_accuracy + "." };
+}
+
+let lastReviewId = null;
+
+function renderResult(res) {
+  lastReviewId = res.review_id;
+  const out = [];
+  const n = res.segments.length;
+  out.push('<p class="hint" style="margin-bottom:14px">We found <strong>' + n +
+    "</strong> separate point" + (n === 1 ? "" : "s") + " in what you wrote about " +
+    esc(res.destination) + ". Thank you — it is saved.</p>");
+
+  res.segments.forEach((seg, i) => {
+    out.push('<div class="seg"><p class="seg-text">“' +
+             esc(seg.segment_text) + '”</p>');
+    if (!seg.aspects.length) {
+      out.push('<p class="seg-none">We could not match this to any of our ' +
+               "topics. We keep it anyway — the things we cannot categorise are " +
+               "how we find out what topics are missing.</p>");
+    } else {
+      seg.aspects.forEach(key => {
+        const a = byKey[key] || { label: key };
+        const pol = seg.aspect_polarity[key] || seg.polarity_label;
+        const c = confidenceLine(key);
+        const id = i + "-" + key;
+        out.push(
+          '<div class="finding ' + CODE[pol] + c.cls + '">' +
+            '<div class="finding-top">' +
+              '<span class="cat">' + esc(a.label) + "</span>" +
+              '<span class="verdict">' + (VERDICT[pol] || pol) + "</span>" +
+              '<button type="button" class="tiny fixbtn" data-fix="' + id + '">' +
+                "Not right?</button>" +
+            "</div>" +
+            '<div class="conf">' + esc(c.text) + "</div>" +
+            (seg.triggered_words && seg.triggered_words.length
+              ? '<div class="why">We picked this because you wrote: ' +
+                esc(seg.triggered_words.slice(0, 5).join(", ")) + "</div>"
+              : "") +
+            '<div class="fixer" id="fix-' + id + '" hidden>' +
+              "<p>What should it be?</p>" +
+              '<div class="opts">' +
+                fixButton(i, key, "complaint", "It is a problem") +
+                fixButton(i, key, "praise", "It is something good") +
+                fixButton(i, key, "factual", "It is just a fact") +
+                fixButton(i, key, "not_about_this",
+                          "This is not about " + a.label.toLowerCase()) +
+              "</div>" +
+            "</div>" +
+          "</div>");
+      });
+    }
+    out.push("</div>");
+  });
+
+  if (res.truncated) {
+    out.push('<div class="note warn"><strong>That was a long one.</strong> ' +
+      "We read as much as we could, but not quite all of it.</div>");
+  }
+  if (!res.stored) {
+    out.push('<div class="note warn"><strong>We could not save it.</strong> ' +
+      "We still read it for you, but it did not reach our records. " +
+      "Your text is still in the box, so nothing is lost.</div>");
+  }
+
+  $("result").innerHTML = out.join("");
+}
+
+function fixButton(segIndex, key, verdict, label) {
+  return '<button type="button" class="tiny" data-correct="' +
+    segIndex + "|" + key + "|" + verdict + '">' + esc(label) + "</button>";
+}
+
+// One listener on the container rather than a handler per button, so buttons
+// rendered later still work.
+$("result").addEventListener("click", async (e) => {
+  const fix = e.target.closest("[data-fix]");
+  if (fix) {
+    const box = $("fix-" + fix.getAttribute("data-fix"));
+    box.hidden = !box.hidden;
+    return;
+  }
+  const btn = e.target.closest("[data-correct]");
+  if (!btn) return;
+
+  const [segIndex, aspect, verdict] = btn.getAttribute("data-correct").split("|");
+  const finding = btn.closest(".finding");
+  btn.disabled = true;
+  try {
+    const r = await fetch(API + "/corrections", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        review_id: lastReviewId, seg_index: Number(segIndex),
+        aspect: aspect, human_verdict: verdict })
+    });
+    if (!r.ok) throw new Error("HTTP " + r.status);
+    finding.querySelector(".fixer").innerHTML =
+      '<p class="fixed">Thank you — noted. A person reads these; nothing on ' +
+      "the site changes automatically because of one correction.</p>";
+  } catch (err) {
+    btn.disabled = false;
+    finding.querySelector(".fixer").insertAdjacentHTML("beforeend",
+      '<p class="fixed" style="color:var(--critical)">That did not go through. ' +
+      "Please try again.</p>");
+  }
+});
+
+// ----------------------------------------------------------------- submit
+$("form").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  $("error").innerHTML = "";
+  const btn = $("submit");
+  const payload = {
+    text: ta.value.trim(),
+    destination: $("destination").value.trim(),
+    district: $("district").value.trim(),
+    source: "portal"
+  };
+  if (payload.text.length < 10) {
+    $("error").innerHTML = '<div class="err">Please write a little more — ' +
+      "at least a few words.</div>";
+    return;
+  }
+
+  btn.disabled = true;
+  btn.textContent = "Reading it…";
+  $("result").innerHTML = '<p class="placeholder">Reading what you wrote…</p>';
+  try {
+    const r = await fetch(API + "/analyse", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    });
+    const body = await r.json().catch(() => ({}));
+    if (!r.ok) {
+      const d = body.detail;
+      const msg = Array.isArray(d)
+        ? d.map(x => x.msg).join("; ")
+        : (d || ("Something went wrong (HTTP " + r.status + ")"));
+      throw new Error(msg);
+    }
+    renderResult(body);
+    rememberReview(body);
+    ta.value = "";
+    ta.dispatchEvent(new Event("input"));
+  } catch (err) {
+    $("result").innerHTML = '<p class="placeholder">Nothing yet.</p>';
+    $("error").innerHTML = '<div class="err">' + esc(err.message) + "</div>";
+  } finally {
+    btn.disabled = false;
+    btn.textContent = "Send it";
+  }
+});
+
+// ------------------------------------------------------------- storyboard
+function loadStories() {
+  fetch(API + "/stories?limit=50")
+    .then(r => r.ok ? r.json() : Promise.reject(new Error("HTTP " + r.status)))
+    .then(d => {
+      if (!d.stories.length) {
+        $("stories").innerHTML =
+          '<p class="placeholder">No stories yet. Yours would be the first.</p>';
+        return;
+      }
+      $("stories").innerHTML = d.stories.map(s =>
+        '<div class="story"><h3>' + esc(s.title) + "</h3>" +
+        '<p class="meta">' +
+          [s.author, s.destination, s.district,
+           (s.submitted_at || "").slice(0, 10)]
+            .filter(Boolean).map(esc).join(" · ") + "</p>" +
+        '<p class="body">' + esc(s.body) + "</p>" +
+        (s.url ? '<p style="margin:8px 0 0"><a href="' + esc(s.url) +
+                 '" target="_blank" rel="noopener noreferrer">Read the full post &rarr;</a></p>'
+               : "") +
+        // Only on stories this browser holds a token for. Everyone else sees
+        // the story and no buttons, because they could not act on them anyway.
+        (MINE.stories[s.story_id]
+          ? '<p style="margin:10px 0 0">' +
+            '<button type="button" class="tiny" data-story-delete="' +
+            esc(s.story_id) + '">Delete</button></p>'
+          : "") +
+        "</div>").join("");
+    })
+    .catch(() => {
+      $("stories").innerHTML =
+        '<p class="placeholder">Cannot reach the story list — the analyser is ' +
+        "not running.</p>";
+    });
+}
+
+$("stories").addEventListener("click", async (e) => {
+  const btn = e.target.closest("[data-story-delete]");
+  if (!btn) return;
+  const id = btn.getAttribute("data-story-delete");
+  const token = MINE.stories[id];
+  if (!token) return;
+  if (!confirm("Delete this story? It is removed for good.")) return;
+  btn.disabled = true;
+  try {
+    const r = await fetch(API + "/stories/" + encodeURIComponent(id),
+                          { method: "DELETE",
+                            headers: { "X-Manage-Token": token } });
+    if (!r.ok) throw new Error("HTTP " + r.status);
+    delete MINE.stories[id];
+    saveMine(MINE);
+    loadStories();
+  } catch (err) {
+    btn.disabled = false;
+    alert("That did not go through. " + err.message);
+  }
+});
+
+$("story-form").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  $("story-msg").innerHTML = "";
+  const btn = $("story-submit");
+  const payload = {
+    title: $("story-title").value.trim(),
+    body: $("story-body").value.trim(),
+    url: $("story-url").value.trim() || null,
+    destination: $("story-place").value.trim() || null,
+    district: $("story-district").value || null,
+    author: $("story-author").value.trim() || null
+  };
+  btn.disabled = true;
+  btn.textContent = "Publishing…";
+  try {
+    const r = await fetch(API + "/stories", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    });
+    const body = await r.json().catch(() => ({}));
+    if (!r.ok) {
+      const d = body.detail;
+      throw new Error(Array.isArray(d) ? d.map(x => x.msg).join("; ")
+                                       : (d || "HTTP " + r.status));
+    }
+    if (body.story_id && body.manage_token) {
+      MINE.stories[body.story_id] = body.manage_token;
+      saveMine(MINE);
+    }
+    $("story-msg").innerHTML =
+      '<div class="ok">Published. Thank you for writing it up.</div>';
+    $("story-form").reset();
+    loadStories();
+  } catch (err) {
+    $("story-msg").innerHTML = '<div class="err">' + esc(err.message) + "</div>";
+  } finally {
+    btn.disabled = false;
+    btn.textContent = "Publish story";
+  }
+});
+
+// Collected videos and articles. Embedded at build time from media.csv, which
+// never touches a calculation -- see tests/test_media_separation.py.
+function renderMedia(place) {
+  const key = (place || "").trim();
+  let items, label;
+  if (key && MEDIA[key]) {
+    items = MEDIA[key].map(m => [key, m]);
+    label = key;
+  } else if (key) {
+    $("media-pill").textContent = "nothing for that place";
+    $("media-body").innerHTML =
+      '<p class="placeholder">We have not collected anything for that place yet.</p>';
+    return;
+  } else {
+    items = [];
+    Object.keys(MEDIA).forEach(d => MEDIA[d].forEach(m => items.push([d, m])));
+    // A stable, arbitrary spread rather than the first 30 of one destination.
+    items.sort((a, b) => (b[1].published || "").localeCompare(a[1].published || ""));
+    items = items.slice(0, 30);
+    label = "a mixture, newest first";
+  }
+  $("media-pill").textContent = label;
+  $("media-body").innerHTML = items.map(([dest, m]) =>
+    '<div class="media-item">' +
+      '<span class="kind">' + esc(m.kind === "youtube" ? "video" : "article") + "</span>" +
+      "<span><a href=\"" + esc(m.url) + '" target="_blank" rel="noopener noreferrer">' +
+        esc(m.title) + "</a><br>" +
+        '<span class="src">' + esc(dest) +
+        (m.source_name ? " · " + esc(m.source_name) : "") +
+        (m.published ? " · " + esc(String(m.published).slice(0, 10)) : "") +
+        "</span></span>" +
+    "</div>").join("");
+}
+$("media-place").addEventListener("input", (e) => renderMedia(e.target.value));
+
+renderBaseline("");
+renderMedia("");
+renderMine();
+selectTab(location.hash.slice(1) || "map");
+</script>
