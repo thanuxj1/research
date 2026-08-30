@@ -335,7 +335,8 @@ export default function DestinationRecommendations({ onBack }) {
           </div>
         </div>
 
-        {/* JSON Inspector Toggle */}
+        {/* JSON Inspector Toggle commented out for now */}
+        {/*
         <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: 10 }}>
           <button
             onClick={() => setShowJsonViewer(!showJsonViewer)}
@@ -368,6 +369,7 @@ export default function DestinationRecommendations({ onBack }) {
             </div>
           </div>
         )}
+        */}
 
         {/* Loading Indicator State */}
         {loadingRecs && (
