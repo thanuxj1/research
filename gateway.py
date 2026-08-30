@@ -72,12 +72,13 @@ UPSTREAMS: Dict[str, str] = {
 }
 
 SPAS = {
-    "/ai": ROOT / "frontend" / "dist",
     "/food": ROOT / "food-assistant" / "frontend" / "dist",
 }
 
+# The main portal (frontend/) is served at / — see portal mount below.
+PORTAL_DIST = ROOT / "frontend" / "dist"
+
 BUILD_HINT = {
-    "/ai": "cd frontend && npm install && npm run build",
     "/food": "cd food-assistant/frontend && npm install && npm run build",
 }
 
@@ -172,24 +173,28 @@ def build_app(upstreams: Optional[Dict[str, str]] = None):
                 "requirements.txt</code></p>".format(_travellens_error),
                 status_code=503)
 
-    # ------------------------------------------------------- unified portal
-    @app.get("/", response_class=HTMLResponse, include_in_schema=False)
-    def portal():
-        return PORTAL_HTML
+    # ------------------------------------------------------- unified portal (React SPA)
+    from fastapi.responses import FileResponse as _FR
+    _portal_index = PORTAL_DIST / "index.html"
 
-    # Slash redirects so /ai and /food bare paths reach the SPA.
-    @app.get("/ai", include_in_schema=False)
-    def _ai_slash():
-        return RedirectResponse("/ai/")
+    @app.get("/", include_in_schema=False)
+    def portal():
+        if _portal_index.exists():
+            return _FR(str(_portal_index))
+        return HTMLResponse(
+            "<h1>Portal not built</h1><pre>cd frontend && npm install && npm run build</pre>",
+            status_code=503)
+
+    # Serve portal static assets (/assets/, /images/)
+    if (PORTAL_DIST / "assets").exists():
+        app.mount("/assets", StaticFiles(directory=str(PORTAL_DIST / "assets")), name="portal-assets")
+    _images_dir = PORTAL_DIST / "images"
+    if _images_dir.exists():
+        app.mount("/images", StaticFiles(directory=str(_images_dir)), name="images")
 
     @app.get("/food", include_in_schema=False)
     def _food_slash():
         return RedirectResponse("/food/")
-
-    # ----------------------------------------- AI SPA images (before SPAs)
-    _images_dir = ROOT / "frontend" / "dist" / "images"
-    if _images_dir.exists():
-        app.mount("/images", StaticFiles(directory=str(_images_dir)), name="images")
 
     # ------------------------------------------------- built SPAs (last)
     for mount, dist in SPAS.items():
