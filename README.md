@@ -20,6 +20,60 @@ conflict on most of those files.
 
 ---
 
+## One URL
+
+```bash
+python gateway.py            # http://localhost:8080
+python gateway.py --check    # what is reachable, starts nothing
+```
+
+| path | what |
+|---|---|
+| `/` | landing page, with a card per application |
+| `/safety/` | SafeTravel LK |
+| `/food/` | food assistant |
+| `/travellens/` | LostinSriLanka |
+
+One origin, so no CORS and one address to share. The three are served
+differently, and the differences are the design:
+
+**travellens is mounted into the gateway process.** It is a FastAPI app in this
+repository, so it costs no extra port and no proxy hop. Its API comes with it
+at `/travellens/analyse`, `/travellens/docs` and so on.
+
+**The two React apps are served as built files**, so build them first:
+
+```bash
+cd frontend && npm install && npm run build
+cd food-assistant/frontend && npm install && npm run build
+```
+
+`base` is set in both vite configs, because a single-page app behind a path
+prefix needs that prefix compiled into its asset URLs — otherwise the built
+page asks the gateway for `/assets/...` and gets a blank screen. Both still run
+under `npm run dev` exactly as before.
+
+**Their two backends stay on their own ports and are proxied**, because they
+are separate Python applications with separate dependencies. Start them
+yourself:
+
+```bash
+cd backend && uvicorn app.main:app --port 8000
+cd food-assistant/backend && uvicorn main:app --port 8001
+```
+
+The gateway starts nothing on your behalf. A gateway that silently spawns other
+people's servers is one nobody can debug, so a service that is down returns a
+502 naming the exact address it tried, and the landing page marks that card
+with the command to fix it.
+
+**The food backend takes several minutes on its first run.** It downloads a
+sentence-transformer and a cross-encoder (about 1 GB together) before it binds
+its port. That is its own start-up, not a gateway problem — subsequent runs use
+the cached models.
+
+---
+
 ## Ports
 
 Everything is on a distinct port, so all three can run at once.
@@ -41,9 +95,9 @@ changed.
 
 ---
 
-## Running them
+## Running them individually
 
-Each is independent. Start only what you need.
+Each is independent, and each still runs on its own without the gateway.
 
 ### travellens — one command
 

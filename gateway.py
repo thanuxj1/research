@@ -43,7 +43,13 @@ It does not start the two backends. They have their own environments and their
 own start-up costs, and a gateway that silently spawns other people's servers
 is a gateway nobody can debug. `python gateway.py --check` says which are up.
 """
-from __future__ import annotations
+# No `from __future__ import annotations` here, deliberately. It turns every
+# annotation into a string, and FastAPI then resolves them with
+# typing.get_type_hints() against the MODULE globals -- where `Request` is not
+# defined, because fastapi is imported inside build_app() so that --check can
+# run without it. The result was FastAPI reading `request: Request` as a query
+# parameter and answering every proxied call with
+# 422 {"loc": ["query", "request"], "msg": "Field required"}.
 
 import argparse
 import sys
