@@ -373,7 +373,7 @@ export default function SafeTravelLK({ onNavigateAnalytics, onNavigateComponent2
   // 1. Fetch live district risk scores from backend API on mount
   useEffect(() => {
     setScoresLoading(true);
-    fetch("http://127.0.0.1:8000/api/v1/districts/risk-map")
+    fetch("/api/v1/districts/risk-map")
       .then(r => r.ok ? r.json() : null)
       .then(data => {
         if (!data || !data.features) { setApiReachable(false); return; }
@@ -407,7 +407,7 @@ export default function SafeTravelLK({ onNavigateAnalytics, onNavigateComponent2
   useEffect(() => {
     if (!selected) { setLiveIncidents([]); return; }
     setLiveLoading(true);
-    fetch(`http://127.0.0.1:8000/api/v1/districts/${encodeURIComponent(selected)}/reports`)
+    fetch(`/api/v1/districts/${encodeURIComponent(selected)}/reports`)
       .then(r => r.ok ? r.json() : null)
       .then(data => {
         if (!data || !data.reports) { setLiveIncidents([]); return; }
@@ -506,7 +506,7 @@ Write a 3-sentence safety briefing for ${profile.name || "this traveler"} visiti
 
     try {
       // 1. Try local FastAPI backend endpoint
-      let backendRes = await fetch("http://127.0.0.1:8000/api/v1/advisor/chat", {
+      let backendRes = await fetch("/api/v1/advisor/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -975,7 +975,7 @@ Write a 3-sentence safety briefing for ${profile.name || "this traveler"} visiti
           <div style={{ fontSize: 48 }}>🔌</div>
           <div style={{ color: "#f87171", fontSize: 20, fontWeight: 700 }}>Safety API Unreachable</div>
           <div style={{ color: "#94a3b8", fontSize: 14, maxWidth: 420 }}>
-            Cannot reach the safety intelligence API at <code style={{ color: "#fbbf24" }}>http://127.0.0.1:8000</code>. No risk data can be displayed.
+            Cannot reach the safety intelligence API at <code style={{ color: "#fbbf24" }}>/api</code>. No risk data can be displayed.
           </div>
           <div style={{ color: "#64748b", fontSize: 12, maxWidth: 400 }}>
             Start the backend with <code style={{ color: "#94a3b8" }}>uvicorn app.main:app</code> and reload, or append <code style={{ color: "#94a3b8" }}>?demo=1</code> to the URL to view illustrative demo fixtures.
