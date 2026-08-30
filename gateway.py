@@ -186,6 +186,11 @@ def build_app(upstreams: Optional[Dict[str, str]] = None):
     def _food_slash():
         return RedirectResponse("/food/")
 
+    # ----------------------------------------- AI SPA images (before SPAs)
+    _images_dir = ROOT / "frontend" / "dist" / "images"
+    if _images_dir.exists():
+        app.mount("/images", StaticFiles(directory=str(_images_dir)), name="images")
+
     # ------------------------------------------------- built SPAs (last)
     for mount, dist in SPAS.items():
         if (dist / "index.html").exists():
