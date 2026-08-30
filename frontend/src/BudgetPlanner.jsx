@@ -810,12 +810,14 @@ export default function BudgetPlanner({ onBack }) {
                     >
                       🛡️ Data Provenance
                     </button>
+                    {/*
                     <button
                       onClick={() => setShowDebugPanel(!showDebugPanel)}
                       style={{ ...styles.secTabBtn, ...(showDebugPanel ? styles.secTabActive : {}) }}
                     >
                       🔌 API Inspector
                     </button>
+                    */}
                   </div>
                 </div>
 
@@ -926,12 +928,13 @@ export default function BudgetPlanner({ onBack }) {
                 )}
               </div>
 
-              {/* BACKEND API INSPECTOR */}
+              {/* BACKEND API INSPECTOR commented out for now */}
+              {/*
               {showDebugPanel && (
                 <div style={styles.debugInspectorContainer}>
                   <div style={styles.debugInspectorHeader}>
                     <span style={{ fontSize: 12.5, fontWeight: 700, color: '#f8fafc' }}>
-                      🔌 Backend API JSON Inspector (http://127.0.0.1:5001/budget_planner/predict)
+                      🔌 Backend API JSON Inspector (http://51.20.34.58:5001/budget_planner/predict)
                     </span>
                     <span style={{ fontSize: 11, fontWeight: 700, color: isLiveApi ? '#34d399' : '#fbbf24' }}>
                       {isLiveApi ? 'LIVE SERVER 200 OK' : 'FALLBACK SIMULATION MODE'}
@@ -949,6 +952,7 @@ export default function BudgetPlanner({ onBack }) {
                   </div>
                 </div>
               )}
+              */}
             </>
           ) : (
             /* CLEAN INITIAL PLACEHOLDER STATE BEFORE USER SUBMITS FORM */

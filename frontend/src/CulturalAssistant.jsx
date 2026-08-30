@@ -263,7 +263,7 @@ export default function CulturalAssistant({ onBack }) {
               boxShadow: isLiveApi ? '0 0 8px #10b981' : '0 0 8px #f59e0b',
             }} />
             <span style={{ fontSize: 13, fontWeight: 700, color: '#f8fafc' }}>
-              🔌 Questions API Inspector — {isLiveApi ? 'Live Server Connected (http://127.0.0.1:5001/questions/predict)' : 'Fallback Simulation Mode'}
+              🔌 Questions API Inspector — {isLiveApi ? 'Live Server Connected (http://51.20.34.58:5001/questions/predict)' : 'Fallback Simulation Mode'}
             </span>
           </div>
           <button

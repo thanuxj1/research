@@ -1,24 +1,27 @@
 // Global API Service for SafeTravel Assistance & Budget Planner Endpoints
-const API_BASE_URL = 'http://127.0.0.1:5001';
+const API_BASE_URL = 'http://51.20.34.58:5001';
 
 const ASSISTANCE_ENDPOINTS = [
+  'http://51.20.34.58:5001/assistance/recommend',   // Remote server
   '/assistance/recommend',                       // Same-origin via Vite Proxy
-  'http://127.0.0.1:5001/assistance/recommend',   // Direct 127.0.0.1
-  'http://localhost:5001/assistance/recommend',   // Direct localhost
+  'http://127.0.0.1:5001/assistance/recommend',   // Local fallback
+  'http://localhost:5001/assistance/recommend',   // Localhost fallback
   'http://127.0.0.1:5000/assistance/recommend',   // Secondary fallback
 ];
 
 const BUDGET_ENDPOINTS = [
+  'http://51.20.34.58:5001/budget_planner/predict',  // Remote server
   '/budget_planner/predict',                      // Same-origin via Vite Proxy
-  'http://127.0.0.1:5001/budget_planner/predict',  // Direct 127.0.0.1
-  'http://localhost:5001/budget_planner/predict',  // Direct localhost
+  'http://127.0.0.1:5001/budget_planner/predict',  // Local fallback
+  'http://localhost:5001/budget_planner/predict',  // Localhost fallback
   'http://127.0.0.1:5000/budget_planner/predict',  // Secondary fallback
 ];
 
 const CULTURAL_ENDPOINTS = [
+  'http://51.20.34.58:5001/questions/predict',       // Remote server
   '/questions/predict',                           // Same-origin via Vite Proxy
-  'http://127.0.0.1:5001/questions/predict',       // Direct 127.0.0.1
-  'http://localhost:5001/questions/predict',       // Direct localhost
+  'http://127.0.0.1:5001/questions/predict',       // Local fallback
+  'http://localhost:5001/questions/predict',       // Localhost fallback
   'http://127.0.0.1:5000/questions/predict',       // Secondary fallback
 ];
 

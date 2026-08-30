@@ -360,7 +360,7 @@ export default function DestinationRecommendations({ onBack }) {
 
               <div>
                 <div style={{ fontSize: 11, fontWeight: 700, color: isLiveApi ? '#34d399' : '#fbbf24', marginBottom: 6, textTransform: 'uppercase' }}>
-                  Backend JSON Return (POST http://127.0.0.1:5001/assistance/recommend)
+                  Backend JSON Return (POST http://51.20.34.58:5001/assistance/recommend)
                 </div>
                 <pre style={{ ...styles.codeBlock, borderColor: isLiveApi ? 'rgba(52, 211, 153, 0.4)' : 'rgba(251, 191, 36, 0.4)', color: isLiveApi ? '#6ee7b7' : '#fde68a' }}>
                   {rawResponseJson ? JSON.stringify(rawResponseJson, null, 2) : '// Awaiting response...'}
