@@ -11,56 +11,54 @@
    faces of one system -- the portal takes evidence in, the dashboard reads
    it out -- and a second visual language would suggest two products. */
 :root {
-  --paper:       #FCFBF7;
-  --ground:      #FCFBF7;
-  --surface:     #FFFFFF;
-  --surface-2:   #F4F2EA;
-  --line:        #DFDBCD;
-  --line-soft:   #EAE7DC;
-  --ink:         #16150F;
-  --ink-muted:   #5F5C50;
-  --ink-faint:   #726E5E;
-  --accent:      #1F5C57;
-  --accent-soft: #E4EFEC;
-  --accent-fill: #1F5C57;
-  --accent-on-fill: #FCFBF7;
-  --accent-text: #1A4E4A;
+  /* Light slate + emerald — aligned with the Food AI design system. */
+  --paper:       #eef2f7;
+  --ground:      #eef2f7;
+  --surface:     #ffffff;
+  --surface-2:   #f1f5f9;
+  --line:        #e5e9f0;
+  --line-soft:   #eef2f7;
+  --ink:         #0f172a;
+  --ink-muted:   #475569;
+  --ink-faint:   #64748b;
+  --accent:      #047857;
+  --accent-soft: rgba(4,120,87,0.10);
+  --accent-fill: #047857;
+  --accent-on-fill: #ffffff;
+  --accent-text: #065f46;
   --critical:    #B04A2F;
   --critical-soft:#F6EAE4;
-  --good:        #4A6B45;
-  --good-soft:   #E8EFE5;
+  --good:        #15803d;
+  --good-soft:   rgba(21,128,61,0.10);
   --warn:        #9A6B18;
   --warn-soft:   #F6EEDC;
-
-  --brand-ink:  #1C1C1F;
-  --brand-ink2: #2E2E34;
-  --brand-gold: #F5C842;
 
   --f-display: "Source Serif 4", Georgia, serif;
   --f-body:    "Inter", system-ui, sans-serif;
   --f-mono:    "IBM Plex Mono", ui-monospace, monospace;
 }
-:root[data-theme="dark"] {
-  --ground:      #14130E;
-  --surface:     #1C1B15;
-  --surface-2:   #262419;
-  --line:        #38352A;
-  --line-soft:   #2B2921;
-  --ink:         #F2EFE6;
-  --ink-muted:   #ABA694;
-  --ink-faint:   #8A8677;
-  --accent:      #6FBFB2;
-  --accent-soft: rgba(111,191,178,.16);
-  --accent-fill: #6FBFB2;
-  --accent-on-fill: #14130E;
-  --accent-text: #6FBFB2;
-  --critical:    #D9714F;
-  --critical-soft:rgba(217,113,79,.18);
-  --good:        #8FB07F;
-  --good-soft:   rgba(143,176,127,.18);
-  --warn:        #D3A03C;
-  --warn-soft:   rgba(211,160,60,.18);
-}
+:root[data-theme="dark"],
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --ground:      #0f172a;
+  --surface:     #1e293b;
+  --surface-2:   #273549;
+  --line:        #334155;
+  --line-soft:   #273549;
+  --ink:         #f1f5f9;
+  --ink-muted:   #94a3b8;
+  --ink-faint:   #64748b;
+  --accent:      #34d399;
+  --accent-soft: rgba(52,211,153,.15);
+  --accent-fill: #059669;
+  --accent-on-fill: #ffffff;
+  --accent-text: #34d399;
+  --critical:    #f87171;
+  --critical-soft:rgba(248,113,113,.18);
+  --good:        #4ade80;
+  --good-soft:   rgba(74,222,128,.18);
+  --warn:        #fbbf24;
+  --warn-soft:   rgba(251,191,36,.18);
+}}
 
 * { box-sizing: border-box; }
 
@@ -93,46 +91,64 @@ body {
   font-family: var(--f-body); font-size: 15px; line-height: 1.6;
   -webkit-font-smoothing: antialiased;
 }
-.wrap { max-width: 1040px; margin: 0 auto; padding: 0 24px 80px; }
+.wrap { max-width: 1040px; margin: 0 auto; padding: 28px 24px 80px; }
 
-/* ----------------------------------------------------------------- header */
+/* ----------------------------------------------------------------- header
+   Light slate nav with emerald monogram — matches the Ceylon Foods (Food AI)
+   design system: white surface, dark text, emerald-700 accent, Inter. */
 .masthead {
-  background: linear-gradient(105deg, var(--brand-ink) 0%, var(--brand-ink2) 60%, var(--brand-ink) 100%);
-  padding: 26px 0 0; margin-bottom: 28px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--line);
+  padding: 0;
+  position: sticky; top: 0; z-index: 50;
+  box-shadow: 0 1px 2px rgba(15,23,42,0.06);
 }
 .masthead-inner {
   max-width: 1040px; margin: 0 auto; padding: 0 24px;
-  display: flex; align-items: baseline; gap: 16px; flex-wrap: wrap;
+  height: 56px;
+  display: flex; align-items: center; gap: 14px;
 }
 .brand {
-  font-family: var(--f-display); font-weight: 700; font-size: 28px;
-  letter-spacing: -.03em; margin: 0; color: #FFFFFF; line-height: 1;
+  display: flex; align-items: center; gap: 9px;
+  font-family: var(--f-body); font-weight: 600; font-size: 14px;
+  letter-spacing: -0.01em; margin: 0; color: var(--ink); line-height: 1;
 }
-.brand span { color: var(--brand-gold); }
+.brand-mark {
+  width: 30px; height: 30px; border-radius: 50%;
+  background: var(--accent-fill); color: var(--accent-on-fill);
+  font-size: 10.5px; font-weight: 700; letter-spacing: 0.04em;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; user-select: none;
+}
+.brand .name-hi { color: var(--accent); }
 .tagline {
-  color: rgba(255,255,255,.62); font-size: 12.5px; margin: 0;
-  font-family: var(--f-display); font-weight: 600;
+  color: var(--ink-muted); font-size: 12px; margin: 0;
+  font-family: var(--f-body); font-weight: 400;
 }
 .masthead a.back {
-  margin-left: auto; color: rgba(255,255,255,.72); font-size: 12.5px;
-  text-decoration: none; border-bottom: 1px solid rgba(255,255,255,.28);
+  margin-left: auto; color: var(--ink-muted); font-size: 12px;
+  text-decoration: none; border-bottom: 1px solid var(--line);
+  transition: color 120ms;
 }
-.masthead a.back:hover { color: #fff; }
+.masthead a.back:hover { color: var(--ink); border-bottom-color: var(--ink-muted); }
 
 /* -------------------------------------------------------------------- tabs */
 .tabs {
-  max-width: 1040px; margin: 20px auto 0; padding: 0 24px;
-  display: flex; gap: 4px;
+  max-width: 1040px; margin: 0 auto; padding: 0 24px;
+  display: flex; gap: 2px;
 }
 .tab {
-  appearance: none; background: transparent; border: 0; cursor: pointer;
-  font-family: var(--f-body); font-size: 14px; font-weight: 500;
-  color: rgba(255,255,255,.6); padding: 10px 16px;
-  border-bottom: 2px solid transparent; border-radius: 0;
+  appearance: none; background: transparent; cursor: pointer;
+  font-family: var(--f-body); font-size: 13.5px; font-weight: 500;
+  color: var(--ink-muted); padding: 14px 16px;
+  border: 0; border-bottom: 2px solid transparent;
+  border-radius: 0; margin-bottom: -1px;
+  transition: color 120ms;
 }
-.tab:hover { color: rgba(255,255,255,.9); }
+.tab:hover { color: var(--ink); }
 .tab[aria-selected="true"] {
-  color: #fff; border-bottom-color: var(--brand-gold);
+  color: var(--accent); border-bottom-color: var(--accent);
+  font-weight: 600;
 }
 .panel[hidden] { display: none; }
 
@@ -350,7 +366,10 @@ code { font-family: var(--f-mono); font-size: 12.5px; background: var(--surface-
 
 <div class="masthead">
   <div class="masthead-inner">
-    <h1 class="brand">Lost<span>in</span>SriLanka</h1>
+    <h1 class="brand">
+      <span class="brand-mark" aria-hidden="true">TL</span>
+      Lost<span class="name-hi">in</span>SriLanka
+    </h1>
     <p class="tagline">What visitors report about Sri Lanka&rsquo;s destinations</p>
   </div>
   <div class="tabs" role="tablist">
