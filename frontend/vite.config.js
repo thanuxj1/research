@@ -12,12 +12,17 @@ export default defineConfig({
         changeOrigin: true,
       },
       '/assistance': {
-        target: 'http://127.0.0.1:5000',
+        target: 'http://127.0.0.1:5001',
         changeOrigin: true,
         secure: false,
       },
       '/budget_planner': {
-        target: 'http://127.0.0.1:5000',
+        target: 'http://127.0.0.1:5001',
+        changeOrigin: true,
+        secure: false,
+      },
+      '/questions': {
+        target: 'http://127.0.0.1:5001',
         changeOrigin: true,
         secure: false,
       },

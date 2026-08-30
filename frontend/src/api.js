@@ -1,16 +1,25 @@
 // Global API Service for SafeTravel Assistance & Budget Planner Endpoints
-const API_BASE_URL = 'http://127.0.0.1:5000';
+const API_BASE_URL = 'http://127.0.0.1:5001';
 
 const ASSISTANCE_ENDPOINTS = [
   '/assistance/recommend',                       // Same-origin via Vite Proxy
-  'http://127.0.0.1:5000/assistance/recommend',   // Direct 127.0.0.1
-  'http://localhost:5000/assistance/recommend',   // Direct localhost
+  'http://127.0.0.1:5001/assistance/recommend',   // Direct 127.0.0.1
+  'http://localhost:5001/assistance/recommend',   // Direct localhost
+  'http://127.0.0.1:5000/assistance/recommend',   // Secondary fallback
 ];
 
 const BUDGET_ENDPOINTS = [
   '/budget_planner/predict',                      // Same-origin via Vite Proxy
-  'http://127.0.0.1:5000/budget_planner/predict',  // Direct 127.0.0.1
-  'http://localhost:5000/budget_planner/predict',  // Direct localhost
+  'http://127.0.0.1:5001/budget_planner/predict',  // Direct 127.0.0.1
+  'http://localhost:5001/budget_planner/predict',  // Direct localhost
+  'http://127.0.0.1:5000/budget_planner/predict',  // Secondary fallback
+];
+
+const CULTURAL_ENDPOINTS = [
+  '/questions/predict',                           // Same-origin via Vite Proxy
+  'http://127.0.0.1:5001/questions/predict',       // Direct 127.0.0.1
+  'http://localhost:5001/questions/predict',       // Direct localhost
+  'http://127.0.0.1:5000/questions/predict',       // Secondary fallback
 ];
 
 // Comprehensive place metadata mapping for all Sri Lankan destinations
@@ -177,6 +186,10 @@ export async function getRecommendations(userText = '', overrideParams = {}) {
 
       if (response.ok) {
         const data = await response.json();
+        console.log("Backend Raw Response Data:", data);
+        console.log("Route Recommendations:", data?.route_recommendations);
+        console.log("Destination Recommendations:", data?.recommendations);
+
         if (data && (Array.isArray(data.recommendations) || Array.isArray(data.route_recommendations))) {
           const recs = Array.isArray(data.recommendations) ? data.recommendations : [];
           const routeRecs = Array.isArray(data.route_recommendations) ? data.route_recommendations : [];
@@ -343,6 +356,115 @@ export async function predictBudgetPlan(inputData = {}) {
     isLive: false,
     rawJson: fallbackRawJson,
     requestPayload: payload,
+  };
+}
+
+/**
+ * Sends a cultural question request to /questions/predict.
+ */
+export async function askCulturalQuestion(questionText = '') {
+  const payload = { question: questionText };
+  let lastError = null;
+
+  for (const url of CULTURAL_ENDPOINTS) {
+    try {
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        if (data) {
+          return {
+            result: data.result || data,
+            isLive: true,
+            rawJson: data,
+            requestPayload: payload,
+          };
+        }
+      } else {
+        lastError = `HTTP ${response.status} ${response.statusText}`;
+      }
+    } catch (err) {
+      lastError = err.message || 'Network error';
+    }
+  }
+
+  const fallbackResult = generateFallbackCulturalAnswer(questionText);
+  return {
+    result: fallbackResult,
+    isLive: false,
+    rawJson: { result: fallbackResult },
+    requestPayload: payload,
+    errorDetail: lastError,
+  };
+}
+
+function generateFallbackCulturalAnswer(query = '') {
+  const q = query.toLowerCase();
+
+  if (q.includes('food') || q.includes('eat') || q.includes('rice') || q.includes('curry')) {
+    return {
+      predicted_intent: 'cultural_food',
+      confidence: 0.95,
+      response: {
+        title: 'Traditional Sri Lankan Cuisine',
+        description: 'Rice and Curry is the staple dish of Sri Lanka, usually eaten by hand using the right hand. Kottu Roti, Hoppers (Appa), and String Hoppers are popular street food favorites.',
+        guidance: [
+          'Always use your right hand when eating food traditionally.',
+          'Try authentic local eateries for Kottu Roti and fresh seafood.',
+          'Be prepared for spicy flavors — ask for less spice if sensitive.'
+        ],
+        avoid: [
+          'Do not use your left hand to pass food or eat.',
+          'Avoid drinking unboiled tap water.'
+        ],
+        recommended_festivals: ['Avurudu (Sinhala & Tamil New Year Food Table)', 'Vel Festival']
+      }
+    };
+  }
+
+  if (q.includes('perahera') || q.includes('esala') || q.includes('festival') || q.includes('temple')) {
+    return {
+      predicted_intent: 'cultural_festival',
+      confidence: 0.98,
+      response: {
+        title: 'Kandy Esala Perahera & Temple Etiquette',
+        description: 'The Esala Perahera in Kandy is one of South Asia’s oldest and grandest Buddhist festivals, featuring decorated elephants, traditional Kandyan dancers, and drummers paying homage to the Sacred Tooth Relic.',
+        guidance: [
+          'Dress modestly covering shoulders and knees when visiting temples.',
+          'Remove shoes and hats before entering sacred temple precincts.',
+          'Book seating in advance for the night perahera processions.'
+        ],
+        avoid: [
+          'Do not turn your back directly to Buddha statues when posing for photos.',
+          'Do not touch or disturb Buddhist monks or religious items.'
+        ],
+        recommended_festivals: ['Kandy Esala Perahera', 'Vesak Poya', 'Katharagama Festival']
+      }
+    };
+  }
+
+  return {
+    predicted_intent: 'cultural_qa',
+    confidence: 0.90,
+    response: {
+      title: 'Sri Lankan Cultural Etiquette & Customs',
+      description: 'Sri Lanka is a warm and hospitable country with rich Buddhist, Hindu, Muslim, and Christian heritage. Greeting locals with a smile and a polite "Ayubowan" (May you live long) is warmly welcomed.',
+      guidance: [
+        'Greet locals with "Ayubowan" joining palms together in front of the chest.',
+        'Cover shoulders and knees when visiting all religious sites.',
+        'Ask permission before taking photos of local people or monks.'
+      ],
+      avoid: [
+        'Avoid public displays of affection in conservative areas.',
+        'Never pose standing beside or with your back facing a Buddha image.',
+        'Do not touch someone on the head, as it is considered sacred.'
+      ],
+      recommended_festivals: ['Vesak Poya', 'Sinhala & Tamil New Year', 'Deepavali']
+    }
   };
 }
 
