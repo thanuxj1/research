@@ -40,6 +40,7 @@ node_modules/
 dist/
 build/
 .npm/
+frontend/.vite/
 
 # IDE & OS
 .vscode/
