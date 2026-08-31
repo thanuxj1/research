@@ -1,0 +1,843 @@
+<title>Tourism Complaint Mining</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+
+<style>
+/* ── Design tokens ──────────────────────────────────────────────────
+   Single dark theme — deliberate presentation choice.
+   Palette matches LostInSriLanka brand (navy + gold) with teal/red
+   for semantic positive/negative data encoding.                      */
+:root {
+  --bg:          #060F1E;
+  --surface:     #0C1E33;
+  --surface-2:   #122640;
+  --surface-3:   #1A304F;
+  --gold:        #E8B84B;
+  --gold-soft:   rgba(232,184,75,.12);
+  --gold-border: rgba(232,184,75,.28);
+  --teal:        #2DD4BF;
+  --teal-soft:   rgba(45,212,191,.12);
+  --teal-border: rgba(45,212,191,.28);
+  --red:         #F87171;
+  --red-soft:    rgba(248,113,113,.12);
+  --red-border:  rgba(248,113,113,.28);
+  --text:        #EEF4FF;
+  --muted:       rgba(238,244,255,.52);
+  --faint:       rgba(238,244,255,.28);
+  --line:        rgba(238,244,255,.08);
+  --line-strong: rgba(238,244,255,.14);
+  --f-disp:  'Syne', system-ui, sans-serif;
+  --f-body:  'Inter', system-ui, sans-serif;
+  --f-data:  'JetBrains Mono', ui-monospace, monospace;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  width: 100%; height: 100%;
+  background: var(--bg); color: var(--text);
+  font-family: var(--f-body); font-size: 15px;
+  overflow: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── Slide system ─────────────────────────────────────────────────── */
+.deck { width: 100%; height: 100vh; position: relative; user-select: none; }
+
+.slide {
+  position: absolute; inset: 0;
+  display: none; flex-direction: column;
+  padding: 42px 68px 78px;
+  overflow: hidden;
+}
+.slide.active { display: flex; animation: reveal .22s ease; }
+
+@keyframes reveal {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@media (prefers-reduced-motion: reduce) { .slide { animation: none; } }
+
+/* ── Eyebrow + title ─────────────────────────────────────────────── */
+.eye {
+  display: flex; align-items: center; gap: 10px;
+  font-family: var(--f-data); font-size: 10px; font-weight: 500;
+  letter-spacing: .12em; text-transform: uppercase; color: var(--gold);
+  margin-bottom: 16px;
+}
+.eye::after { content:''; flex:1; height:1px; background: var(--line); }
+
+h1, h2 {
+  font-family: var(--f-disp); font-weight: 800;
+  line-height: 1.06; text-wrap: balance;
+}
+h1 { font-size: 50px; margin-bottom: 14px; }
+h2 { font-size: 30px; margin-bottom: 10px; }
+.sub { color: var(--muted); font-size: 14.5px; line-height: 1.6; max-width: 72ch; }
+
+/* ── Two-col layouts ─────────────────────────────────────────────── */
+.g2   { display: grid; grid-template-columns: 1fr 1fr;      gap: 28px; }
+.g2l  { display: grid; grid-template-columns: 1.45fr 1fr;   gap: 30px; }
+.g2r  { display: grid; grid-template-columns: 1fr 1.45fr;   gap: 30px; }
+.g3   { display: grid; grid-template-columns: repeat(3,1fr);gap: 16px; }
+.g4   { display: grid; grid-template-columns: repeat(4,1fr);gap: 16px; }
+.grow { margin-top: 22px; flex: 1; align-content: start; }
+
+/* ── Cards ─────────────────────────────────────────────────────────  */
+.card {
+  background: var(--surface); border: 1px solid var(--line);
+  border-radius: 6px; padding: 16px 18px;
+}
+.card + .card { margin-top: 10px; }
+.card-lbl { font-family: var(--f-data); font-size: 9px; letter-spacing:.1em; text-transform:uppercase; color:var(--faint); margin-bottom:6px; }
+.card-h   { font-size: 13.5px; font-weight: 600; margin-bottom: 5px; }
+.card-p   { font-size: 12.5px; color: var(--muted); line-height: 1.55; }
+
+/* ── Stat strip ──────────────────────────────────────────────────── */
+.stats {
+  display: flex; margin-top: 30px;
+  border: 1px solid var(--line-strong); border-radius: 7px; overflow: hidden;
+}
+.stat {
+  flex: 1; padding: 14px 20px; border-right: 1px solid var(--line);
+  display: flex; flex-direction: column; gap: 3px;
+}
+.stat:last-child { border-right: none; }
+.stat-n   { font-family: var(--f-data); font-size: 28px; color: var(--gold); line-height: 1; }
+.stat-lbl { font-size: 10.5px; color: var(--faint); letter-spacing: .04em; }
+
+/* ── Badges ──────────────────────────────────────────────────────── */
+.badge {
+  display: inline-flex; align-items: center; gap: 4px;
+  font-family: var(--f-data); font-size: 9.5px; font-weight: 500;
+  padding: 2px 8px; border-radius: 3px; letter-spacing: .06em; text-transform: uppercase;
+  vertical-align: middle; margin-left: 6px;
+}
+.bdg-on   { background: var(--teal-soft); color: var(--teal); }
+.bdg-exp  { background: var(--gold-soft); color: var(--gold); }
+.bdg-off  { background: var(--line);       color: var(--faint); }
+
+/* ── Bullet list ─────────────────────────────────────────────────── */
+.blist { display: flex; flex-direction: column; gap: 10px; }
+.bitem {
+  display: flex; gap: 10px; font-size: 13.5px;
+  color: var(--muted); line-height: 1.5;
+}
+.bitem::before { content:'—'; color:var(--gold); flex-shrink:0; font-family:var(--f-data); font-size:12px; margin-top:1px; }
+.bitem strong { color: var(--text); font-weight: 600; }
+
+/* ── Cite ────────────────────────────────────────────────────────── */
+.cite { font-family: var(--f-data); font-size: 9.5px; color: var(--faint); margin-top: 6px; letter-spacing:.02em; }
+
+/* ── Section heading inside slide ───────────────────────────────── */
+.sh { font-size: 10.5px; font-weight: 600; letter-spacing:.08em; text-transform:uppercase; color:var(--faint); margin-bottom: 12px; }
+
+/* ── Divider ─────────────────────────────────────────────────────── */
+.divider { height: 1px; background: var(--line); margin: 14px 0; }
+
+/* ── Source pill ─────────────────────────────────────────────────── */
+.src-pill {
+  display: flex; align-items: flex-start; gap: 11px;
+  background: var(--surface); border: 1px solid var(--line);
+  border-radius: 6px; padding: 11px 14px;
+}
+.src-ico {
+  width: 28px; height: 28px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 700; flex-shrink: 0; margin-top: 1px;
+}
+.src-n  { font-size: 13px; font-weight: 600; margin-bottom: 2px; }
+.src-ct { font-family: var(--f-data); font-size: 17px; color: var(--gold); line-height: 1.1; }
+.src-d  { font-size: 11px; color: var(--faint); margin-top: 2px; line-height: 1.4; }
+
+/* ── Pipeline layer ──────────────────────────────────────────────── */
+.pipe-layer {
+  display: grid; grid-template-columns: 22px 1fr auto; gap: 12px; align-items: start;
+  background: var(--surface); border: 1px solid var(--line); border-radius: 5px;
+  padding: 11px 14px; margin-bottom: 6px;
+}
+.pipe-num  { font-family: var(--f-data); font-size: 10.5px; color: var(--faint); padding-top: 2px; }
+.pipe-name { font-size: 13px; font-weight: 600; margin-bottom: 3px; }
+.pipe-desc { font-size: 11.5px; color: var(--muted); line-height: 1.45; }
+.pipe-arrow { text-align: center; color: var(--faint); font-size: 13px; margin: -2px 0 2px 22px; }
+
+/* ── Accuracy bar row ────────────────────────────────────────────── */
+.acc-row {
+  display: grid; grid-template-columns: 120px 1fr 90px; gap: 10px;
+  align-items: center; padding: 5px 0; border-bottom: 1px solid var(--line);
+  font-size: 12.5px;
+}
+.acc-lbl  { color: var(--muted); }
+.acc-wrap { height: 7px; background: var(--surface-3); border-radius: 4px; position: relative; overflow: hidden; }
+.acc-bar  { height: 100%; border-radius: 4px; }
+.acc-val  { font-family: var(--f-data); font-size: 12px; text-align: right; }
+.acc-ci   { font-size: 10px; color: var(--faint); text-align: right; }
+
+/* ── Reliability table ───────────────────────────────────────────── */
+.rel-row {
+  display: grid; grid-template-columns: 80px 60px 80px 1fr; gap: 10px;
+  align-items: center; padding: 7px 0; border-bottom: 1px solid var(--line); font-size: 12.5px;
+}
+.rel-row.rh { font-size: 9.5px; color: var(--faint); font-weight: 600; letter-spacing: .08em; text-transform: uppercase; }
+.rel-mn { font-family: var(--f-data); }
+
+/* ── PLSSE row ───────────────────────────────────────────────────── */
+.plsse-row {
+  display: grid; grid-template-columns: 90px 1fr; gap: 14px; align-items: start;
+  padding: 9px 0; border-bottom: 1px solid var(--line);
+}
+.plsse-type {
+  font-family: var(--f-data); font-size: 9px; letter-spacing: .08em; font-weight: 600;
+  text-transform: uppercase; padding: 3px 7px; border-radius: 3px;
+  display: inline-block; text-align: center;
+}
+.plsse-txt { font-size: 12.5px; color: var(--muted); line-height: 1.5; }
+.plsse-txt strong { color: var(--text); }
+
+/* ── Title slide gradient ────────────────────────────────────────── */
+#s1 {
+  justify-content: center;
+  background:
+    radial-gradient(ellipse 55% 45% at 82% 15%, rgba(232,184,75,.07) 0%, transparent 70%),
+    radial-gradient(ellipse 35% 55% at 12% 82%, rgba(45,212,191,.05) 0%, transparent 70%),
+    var(--bg);
+}
+
+/* ── Highlight helpers ───────────────────────────────────────────── */
+.gold  { color: var(--gold); }
+.teal  { color: var(--teal); }
+.red   { color: var(--red); }
+.muted { color: var(--muted); }
+
+/* ── Navigation ──────────────────────────────────────────────────── */
+.nav {
+  position: fixed; bottom: 22px; left: 0; right: 0;
+  display: flex; align-items: center; justify-content: center; gap: 12px;
+  z-index: 300; pointer-events: none;
+}
+.nav > * { pointer-events: auto; }
+.nbtn {
+  width: 36px; height: 36px; border-radius: 50%;
+  border: 1px solid var(--line-strong); background: var(--surface);
+  color: var(--muted); cursor: pointer; font-size: 15px;
+  display: flex; align-items: center; justify-content: center;
+  transition: all .15s;
+}
+.nbtn:hover:not(:disabled) { border-color: var(--gold); color: var(--gold); background: var(--gold-soft); }
+.nbtn:disabled { opacity: .3; cursor: default; }
+.ndots { display: flex; gap: 5px; align-items: center; }
+.ndot {
+  width: 5px; height: 5px; border-radius: 50%;
+  background: var(--faint); cursor: pointer; transition: all .15s;
+}
+.ndot.on { background: var(--gold); width: 16px; border-radius: 3px; }
+.ncnt { font-family: var(--f-data); font-size: 10.5px; color: var(--faint); width: 38px; text-align: center; }
+
+/* ── Inline example boxes ────────────────────────────────────────── */
+.ex-box {
+  background: var(--surface); border: 1px solid var(--line); border-radius: 5px;
+  padding: 9px 12px; font-size: 12px; color: var(--muted); line-height: 1.5;
+}
+.ex-tag { font-family: var(--f-data); font-size: 10px; margin-bottom: 3px; }
+
+/* ── Precision mini bar ──────────────────────────────────────────── */
+.prec-row { display: grid; grid-template-columns: 110px 1fr 40px; gap: 8px; align-items: center; padding: 4px 0; font-size: 12px; }
+.prec-wrap { height: 5px; background: var(--surface-3); border-radius: 3px; overflow:hidden; }
+.prec-bar  { height: 100%; background: var(--gold); border-radius: 3px; }
+.prec-val  { font-family: var(--f-data); font-size: 11px; color: var(--gold); text-align: right; }
+
+/* ── Gateway diagram ─────────────────────────────────────────────── */
+.gw-box {
+  background: var(--gold-soft); border: 1.5px solid var(--gold-border);
+  border-radius: 8px; padding: 12px 18px; text-align: center;
+}
+.gw-lbl { font-size: 9px; letter-spacing:.12em; text-transform:uppercase; color:var(--gold); font-family:var(--f-data); }
+.gw-name { font-size: 18px; font-weight: 700; color: var(--gold); margin: 4px 0 2px; font-family: var(--f-disp); }
+.gw-port { font-family: var(--f-data); font-size: 11px; color: var(--muted); }
+.svc-box { border: 1px solid var(--line); border-radius: 6px; padding: 10px 12px; text-align: center; background: var(--surface-2); }
+.svc-name { font-size: 13px; font-weight: 600; }
+.svc-desc { font-size: 10.5px; color: var(--faint); margin-top: 3px; }
+.arrow-v { text-align: center; color: var(--faint); font-size: 16px; line-height: 1; margin: 4px 0; }
+</style>
+
+<!-- ================================================================
+     SLIDES
+     ================================================================ -->
+<div class="deck">
+
+<!-- ─── SLIDE 1 · Title ───────────────────────────────────────────── -->
+<div class="slide active" id="s1">
+  <div class="eye">IT4010 Research Project · PP2 · LostinSriLanka — Analytics Module</div>
+  <h1>Aspect-Based Complaint Mining<br><span class="gold">for Sri Lankan Tourism</span></h1>
+  <p class="sub">Structured complaint intelligence from 46,854 visitor reviews — surfacing what travellers actually find wrong, by topic, by district, by destination.</p>
+  <div class="stats">
+    <div class="stat"><span class="stat-n">46,854</span><span class="stat-lbl">Total reviews</span></div>
+    <div class="stat"><span class="stat-n">294</span><span class="stat-lbl">Destinations</span></div>
+    <div class="stat"><span class="stat-n">19</span><span class="stat-lbl">Districts</span></div>
+    <div class="stat"><span class="stat-n">7</span><span class="stat-lbl">Complaint topics</span></div>
+    <div class="stat"><span class="stat-n">78,568</span><span class="stat-lbl">Opinion units</span></div>
+    <div class="stat"><span class="stat-n">50+</span><span class="stat-lbl">Automated tests</span></div>
+  </div>
+</div>
+
+<!-- ─── SLIDE 2 · Problem ─────────────────────────────────────────── -->
+<div class="slide" id="s2">
+  <div class="eye">Problem Statement</div>
+  <h2>Tourists can't assess destination quality by topic</h2>
+  <div class="g2 grow">
+    <div>
+      <div class="sh">The Information Gap</div>
+      <div class="blist">
+        <div class="bitem">Aggregate star ratings collapse <strong>7 distinct complaint categories</strong> into a single number</div>
+        <div class="bitem">A destination rated 4/5 stars could be hiding serious <strong>safety or roads complaints</strong> beneath excellent scenery scores</div>
+        <div class="bitem">Tourists booking Sri Lankan trips have <strong>no structured, per-topic evidence</strong> to assess risk before visiting</div>
+        <div class="bitem"><strong>No prior published ABSA system</strong> exists for Sri Lankan tourism at this geographic scale or with measured reliability thresholds</div>
+      </div>
+      <div class="cite" style="margin-top:14px;">Pontiki et al. (2014). SemEval-2014 Task 4: Aspect Based Sentiment Analysis. <em>SemEval Workshop.</em></div>
+      <div class="cite">Pontiki et al. (2016). SemEval-2016 Task 5: Aspect Based Sentiment Analysis. <em>SemEval Workshop.</em></div>
+    </div>
+    <div>
+      <div class="sh">Who Is Affected</div>
+      <div class="card">
+        <div class="card-lbl">International Tourists (TripAdvisor corpus)</div>
+        <div class="card-p">UK 4,446 · Australia 1,990 · India 1,621 · USA 1,289 of 16,156 reviewers — exactly <strong style="color:var(--text);">1 Sri Lankan</strong>. They rely solely on aggregate scores with no topic breakdown.</div>
+      </div>
+      <div class="card" style="margin-top:10px;">
+        <div class="card-lbl">Local Residents (Google Maps corpus)</div>
+        <div class="card-p">Google Maps skews local. Complaints from a Sri Lankan versus a foreign tourist about the <em>same</em> destination can differ significantly — <strong style="color:var(--text);">that contrast is itself a research finding</strong>.</div>
+      </div>
+      <div class="card" style="margin-top:10px;">
+        <div class="card-lbl">SLTDA / Destination Operators</div>
+        <div class="card-p">Complaint patterns are known anecdotally but not measured at district level with documented reliability. Infrastructure deficits (roads, facilities) cannot be prioritised without structured evidence.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ─── SLIDE 3 · Research Objectives ─────────────────────────────── -->
+<div class="slide" id="s3">
+  <div class="eye">Research Gap + Objectives</div>
+  <h2>Four concrete, measurable research objectives</h2>
+  <div class="g2 grow" style="gap:20px;">
+    <div style="display:flex;flex-direction:column;gap:12px;">
+      <div class="card" style="border-left:3px solid var(--gold);">
+        <div class="card-lbl">RO1 · Aspect Classification</div>
+        <div class="card-h">Sentence-level topic labelling</div>
+        <div class="card-p">Classify individual opinion units across 7 complaint categories — Safety, Cleanliness, Facilities, Roads &amp; Access, Price &amp; Value, Crowding, Scenery — using a multi-layer pipeline</div>
+      </div>
+      <div class="card" style="border-left:3px solid var(--gold);">
+        <div class="card-lbl">RO2 · Evidence Thresholds (Novel)</div>
+        <div class="card-h">Reliability-derived display rules</div>
+        <div class="card-p">Derive minimum-opinion thresholds from a 200-bootstrap Spearman-Brown split-half study. Suppress cells below the coin-toss threshold (n&lt;10, reliability 0.46) — not by intuition</div>
+        <div class="cite">Brown (1910); Spearman (1910). Prophecy formula.</div>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:12px;">
+      <div class="card" style="border-left:3px solid var(--teal);">
+        <div class="card-lbl">RO3 · Geographic Intelligence</div>
+        <div class="card-h">Actionable insight by district and destination</div>
+        <div class="card-p">Surface complaint patterns at three levels: Sri Lanka → District → Destination → Aspect → Evidence quotes. Enable comparison across 19 of 22 districts.</div>
+      </div>
+      <div class="card" style="border-left:3px solid var(--teal);">
+        <div class="card-lbl">RO4 · Real-Time API</div>
+        <div class="card-h">Live review analysis endpoint</div>
+        <div class="card-p">FastAPI /analyse endpoint: tourist submits a review, receives aspect-polarity scores with triggering words highlighted, compared against the historical 46,854-review baseline. Response &lt;200 ms.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ─── SLIDE 4 · Data Collection ─────────────────────────────────── -->
+<div class="slide" id="s4">
+  <div class="eye">Data Collection · Six Source Types</div>
+  <h2><span class="gold">46,854</span> reviews · <span class="gold">294</span> destinations · <span class="gold">19</span> districts</h2>
+  <div class="g3 grow" style="margin-top:16px;">
+    <div class="src-pill">
+      <div class="src-ico" style="background:rgba(66,133,244,.15);color:#4A90E2;">G</div>
+      <div>
+        <div class="src-n">Google Maps</div>
+        <div class="src-ct">30,705</div>
+        <div class="src-d">Google Places API · Local-skewing audience · Hard cap 200 calls/run to prevent billing spikes</div>
+      </div>
+    </div>
+    <div class="src-pill">
+      <div class="src-ico" style="background:rgba(0,120,190,.15);color:#3A9BD5;">T</div>
+      <div>
+        <div class="src-n">TripAdvisor</div>
+        <div class="src-ct">16,149</div>
+        <div class="src-d">Pre-existing CSV · 99.99% non-Sri Lankan reviewers · Raw CSVs excluded from repo (redistribution rights)</div>
+      </div>
+    </div>
+    <div class="src-pill">
+      <div class="src-ico" style="background:rgba(255,60,60,.12);color:#F47;">▶</div>
+      <div>
+        <div class="src-n">YouTube</div>
+        <div class="src-ct">335 shown</div>
+        <div class="src-d">YouTube Data API · Storyboard only — <em>never</em> counted in complaint rates (test enforced)</div>
+      </div>
+    </div>
+    <div class="src-pill">
+      <div class="src-ico" style="background:rgba(255,69,0,.12);color:#F5540A;">r/</div>
+      <div>
+        <div class="src-n">Reddit</div>
+        <div class="src-ct">Rate-limited</div>
+        <div class="src-d">Public JSON feed · 1 req/sec · Storyboard display only</div>
+      </div>
+    </div>
+    <div class="src-pill">
+      <div class="src-ico" style="background:rgba(232,184,75,.12);color:var(--gold);">N</div>
+      <div>
+        <div class="src-n">Google News RSS</div>
+        <div class="src-ct">11 outlets</div>
+        <div class="src-d">Per-destination queries · News articles per destination · Display only</div>
+      </div>
+    </div>
+    <div class="src-pill">
+      <div class="src-ico" style="background:rgba(45,212,191,.12);color:var(--teal);">⬡</div>
+      <div>
+        <div class="src-n">OpenStreetMap + SRTM</div>
+        <div class="src-ct">142 coords</div>
+        <div class="src-d">NASA SRTM 64×96 terrain elevation grid · Map rendering · No API key</div>
+      </div>
+    </div>
+  </div>
+  <div style="margin-top:14px;padding:10px 14px;background:var(--gold-soft);border:1px solid var(--gold-border);border-radius:5px;font-size:12.5px;color:var(--muted);">
+    <strong class="gold">Why two review corpora?</strong> TripAdvisor (99.99% non-local) vs Google Maps (local-skewing) captures different complaint patterns from the same destinations. The gap between local and international visitor complaints is a research finding — not noise.
+  </div>
+</div>
+
+<!-- ─── SLIDE 5 · ML Pipeline ──────────────────────────────────────── -->
+<div class="slide" id="s5">
+  <div class="eye">Solution Architecture · Five-Layer ML Pipeline</div>
+  <h2>Raw review → structured complaint score</h2>
+  <div class="g2l grow" style="margin-top:16px;gap:24px;">
+    <div>
+      <div class="pipe-layer">
+        <div class="pipe-num">1</div>
+        <div>
+          <div class="pipe-name">Rule Lexicon <span class="badge bdg-on">Deployed</span></div>
+          <div class="pipe-desc">Hand-crafted keyword lists per topic · gated triggers ("deep" + "water" + "dangerous") · veto rules prevent false matches · fully auditable — every tag points to the triggering word</div>
+        </div>
+      </div>
+      <div class="pipe-arrow">↓ tagged opinion units</div>
+      <div class="pipe-layer">
+        <div class="pipe-num">2</div>
+        <div>
+          <div class="pipe-name">MiniLM Embedding Similarity <span class="badge bdg-exp">Experimental</span></div>
+          <div class="pipe-desc">sentence-transformers/all-MiniLM-L6-v2 · 384-dim vectors · cosine similarity threshold 0.40, probe-calibrated on 22-item set</div>
+          <div class="cite">Reimers &amp; Gurevych (2019). Sentence-BERT. EMNLP 2019.</div>
+        </div>
+      </div>
+      <div class="pipe-arrow">↓ 57,621 weakly labelled segments</div>
+      <div class="pipe-layer">
+        <div class="pipe-num">3</div>
+        <div>
+          <div class="pipe-name">LR Aspect Classifier <span class="badge bdg-exp">Experimental</span></div>
+          <div class="pipe-desc">One-vs-rest Logistic Regression per aspect · C=1.0 · class_weight="balanced" · trained on weak supervision labels — recognises paraphrases the rules miss</div>
+        </div>
+      </div>
+      <div class="pipe-arrow">↓ safety precision: 0.48 → 0.867</div>
+      <div class="pipe-layer">
+        <div class="pipe-num">4</div>
+        <div>
+          <div class="pipe-name">Safety Classifier <span class="badge bdg-on">Deployed</span></div>
+          <div class="pipe-desc">Hazard word AND physical context required · "We saw monkeys very close up" → not a safety complaint · precision: <strong class="teal">0.867</strong> vs raw lexicon: 0.48</div>
+        </div>
+      </div>
+      <div class="pipe-arrow">↓ N / P / X per tagged unit</div>
+      <div class="pipe-layer">
+        <div class="pipe-num">5</div>
+        <div>
+          <div class="pipe-name">Twitter-RoBERTa Sentiment <span class="badge bdg-on">Deployed</span></div>
+          <div class="pipe-desc">cardiffnlp/twitter-roberta-base-sentiment-latest · 3-class softmax · aspect-prepended input for per-aspect ABSA · domain correction for tourism words</div>
+          <div class="cite">Barbieri et al. (2020). TweetEval. EMNLP Findings 2020.</div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="sh">How One Review Flows Through</div>
+      <div class="ex-box">
+        <div class="ex-tag muted">Raw input</div>
+        "Nice location but bathing is <strong>dangerous</strong> here."
+      </div>
+      <div style="text-align:center;color:var(--faint);font-size:13px;padding:6px 0;">↓ contrast-split at "but"</div>
+      <div class="ex-box" style="border-color:var(--teal-border);">
+        <div class="ex-tag teal">✓ PRAISE · scenery</div>
+        "Nice location"
+      </div>
+      <div class="ex-box" style="border-color:var(--red-border);margin-top:6px;">
+        <div class="ex-tag red">⚠ COMPLAINT · safety</div>
+        "bathing is dangerous here"
+      </div>
+      <div style="text-align:center;color:var(--faint);font-size:13px;padding:6px 0;">↓</div>
+      <div style="padding:10px 12px;background:var(--gold-soft);border:1px solid var(--gold-border);border-radius:5px;">
+        <div style="font-size:10px;color:var(--gold);margin-bottom:6px;font-family:var(--f-data);">Aggregate contribution</div>
+        <div style="font-family:var(--f-data);font-size:11.5px;">safety.n_negative += 1</div>
+        <div style="font-family:var(--f-data);font-size:11.5px;">scenery.n_positive += 1</div>
+      </div>
+      <div style="margin-top:14px;font-size:12px;color:var(--muted);line-height:1.55;">
+        <strong class="gold">Why aspect-prepended input?</strong> "roads_access: the road is bad but the view is stunning" — one sentence, two aspects, two different verdicts from one model. Standard ABSA sentence-pair formulation.
+      </div>
+      <div class="cite">Sun et al. (2019). Utilizing BERT for ABSA. NAACL 2019.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ─── SLIDE 6 · Evidence Thresholds ─────────────────────────────── -->
+<div class="slide" id="s6">
+  <div class="eye">Novel Contribution · Reliability-Derived Evidence Thresholds</div>
+  <h2>Display thresholds derived from <span class="gold">data</span>, not intuition</h2>
+  <div class="g2 grow" style="gap:28px;">
+    <div>
+      <div class="sh">Spearman-Brown Split-Half Reliability</div>
+      <div style="font-size:12.5px;color:var(--muted);margin-bottom:12px;line-height:1.6;">
+        200 bootstrap replications per destination-aspect cell. Each splits the opinions in half and asks: do both halves agree on the complaint rate? Prior systems chose "show if n ≥ 5" by intuition. Here the threshold is measured.
+      </div>
+      <div class="cite" style="margin-bottom:14px;">Brown (1910); Spearman (1910). Prophecy formula for split-half reliability.</div>
+
+      <div class="rel-row rh"><span>n opinions</span><span>Reliability</span><span>Disagrees by</span><span>Shown as</span></div>
+      <div class="rel-row">
+        <span class="rel-mn red">2 – 9</span>
+        <span class="rel-mn red">0.462</span>
+        <span class="rel-mn muted">26.0 pp</span>
+        <span><span style="background:var(--red-soft);color:var(--red);border-radius:3px;padding:2px 8px;font-size:10.5px;">Suppressed</span></span>
+      </div>
+      <div class="rel-row">
+        <span class="rel-mn gold">10 – 19</span>
+        <span class="rel-mn gold">0.749</span>
+        <span class="rel-mn muted">15.5 pp</span>
+        <span><span style="background:var(--gold-soft);color:var(--gold);border-radius:3px;padding:2px 8px;font-size:10.5px;">Low confidence</span></span>
+      </div>
+      <div class="rel-row">
+        <span class="rel-mn teal">20 – 49</span>
+        <span class="rel-mn teal">0.809</span>
+        <span class="rel-mn muted">11.7 pp</span>
+        <span><span style="background:var(--teal-soft);color:var(--teal);border-radius:3px;padding:2px 8px;font-size:10.5px;">Published</span></span>
+      </div>
+      <div class="rel-row">
+        <span class="rel-mn teal">50 – 99</span>
+        <span class="rel-mn teal">0.893</span>
+        <span class="rel-mn muted">6.8 pp</span>
+        <span><span style="background:var(--teal-soft);color:var(--teal);border-radius:3px;padding:2px 8px;font-size:10.5px;">Published</span></span>
+      </div>
+      <div class="rel-row">
+        <span class="rel-mn teal">100+</span>
+        <span class="rel-mn teal">0.960</span>
+        <span class="rel-mn muted">3.7 pp</span>
+        <span><span style="background:var(--teal-soft);color:var(--teal);border-radius:3px;padding:2px 8px;font-size:10.5px;">High confidence</span></span>
+      </div>
+    </div>
+    <div>
+      <div class="sh" style="margin-bottom:12px;">Impact &amp; Validation</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;">
+        <div class="card" style="text-align:center;">
+          <div class="card-lbl">Cells suppressed</div>
+          <div style="font-family:var(--f-data);font-size:34px;color:var(--red);margin:4px 0;line-height:1;">271</div>
+          <div class="card-p" style="font-size:11px;">of 1,103 destination-aspect cells — shown as "data too thin", not as 0%</div>
+        </div>
+        <div class="card" style="text-align:center;">
+          <div class="card-lbl">Permutation null test</div>
+          <div style="font-family:var(--f-data);font-size:34px;color:var(--teal);margin:4px 0;line-height:1;">−0.083</div>
+          <div class="card-p" style="font-size:11px;">Verdicts shuffled randomly → confirms the 0.46–0.96 signal is real, not procedural artefact</div>
+        </div>
+      </div>
+      <div class="card" style="background:var(--teal-soft);border-color:var(--teal-border);margin-bottom:10px;">
+        <div class="card-lbl" style="color:var(--teal);">What makes this novel</div>
+        <div class="card-p" style="font-size:12px;">Prior complaint mining systems chose display thresholds by intuition. Here thresholds are derived from measured reliability and validated by a permutation null — the threshold is a <strong style="color:var(--text);">research finding</strong>, not a design choice. 271 suppressed cells are reported honestly as a coverage statistic, not hidden.</div>
+      </div>
+      <div class="card">
+        <div class="card-lbl">External validity check</div>
+        <div class="card-p" style="font-size:12px;">Complaint rates cross-checked against TripAdvisor bubble scores (independent scale, different reviewer population). Inverse correlation confirms rates measure something real.</div>
+        <div class="cite">scripts/34_external_validity.py</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ─── SLIDE 7 · Accuracy ─────────────────────────────────────────── -->
+<div class="slide" id="s7">
+  <div class="eye">Evaluation Evidence · Accuracy + Extraction Precision</div>
+  <h2>Accuracy varies by reader — <span class="gold">both figures</span> are published</h2>
+  <div class="g2 grow" style="gap:28px;">
+    <div>
+      <div class="sh">Sentiment Accuracy with 95% Confidence Intervals</div>
+      <div style="font-size:11.5px;color:var(--muted);margin-bottom:10px;">Scored against two independent human readers. CI via binomial exact method. n=420 total sentences evaluated.</div>
+      <!-- Accuracy bars -->
+      <div style="border-bottom:1px solid var(--line);padding-bottom:5px;margin-bottom:5px;">
+        <div class="acc-row" style="border:0;"><span class="acc-lbl" style="font-size:9.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--faint);">Aspect</span><span style="font-size:9.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--faint);">Accuracy (0.0 – 1.0)</span><span class="acc-val" style="font-size:9.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--faint);">Score</span></div>
+      </div>
+      <div class="acc-row"><span class="acc-lbl">Roads &amp; Access</span><div class="acc-wrap"><div class="acc-bar" style="width:80%;background:var(--teal);"></div></div><span class="acc-val teal">0.800</span></div>
+      <div class="acc-row"><span class="acc-lbl muted" style="font-size:11px;color:var(--faint);">[0.683 – 0.900]</span><div></div><span></span></div>
+      <div class="acc-row"><span class="acc-lbl">Scenery</span><div class="acc-wrap"><div class="acc-bar" style="width:76.2%;background:var(--teal);"></div></div><span class="acc-val teal">0.762</span></div>
+      <div class="acc-row"><span class="acc-lbl">Safety</span><div class="acc-wrap"><div class="acc-bar" style="width:73.3%;background:var(--teal);"></div></div><span class="acc-val teal">0.733</span></div>
+      <div class="acc-row"><span class="acc-lbl">Crowding &amp; Noise</span><div class="acc-wrap"><div class="acc-bar" style="width:72.5%;background:var(--teal);"></div></div><span class="acc-val teal">0.725</span></div>
+      <div class="acc-row"><span class="acc-lbl">Facilities</span><div class="acc-wrap"><div class="acc-bar" style="width:70%;background:var(--gold);"></div></div><span class="acc-val gold">0.700</span></div>
+      <div class="acc-row"><span class="acc-lbl">Cleanliness</span><div class="acc-wrap"><div class="acc-bar" style="width:63.3%;background:var(--gold);"></div></div><span class="acc-val gold">0.633</span></div>
+      <div class="acc-row"><span class="acc-lbl">Price &amp; Value</span><div class="acc-wrap"><div class="acc-bar" style="width:60%;background:var(--red);"></div></div><span class="acc-val red">0.600</span></div>
+      <div style="margin-top:8px;font-family:var(--f-data);font-size:11px;color:var(--faint);">Macro average: 0.708 · supplementary reader set, n=420</div>
+    </div>
+    <div>
+      <div class="sh">Key Findings (Reported, Not Buried)</div>
+      <div class="card" style="background:var(--red-soft);border-color:var(--red-border);margin-bottom:10px;">
+        <div class="card-lbl" style="color:var(--red);">Dual-Reader Finding</div>
+        <div class="card-p" style="font-size:12.5px;">Same system, same data, two readers: macro accuracy <strong style="color:var(--text);">0.636</strong> vs <strong style="color:var(--text);">0.747</strong> — an 11 pp swing. Accuracy is a property of the <em>task and reader</em>, not just the system. Both figures are published.</div>
+      </div>
+      <div class="card" style="background:var(--red-soft);border-color:var(--red-border);margin-bottom:10px;">
+        <div class="card-lbl" style="color:var(--red);">Self-Labelling Trap</div>
+        <div class="card-p" style="font-size:12.5px;">Roads &amp; Access F1: <strong style="color:var(--text);">0.914</strong> on self-labelled sets. Against human labels: <strong style="color:var(--text);">0.635</strong>. Drop of 0.279 — self-labels were flattering the component they were meant to justify.</div>
+      </div>
+      <div class="card">
+        <div class="card-lbl">Extraction Precision (aspect correctly identified?)</div>
+        <div style="margin-top:8px;">
+          <div class="prec-row"><span class="muted">Roads &amp; Access</span><div class="prec-wrap"><div class="prec-bar" style="width:90%;"></div></div><span class="prec-val">0.900</span></div>
+          <div class="prec-row"><span class="muted">Crowding</span><div class="prec-wrap"><div class="prec-bar" style="width:82.5%;"></div></div><span class="prec-val">0.825</span></div>
+          <div class="prec-row"><span class="muted">Price &amp; Value</span><div class="prec-wrap"><div class="prec-bar" style="width:81.2%;"></div></div><span class="prec-val">0.812</span></div>
+          <div class="prec-row"><span class="muted">Safety</span><div class="prec-wrap"><div class="prec-bar" style="width:80%;"></div></div><span class="prec-val">0.800</span></div>
+          <div class="prec-row"><span class="muted">Scenery</span><div class="prec-wrap"><div class="prec-bar" style="width:71.3%;"></div></div><span class="prec-val">0.713</span></div>
+          <div class="prec-row"><span class="muted">Cleanliness</span><div class="prec-wrap"><div class="prec-bar" style="width:66.7%;"></div></div><span class="prec-val">0.667</span></div>
+        </div>
+        <div class="cite" style="margin-top:8px;">Note: recall/F1 not reported from precision-only samples — enforced by test_accuracy_provenance.py</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ─── SLIDE 8 · Integration ──────────────────────────────────────── -->
+<div class="slide" id="s8">
+  <div class="eye">Integration &amp; Completion Status</div>
+  <h2>One system · one port · <span class="gold">four modules</span></h2>
+  <div class="g2 grow" style="gap:28px;">
+    <div>
+      <div class="sh">LostinSriLanka Gateway Architecture</div>
+      <div style="display:flex;flex-direction:column;gap:6px;margin-bottom:16px;">
+        <div class="gw-box">
+          <div class="gw-lbl">Entry point</div>
+          <div class="gw-name">gateway.py</div>
+          <div class="gw-port">FastAPI · localhost:8090 · single origin</div>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;">
+          <div>
+            <div class="arrow-v">↓</div>
+            <div class="svc-box">
+              <div class="svc-name">/ai/</div>
+              <div class="svc-desc">React SPA<br>frontend/dist</div>
+            </div>
+          </div>
+          <div>
+            <div class="arrow-v">↓</div>
+            <div class="svc-box" style="border-color:var(--gold-border);background:var(--gold-soft);">
+              <div class="svc-name gold">/travellens/</div>
+              <div class="svc-desc" style="color:var(--gold);opacity:.8;">This module<br>StaticFiles</div>
+            </div>
+          </div>
+          <div>
+            <div class="arrow-v">↓</div>
+            <div class="svc-box">
+              <div class="svc-name">/food/</div>
+              <div class="svc-desc">Food SPA<br>food-assistant/dist</div>
+            </div>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+          <div class="svc-box">
+            <div class="svc-name">/analyse</div>
+            <div class="svc-desc">Review analysis API<br>→ AI Travel Assistant proxy (51.20.34.58:5001)</div>
+          </div>
+          <div class="svc-box">
+            <div class="svc-name">/corpus-summary</div>
+            <div class="svc-desc">Aggregated complaint rates<br>→ Analytics dashboard</div>
+          </div>
+        </div>
+      </div>
+      <div style="padding:10px 14px;background:var(--gold-soft);border:1px solid var(--gold-border);border-radius:5px;font-size:12px;color:var(--muted);">
+        <strong class="gold">Elimination of double navigation:</strong> Gateway root (/) redirects to /ai/. Reviews tab loads travellens portal via iframe with ?embedded=1 — hides brand header, keeps tab bar (Map / Stories / Add a Review / Analytics).
+      </div>
+    </div>
+    <div>
+      <div class="sh">Completion Checklist</div>
+      <div style="display:flex;flex-direction:column;gap:7px;">
+        <div style="display:flex;align-items:center;gap:10px;font-size:13px;padding:8px 12px;background:var(--surface);border-radius:5px;border:1px solid var(--line);">
+          <span class="teal" style="font-size:16px;">✓</span><span><strong>Map tab</strong> — 294 destinations, 19 districts, clickable drill-down</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;font-size:13px;padding:8px 12px;background:var(--surface);border-radius:5px;border:1px solid var(--line);">
+          <span class="teal" style="font-size:16px;">✓</span><span><strong>Stories tab</strong> — YouTube + Reddit + news per destination</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;font-size:13px;padding:8px 12px;background:var(--surface);border-radius:5px;border:1px solid var(--line);">
+          <span class="teal" style="font-size:16px;">✓</span><span><strong>Add a Review tab</strong> — real-time /analyse API, token-based ownership</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;font-size:13px;padding:8px 12px;background:var(--surface);border-radius:5px;border:1px solid var(--gold-border);">
+          <span class="gold" style="font-size:16px;">✓</span><span><strong>Analytics tab</strong> — 46,854 reviews · 7 topics · complaint rate bars · district rankings · top destinations table</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;font-size:13px;padding:8px 12px;background:var(--surface);border-radius:5px;border:1px solid var(--line);">
+          <span class="teal" style="font-size:16px;">✓</span><span><strong>REST API</strong> — /analyse endpoint, /corpus-summary, review submission, withdrawal</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;font-size:13px;padding:8px 12px;background:var(--surface);border-radius:5px;border:1px solid var(--line);">
+          <span class="teal" style="font-size:16px;">✓</span><span><strong>50+ automated tests</strong> — pipeline, API parity, media separation, contributor separation</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;font-size:13px;padding:8px 12px;background:var(--surface);border-radius:5px;border:1px solid var(--line);">
+          <span style="color:var(--gold);font-size:16px;">✓</span><span><strong>Startup</strong> — VS Code tasks.json: Ctrl+Shift+B starts gateway:8090 + food:8001</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ─── SLIDE 9 · PLSSE + NFRs ────────────────────────────────────── -->
+<div class="slide" id="s9">
+  <div class="eye">Professional · Legal · Social · Security · Ethical Issues</div>
+  <h2>Specific mitigations — <span class="gold">not generic slides</span></h2>
+  <div class="g2 grow" style="gap:28px;">
+    <div>
+      <div class="plsse-row" style="padding-top:0;border-top:1px solid var(--line);">
+        <span><span class="plsse-type" style="background:rgba(232,184,75,.15);color:var(--gold);">Professional</span></span>
+        <div class="plsse-txt">No personal data collected — <strong>token-based ownership</strong> (SHA-256 hash, never stored in plain text) allows correction rights without accounts. Write endpoint refuses to start if bound to 0.0.0.0 simultaneously with a database URL.</div>
+      </div>
+      <div class="plsse-row">
+        <span><span class="plsse-type" style="background:rgba(45,212,191,.12);color:var(--teal);">Legal</span></span>
+        <div class="plsse-txt"><strong>Raw CSVs excluded from repo</strong> — "the two review corpora are third-party scrapes this project has no right to redistribute." Pre-built dashboard IS committed so pages open immediately. Wikipedia photos used (not Google Places Photos which require API key travel with user data).</div>
+      </div>
+      <div class="plsse-row">
+        <span><span class="plsse-type" style="background:rgba(248,113,113,.12);color:var(--red);">Social</span></span>
+        <div class="plsse-txt">TripAdvisor corpus: <strong>99.99% non-Sri Lankan reviewers</strong>. Audience bias explicitly disclosed in methodology, not hidden. Google Maps (local-skewing) included specifically to capture local perspective alongside international. Local/international divergence is a finding, not a flaw.</div>
+      </div>
+      <div class="plsse-row">
+        <span><span class="plsse-type" style="background:rgba(130,150,230,.15);color:#8A9EE6;">Security</span></span>
+        <div class="plsse-txt">Hard-coded server refusal: if SUBMISSIONS_DATABASE_URL is set AND binding to 0.0.0.0, <strong>server refuses to start</strong> — prevents publishing a write endpoint into thesis data. MAX_REQUESTS_PER_RUN=200 prevents accidental billing spikes against Google Places API. Rate-limited Reddit scrape (1 req/sec) with honest User-Agent string.</div>
+      </div>
+      <div class="plsse-row">
+        <span><span class="plsse-type" style="background:rgba(180,120,220,.15);color:#C47FE8;">Ethical</span></span>
+        <div class="plsse-txt">"Not right?" button on every tag — contributor corrections accepted and stored. <strong>Test asserts they can never enter published accuracy figures</strong> (tests/test_contributor_separation.py) without a deliberate annotation pass. Withdraw-not-delete: removed reviews persist in database so downstream counts stay auditable.</div>
+      </div>
+    </div>
+    <div>
+      <div class="sh">Non-Functional Requirements (Measured)</div>
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <div class="card">
+          <div class="card-lbl">Performance</div>
+          <div class="card-p" style="font-size:12.5px;"><strong style="color:var(--text);">&lt;200 ms</strong> /analyse response for real-time review analysis · Pipeline refresh: ~15 seconds from raw corpus (cached)</div>
+        </div>
+        <div class="card">
+          <div class="card-lbl">Reliability</div>
+          <div class="card-p" style="font-size:12.5px;"><strong style="color:var(--text);">50+ automated tests</strong> covering pipeline, API parity, media separation, contributor separation, accuracy provenance. Preflight check refuses to start with stale dashboard.</div>
+        </div>
+        <div class="card">
+          <div class="card-lbl">Maintainability</div>
+          <div class="card-p" style="font-size:12.5px;">Every hyperparameter has a comment explaining why that value was chosen. Nothing is a magic number. MIN_WORDS=4 (derived from 17% short-review corpus analysis).</div>
+        </div>
+        <div class="card">
+          <div class="card-lbl">Scalability / Portability</div>
+          <div class="card-p" style="font-size:12.5px;">Single-file self-contained dashboard (3.8 MB) opens from a USB stick — no server required. SQLite locally; PostgreSQL URL for hosted deployment. Gateway on single port eliminates CORS.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ─── SLIDE 10 · Commercialisation + Demo ───────────────────────── -->
+<div class="slide" id="s10">
+  <div class="eye">Commercialisation + Demo Roadmap</div>
+  <h2>From research to <span class="gold">deployable intelligence</span></h2>
+  <div class="g2l grow" style="gap:28px;">
+    <div>
+      <div class="sh">Commercialisation Pathways</div>
+      <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:14px;">
+        <div class="card" style="border-left:3px solid var(--gold);">
+          <div class="card-h">Sri Lanka Tourism Development Authority (SLTDA)</div>
+          <div class="card-p" style="font-size:12px;">Live complaint-rate dashboard replacing manual review platform monitoring. API integration into existing tourism management systems.</div>
+        </div>
+        <div class="card" style="border-left:3px solid var(--teal);">
+          <div class="card-h">Destination Management Organisations (DMOs)</div>
+          <div class="card-p" style="font-size:12px;">Per-district scorecard reports identifying infrastructure deficits (roads 29.8%, facilities 24.5%) prioritised by complaint rate + volume.</div>
+        </div>
+        <div class="card" style="border-left:3px solid var(--teal);">
+          <div class="card-h">Travel Media / Insurance</div>
+          <div class="card-p" style="font-size:12px;">Machine-generated "what visitors actually complain about" sections per destination. Safety complaint data (slippery paths, strong currents) for travel insurance pricing.</div>
+        </div>
+      </div>
+      <div style="padding:10px 14px;background:var(--red-soft);border:1px solid var(--red-border);border-radius:5px;font-size:12px;color:var(--muted);">
+        <strong class="red">Before commercial use:</strong> Roads &amp; Access accuracy gap must close (0.421 vs 0.871 human ceiling). A second human reader needed for Scenery, Price &amp; Value, Crowding (no inter-annotator agreement figure yet). Data licensing for Google Maps/TripAdvisor corpora must be resolved.
+      </div>
+    </div>
+    <div>
+      <div class="sh">Demo Path (30-Minute Session)</div>
+      <div style="display:flex;flex-direction:column;gap:6px;">
+        <div style="display:flex;gap:10px;font-size:12.5px;padding:8px 11px;background:var(--surface);border-radius:5px;border:1px solid var(--line);align-items:flex-start;">
+          <span class="gold" style="flex-shrink:0;font-family:var(--f-data);font-size:11px;margin-top:1px;">01</span>
+          <span><strong>Enter Platform</strong> → LostinSriLanka cover page → Reviews tab (travellens embedded)</span>
+        </div>
+        <div style="display:flex;gap:10px;font-size:12.5px;padding:8px 11px;background:var(--surface);border-radius:5px;border:1px solid var(--gold-border);align-items:flex-start;">
+          <span class="gold" style="flex-shrink:0;font-family:var(--f-data);font-size:11px;margin-top:1px;">02</span>
+          <span><strong>Analytics tab</strong> → 46,854 reviews · complaint rate bars (Safety 60.2% → Scenery 9.0%) · click a bar to filter districts + destinations</span>
+        </div>
+        <div style="display:flex;gap:10px;font-size:12.5px;padding:8px 11px;background:var(--surface);border-radius:5px;border:1px solid var(--line);align-items:flex-start;">
+          <span class="gold" style="flex-shrink:0;font-family:var(--f-data);font-size:11px;margin-top:1px;">03</span>
+          <span><strong>District rankings</strong> → Worst (Kegalle 46.1%) vs Most praised (Kurunegala 90.4%)</span>
+        </div>
+        <div style="display:flex;gap:10px;font-size:12.5px;padding:8px 11px;background:var(--surface);border-radius:5px;border:1px solid var(--line);align-items:flex-start;">
+          <span class="gold" style="flex-shrink:0;font-family:var(--f-data);font-size:11px;margin-top:1px;">04</span>
+          <span><strong>Add a Review</strong> → live /analyse API → aspect tags with triggering words highlighted → compare against baseline</span>
+        </div>
+        <div style="display:flex;gap:10px;font-size:12.5px;padding:8px 11px;background:var(--surface);border-radius:5px;border:1px solid var(--line);align-items:flex-start;">
+          <span class="gold" style="flex-shrink:0;font-family:var(--f-data);font-size:11px;margin-top:1px;">05</span>
+          <span><strong>Evidence</strong> → Git commit history · 50+ passing tests · reliability.json · accuracy figures with CIs</span>
+        </div>
+      </div>
+      <div style="margin-top:12px;padding:10px 14px;background:var(--gold-soft);border:1px solid var(--gold-border);border-radius:5px;font-size:12px;color:var(--muted);">
+        <strong class="gold">Integration + Evidence + Ownership + Professionalism = PP2 Readiness.</strong> A complete system without defensible evidence is still weak research.
+      </div>
+    </div>
+  </div>
+</div>
+
+</div><!-- .deck -->
+
+<!-- ── Navigation ──────────────────────────────────────────────────── -->
+<nav class="nav">
+  <button class="nbtn" id="prev" title="Previous">&#8592;</button>
+  <div class="ndots" id="dots"></div>
+  <button class="nbtn" id="next" title="Next">&#8594;</button>
+  <span class="ncnt" id="cnt">1 / 10</span>
+</nav>
+
+<script>
+const slides = Array.from(document.querySelectorAll('.slide'));
+const N = slides.length;
+let cur = 0;
+
+const dotsEl = document.getElementById('dots');
+const cntEl  = document.getElementById('cnt');
+const prevBtn = document.getElementById('prev');
+const nextBtn = document.getElementById('next');
+
+// Build dots
+slides.forEach((_, i) => {
+  const d = document.createElement('span');
+  d.className = 'ndot' + (i === 0 ? ' on' : '');
+  d.addEventListener('click', () => go(i));
+  dotsEl.appendChild(d);
+});
+
+function go(i) {
+  slides[cur].classList.remove('active');
+  dotsEl.children[cur].classList.remove('on');
+  cur = Math.max(0, Math.min(N - 1, i));
+  slides[cur].classList.add('active');
+  dotsEl.children[cur].classList.add('on');
+  cntEl.textContent = (cur + 1) + ' / ' + N;
+  prevBtn.disabled = cur === 0;
+  nextBtn.disabled = cur === N - 1;
+}
+
+prevBtn.addEventListener('click', () => go(cur - 1));
+nextBtn.addEventListener('click', () => go(cur + 1));
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowLeft')  go(cur - 1);
+  if (e.key === 'ArrowRight') go(cur + 1);
+  if (e.key === 'Home')       go(0);
+  if (e.key === 'End')        go(N - 1);
+});
+
+go(0);
+</script>

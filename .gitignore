@@ -40,13 +40,16 @@ node_modules/
 dist/
 build/
 .npm/
-frontend/.vite/
 
 # IDE & OS
-.vscode/
+.vscode/*
+!.vscode/tasks.json
 .idea/
 .DS_Store
 Thumbs.db
+
+# Vite dev cache
+frontend/.vite/
 
 # Temp & Artifact Storage
 .tempmediaStorage/

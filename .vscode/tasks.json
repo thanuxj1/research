@@ -1,0 +1,55 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "1. Backend — Gateway + Reviews + APIs (port 8090)",
+      "type": "shell",
+      "command": "python gateway.py --port 8090",
+      "options": { "cwd": "${workspaceFolder}" },
+      "isBackground": true,
+      "problemMatcher": {
+        "pattern": { "regexp": "^$" },
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": "Sri Lanka Tourism",
+          "endsPattern": "Application startup complete"
+        }
+      },
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated",
+        "label": "Backend :8090"
+      }
+    },
+    {
+      "label": "2. Food AI — ML backend (port 8001)",
+      "type": "shell",
+      "command": "python -m uvicorn main:app --host 127.0.0.1 --port 8001",
+      "options": { "cwd": "${workspaceFolder}/food-assistant/backend" },
+      "isBackground": true,
+      "problemMatcher": {
+        "pattern": { "regexp": "^$" },
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": "Started server process",
+          "endsPattern": "Application startup complete"
+        }
+      },
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated",
+        "label": "Food AI :8001"
+      }
+    },
+    {
+      "label": "Run All (backend + food AI)",
+      "dependsOrder": "parallel",
+      "dependsOn": [
+        "1. Backend — Gateway + Reviews + APIs (port 8090)",
+        "2. Food AI — ML backend (port 8001)"
+      ],
+      "group": { "kind": "build", "isDefault": true },
+      "problemMatcher": []
+    }
+  ]
+}

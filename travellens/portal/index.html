@@ -281,6 +281,23 @@ td.num { font-family: var(--f-mono); text-align: right; padding-right: 12px; whi
 .photo figcaption { font-size: 11.5px; color: var(--ink-faint); margin-top: 5px; }
 .photo a { color: var(--ink-faint); }
 
+/* ------------------------------------------------------------ autocomplete */
+.ac-wrap { position: relative; }
+.ac-drop {
+  position: absolute; top: calc(100% + 2px); left: 0; right: 0; z-index: 50;
+  background: var(--surface); border: 1px solid var(--line);
+  border-radius: 6px; box-shadow: 0 6px 24px rgba(0,0,0,.14);
+  max-height: 260px; overflow-y: auto; font-family: var(--f-body);
+}
+.ac-item {
+  padding: 10px 14px; cursor: pointer; display: flex; flex-direction: column;
+  gap: 2px; border-bottom: 1px solid var(--line-soft); transition: background .1s;
+}
+.ac-item:last-child { border-bottom: none; }
+.ac-item:hover, .ac-item.ac-active { background: var(--accent-soft); }
+.ac-name { font-size: 13.5px; font-weight: 500; color: var(--ink); }
+.ac-dist { font-size: 11px; color: var(--ink-faint); letter-spacing: .01em; }
+
 /* ------------------------------------------------------------- storyboard */
 .story {
   border: 1px solid var(--line); border-radius: 4px; padding: 15px 17px;
@@ -346,7 +363,102 @@ footer {
 footer p { margin: 0 0 10px; }
 code { font-family: var(--f-mono); font-size: 12.5px; background: var(--surface-2);
        padding: 1px 5px; border-radius: 2px; }
+
+/* --------------------------------------------------------- analytics tab */
+.an-overview { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 32px; }
+.an-stat {
+  flex: 1 1 140px; background: var(--surface); border: 1px solid var(--line);
+  border-radius: 10px; padding: 20px 24px;
+}
+.an-num { display: block; font-family: var(--f-display); font-size: 38px; font-weight: 600;
+  color: var(--accent); letter-spacing: -.03em; line-height: 1.1; }
+.an-label { font-size: 11.5px; color: var(--ink-muted); text-transform: uppercase;
+  letter-spacing: .08em; font-weight: 500; }
+.an-h2 { font-family: var(--f-display); font-size: 19px; margin: 32px 0 10px;
+  color: var(--ink); font-weight: 600; }
+.an-h2.an-critical { color: var(--critical); }
+.an-h2.an-good     { color: var(--good); }
+.an-sub { font-size: 13px; color: var(--ink-muted); margin: 0 0 14px; }
+.an-pills { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 4px; }
+.an-filter-row { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; }
+.an-filter-label { font-size: 13px; font-weight: 600; color: var(--ink-muted); white-space: nowrap; }
+.an-topic-sel {
+  height: 36px; padding: 0 32px 0 12px; border-radius: 8px;
+  border: 1.5px solid var(--line); background: var(--surface);
+  color: var(--ink); font-size: 13px; font-family: var(--f-body);
+  cursor: pointer; appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23888' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 10px center;
+  min-width: 180px;
+}
+.an-topic-sel:focus { outline: none; border-color: var(--accent); }
+.an-pill {
+  padding: 6px 15px; border-radius: 20px; border: 1px solid var(--line);
+  background: var(--surface); color: var(--ink-muted); font-size: 13px;
+  cursor: pointer; transition: background .12s, color .12s, border-color .12s;
+  font-family: var(--f-body);
+}
+.an-pill:hover  { background: var(--accent-soft); color: var(--accent-text); border-color: var(--accent); }
+.an-pill.active { background: var(--accent-fill); color: var(--accent-on-fill); border-color: var(--accent-fill); font-weight: 600; }
+.an-bars { display: flex; flex-direction: column; gap: 6px; margin-bottom: 4px; }
+.an-bar-row { display: flex; align-items: center; gap: 10px; cursor: pointer;
+  padding: 7px 10px; border-radius: 6px; transition: background .1s; }
+.an-bar-row:hover   { background: var(--surface-2); }
+.an-bar-row.an-sel  { background: var(--accent-soft); }
+.an-bar-label { min-width: 130px; font-size: 13px; color: var(--ink-muted); flex-shrink: 0; }
+.an-bar-wrap  { flex: 1; height: 10px; background: var(--line-soft); border-radius: 5px; overflow: hidden; }
+.an-bar-fill  { height: 100%; background: var(--critical); border-radius: 5px; transition: width .35s; }
+.an-bar-pct   { min-width: 44px; font-size: 13px; font-weight: 600; color: var(--critical); text-align: right; }
+.an-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; margin-bottom: 8px; }
+@media (max-width: 640px) { .an-cols { grid-template-columns: 1fr; } }
+.an-rank-row { display: flex; align-items: center; gap: 12px;
+  padding: 10px 0; border-bottom: 1px solid var(--line-soft); }
+.an-rank-row:last-child { border-bottom: none; }
+.an-rank-num { width: 26px; height: 26px; border-radius: 50%; background: var(--surface-2);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 700; color: var(--ink-muted); flex-shrink: 0; }
+.an-rank-top  { background: var(--critical-soft); color: var(--critical); }
+.an-rank-good { background: var(--good-soft);     color: var(--good); }
+.an-rank-info { flex: 1; min-width: 0; }
+.an-rank-name { display: block; font-size: 14px; font-weight: 600; overflow-wrap: anywhere; }
+.an-rank-meta { font-size: 11.5px; color: var(--ink-faint); }
+.an-rank-pct  { font-size: 13px; font-weight: 700; text-align: right; flex-shrink: 0; line-height: 1.3; }
+.an-critical-text { color: var(--critical); }
+.an-good-text     { color: var(--good); }
+.an-view-tabs { display: flex; border: 1px solid var(--line); border-radius: 8px;
+  overflow: hidden; width: fit-content; margin-bottom: 16px; }
+.an-view { padding: 7px 16px; background: var(--surface); border: none;
+  font-size: 13px; cursor: pointer; color: var(--ink-muted);
+  border-right: 1px solid var(--line); font-family: var(--f-body);
+  transition: background .1s, color .1s; }
+.an-view:last-child { border-right: none; }
+.an-view:hover  { background: var(--surface-2); color: var(--ink); }
+.an-view.active { background: var(--accent-fill); color: var(--accent-on-fill); font-weight: 600; }
+.an-table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+.an-table th { text-align: left; padding: 8px 12px; font-size: 11px;
+  text-transform: uppercase; letter-spacing: .07em; color: var(--ink-muted);
+  border-bottom: 2px solid var(--line); font-weight: 600; }
+.an-table td { padding: 9px 12px; border-bottom: 1px solid var(--line-soft); }
+.an-table tr:last-child td { border-bottom: none; }
+.an-table tr:hover td { background: var(--surface); }
+.an-td-num   { text-align: right; font-variant-numeric: tabular-nums; font-weight: 600; }
+.an-td-muted { color: var(--ink-muted); font-size: 12.5px; }
 </style>
+
+<script>
+/* Hide the masthead when the portal is embedded inside the gateway iframe.
+   Done synchronously here (before first paint) to avoid a flash of the
+   duplicated nav bar. The outer shell provides its own navigation. */
+if (new URLSearchParams(location.search).get('embedded') === '1') {
+  document.write(`<style>
+    .masthead-inner { display: none !important; }
+    .lede, .sub    { display: none !important; }
+    footer         { display: none !important; }
+    .wrap          { padding-top: 0 !important; }
+    #map-frame     { height: calc(100vh - 90px) !important; }
+  </style>`);
+}
+</script>
 
 <div class="masthead">
   <div class="masthead-inner">
@@ -360,6 +472,8 @@ code { font-family: var(--f-mono); font-size: 12.5px; background: var(--surface-
             aria-controls="panel-stories">Stories &amp; videos</button>
     <button class="tab" role="tab" id="tab-share" aria-selected="false"
             aria-controls="panel-share">Add a review</button>
+    <button class="tab" role="tab" id="tab-analytics" aria-selected="false"
+            aria-controls="panel-analytics">Analytics</button>
   </div>
 </div>
 
@@ -401,10 +515,12 @@ code { font-family: var(--f-mono); font-size: 12.5px; background: var(--surface-
           <form id="form" autocomplete="off">
             <div class="field">
               <label for="destination">Which place?</label>
-              <input id="destination" name="destination" list="destinations"
-                     placeholder="Start typing, e.g. Kandy Lake"
-                     minlength="2" maxlength="200" required>
-              <datalist id="destinations"></datalist>
+              <div class="ac-wrap">
+                <input id="destination" name="destination" autocomplete="off"
+                       placeholder="Start typing, e.g. Kandy Lake"
+                       minlength="2" maxlength="200" required>
+                <div class="ac-drop" id="ac-dest-drop" hidden></div>
+              </div>
               <div class="newplace" id="newplace"></div>
             </div>
 
@@ -484,8 +600,11 @@ code { font-family: var(--f-mono); font-size: 12.5px; background: var(--surface-
             </div>
             <div class="field">
               <label for="story-place">Which place? (optional)</label>
-              <input id="story-place" list="destinations" maxlength="200"
-                     placeholder="Ella Rock">
+              <div class="ac-wrap">
+                <input id="story-place" autocomplete="off" maxlength="200"
+                       placeholder="Ella Rock">
+                <div class="ac-drop" id="ac-story-drop" hidden></div>
+              </div>
             </div>
             <div class="field">
               <label for="story-district">District (optional)</label>
@@ -534,6 +653,41 @@ code { font-family: var(--f-mono); font-size: 12.5px; background: var(--surface-
         </div>
       </div>
     </div>
+  </section>
+
+  <!-- ====================================================== ANALYTICS -->
+  <section class="panel" id="panel-analytics" role="tabpanel" aria-labelledby="tab-analytics" hidden>
+    <p class="lede">Patterns, rankings and filters across the full review corpus.</p>
+
+    <div class="an-overview">
+      <div class="an-stat"><span class="an-num" id="an-total">46,854</span><span class="an-label">reviews analysed</span></div>
+      <div class="an-stat"><span class="an-num" id="an-dests">293</span><span class="an-label">destinations</span></div>
+      <div class="an-stat"><span class="an-num" id="an-districts-n">19</span><span class="an-label">districts</span></div>
+    </div>
+
+    <h2 class="an-h2">Complaint rate by topic <span style="font-size:13px;color:var(--ink-faint);font-weight:400;font-family:var(--f-body)">— click a bar to filter</span></h2>
+    <div class="an-bars" id="an-bars"></div>
+
+    <div class="an-cols" style="margin-top:32px">
+      <div>
+        <h2 class="an-h2 an-critical">Worst districts</h2>
+        <p class="an-sub" id="an-worst-sub">Highest complaint rate</p>
+        <div id="an-worst"></div>
+      </div>
+      <div>
+        <h2 class="an-h2 an-good">Most praised</h2>
+        <p class="an-sub" id="an-best-sub">Highest praise rate</p>
+        <div id="an-best"></div>
+      </div>
+    </div>
+
+    <h2 class="an-h2">Top destinations</h2>
+    <div class="an-view-tabs" id="an-view-tabs">
+      <button class="an-view active" data-view="reviews">Most reviewed</button>
+      <button class="an-view" data-view="complaints">Most complaints</button>
+      <button class="an-view" data-view="praised">Most praised</button>
+    </div>
+    <div id="an-destinations"></div>
   </section>
 
   <footer>
@@ -695,7 +849,7 @@ $("mine-body").addEventListener("click", async (e) => {
 });
 
 // -------------------------------------------------------------------- tabs
-const TABS = ["map", "stories", "share"];
+const TABS = ["map", "stories", "share", "analytics"];
 
 function selectTab(name) {
   if (TABS.indexOf(name) === -1) name = TABS[0];
@@ -716,6 +870,7 @@ function selectTab(name) {
     sizeFrame();
   }
   if (name === "stories") loadStories();
+  if (name === "analytics") initAnalytics();
   // In the address bar so a tab can be linked to, and survives a reload --
   // otherwise every refresh silently returns the reader to the first tab.
   if (location.hash.slice(1) !== name) {
@@ -749,10 +904,80 @@ const districtOptions = (blank) =>
 $("district").innerHTML = districtOptions("Choose a district…");
 $("story-district").innerHTML = districtOptions("(not sure)");
 
-$("destinations").innerHTML = Object.keys(BASELINE).sort()
-  .map(d => '<option value="' + esc(d) + '">').join("");
 $("media-destinations").innerHTML = Object.keys(MEDIA).sort()
   .map(d => '<option value="' + esc(d) + '">').join("");
+
+// ── Uber-style destination typeahead ──────────────────────────────────────
+function makeAC(inputId, dropId, onPick) {
+  var input = $(inputId), drop = $(dropId);
+  if (!input || !drop) return;
+  var idx = -1;
+
+  function getMatches(q) {
+    if (!q || q.length < 1) return [];
+    var lq = q.toLowerCase();
+    return Object.entries(BASELINE)
+      .filter(function(e) {
+        return e[0].toLowerCase().includes(lq) ||
+               (e[1].district || "").toLowerCase().includes(lq);
+      })
+      .sort(function(a, b) {
+        var aS = a[0].toLowerCase().startsWith(lq);
+        var bS = b[0].toLowerCase().startsWith(lq);
+        return aS === bS ? a[0].localeCompare(b[0]) : aS ? -1 : 1;
+      })
+      .slice(0, 8);
+  }
+
+  function renderDrop(res) {
+    if (!res.length) { drop.hidden = true; return; }
+    drop.innerHTML = res.map(function(e) {
+      return '<div class="ac-item" data-v="' + esc(e[0]) + '">' +
+             '<span class="ac-name">' + esc(e[0]) + '</span>' +
+             '<span class="ac-dist">' + esc(e[1].district || "") + '</span></div>';
+    }).join('');
+    drop.hidden = false; idx = -1;
+  }
+
+  function pick(val) {
+    input.value = val;
+    input.dispatchEvent(new Event('input'));
+    drop.hidden = true; idx = -1;
+    if (onPick) onPick(val, BASELINE[val]);
+  }
+
+  input.addEventListener('input', function() {
+    renderDrop(getMatches(input.value.trim()));
+  });
+  input.addEventListener('focus', function() {
+    if (input.value.trim().length >= 1) renderDrop(getMatches(input.value.trim()));
+  });
+  input.addEventListener('keydown', function(e) {
+    var items = drop.querySelectorAll('.ac-item');
+    if (e.key === 'ArrowDown') {
+      e.preventDefault(); idx = Math.min(idx + 1, items.length - 1);
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault(); idx = Math.max(idx - 1, -1);
+    } else if (e.key === 'Enter' && idx >= 0 && items.length) {
+      e.preventDefault(); pick(items[idx].dataset.v); return;
+    } else if (e.key === 'Escape') {
+      drop.hidden = true; return;
+    }
+    items.forEach(function(it, i) { it.classList.toggle('ac-active', i === idx); });
+  });
+  drop.addEventListener('click', function(e) {
+    var it = e.target.closest('.ac-item');
+    if (it) pick(it.dataset.v);
+  });
+  document.addEventListener('click', function(e) {
+    if (!input.contains(e.target) && !drop.contains(e.target)) drop.hidden = true;
+  });
+}
+
+makeAC('destination', 'ac-dest-drop');
+makeAC('story-place', 'ac-story-drop', function(val, rec) {
+  if (rec && rec.district && $('story-district')) $('story-district').value = rec.district;
+});
 
 // ----------------------------------------------------------------- health
 fetch(API + "/health")
@@ -1193,4 +1418,300 @@ renderBaseline("");
 renderMedia("");
 renderMine();
 selectTab(location.hash.slice(1) || "map");
+
+// =====================================================================
+// ANALYTICS TAB
+// =====================================================================
+
+const AN_ASPECTS = [
+  { key: "safety",       label: "Safety" },
+  { key: "cleanliness",  label: "Cleanliness" },
+  { key: "price_value",  label: "Price & Value" },
+  { key: "roads_access", label: "Roads & Access" },
+  { key: "facilities",   label: "Facilities" },
+  { key: "crowd",        label: "Crowding & Noise" },
+  { key: "scenery",      label: "Scenery & Nature" },
+];
+
+let AN_ASPECT  = null;   // null = all topics
+let AN_VIEW    = "reviews";
+let AN_INITED  = false;
+let AN_SUMMARY = null;   // corpus-summary payload
+
+// --- data helpers ---
+
+function anBuildDistricts(aspect) {
+  const byDistrict = {};
+  Object.values(BASELINE).forEach(d => {
+    const dist = d.district;
+    if (!byDistrict[dist]) byDistrict[dist] = { n: 0, neg: 0, pos: 0, reviews: 0 };
+    byDistrict[dist].reviews += (d.reviews || 0);
+    if (aspect) {
+      const a = d.aspects && d.aspects[aspect];
+      if (a) {
+        byDistrict[dist].n   += a.n   || 0;
+        byDistrict[dist].neg += a.neg || 0;
+        byDistrict[dist].pos += (a.n - a.neg) || 0;
+      }
+    } else {
+      AN_ASPECTS.forEach(({ key }) => {
+        const a = d.aspects && d.aspects[key];
+        if (a) {
+          byDistrict[dist].n   += a.n   || 0;
+          byDistrict[dist].neg += a.neg || 0;
+          byDistrict[dist].pos += (a.n - a.neg) || 0;
+        }
+      });
+    }
+  });
+  return Object.entries(byDistrict).map(([name, v]) => ({
+    name,
+    reviews:      v.reviews,
+    n:            v.n,
+    neg:          v.neg,
+    pos:          v.pos,
+    rate:         v.n > 0 ? v.neg / v.n : 0,
+    praiseRate:   v.n > 0 ? v.pos / v.n : 0,
+  }));
+}
+
+function anBuildDests(aspect, view) {
+  const rows = Object.entries(BASELINE).map(([name, d]) => {
+    let n = 0, neg = 0, pos = 0;
+    if (aspect) {
+      const a = d.aspects && d.aspects[aspect];
+      if (a) { n = a.n || 0; neg = a.neg || 0; pos = n - neg; }
+    } else {
+      AN_ASPECTS.forEach(({ key }) => {
+        const a = d.aspects && d.aspects[key];
+        if (a) { n += a.n || 0; neg += a.neg || 0; }
+      });
+      pos = n - neg;
+    }
+    return {
+      name,
+      district:  d.district,
+      reviews:   d.reviews || 0,
+      n, neg, pos,
+      rate:        n > 0 ? neg / n : 0,
+      praiseRate:  n > 0 ? pos / n : 0,
+    };
+  });
+  if (view === "complaints")
+    return rows.filter(r => r.neg > 0).sort((a, b) => b.neg - a.neg || b.rate - a.rate).slice(0, 15);
+  if (view === "praised")
+    return rows.filter(r => r.pos > 0).sort((a, b) => b.pos - a.pos || b.praiseRate - a.praiseRate).slice(0, 15);
+  // default: most reviewed
+  return rows.sort((a, b) => b.reviews - a.reviews).slice(0, 15);
+}
+
+// --- renderers ---
+
+function anRenderPills() {
+  const el = document.getElementById("an-topic-sel");
+  if (!el) return;
+  const all = [{ key: "", label: "All topics" }].concat(
+    AN_ASPECTS.map(a => ({ key: a.key, label: a.label }))
+  );
+  el.innerHTML = all.map(({ key, label }) =>
+    `<option value="${esc(key)}"${(AN_ASPECT || "") === key ? " selected" : ""}>${esc(label)}</option>`
+  ).join("");
+  el.onchange = () => {
+    AN_ASPECT = el.value || null;
+    anRender();
+  };
+}
+
+function anRenderBars(aspects) {
+  const el = document.getElementById("an-bars");
+  if (!el || !aspects || !aspects.length) return;
+  const max = Math.max(...aspects.map(a => a.complaint_rate || 0));
+  el.innerHTML = aspects.map(a => {
+    const pct = max > 0 ? (a.complaint_rate / max) * 100 : 0;
+    const label = (AN_ASPECTS.find(x => x.key === a.key) || {}).label || a.label || a.key;
+    const active = AN_ASPECT === a.key ? " active" : "";
+    return `<div class="an-bar-row${active}" data-key="${esc(a.key)}" role="button" tabindex="0">
+      <span class="an-bar-label">${esc(label)}</span>
+      <div class="an-bar-wrap">
+        <div class="an-bar-fill" style="width:${pct.toFixed(1)}%"></div>
+      </div>
+      <span class="an-bar-pct">${(a.complaint_rate * 100).toFixed(1)}%</span>
+    </div>`;
+  }).join("");
+  el.querySelectorAll(".an-bar-row").forEach(row => {
+    const act = () => {
+      AN_ASPECT = row.dataset.key || null;
+      anRender();
+    };
+    row.addEventListener("click", act);
+    row.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") act(); });
+  });
+}
+
+function anRenderDistricts(districts) {
+  const worst = document.getElementById("an-worst");
+  const best  = document.getElementById("an-best");
+  const wsub  = document.getElementById("an-worst-sub");
+  const bsub  = document.getElementById("an-best-sub");
+  const topicLabel = AN_ASPECT
+    ? ((AN_ASPECTS.find(x => x.key === AN_ASPECT) || {}).label || AN_ASPECT)
+    : "all topics";
+  if (wsub) wsub.textContent = "Highest complaint rate · " + topicLabel;
+  if (bsub) bsub.textContent = "Highest praise rate · " + topicLabel;
+
+  const sorted = [...districts].filter(d => d.n > 0);
+  const byWorst = [...sorted].sort((a, b) => b.rate - a.rate).slice(0, 8);
+  const byBest  = [...sorted].sort((a, b) => b.praiseRate - a.praiseRate).slice(0, 8);
+
+  function renderList(el, rows, rateKey, cls) {
+    if (!el) return;
+    el.innerHTML = rows.map((d, i) => {
+      const pct = (d[rateKey] * 100).toFixed(1);
+      return `<div class="an-rank-row">
+        <span class="an-rank-num">${i + 1}</span>
+        <div>
+          <div class="an-rank-name">${esc(d.name)}</div>
+          <div class="an-rank-meta">${d.reviews.toLocaleString()} reviews · ${d.n.toLocaleString()} mentions</div>
+        </div>
+        <span class="an-rank-pct ${cls}">${pct}%</span>
+      </div>`;
+    }).join("");
+  }
+  renderList(worst, byWorst, "rate",       "an-critical-text");
+  renderList(best,  byBest,  "praiseRate", "an-good-text");
+}
+
+function anRenderDests() {
+  const el = document.getElementById("an-destinations");
+  if (!el) return;
+  const rows = anBuildDests(AN_ASPECT, AN_VIEW);
+  if (!rows.length) { el.innerHTML = '<p style="color:var(--ink-faint)">No data.</p>'; return; }
+
+  const topicLabel = AN_ASPECT
+    ? ((AN_ASPECTS.find(x => x.key === AN_ASPECT) || {}).label || AN_ASPECT)
+    : "all topics";
+
+  const colHeader = AN_VIEW === "complaints"
+    ? `Complaints (${topicLabel})`
+    : AN_VIEW === "praised"
+    ? `Praised (${topicLabel})`
+    : "Total reviews";
+
+  el.innerHTML = `<table class="an-table">
+    <thead><tr>
+      <th>#</th>
+      <th>Destination</th>
+      <th>District</th>
+      <th class="an-td-num">${esc(colHeader)}</th>
+      <th class="an-td-num">Rate</th>
+    </tr></thead>
+    <tbody>
+    ${rows.map((r, i) => {
+      let mainVal, rate;
+      if (AN_VIEW === "complaints") {
+        mainVal = r.neg.toLocaleString();
+        rate    = r.n > 0 ? (r.rate * 100).toFixed(1) + "%" : "—";
+      } else if (AN_VIEW === "praised") {
+        mainVal = r.pos.toLocaleString();
+        rate    = r.n > 0 ? (r.praiseRate * 100).toFixed(1) + "%" : "—";
+      } else {
+        mainVal = r.reviews.toLocaleString();
+        rate    = "—";
+      }
+      return `<tr>
+        <td class="an-td-num an-td-muted">${i + 1}</td>
+        <td>${esc(r.name)}</td>
+        <td class="an-td-muted">${esc(r.district)}</td>
+        <td class="an-td-num">${mainVal}</td>
+        <td class="an-td-num an-td-muted">${rate}</td>
+      </tr>`;
+    }).join("")}
+    </tbody>
+  </table>`;
+}
+
+function anRender() {
+  anRenderPills();
+  document.querySelectorAll(".an-bar-row").forEach(r => {
+    r.classList.toggle("active", r.dataset.key === (AN_ASPECT || ""));
+  });
+  const districts = anBuildDistricts(AN_ASPECT);
+  anRenderDistricts(districts);
+  anRenderDests();
+  // view-tab active states
+  document.querySelectorAll(".an-view").forEach(b => {
+    b.classList.toggle("active", b.dataset.view === AN_VIEW);
+  });
+}
+
+function initAnalytics() {
+  if (AN_INITED) { anRender(); return; }
+  AN_INITED = true;
+
+  // Wire view tabs
+  document.querySelectorAll(".an-view").forEach(btn => {
+    btn.addEventListener("click", () => {
+      AN_VIEW = btn.dataset.view;
+      anRenderDests();
+      document.querySelectorAll(".an-view").forEach(b =>
+        b.classList.toggle("active", b.dataset.view === AN_VIEW)
+      );
+    });
+  });
+
+  // Fetch live corpus-summary for overview stats + aspect bar data
+  fetch(API + "/corpus-summary")
+    .then(r => r.ok ? r.json() : Promise.reject(r.status))
+    .then(data => {
+      AN_SUMMARY = data;
+      const tot = document.getElementById("an-total");
+      const des = document.getElementById("an-dests");
+      const dis = document.getElementById("an-districts-n");
+      if (tot) tot.textContent = (data.total_reviews || 0).toLocaleString();
+      if (des) des.textContent = (data.destinations  || 0).toLocaleString();
+      if (dis) dis.textContent = (data.districts      || 0).toLocaleString();
+      if (data.aspects && data.aspects.length) {
+        // API returns complaint_rate as 0-100; normalize to 0-1 for anRenderBars
+        anRenderBars(data.aspects.map(a => ({
+          ...a,
+          complaint_rate: a.complaint_rate / 100,
+        })));
+      }
+    })
+    .catch(() => {
+      // Fallback: compute aspect rates from BASELINE
+      const totals = {};
+      AN_ASPECTS.forEach(({ key }) => totals[key] = { n: 0, neg: 0 });
+      Object.values(BASELINE).forEach(d => {
+        AN_ASPECTS.forEach(({ key }) => {
+          const a = d.aspects && d.aspects[key];
+          if (a) { totals[key].n += a.n || 0; totals[key].neg += a.neg || 0; }
+        });
+      });
+      const aspects = AN_ASPECTS.map(({ key, label }) => ({
+        key, label,
+        complaint_rate: totals[key].n > 0 ? totals[key].neg / totals[key].n : 0,
+        n_negative: totals[key].neg,
+        n_positive: totals[key].n - totals[key].neg,
+      })).sort((a, b) => b.complaint_rate - a.complaint_rate);
+      anRenderBars(aspects);
+
+      // Compute totals from BASELINE for overview cards
+      let totalReviews = 0;
+      const dests = new Set(), districts = new Set();
+      Object.values(BASELINE).forEach(d => {
+        totalReviews += d.reviews || 0;
+        districts.add(d.district);
+      });
+      Object.keys(BASELINE).forEach(k => dests.add(k));
+      const tot = document.getElementById("an-total");
+      const des = document.getElementById("an-dests");
+      const dis = document.getElementById("an-districts-n");
+      if (tot) tot.textContent = totalReviews.toLocaleString();
+      if (des) des.textContent = dests.size.toLocaleString();
+      if (dis) dis.textContent = districts.size.toLocaleString();
+    });
+
+  anRender();
+}
 </script>

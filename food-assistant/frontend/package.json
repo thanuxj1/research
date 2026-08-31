@@ -1,0 +1,21 @@
+{
+  "name": "food-ai-frontend",
+  "private": true,
+  "version": "3.0.0",
+  "type": "module",
+  "description": "React client for the Sri Lankan Food AI search API",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "verify": "node scripts/verify.mjs"
+  },
+  "dependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.3.1",
+    "vite": "^5.4.0"
+  }
+}

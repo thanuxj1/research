@@ -609,6 +609,86 @@ def list_aspects():
     }
 
 
+# In-process cache — segments_scored.csv is ~38 MB; reading it on every
+# request would be wasteful. Computed once on first call, reused thereafter.
+_corpus_summary_cache: Optional[dict] = None
+_corpus_summary_lock = threading.Lock()
+
+_ASP_COLS = {
+    "asp_safety":       ("safety",         "Safety"),
+    "asp_price_value":  ("price_value",    "Price & Value"),
+    "asp_cleanliness":  ("cleanliness",    "Cleanliness"),
+    "asp_roads_access": ("roads_access",   "Roads & Access"),
+    "asp_facilities":   ("facilities",     "Facilities"),
+    "asp_crowd":        ("crowding_noise", "Crowding & Noise"),
+    "asp_scenery":      ("scenery_nature", "Scenery & Nature"),
+}
+
+
+def _build_corpus_summary() -> dict:
+    """Read segments_scored.csv and return the shape ReviewsPanel.jsx expects."""
+    import pandas as pd
+
+    path = C.DATA_PROCESSED / "segments_scored.csv"
+    needed = (["review_id", "destination", "district", "n_aspects", "pol_final"]
+              + list(_ASP_COLS.keys()))
+    seg = pd.read_csv(path, usecols=needed)
+    tagged = seg[seg["n_aspects"] > 0]
+
+    aspects = []
+    for col, (key, label) in _ASP_COLS.items():
+        sub = tagged[tagged[col] == True]
+        neg = int((sub["pol_final"] == "N").sum())
+        pos = int((sub["pol_final"] == "P").sum())
+        total = neg + pos
+        rate = round(100 * neg / total, 1) if total else 0.0
+        aspects.append({"key": key, "label": label,
+                         "complaint_rate": rate,
+                         "n_negative": neg, "n_positive": pos})
+
+    # Worst districts for safety complaints.
+    safety_tagged = tagged[tagged["asp_safety"] == True]
+    safety_neg = safety_tagged[safety_tagged["pol_final"] == "N"]
+    worst = (safety_neg.groupby("district")
+                       .size()
+                       .sort_values(ascending=False)
+                       .head(3)
+                       .reset_index(name="complaint_count"))
+    worst_list = [{"district": r.district, "complaint_count": int(r.complaint_count)}
+                  for r in worst.itertuples(index=False)]
+
+    return {
+        "total_reviews": int(seg["review_id"].nunique()),
+        "destinations":  int(seg["destination"].nunique()),
+        "districts":     int(seg["district"].nunique()),
+        "aspects":       aspects,
+        "worst_safety_districts": worst_list,
+    }
+
+
+@app.get("/corpus-summary", tags=["Reference"])
+def corpus_summary():
+    """
+    Pre-computed aggregate statistics for the research corpus.
+
+    Used by the Reviews panel sidebar to show complaint-rate bars and the
+    worst-safety-districts ranking without a full database scan per request.
+    Computed once from segments_scored.csv on first call and cached in-process.
+    """
+    global _corpus_summary_cache
+    if _corpus_summary_cache is not None:
+        return _corpus_summary_cache
+    with _corpus_summary_lock:
+        if _corpus_summary_cache is None:
+            try:
+                _corpus_summary_cache = _build_corpus_summary()
+            except Exception as exc:
+                raise HTTPException(
+                    status_code=503,
+                    detail="Could not read corpus: {}".format(exc))
+    return _corpus_summary_cache
+
+
 @app.post("/analyse", response_model=AnalyseResponse, tags=["Analysis"])
 def analyse(req: ReviewRequest, request: Request):
     """
@@ -1342,10 +1422,13 @@ def _page(name: str):
         # catch. `no-cache` only asks for revalidation and was observed still
         # serving a previous build after a rebuild; `no-store` is the one that
         # means what is wanted here.
-        return FileResponse(str(path), media_type="text/html", headers={
-            "Cache-Control": "no-store, must-revalidate",
-            "Pragma": "no-cache",
-        })
+        return HTMLResponse(
+            path.read_text("utf-8"),
+            media_type="text/html",
+            headers={
+                "Cache-Control": "no-store, must-revalidate",
+                "Pragma": "no-cache",
+            })
     return HTMLResponse(
         "<h1>The {name} has not been built yet</h1>"
         "<p>Run <code>{cmd}</code> from the travellens directory, then "
