@@ -80,35 +80,56 @@ body {
 }
 .masthead a.back:hover { color: #EFF7F2; }
 
-/* ── Tabs — dark nav bar matching the outer gateway nav */
+/* ── Hamburger sub-nav ──────────────────────────────── */
 .tabs {
   background: #0D1B2A;
-  max-width: unset; margin: 0; padding: 0 24px;
-  display: flex;
+  max-width: unset; margin: 0; padding: 0 20px;
+  height: 40px;
+  display: flex; align-items: center; justify-content: space-between;
   border-top: 1px solid rgba(239,247,242,.06);
-  border-bottom: 1px solid rgba(239,247,242,.07);
+  border-bottom: 1px solid rgba(239,247,242,.06);
+  position: relative;
 }
-.tab {
-  appearance: none; background: transparent; cursor: pointer;
+.tab { display: none; }
+#tab-current-label {
+  font-family: var(--f-body); font-size: 12.5px; font-weight: 600;
+  color: #E8B84B; display: flex; align-items: center; gap: 6px;
+  letter-spacing: .01em;
+}
+#hamburger-toggle {
+  appearance: none; background: none; border: none; cursor: pointer;
+  padding: 6px; display: flex; flex-direction: column;
+  align-items: center; justify-content: center; gap: 4px;
+  border-radius: 5px; transition: background 120ms;
+}
+#hamburger-toggle:hover { background: rgba(255,255,255,.07); }
+#hamburger-toggle span {
+  display: block; width: 18px; height: 1.5px;
+  background: rgba(239,247,242,.55); border-radius: 2px;
+  transition: background 120ms;
+}
+#hamburger-toggle:hover span { background: #EFF7F2; }
+#hamburger-menu {
+  position: absolute; top: calc(100% + 4px); right: 0;
+  background: #0F2035; border: 1px solid rgba(239,247,242,.10);
+  border-radius: 10px; overflow: hidden;
+  box-shadow: 0 8px 32px rgba(0,0,0,.50);
+  min-width: 180px; z-index: 200;
+}
+#hamburger-menu[hidden] { display: none; }
+.hmenu-item {
+  appearance: none; background: none; border: none; cursor: pointer;
+  width: 100%; display: flex; align-items: center; gap: 10px;
+  padding: 11px 16px;
   font-family: var(--f-body); font-size: 13px; font-weight: 500;
-  color: rgba(239,247,242,.50);
-  padding: 0 18px; height: 46px;
-  display: flex; align-items: center; gap: 7px;
-  border: 0; border-bottom: 3px solid transparent;
-  white-space: nowrap;
-  transition: color 120ms, background 120ms, border-color 120ms;
+  color: rgba(239,247,242,.60); text-align: left;
+  transition: background 100ms, color 100ms;
 }
-.tab:hover {
-  color: rgba(239,247,242,.85);
-  background: rgba(255,255,255,.05);
-}
-.tab[aria-selected="true"] {
-  color: #E8B84B;
-  border-bottom-color: #E8B84B;
-  font-weight: 600;
-  background: rgba(232,184,75,.08);
-}
-.tab-icon { font-style: normal; font-size: 14px; }
+.hmenu-item:hover { background: rgba(255,255,255,.06); color: #EFF7F2; }
+.hmenu-item.active { color: #E8B84B; font-weight: 600; }
+.hmenu-item + .hmenu-item { border-top: 1px solid rgba(239,247,242,.06); }
+.hmenu-icon { font-style: normal; font-size: 14px; flex-shrink: 0; }
+.tab-icon { display: none; }
 .panel[hidden] { display: none; }
 
 /* ── Section intros ────────────────────────────────── */
@@ -334,13 +355,20 @@ code {
     </h1>
     <p class="tagline">What visitors report about Sri Lanka&rsquo;s destinations</p>
   </div>
-  <div class="tabs" role="tablist">
-    <button class="tab" role="tab" id="tab-map" aria-selected="true"
-            aria-controls="panel-map"><i class="tab-icon">🗺</i> Map</button>
-    <button class="tab" role="tab" id="tab-stories" aria-selected="false"
-            aria-controls="panel-stories"><i class="tab-icon">▶</i> Stories &amp; videos</button>
-    <button class="tab" role="tab" id="tab-share" aria-selected="false"
-            aria-controls="panel-share"><i class="tab-icon">✏</i> Add a review</button>
+  <div class="tabs">
+    <button class="tab" role="tab" id="tab-map" aria-selected="true" aria-controls="panel-map"></button>
+    <button class="tab" role="tab" id="tab-stories" aria-selected="false" aria-controls="panel-stories"></button>
+    <button class="tab" role="tab" id="tab-share" aria-selected="false" aria-controls="panel-share"></button>
+    <!-- hamburger UI -->
+    <span id="tab-current-label"><i class="hmenu-icon">🗺</i> Map</span>
+    <button id="hamburger-toggle" aria-label="Open navigation" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+    <div id="hamburger-menu" hidden>
+      <button class="hmenu-item active" data-htab="map"><i class="hmenu-icon">🗺</i> Map</button>
+      <button class="hmenu-item" data-htab="stories"><i class="hmenu-icon">▶</i> Stories &amp; videos</button>
+      <button class="hmenu-item" data-htab="share"><i class="hmenu-icon">✏</i> Add a review</button>
+    </div>
   </div>
 </div>
 
@@ -1174,6 +1202,37 @@ renderBaseline("");
 renderMedia("");
 renderMine();
 selectTab(location.hash.slice(1) || "map");
+
+// ── Hamburger sub-nav ─────────────────────────────────
+(function(){
+  var LABELS = { map: ["🗺","Map"], stories: ["▶","Stories & videos"], share: ["✏","Add a review"] };
+  var toggle = document.getElementById("hamburger-toggle");
+  var menu   = document.getElementById("hamburger-menu");
+  var label  = document.getElementById("tab-current-label");
+  if (!toggle) return;
+
+  function closeMenu(){ menu.hidden = true; toggle.setAttribute("aria-expanded","false"); }
+  function openMenu() { menu.hidden = false; toggle.setAttribute("aria-expanded","true"); }
+
+  toggle.addEventListener("click", function(e){
+    e.stopPropagation();
+    menu.hidden ? openMenu() : closeMenu();
+  });
+  document.addEventListener("click", function(){ closeMenu(); });
+  menu.addEventListener("click", function(e){ e.stopPropagation(); });
+
+  document.querySelectorAll(".hmenu-item").forEach(function(btn){
+    btn.addEventListener("click", function(){
+      var t = btn.dataset.htab;
+      selectTab(t);
+      document.querySelectorAll(".hmenu-item").forEach(function(b){ b.classList.remove("active"); });
+      btn.classList.add("active");
+      var l = LABELS[t];
+      label.innerHTML = '<i class="hmenu-icon">' + l[0] + '</i> ' + l[1];
+      closeMenu();
+    });
+  });
+})();
 </script>
 <!-- embedded=1: hide brand row only, keep sub-tabs visible -->
 <style id="embedded-style" media="not all">
