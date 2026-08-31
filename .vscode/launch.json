@@ -1,0 +1,37 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Gateway (port 8080)",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/gateway.py",
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal"
+    },
+    {
+      "name": "Flask AI backend",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/backend_flask/app.py",
+      "cwd": "${workspaceFolder}/backend_flask",
+      "console": "integratedTerminal"
+    },
+    {
+      "name": "Food API (uvicorn)",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "uvicorn",
+      "args": ["main:app", "--reload", "--port", "8001"],
+      "cwd": "${workspaceFolder}/food-assistant/backend",
+      "console": "integratedTerminal"
+    }
+  ],
+  "compounds": [
+    {
+      "name": "LostinSriLanka: All Servers",
+      "configurations": ["Gateway (port 8080)", "Flask AI backend", "Food API (uvicorn)"],
+      "presentation": { "order": 1 }
+    }
+  ]
+}

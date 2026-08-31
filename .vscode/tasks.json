@@ -1,0 +1,60 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Build: Portal frontend",
+      "type": "shell",
+      "command": "npm install && npm run build",
+      "options": { "cwd": "${workspaceFolder}/frontend" },
+      "group": "build",
+      "presentation": { "panel": "shared", "reveal": "always" }
+    },
+    {
+      "label": "Build: Food frontend",
+      "type": "shell",
+      "command": "npm install && npm run build",
+      "options": { "cwd": "${workspaceFolder}/food-assistant/frontend" },
+      "group": "build",
+      "presentation": { "panel": "shared", "reveal": "always" }
+    },
+    {
+      "label": "Run: Gateway (port 8080)",
+      "type": "shell",
+      "command": "python gateway.py",
+      "options": { "cwd": "${workspaceFolder}" },
+      "isBackground": true,
+      "presentation": { "panel": "dedicated", "reveal": "always", "group": "servers" },
+      "problemMatcher": []
+    },
+    {
+      "label": "Run: Flask AI backend (port 5000)",
+      "type": "shell",
+      "command": "python app.py",
+      "options": { "cwd": "${workspaceFolder}/backend_flask" },
+      "isBackground": true,
+      "presentation": { "panel": "dedicated", "reveal": "always", "group": "servers" },
+      "problemMatcher": []
+    },
+    {
+      "label": "Run: Food API (port 8001)",
+      "type": "shell",
+      "command": "uvicorn main:app --reload --port 8001",
+      "options": { "cwd": "${workspaceFolder}/food-assistant/backend" },
+      "isBackground": true,
+      "presentation": { "panel": "dedicated", "reveal": "always", "group": "servers" },
+      "problemMatcher": []
+    },
+    {
+      "label": "Start: All servers",
+      "dependsOn": [
+        "Run: Gateway (port 8080)",
+        "Run: Flask AI backend (port 5000)",
+        "Run: Food API (port 8001)"
+      ],
+      "dependsOrder": "parallel",
+      "group": { "kind": "build", "isDefault": true },
+      "presentation": { "panel": "shared", "reveal": "always" },
+      "problemMatcher": []
+    }
+  ]
+}
