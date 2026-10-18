@@ -1,0 +1,503 @@
+# labelled_by=claude. One line per sentence: number, then topic codes.
+# r=roads_access c=cleanliness f=facilities s=safety p=price_value w=crowd v=scenery
+# followed by N (complaint) P (praise) X (fact). A bare number = no topic.
+1
+2 vP
+3 cN
+4 fX
+5 fP
+6
+7 fP
+8 vP
+9 vP
+10
+11 fX
+12 rP
+13 rP
+14
+15 fP
+16 wP
+17
+18 rX
+19
+20 pX
+21
+22 fP
+23 rP
+24
+25 fP
+26 wP rX
+27
+28
+29
+30 cP vP
+31
+32 rP
+33 wP
+34
+35
+36
+37 vP
+38 fX
+39 fN
+40 cN fN
+41
+42 fP
+43 fP
+44 vX
+45 rP
+46
+47 vP
+48
+49 fP
+50 sN
+51
+52
+53 fN
+54 pN
+55 wX
+56 sX
+57 vP
+58 rP vP
+59
+60 fP
+61
+62
+63 vP
+64
+65
+66 cN
+67 wN
+68 sP
+69 fP
+70 fN
+71 vP
+72 cN
+73 vX
+74 vP
+75 fP
+76 vP
+77 fP
+78
+79 rP
+80
+81
+82 fP pP
+83 vP
+84
+85 vP
+86 fX
+87
+88
+89
+90
+91 vP
+92
+93
+94 fP
+95
+96 wX
+97 wP
+98 cN sN
+99 sN
+100 vP
+101 fP
+102 rX
+103
+104 fP pP
+105 rX
+106
+107
+108 fN
+109
+110 vP
+111 sN
+112 rP
+113
+114
+115
+116 vN
+117 vN
+118 fN
+119
+120 vP
+121
+122
+123 wN
+124
+125 cP
+126 wP vP
+127
+128
+129
+130 fP
+131
+132
+133 wN
+134
+135 vP
+136
+137 vP
+138
+139
+140 vP
+141 vX
+142
+143 pX rN
+144 wX
+145
+146 rX
+147 fP
+148 vP
+149 cP vP
+150
+151 fP
+152
+153
+154
+155 vP
+156 fX
+157
+158 rN
+159 rN
+160 rN
+161 pX fX
+162
+163
+164 vX
+165 wN
+166 fN
+167 sX
+168
+169 rP
+170
+171 fX
+172
+173 rN
+174
+175 vP
+176 vP
+177 rX
+178 fP
+179 fP
+180 vP wP
+181 fX
+182 fP
+183
+184
+185 rX
+186 fN
+187 fN
+188 vP
+189
+190 fX rX
+191 wX
+192 pP
+193 sN
+194
+195 rP
+196
+197
+198
+199
+200
+201 rX
+202 cN
+203 wP
+204
+205 vP
+206 vP
+207 pN
+208 cP wP vP
+209
+210
+211
+212 cN
+213 cN
+214
+215 rX
+216 vP
+217 wP
+218 vP
+219
+220 rX
+221 fN
+222 rN
+223 vP
+224
+225 vP
+226 wP
+227
+228 cN
+229 vP
+230 vP
+231 fN
+232 rN
+233 cP fP
+234 rX
+235 rP vP
+236 fP
+237
+238
+239
+240
+241 wN
+242
+243 pP
+244
+245
+246
+247
+248
+249 rN
+250 rX
+251
+252 pX
+253 wN sN
+254 rX
+255 wN
+256 pN
+257 pX
+258 vN
+259 fN
+260
+261 fX
+262
+263 fP pX
+264 vP
+265 vP
+266 vP
+267 vX
+268 cP
+269 vP
+270 vP
+271 fN cN
+272 sN
+273 fX
+274
+275 sN
+276 vN
+277 fP
+278
+279
+280
+281 fP
+282
+283 vP
+284 rN
+285 fP
+286 sP
+287 vP
+288 fX
+289 vX
+290
+291 vX
+292
+293 fX
+294
+295
+296 pN
+297
+298 fP pP
+299 fP vP
+300 pX
+301 fP
+302 vP
+303 cN
+304
+305 rP
+306
+307 sX
+308
+309
+310 rP
+311
+312
+313 sP
+314 fP
+315 vP
+316 rP vP
+317 fP
+318 rX
+319 pX fX
+320
+321
+322 vX
+323 rX
+324 fN
+325
+326 rP vP
+327
+328 vP
+329 fX
+330 fP
+331 fP
+332 vP
+333 vP
+334 cN
+335 wN
+336 pX
+337 vP
+338 vP
+339 vP fP
+340 sN
+341 fP
+342 fP
+343 rN
+344 vP
+345
+346 rP vP
+347 vP
+348 fX
+349 fP
+350 fX
+351 rP
+352 pP fP
+353 rP
+354 cP
+355
+356
+357
+358
+359 rN
+360
+361
+362
+363 wX
+364
+365 sN vP
+366 pN wN
+367 vP wX
+368
+369
+370
+371
+372
+373
+374 pN
+375 vP
+376
+377 wX
+378 fP
+379
+380
+381
+382 wN
+383
+384 fP
+385
+386 pN
+387 vP
+388 wN pN
+389
+390
+391
+392 fP
+393
+394 cN
+395
+396 fN
+397
+398
+399 fP
+400 fP
+401
+402
+403 wP
+404 fN
+405
+406 wP vP
+407
+408 pN
+409 fP
+410 pX
+411
+412
+413
+414
+415 vP rX
+416 wN
+417 vP
+418 vP wP
+419
+420 vN
+421
+422
+423
+424
+425
+426 fP
+427 vP
+428 fP
+429
+430 fX wN
+431 vP
+432 pP fP
+433 vX
+434
+435
+436 fP
+437 vP rX
+438
+439
+440 vP
+441
+442 fX
+443
+444
+445 vP
+446 vP
+447 fP
+448
+449
+450 cP fP
+451 pN
+452 rX
+453 fP
+454 vP
+455 vP
+456 fP
+457 fP
+458
+459 vN
+460
+461 vP
+462 fP
+463 vP
+464
+465 fP
+466
+467 rP vP
+468
+469 vP
+470 pX fX
+471
+472 rX
+473
+474 wN
+475 pN
+476 fP
+477
+478
+479 fP
+480 sN rX
+481
+482 rN
+483
+484 wN
+485
+486
+487
+488
+489 fN
+490 fP
+491
+492 rP vP
+493 fP
+494 fP
+495 vP
+496 cN
+497
+498
+499
+500 fX

@@ -72,8 +72,10 @@ def score(gold, seg, aspects):
             if sid not in seg:
                 continue
             row = seg[sid]
-            # The union tagger is what the tree is built from where present.
-            pred = bool(row.get(ucol, row.get(col, False)))
+            # Score whatever the tree is built from: the deployed final topic
+            # model (fAsp_, scripts/62) when present, else the union tagger,
+            # else the lexicon.
+            pred = bool(row.get("fAsp_" + a, row.get(ucol, row.get(col, False))))
             # pandas reads an empty cell as NaN, and str(nan) is "nan"
             # -- truthy. That made every row count as a human positive,
             # so precision came out 1.000 for every aspect.
@@ -107,6 +109,13 @@ def main():
 
     u = pd.read_csv(C.DATA_PROCESSED / "segments_tagged_union.csv",
                     low_memory=False)
+    final_cols = [c for c in pd.read_csv(C.DATA_PROCESSED / "segments_scored.csv", nrows=0).columns
+                  if c.startswith("fAsp_")]
+    if final_cols:
+        f = pd.read_csv(C.DATA_PROCESSED / "segments_scored.csv",
+                        usecols=["segment_id"] + final_cols).drop_duplicates("segment_id")
+        u = u.merge(f, on="segment_id", how="left")
+        print("  scoring the deployed final topic model (fAsp_ columns)")
     seg = {str(r["segment_id"]): r for r in u.to_dict("records")}
     aspects = [a for a in ASPECTS if a in gold.columns]
 

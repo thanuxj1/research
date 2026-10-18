@@ -136,16 +136,18 @@ def load_pairs() -> Dict:
         usecols=["segment_id", "segment", "pol_final", "pol_lexicon"],
     ).drop_duplicates("segment_id").set_index("segment_id")
 
+    final = _final_verdicts()
     rows, missed = [], 0
     for r in a1.to_dict("records"):
         sid = str(r["segment_id"])
         if sid not in scored.index:
             continue
         s = scored.loc[sid]
-        if pd.isna(s["pol_final"]):
+        if final is None and pd.isna(s["pol_final"]):
             continue
         text = str(s["segment"])
-        found = tag_segment(text)
+        found = (final["tags"].get(sid, set()) if final is not None
+                 else tag_segment(text))
         # `part` is the column the sampler writes; sample_reason is the older
         # way of recovering it and is kept as a fallback so an earlier gold
         # file still evaluates.
@@ -162,19 +164,47 @@ def load_pairs() -> Dict:
             if a not in found:
                 missed += 1                    # extraction miss, 38's business
                 continue
-            pred, _, _ = aspect_polarity(text, a, s["pol_final"], s["pol_lexicon"])
+            if final is not None:
+                pred = final["verdict"][(sid, a)]
+            else:
+                pred, _, _ = aspect_polarity(text, a, s["pol_final"], s["pol_lexicon"])
             rows.append({
                 "segment_id": sid, "part": part, "aspect": a,
                 "human1": human1,
                 "human2": _verdict(other.get(a)) if other is not None else None,
                 "pred": pred,
             })
-    supp, supp_note = load_supplementary(scored)
+    if final is not None:
+        # The 420 supplementary pairs TRAINED the deployed verdict model
+        # (scripts/58, 61), so scoring it on them would be training accuracy.
+        # They stay out of every figure while that model is deployed.
+        supp = pd.DataFrame(columns=["segment_id", "part", "aspect", "human1", "human2", "pred"])
+        supp_note = {"status": "excluded",
+                     "reason": "these pairs were used to train the deployed verdict model "
+                               "(fine-tuned RoBERTa); scoring it on them would be training accuracy"}
+    else:
+        supp, supp_note = load_supplementary(scored)
     pairs = pd.DataFrame(rows)
     if len(supp):
         pairs = pd.concat([pairs, supp], ignore_index=True)
     return {"pairs": pairs, "extraction_misses": missed,
             "supplementary": supp_note}
+
+
+def _final_verdicts():
+    """Deployed final-model tags and verdicts (scripts/62), or None if not deployed."""
+    from .final_models import VERDICT_CSV
+    scored_path = C.DATA_PROCESSED / "segments_scored.csv"
+    cols = pd.read_csv(scored_path, nrows=0).columns
+    fcols = [c for c in cols if c.startswith("fAsp_")]
+    if not VERDICT_CSV.exists() or not fcols:
+        return None
+    v = pd.read_csv(VERDICT_CSV)
+    tags = {}
+    for sid, a in zip(v["segment_id"].astype(str), v["aspect"]):
+        tags.setdefault(sid, set()).add(a)
+    return {"tags": tags,
+            "verdict": {(str(s), a): p for s, a, p in zip(v["segment_id"], v["aspect"], v["pol_fm"])}}
 
 
 def load_supplementary(scored: pd.DataFrame):

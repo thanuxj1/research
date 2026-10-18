@@ -1,0 +1,4603 @@
+{
+ "what_this_is": "Topic detection: train, test and compare candidate models.",
+ "selection_rule": "highest 5-fold cross-validated macro-F1 on the training set; within 0.01, prefer simpler/faster",
+ "data": {
+  "train_sentences": 1500,
+  "test_random_sentences": 800,
+  "gold_A_sentences": 120,
+  "gold_B_sentences": 80,
+  "train_labels": "AI-annotated (Claude), calibrated against the human gold set",
+  "test_random_labels": "AI-annotated (Claude), random sample, never trained or tuned on",
+  "gold_labels": "human, two independent readers, four topics"
+ },
+ "ranking_by_cv": [
+  "H Embeddings + RBF SVM OR lexicon",
+  "H Fine-tuned RoBERTa-base (125M) OR lexicon",
+  "M9 Fine-tuned RoBERTa-base (125M)",
+  "H Embeddings + Logistic Regression OR lexicon",
+  "M5 Embeddings + RBF SVM",
+  "H Embeddings + XGBoost OR lexicon",
+  "H TF-IDF + Linear SVM OR lexicon",
+  "H TF-IDF + Logistic Regression OR lexicon",
+  "H Fine-tuned bge-small (33M) OR lexicon",
+  "H TF-IDF + Naive Bayes OR lexicon",
+  "M4 Embeddings + Logistic Regression",
+  "M3 TF-IDF + Linear SVM",
+  "M8 Fine-tuned bge-small (33M)",
+  "M6 Embeddings + XGBoost",
+  "M2 TF-IDF + Logistic Regression",
+  "M0 Rule lexicon (deployed)",
+  "M1 TF-IDF + Naive Bayes",
+  "M7 Zero-shot NLI (DistilBERT-MNLI)"
+ ],
+ "best_by_cv": "H Embeddings + RBF SVM OR lexicon",
+ "models": {
+  "M0 Rule lexicon (deployed)": {
+   "meta": {
+    "family": "rules",
+    "trained": false,
+    "fit_seconds": 0,
+    "ms_per_item": null
+   },
+   "thresholds": [
+    0.5,
+    0.5,
+    0.5,
+    0.5,
+    0.5,
+    0.5,
+    0.5
+   ],
+   "cv": {
+    "macro_f1": 0.695,
+    "per_topic_f1": {
+     "roads_access": 0.637,
+     "cleanliness": 0.898,
+     "facilities": 0.458,
+     "safety": 0.647,
+     "price_value": 0.822,
+     "crowd": 0.726,
+     "scenery": 0.68
+    },
+    "fold_macro_f1": [
+     0.669,
+     0.723,
+     0.686,
+     0.704,
+     0.671
+    ],
+    "fold_sd": 0.02
+   },
+   "test_random": {
+    "per_topic": {
+     "roads_access": {
+      "precision": 0.766,
+      "recall": 0.563,
+      "f1": 0.649,
+      "tp": 49,
+      "fp": 15,
+      "fn": 38
+     },
+     "cleanliness": {
+      "precision": 0.862,
+      "recall": 0.758,
+      "f1": 0.806,
+      "tp": 25,
+      "fp": 4,
+      "fn": 8
+     },
+     "facilities": {
+      "precision": 0.844,
+      "recall": 0.247,
+      "f1": 0.382,
+      "tp": 38,
+      "fp": 7,
+      "fn": 116
+     },
+     "safety": {
+      "precision": 0.846,
+      "recall": 0.344,
+      "f1": 0.489,
+      "tp": 11,
+      "fp": 2,
+      "fn": 21
+     },
+     "price_value": {
+      "precision": 0.879,
+      "recall": 0.644,
+      "f1": 0.744,
+      "tp": 29,
+      "fp": 4,
+      "fn": 16
+     },
+     "crowd": {
+      "precision": 0.9,
+      "recall": 0.679,
+      "f1": 0.774,
+      "tp": 36,
+      "fp": 4,
+      "fn": 17
+     },
+     "scenery": {
+      "precision": 0.601,
+      "recall": 0.698,
+      "f1": 0.646,
+      "tp": 113,
+      "fp": 75,
+      "fn": 49
+     }
+    },
+    "macro_f1": 0.641,
+    "macro_f1_ci95": [
+     0.596,
+     0.682
+    ],
+    "macro_precision": 0.814,
+    "macro_recall": 0.562,
+    "micro_f1": 0.616,
+    "label_accuracy": 0.933,
+    "exact_match": 0.601,
+    "n": 800
+   },
+   "gold_A_reader1": {
+    "per_topic": {
+     "roads_access": {
+      "precision": 0.633,
+      "recall": 0.826,
+      "f1": 0.717,
+      "tp": 19,
+      "fp": 11,
+      "fn": 4
+     },
+     "cleanliness": {
+      "precision": 0.844,
+      "recall": 0.964,
+      "f1": 0.9,
+      "tp": 27,
+      "fp": 5,
+      "fn": 1
+     },
+     "facilities": {
+      "precision": 0.805,
+      "recall": 0.846,
+      "f1": 0.825,
+      "tp": 33,
+      "fp": 8,
+      "fn": 6
+     },
+     "safety": {
+      "precision": 0.917,
+      "recall": 0.733,
+      "f1": 0.815,
+      "tp": 11,
+      "fp": 1,
+      "fn": 4
+     }
+    },
+    "macro_f1": 0.814,
+    "macro_f1_ci95": [
+     0.739,
+     0.872
+    ],
+    "macro_precision": 0.8,
+    "macro_recall": 0.842,
+    "micro_f1": 0.818,
+    "label_accuracy": 0.917,
+    "exact_match": 0.708,
+    "n": 120
+   },
+   "gold_A_reader2": {
+    "per_topic": {
+     "roads_access": {
+      "precision": 0.567,
+      "recall": 0.773,
+      "f1": 0.654,
+      "tp": 17,
+      "fp": 13,
+      "fn": 5
+     },
+     "cleanliness": {
+      "precision": 0.75,
+      "recall": 0.96,
+      "f1": 0.842,
+      "tp": 24,
+      "fp": 8,
+      "fn": 1
+     },
+     "facilities": {
+      "precision": 0.707,
+      "recall": 0.853,
+      "f1": 0.773,
+      "tp": 29,
+      "fp": 12,
+      "fn": 5
+     },
+     "safety": {
+      "precision": 0.833,
+      "recall": 1.0,
+      "f1": 0.909,
+      "tp": 10,
+      "fp": 2,
+      "fn": 0
+     }
+    },
+    "macro_f1": 0.794,
+    "macro_f1_ci95": [
+     0.726,
+     0.85
+    ],
+    "macro_precision": 0.714,
+    "macro_recall": 0.897,
+    "micro_f1": 0.777,
+    "label_accuracy": 0.904,
+    "exact_match": 0.675,
+    "n": 120
+   },
+   "gold_B_reader1": {
+    "per_topic": {
+     "roads_access": {
+      "precision": 0.75,
+      "recall": 0.875,
+      "f1": 0.808,
+      "tp": 21,
+      "fp": 7,
+      "fn": 3
+     },
+     "cleanliness": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "tp": 17,
+      "fp": 0,
+      "fn": 0
+     },
+     "facilities": {
+      "precision": 0.619,
+      "recall": 0.867,
+      "f1": 0.722,
+      "tp": 13,
+      "fp": 8,
+      "fn": 2
+     },
+     "safety": {
+      "precision": 0.938,
+      "recall": 0.75,
+      "f1": 0.833,
+      "tp": 15,
+      "fp": 1,
+      "fn": 5
+     }
+    },
+    "macro_f1": 0.841,
+    "macro_f1_ci95": [
+     0.769,
+     0.895
+    ],
+    "macro_precision": 0.827,
+    "macro_recall": 0.873,
+    "micro_f1": 0.835,
+    "label_accuracy": 0.919,
+    "exact_match": 0.725,
+    "n": 80
+   }
+  },
+  "M1 TF-IDF + Naive Bayes": {
+   "meta": {
+    "family": "classical ML",
+    "trained": true,
+    "fit_seconds": 0.92,
+    "ms_per_item": 0.02
+   },
+   "thresholds": [
+    0.4299,
+    0.4738,
+    0.578,
+    0.0637,
+    0.3257,
+    0.2021,
+    0.1768
+   ],
+   "cv": {
+    "macro_f1": 0.678,
+    "per_topic_f1": {
+     "roads_access": 0.687,
+     "cleanliness": 0.692,
+     "facilities": 0.642,
+     "safety": 0.556,
+     "price_value": 0.795,
+     "crowd": 0.7,
+     "scenery": 0.677
+    },
+    "fold_macro_f1": [
+     0.66,
+     0.691,
+     0.683,
+     0.687,
+     0.671
+    ],
+    "fold_sd": 0.011
+   },
+   "test_random": {
+    "per_topic": {
+     "roads_access": {
+      "precision": 0.584,
+      "recall": 0.517,
+      "f1": 0.549,
+      "tp": 45,
+      "fp": 32,
+      "fn": 42,
+      "pr_auc": 0.601
+     },
+     "cleanliness": {
+      "precision": 0.842,
+      "recall": 0.485,
+      "f1": 0.615,
+      "tp": 16,
+      "fp": 3,
+      "fn": 17,
+      "pr_auc": 0.623
+     },
+     "facilities": {
+      "precision": 0.712,
+      "recall": 0.578,
+      "f1": 0.638,
+      "tp": 89,
+      "fp": 36,
+      "fn": 65,
+      "pr_auc": 0.717
+     },
+     "safety": {
+      "precision": 0.593,
+      "recall": 0.5,
+      "f1": 0.542,
+      "tp": 16,
+      "fp": 11,
+      "fn": 16,
+      "pr_auc": 0.516
+     },
+     "price_value": {
+      "precision": 0.714,
+      "recall": 0.667,
+      "f1": 0.69,
+      "tp": 30,
+      "fp": 12,
+      "fn": 15,
+      "pr_auc": 0.719
+     },
+     "crowd": {
+      "precision": 0.667,
+      "recall": 0.491,
+      "f1": 0.565,
+      "tp": 26,
+      "fp": 13,
+      "fn": 27,
+      "pr_auc": 0.624
+     },
+     "scenery": {
+      "precision": 0.638,
+      "recall": 0.728,
+      "f1": 0.68,
+      "tp": 118,
+      "fp": 67,
+      "fn": 44,
+      "pr_auc": 0.772
+     }
+    },
+    "macro_f1": 0.611,
+    "macro_f1_ci95": [
+     0.565,
+     0.653
+    ],
+    "macro_precision": 0.679,
+    "macro_recall": 0.567,
+    "micro_f1": 0.63,
+    "label_accuracy": 0.929,
+    "exact_match": 0.591,
+    "n": 800
+   },
+   "gold_A_reader1": {
+    "per_topic": {
+     "roads_access": {
+      "precision": 0.583,
+      "recall": 0.609,
+      "f1": 0.596,
+      "tp": 14,
+      "fp": 10,
+      "fn": 9
+     },
+     "cleanliness": {
+      "precision": 1.0,
+      "recall": 0.464,
+      "f1": 0.634,
+      "tp": 13,
+      "fp": 0,
+      "fn": 15
+     },
+     "facilities": {
+      "precision": 0.897,
+      "recall": 0.667,
+      "f1": 0.765,
+      "tp": 26,
+      "fp": 3,
+      "fn": 13
+     },
+     "safety": {
+      "precision": 0.75,
+      "recall": 0.4,
+      "f1": 0.522,
+      "tp": 6,
+      "fp": 2,
+      "fn": 9
+     }
+    },
+    "macro_f1": 0.629,
+    "macro_f1_ci95": [
+     0.524,
+     0.707
+    ],
+    "macro_precision": 0.807,
+    "macro_recall": 0.535,
+    "micro_f1": 0.659,
+    "label_accuracy": 0.873,
+    "exact_match": 0.567,
+    "n": 120
+   },
+   "gold_A_reader2": {
+    "per_topic": {
+     "roads_access": {
+      "precision": 0.667,
+      "recall": 0.727,
+      "f1": 0.696,
+      "tp": 16,
+      "fp": 8,
+      "fn": 6
+     },
+     "cleanliness": {
+      "precision": 0.923,
+      "recall": 0.48,
+      "f1": 0.632,
+      "tp": 12,
+      "fp": 1,
+      "fn": 13
+     },
+     "facilities": {
+      "precision": 0.828,
+      "recall": 0.706,
+      "f1": 0.762,
+      "tp": 24,
+      "fp": 5,
+      "fn": 10
+     },
+     "safety": {
+      "precision": 0.875,
+      "recall": 0.7,
+      "f1": 0.778,
+      "tp": 7,
+      "fp": 1,
+      "fn": 3
+     }
+    },
+    "macro_f1": 0.717,
+    "macro_f1_ci95": [
+     0.612,
+     0.795
+    ],
+    "macro_precision": 0.823,
+    "macro_recall": 0.653,
+    "micro_f1": 0.715,
+    "label_accuracy": 0.902,
+    "exact_match": 0.667,
+    "n": 120
+   },
+   "gold_B_reader1": {
+    "per_topic": {
+     "roads_access": {
+      "precision": 0.875,
+      "recall": 0.583,
+      "f1": 0.7,
+      "tp": 14,
+      "fp": 2,
+      "fn": 10
+     },
+     "cleanliness": {
+      "precision": 0.938,
+      "recall": 0.882,
+      "f1": 0.909,
+      "tp": 15,
+      "fp": 1,
+      "fn": 2
+     },
+     "facilities": {
+      "precision": 0.583,
+      "recall": 0.467,
+      "f1": 0.519,
+      "tp": 7,
+      "fp": 5,
+      "fn": 8
+     },
+     "safety": {
+      "precision": 0.923,
+      "recall": 0.6,
+      "f1": 0.727,
+      "tp": 12,
+      "fp": 1,
+      "fn": 8
+     }
+    },
+    "macro_f1": 0.714,
+    "macro_f1_ci95": [
+     0.608,
+     0.803
+    ],
+    "macro_precision": 0.83,
+    "macro_recall": 0.633,
+    "micro_f1": 0.722,
+    "label_accuracy": 0.884,
+    "exact_match": 0.65,
+    "n": 80
+   }
+  },
+  "M2 TF-IDF + Logistic Regression": {
+   "meta": {
+    "family": "classical ML",
+    "trained": true,
+    "fit_seconds": 4.62,
+    "ms_per_item": 0.01
+   },
+   "thresholds": [
+    0.3807,
+    0.4189,
+    0.4978,
+    0.311,
+    0.3451,
+    0.4544,
+    0.4184
+   ],
+   "cv": {
+    "macro_f1": 0.725,
+    "per_topic_f1": {
+     "roads_access": 0.752,
+     "cleanliness": 0.79,
+     "facilities": 0.662,
+     "safety": 0.587,
+     "price_value": 0.82,
+     "crowd": 0.763,
+     "scenery": 0.698
+    },
+    "fold_macro_f1": [
+     0.729,
+     0.744,
+     0.751,
+     0.688,
+     0.717
+    ],
+    "fold_sd": 0.022
+   },
+   "test_random": {
+    "per_topic": {
+     "roads_access": {
+      "precision": 0.606,
+      "recall": 0.724,
+      "f1": 0.66,
+      "tp": 63,
+      "fp": 41,
+      "fn": 24,
+      "pr_auc": 0.706
+     },
+     "cleanliness": {
+      "precision": 0.913,
+      "recall": 0.636,
+      "f1": 0.75,
+      "tp": 21,
+      "fp": 2,
+      "fn": 12,
+      "pr_auc": 0.788
+     },
+     "facilities": {
+      "precision": 0.703,
+      "recall": 0.662,
+      "f1": 0.682,
+      "tp": 102,
+      "fp": 43,
+      "fn": 52,
+      "pr_auc": 0.787
+     },
+     "safety": {
+      "precision": 0.684,
+      "recall": 0.406,
+      "f1": 0.51,
+      "tp": 13,
+      "fp": 6,
+      "fn": 19,
+      "pr_auc": 0.561
+     },
+     "price_value": {
+      "precision": 0.698,
+      "recall": 0.822,
+      "f1": 0.755,
+      "tp": 37,
+      "fp": 16,
+      "fn": 8,
+      "pr_auc": 0.845
+     },
+     "crowd": {
+      "precision": 0.829,
+      "recall": 0.547,
+      "f1": 0.659,
+      "tp": 29,
+      "fp": 6,
+      "fn": 24,
+      "pr_auc": 0.702
+     },
+     "scenery": {
+      "precision": 0.672,
+      "recall": 0.759,
+      "f1": 0.713,
+      "tp": 123,
+      "fp": 60,
+      "fn": 39,
+      "pr_auc": 0.788
+     }
+    },
+    "macro_f1": 0.676,
+    "macro_f1_ci95": [
+     0.632,
+     0.712
+    ],
+    "macro_precision": 0.729,
+    "macro_recall": 0.651,
+    "micro_f1": 0.688,
+    "label_accuracy": 0.937,
+    "exact_match": 0.634,
+    "n": 800
+   },
+   "gold_A_reader1": {
+    "per_topic": {
+     "roads_access": {
+      "precision": 0.447,
+      "recall": 0.739,
+      "f1": 0.557,
+      "tp": 17,
+      "fp": 21,
+      "fn": 6
+     },
+     "cleanliness": {
+      "precision": 0.95,
+      "recall": 0.679,
+      "f1": 0.792,
+      "tp": 19,
+      "fp": 1,
+      "fn": 9
+     },
+     "facilities": {
+      "precision": 0.806,
+      "recall": 0.744,
+      "f1": 0.773,
+      "tp": 29,
+      "fp": 7,
+      "fn": 10
+     },
+     "safety": {
+      "precision": 0.846,
+      "recall": 0.733,
+      "f1": 0.786,
+      "tp": 11,
+      "fp": 2,
+      "fn": 4
+     }
+    },
+    "macro_f1": 0.727,
+    "macro_f1_ci95": [
+     0.642,
+     0.793
+    ],
+    "macro_precision": 0.762,
+    "macro_recall": 0.724,
+    "micro_f1": 0.717,
+    "label_accuracy": 0.875,
+    "exact_match": 0.6,
+    "n": 120
+   },
+   "gold_A_reader2": {
+    "per_topic": {
+     "roads_access": {
+      "precision": 0.474,
+      "recall": 0.818,
+      "f1": 0.6,
+      "tp": 18,
+      "fp": 20,
+      "fn": 4
+     },
+     "cleanliness": {
+      "precision": 0.85,
+      "recall": 0.68,
+      "f1": 0.756,
+      "tp": 17,
+      "fp": 3,
+      "fn": 8
+     },
+     "facilities": {
+      "precision": 0.75,
+      "recall": 0.794,
+      "f1": 0.771,
+      "tp": 27,
+      "fp": 9,
+      "fn": 7
+     },
+     "safety": {
+      "precision": 0.769,
+      "recall": 1.0,
+      "f1": 0.87,
+      "tp": 10,
+      "fp": 3,
+      "fn": 0
+     }
+    },
+    "macro_f1": 0.749,
+    "macro_f1_ci95": [
+     0.668,
+     0.81
+    ],
+    "macro_precision": 0.711,
+    "macro_recall": 0.823,
+    "micro_f1": 0.727,
+    "label_accuracy": 0.887,
+    "exact_match": 0.625,
+    "n": 120
+   },
+   "gold_B_reader1": {
+    "per_topic": {
+     "roads_access": {
+      "precision": 0.87,
+      "recall": 0.833,
+      "f1": 0.851,
+      "tp": 20,
+      "fp": 3,
+      "fn": 4
+     },
+     "cleanliness": {
+      "precision": 0.933,
+      "recall": 0.824,
+      "f1": 0.875,
+      "tp": 14,
+      "fp": 1,
+      "fn": 3
+     },
+     "facilities": {
+      "precision": 0.579,
+      "recall": 0.733,
+      "f1": 0.647,
+      "tp": 11,
+      "fp": 8,
+      "fn": 4
+     },
+     "safety": {
+      "precision": 0.929,
+      "recall": 0.65,
+      "f1": 0.765,
+      "tp": 13,
+      "fp": 1,
+      "fn": 7
+     }
+    },
+    "macro_f1": 0.785,
+    "macro_f1_ci95": [
+     0.695,
+     0.857
+    ],
+    "macro_precision": 0.828,
+    "macro_recall": 0.76,
+    "micro_f1": 0.789,
+    "label_accuracy": 0.903,
+    "exact_match": 0.688,
+    "n": 80
+   }
+  },
+  "M3 TF-IDF + Linear SVM": {
+   "meta": {
+    "family": "classical ML",
+    "trained": true,
+    "fit_seconds": 1.11,
+    "ms_per_item": 0.008
+   },
+   "thresholds": [
+    -0.1695,
+    -0.2456,
+    -0.0191,
+    -0.3449,
+    -0.1201,
+    -0.066,
+    -0.0778
+   ],
+   "cv": {
+    "macro_f1": 0.733,
+    "per_topic_f1": {
+     "roads_access": 0.769,
+     "cleanliness": 0.805,
+     "facilities": 0.662,
+     "safety": 0.606,
+     "price_value": 0.822,
+     "crowd": 0.78,
+     "scenery": 0.685
+    },
+    "fold_macro_f1": [
+     0.753,
+     0.75,
+     0.747,
+     0.685,
+     0.732
+    ],
+    "fold_sd": 0.025
+   },
+   "test_random": {
+    "per_topic": {
+     "roads_access": {
+      "precision": 0.633,
+      "recall": 0.713,
+      "f1": 0.67,
+      "tp": 62,
+      "fp": 36,
+      "fn": 25,
+      "pr_auc": 0.704
+     },
+     "cleanliness": {
+      "precision": 0.774,
+      "recall": 0.727,
+      "f1": 0.75,
+      "tp": 24,
+      "fp": 7,
+      "fn": 9,
+      "pr_auc": 0.81
+     },
+     "facilities": {
+      "precision": 0.701,
+      "recall": 0.623,
+      "f1": 0.66,
+      "tp": 96,
+      "fp": 41,
+      "fn": 58,
+      "pr_auc": 0.774
+     },
+     "safety": {
+      "precision": 0.571,
+      "recall": 0.5,
+      "f1": 0.533,
+      "tp": 16,
+      "fp": 12,
+      "fn": 16,
+      "pr_auc": 0.577
+     },
+     "price_value": {
+      "precision": 0.791,
+      "recall": 0.756,
+      "f1": 0.773,
+      "tp": 34,
+      "fp": 9,
+      "fn": 11,
+      "pr_auc": 0.85
+     },
+     "crowd": {
+      "precision": 0.794,
+      "recall": 0.509,
+      "f1": 0.621,
+      "tp": 27,
+      "fp": 7,
+      "fn": 26,
+      "pr_auc": 0.715
+     },
+     "scenery": {
+      "precision": 0.694,
+      "recall": 0.728,
+      "f1": 0.711,
+      "tp": 118,
+      "fp": 52,
+      "fn": 44,
+      "pr_auc": 0.788
+     }
+    },
+    "macro_f1": 0.674,
+    "macro_f1_ci95": [
+     0.632,
+     0.71
+    ],
+    "macro_precision": 0.708,
+    "macro_recall": 0.651,
+    "micro_f1": 0.681,
+    "label_accuracy": 0.937,
+    "exact_match": 0.631,
+    "n": 800
+   },
+   "gold_A_reader1": {
+    "per_topic": {
+     "roads_access": {
+      "precision": 0.432,
+      "recall": 0.696,
+      "f1": 0.533,
+      "tp": 16,
+      "fp": 21,
+      "fn": 7
+     },
+     "cleanliness": {
+      "precision": 0.92,
+      "recall": 0.821,
+      "f1": 0.868,
+      "tp": 23,
+      "fp": 2,
+      "fn": 5
+     },
+     "facilities": {
+      "precision": 0.829,
+      "recall": 0.744,
+      "f1": 0.784,
+      "tp": 29,
+      "fp": 6,
+      "fn": 10
+     },
+     "safety": {
+      "precision": 0.786,
+      "recall": 0.733,
+      "f1": 0.759,
+      "tp": 11,
+      "fp": 3,
+      "fn": 4
+     }
+    },
+    "macro_f1": 0.736,
+    "macro_f1_ci95": [
+     0.654,
+     0.798
+    ],
+    "macro_precision": 0.742,
+    "macro_recall": 0.749,
+    "micro_f1": 0.731,
+    "label_accuracy": 0.879,
+    "exact_match": 0.608,
+    "n": 120
+   },
+   "gold_A_reader2": {
+    "per_topic": {
+     "roads_access": {
+      "precision": 0.486,
+      "recall": 0.818,
+      "f1": 0.61,
+      "tp": 18,
+      "fp": 19,
+      "fn": 4
+     },
+     "cleanliness": {
+      "precision": 0.84,
+      "recall": 0.84,
+      "f1": 0.84,
+      "tp": 21,
+      "fp": 4,
+      "fn": 4
+     },
+     "facilities": {
+      "precision": 0.771,
+      "recall": 0.794,
+      "f1": 0.783,
+      "tp": 27,
+      "fp": 8,
+      "fn": 7
+     },
+     "safety": {
+      "precision": 0.714,
+      "recall": 1.0,
+      "f1": 0.833,
+      "tp": 10,
+      "fp": 4,
+      "fn": 0
+     }
+    },
+    "macro_f1": 0.766,
+    "macro_f1_ci95": [
+     0.689,
+     0.824
+    ],
+    "macro_precision": 0.703,
+    "macro_recall": 0.863,
+    "micro_f1": 0.752,
+    "label_accuracy": 0.896,
+    "exact_match": 0.642,
+    "n": 120
+   },
+   "gold_B_reader1": {
+    "per_topic": {
+     "roads_access": {
+      "precision": 0.808,
+      "recall": 0.875,
+      "f1": 0.84,
+      "tp": 21,
+      "fp": 5,
+      "fn": 3
+     },
+     "cleanliness": {
+      "precision": 0.941,
+      "recall": 0.941,
+      "f1": 0.941,
+      "tp": 16,
+      "fp": 1,
+      "fn": 1
+     },
+     "facilities": {
+      "precision": 0.579,
+      "recall": 0.733,
+      "f1": 0.647,
+      "tp": 11,
+      "fp": 8,
+      "fn": 4
+     },
+     "safety": {
+      "precision": 0.875,
+      "recall": 0.7,
+      "f1": 0.778,
+      "tp": 14,
+      "fp": 2,
+      "fn": 6
+     }
+    },
+    "macro_f1": 0.801,
+    "macro_f1_ci95": [
+     0.721,
+     0.866
+    ],
+    "macro_precision": 0.801,
+    "macro_recall": 0.812,
+    "micro_f1": 0.805,
+    "label_accuracy": 0.906,
+    "exact_match": 0.688,
+    "n": 80
+   }
+  },
+  "M4 Embeddings + Logistic Regression": {
+   "meta": {
+    "family": "embeddings + classical ML",
+    "trained": true,
+    "fit_seconds": 0.4,
+    "ms_per_item": 0.022
+   },
+   "thresholds": [
+    0.6432,
+    0.7211,
+    0.6104,
+    0.8382,
+    0.7358,
+    0.704,
+    0.741
+   ],
+   "cv": {
+    "macro_f1": 0.763,
+    "per_topic_f1": {
+     "roads_access": 0.77,
+     "cleanliness": 0.8,
+     "facilities": 0.688,
+     "safety": 0.655,
+     "price_value": 0.888,
+     "crowd": 0.787,
+     "scenery": 0.752
+    },
+    "fold_macro_f1": [
+     0.772,
+     0.769,
+     0.782,
+     0.727,
+     0.752
+    ],
+    "fold_sd": 0.019
+   },
+   "test_random": {
+    "per_topic": {
+     "roads_access": {
+      "precision": 0.741,
+      "recall": 0.69,
+      "f1": 0.714,
+      "tp": 60,
+      "fp": 21,
+      "fn": 27,
+      "pr_auc": 0.789
+     },
+     "cleanliness": {
+      "precision": 0.862,
+      "recall": 0.758,
+      "f1": 0.806,
+      "tp": 25,
+      "fp": 4,
+      "fn": 8,
+      "pr_auc": 0.822
+     },
+     "facilities": {
+      "precision": 0.66,
+      "recall": 0.682,
+      "f1": 0.671,
+      "tp": 105,
+      "fp": 54,
+      "fn": 49,
+      "pr_auc": 0.769
+     },
+     "safety": {
+      "precision": 0.952,
+      "recall": 0.625,
+      "f1": 0.755,
+      "tp": 20,
+      "fp": 1,
+      "fn": 12,
+      "pr_auc": 0.815
+     },
+     "price_value": {
+      "precision": 0.941,
+      "recall": 0.711,
+      "f1": 0.81,
+      "tp": 32,
+      "fp": 2,
+      "fn": 13,
+      "pr_auc": 0.881
+     },
+     "crowd": {
+      "precision": 0.658,
+      "recall": 0.472,
+      "f1": 0.549,
+      "tp": 25,
+      "fp": 13,
+      "fn": 28,
+      "pr_auc": 0.622
+     },
+     "scenery": {
+      "precision": 0.821,
+      "recall": 0.735,
+      "f1": 0.775,
+      "tp": 119,
+      "fp": 26,
+      "fn": 43,
+      "pr_auc": 0.869
+     }
+    },
+    "macro_f1": 0.726,
+    "macro_f1_ci95": [
+     0.685,
+     0.76
+    ],
+    "macro_precision": 0.805,
+    "macro_recall": 0.668,
+    "micro_f1": 0.719,
+    "label_accuracy": 0.946,
+    "exact_match": 0.671,
+    "n": 800
+   },
+   "gold_A_reader1": {
+    "per_topic": {
+     "roads_access": {
+      "precision": 0.5,
+      "recall": 0.652,
+      "f1": 0.566,
+      "tp": 15,
+      "fp": 15,
+      "fn": 8
+     },
+     "cleanliness": {
+      "precision": 1.0,
+      "recall": 0.857,
+      "f1": 0.923,
+      "tp": 24,
+      "fp": 0,
+      "fn": 4
+     },
+     "facilities": {
+      "precision": 0.788,
+      "recall": 0.667,
+      "f1": 0.722,
+      "tp": 26,
+      "fp": 7,
+      "fn": 13
+     },
+     "safety": {
+      "precision": 1.0,
+      "recall": 0.4,
+      "f1": 0.571,
+      "tp": 6,
+      "fp": 0,
+      "fn": 9
+     }
+    },
+    "macro_f1": 0.696,
+    "macro_f1_ci95": [
+     0.598,
+     0.767
+    ],
+    "macro_precision": 0.822,
+    "macro_recall": 0.644,
+    "micro_f1": 0.717,
+    "label_accuracy": 0.883,
+    "exact_match": 0.583,
+    "n": 120
+   },
+   "gold_A_reader2": {
+    "per_topic": {
+     "roads_access": {
+      "precision": 0.533,
+      "recall": 0.727,
+      "f1": 0.615,
+      "tp": 16,
+      "fp": 14,
+      "fn": 6
+     },
+     "cleanliness": {
+      "precision": 0.917,
+      "recall": 0.88,
+      "f1": 0.898,
+      "tp": 22,
+      "fp": 2,
+      "fn": 3
+     },
+     "facilities": {
+      "precision": 0.727,
+      "recall": 0.706,
+      "f1": 0.716,
+      "tp": 24,
+      "fp": 9,
+      "fn": 10
+     },
+     "safety": {
+      "precision": 1.0,
+      "recall": 0.6,
+      "f1": 0.75,
+      "tp": 6,
+      "fp": 0,
+      "fn": 4
+     }
+    },
+    "macro_f1": 0.745,
+    "macro_f1_ci95": [
+     0.642,
+     0.819
+    ],
+    "macro_precision": 0.794,
+    "macro_recall": 0.728,
+    "micro_f1": 0.739,
+    "label_accuracy": 0.9,
+    "exact_match": 0.65,
+    "n": 120
+   },
+   "gold_B_reader1": {
+    "per_topic": {
+     "roads_access": {
+      "precision": 0.792,
+      "recall": 0.792,
+      "f1": 0.792,
+      "tp": 19,
+      "fp": 5,
+      "fn": 5
+     },
+     "cleanliness": {
+      "precision": 1.0,
+      "recall": 0.941,
+      "f1": 0.97,
+      "tp": 16,
+      "fp": 0,
+      "fn": 1
+     },
+     "facilities": {
+      "precision": 0.611,
+      "recall": 0.733,
+      "f1": 0.667,
+      "tp": 11,
+      "fp": 7,
+      "fn": 4
+     },
+     "safety": {
+      "precision": 0.818,
+      "recall": 0.45,
+      "f1": 0.581,
+      "tp": 9,
+      "fp": 2,
+      "fn": 11
+     }
+    },
+    "macro_f1": 0.753,
+    "macro_f1_ci95": [
+     0.667,
+     0.82
+    ],
+    "macro_precision": 0.805,
+    "macro_recall": 0.729,
+    "micro_f1": 0.759,
+    "label_accuracy": 0.891,
+    "exact_match": 0.613,
+    "n": 80
+   }
+  },
+  "M5 Embeddings + RBF SVM": {
+   "meta": {
+    "family": "embeddings + classical ML",
+    "trained": true,
+    "fit_seconds": 1.83,
+    "ms_per_item": 1.802
+   },
+   "thresholds": [
+    -0.0306,
+    -0.1947,
+    0.0039,
+    -0.0453,
+    -0.2625,
+    -0.1353,
+    -0.193
+   ],
+   "cv": {
+    "macro_f1": 0.791,
+    "per_topic_f1": {
+     "roads_access": 0.803,
+     "cleanliness": 0.862,
+     "facilities": 0.734,
+     "safety": 0.673,
+     "price_value": 0.894,
+     "crowd": 0.789,
+     "scenery": 0.784
+    },
+    "fold_macro_f1": [
+     0.793,
+     0.82,
+     0.803,
+     0.759,
+     0.784
+    ],
+    "fold_sd": 0.02
+   },
+   "test_random": {
+    "per_topic": {
+     "roads_access": {
+      "precision": 0.786,
+      "recall": 0.632,
+      "f1": 0.701,
+      "tp": 55,
+      "fp": 15,
+      "fn": 32,
+      "pr_auc": 0.793
+     },
+     "cleanliness": {
+      "precision": 0.844,
+      "recall": 0.818,
+      "f1": 0.831,
+      "tp": 27,
+      "fp": 5,
+      "fn": 6,
+      "pr_auc": 0.859
+     },
+     "facilities": {
+      "precision": 0.802,
+      "recall": 0.682,
+      "f1": 0.737,
+      "tp": 105,
+      "fp": 26,
+      "fn": 49,
+      "pr_auc": 0.817
+     },
+     "safety": {
+      "precision": 0.952,
+      "recall": 0.625,
+      "f1": 0.755,
+      "tp": 20,
+      "fp": 1,
+      "fn": 12,
+      "pr_auc": 0.827
+     },
+     "price_value": {
+      "precision": 0.81,
+      "recall": 0.756,
+      "f1": 0.782,
+      "tp": 34,
+      "fp": 8,
+      "fn": 11,
+      "pr_auc": 0.892
+     },
+     "crowd": {
+      "precision": 0.738,
+      "recall": 0.585,
+      "f1": 0.653,
+      "tp": 31,
+      "fp": 11,
+      "fn": 22,
+      "pr_auc": 0.723
+     },
+     "scenery": {
+      "precision": 0.682,
+      "recall": 0.833,
+      "f1": 0.75,
+      "tp": 135,
+      "fp": 63,
+      "fn": 27,
+      "pr_auc": 0.866
+     }
+    },
+    "macro_f1": 0.744,
+    "macro_f1_ci95": [
+     0.704,
+     0.776
+    ],
+    "macro_precision": 0.802,
+    "macro_recall": 0.704,
+    "micro_f1": 0.739,
+    "label_accuracy": 0.949,
+    "exact_match": 0.686,
+    "n": 800
+   },
+   "gold_A_reader1": {
+    "per_topic": {
+     "roads_access": {
+      "precision": 0.56,
+      "recall": 0.609,
+      "f1": 0.583,
+      "tp": 14,
+      "fp": 11,
+      "fn": 9
+     },
+     "cleanliness": {
+      "precision": 1.0,
+      "recall": 0.893,
+      "f1": 0.943,
+      "tp": 25,
+      "fp": 0,
+      "fn": 3
+     },
+     "facilities": {
+      "precision": 0.833,
+      "recall": 0.641,
+      "f1": 0.725,
+      "tp": 25,
+      "fp": 5,
+      "fn": 14
+     },
+     "safety": {
+      "precision": 1.0,
+      "recall": 0.467,
+      "f1": 0.636,
+      "tp": 7,
+      "fp": 0,
+      "fn": 8
+     }
+    },
+    "macro_f1": 0.722,
+    "macro_f1_ci95": [
+     0.629,
+     0.789
+    ],
+    "macro_precision": 0.848,
+    "macro_recall": 0.652,
+    "micro_f1": 0.74,
+    "label_accuracy": 0.896,
+    "exact_match": 0.625,
+    "n": 120
+   },
+   "gold_A_reader2": {
+    "per_topic": {
+     "roads_access": {
+      "precision": 0.64,
+      "recall": 0.727,
+      "f1": 0.681,
+      "tp": 16,
+      "fp": 9,
+      "fn": 6
+     },
+     "cleanliness": {
+      "precision": 0.92,
+      "recall": 0.92,
+      "f1": 0.92,
+      "tp": 23,
+      "fp": 2,
+      "fn": 2
+     },
+     "facilities": {
+      "precision": 0.767,
+      "recall": 0.676,
+      "f1": 0.719,
+      "tp": 23,
+      "fp": 7,
+      "fn": 11
+     },
+     "safety": {
+      "precision": 1.0,
+      "recall": 0.7,
+      "f1": 0.824,
+      "tp": 7,
+      "fp": 0,
+      "fn": 3
+     }
+    },
+    "macro_f1": 0.786,
+    "macro_f1_ci95": [
+     0.7,
+     0.853
+    ],
+    "macro_precision": 0.832,
+    "macro_recall": 0.756,
+    "micro_f1": 0.775,
+    "label_accuracy": 0.917,
+    "exact_match": 0.708,
+    "n": 120
+   },
+   "gold_B_reader1": {
+    "per_topic": {
+     "roads_access": {
+      "precision": 0.909,
+      "recall": 0.833,
+      "f1": 0.87,
+      "tp": 20,
+      "fp": 2,
+      "fn": 4
+     },
+     "cleanliness": {
+      "precision": 1.0,
+      "recall": 0.941,
+      "f1": 0.97,
+      "tp": 16,
+      "fp": 0,
+      "fn": 1
+     },
+     "facilities": {
+      "precision": 0.7,
+      "recall": 0.467,
+      "f1": 0.56,
+      "tp": 7,
+      "fp": 3,
+      "fn": 8
+     },
+     "safety": {
+      "precision": 0.917,
+      "recall": 0.55,
+      "f1": 0.687,
+      "tp": 11,
+      "fp": 1,
+      "fn": 9
+     }
+    },
+    "macro_f1": 0.772,
+    "macro_f1_ci95": [
+     0.678,
+     0.848
+    ],
+    "macro_precision": 0.881,
+    "macro_recall": 0.698,
+    "micro_f1": 0.794,
+    "label_accuracy": 0.912,
+    "exact_match": 0.675,
+    "n": 80
+   }
+  },
+  "M6 Embeddings + XGBoost": {
+   "meta": {
+    "family": "embeddings + gradient boosting",
+    "trained": true,
+    "fit_seconds": 34.29,
+    "ms_per_item": 0.09
+   },
+   "thresholds": [
+    0.0645,
+    0.0383,
+    0.1192,
+    0.0263,
+    0.1441,
+    0.0959,
+    0.2821
+   ],
+   "cv": {
+    "macro_f1": 0.729,
+    "per_topic_f1": {
+     "roads_access": 0.757,
+     "cleanliness": 0.732,
+     "facilities": 0.692,
+     "safety": 0.583,
+     "price_value": 0.863,
+     "crowd": 0.758,
+     "scenery": 0.719
+    },
+    "fold_macro_f1": [
+     0.747,
+     0.745,
+     0.757,
+     0.692,
+     0.703
+    ],
+    "fold_sd": 0.026
+   },
+   "test_random": {
+    "per_topic": {
+     "roads_access": {
+      "precision": 0.685,
+      "recall": 0.701,
+      "f1": 0.693,
+      "tp": 61,
+      "fp": 28,
+      "fn": 26,
+      "pr_auc": 0.743
+     },
+     "cleanliness": {
+      "precision": 0.781,
+      "recall": 0.758,
+      "f1": 0.769,
+      "tp": 25,
+      "fp": 7,
+      "fn": 8,
+      "pr_auc": 0.843
+     },
+     "facilities": {
+      "precision": 0.632,
+      "recall": 0.636,
+      "f1": 0.634,
+      "tp": 98,
+      "fp": 57,
+      "fn": 56,
+      "pr_auc": 0.741
+     },
+     "safety": {
+      "precision": 0.477,
+      "recall": 0.656,
+      "f1": 0.553,
+      "tp": 21,
+      "fp": 23,
+      "fn": 11,
+      "pr_auc": 0.678
+     },
+     "price_value": {
+      "precision": 0.909,
+      "recall": 0.667,
+      "f1": 0.769,
+      "tp": 30,
+      "fp": 3,
+      "fn": 15,
+      "pr_auc": 0.849
+     },
+     "crowd": {
+      "precision": 0.622,
+      "recall": 0.528,
+      "f1": 0.571,
+      "tp": 28,
+      "fp": 17,
+      "fn": 25,
+      "pr_auc": 0.649
+     },
+     "scenery": {
+      "precision": 0.801,
+      "recall": 0.698,
+      "f1": 0.746,
+      "tp": 113,
+      "fp": 28,
+      "fn": 49,
+      "pr_auc": 0.868
+     }
+    },
+    "macro_f1": 0.676,
+    "macro_f1_ci95": [
+     0.636,
+     0.713
+    ],
+    "macro_precision": 0.701,
+    "macro_recall": 0.663,
+    "micro_f1": 0.681,
+    "label_accuracy": 0.937,
+    "exact_match": 0.632,
+    "n": 800
+   },
+   "gold_A_reader1": {
+    "per_topic": {
+     "roads_access": {
+      "precision": 0.615,
+      "recall": 0.696,
+      "f1": 0.653,
+      "tp": 16,
+      "fp": 10,
+      "fn": 7
+     },
+     "cleanliness": {
+      "precision": 1.0,
+      "recall": 0.893,
+      "f1": 0.943,
+      "tp": 25,
+      "fp": 0,
+      "fn": 3
+     },
+     "facilities": {
+      "precision": 0.722,
+      "recall": 0.667,
+      "f1": 0.693,
+      "tp": 26,
+      "fp": 10,
+      "fn": 13
+     },
+     "safety": {
+      "precision": 0.75,
+      "recall": 0.6,
+      "f1": 0.667,
+      "tp": 9,
+      "fp": 3,
+      "fn": 6
+     }
+    },
+    "macro_f1": 0.739,
+    "macro_f1_ci95": [
+     0.653,
+     0.802
+    ],
+    "macro_precision": 0.772,
+    "macro_recall": 0.714,
+    "micro_f1": 0.745,
+    "label_accuracy": 0.892,
+    "exact_match": 0.617,
+    "n": 120
+   },
+   "gold_A_reader2": {
+    "per_topic": {
+     "roads_access": {
+      "precision": 0.577,
+      "recall": 0.682,
+      "f1": 0.625,
+      "tp": 15,
+      "fp": 11,
+      "fn": 7
+     },
+     "cleanliness": {
+      "precision": 0.92,
+      "recall": 0.92,
+      "f1": 0.92,
+      "tp": 23,
+      "fp": 2,
+      "fn": 2
+     },
+     "facilities": {
+      "precision": 0.639,
+      "recall": 0.676,
+      "f1": 0.657,
+      "tp": 23,
+      "fp": 13,
+      "fn": 11
+     },
+     "safety": {
+      "precision": 0.75,
+      "recall": 0.9,
+      "f1": 0.818,
+      "tp": 9,
+      "fp": 3,
+      "fn": 1
+     }
+    },
+    "macro_f1": 0.755,
+    "macro_f1_ci95": [
+     0.679,
+     0.817
+    ],
+    "macro_precision": 0.722,
+    "macro_recall": 0.794,
+    "micro_f1": 0.737,
+    "label_accuracy": 0.896,
+    "exact_match": 0.625,
+    "n": 120
+   },
+   "gold_B_reader1": {
+    "per_topic": {
+     "roads_access": {
+      "precision": 0.885,
+      "recall": 0.958,
+      "f1": 0.92,
+      "tp": 23,
+      "fp": 3,
+      "fn": 1
+     },
+     "cleanliness": {
+      "precision": 1.0,
+      "recall": 0.882,
+      "f1": 0.938,
+      "tp": 15,
+      "fp": 0,
+      "fn": 2
+     },
+     "facilities": {
+      "precision": 0.538,
+      "recall": 0.467,
+      "f1": 0.5,
+      "tp": 7,
+      "fp": 6,
+      "fn": 8
+     },
+     "safety": {
+      "precision": 0.714,
+      "recall": 0.75,
+      "f1": 0.732,
+      "tp": 15,
+      "fp": 6,
+      "fn": 5
+     }
+    },
+    "macro_f1": 0.772,
+    "macro_f1_ci95": [
+     0.683,
+     0.843
+    ],
+    "macro_precision": 0.784,
+    "macro_recall": 0.764,
+    "micro_f1": 0.795,
+    "label_accuracy": 0.903,
+    "exact_match": 0.65,
+    "n": 80
+   }
+  },
+  "M7 Zero-shot NLI (DistilBERT-MNLI)": {
+   "meta": {
+    "family": "transformer, no training",
+    "trained": false
+   },
+   "thresholds": [
+    0.7639,
+    0.9384,
+    0.7095,
+    0.7827,
+    0.9798,
+    0.5774,
+    0.761
+   ],
+   "cv": {
+    "macro_f1": 0.44,
+    "per_topic_f1": {
+     "roads_access": 0.446,
+     "cleanliness": 0.45,
+     "facilities": 0.436,
+     "safety": 0.364,
+     "price_value": 0.658,
+     "crowd": 0.267,
+     "scenery": 0.461
+    },
+    "fold_macro_f1": [
+     0.476,
+     0.428,
+     0.409,
+     0.483,
+     0.405
+    ],
+    "fold_sd": 0.033
+   },
+   "test_random": {
+    "per_topic": {
+     "roads_access": {
+      "precision": 0.463,
+      "recall": 0.218,
+      "f1": 0.297,
+      "tp": 19,
+      "fp": 22,
+      "fn": 68,
+      "pr_auc": 0.331
+     },
+     "cleanliness": {
+      "precision": 0.176,
+      "recall": 0.273,
+      "f1": 0.214,
+      "tp": 9,
+      "fp": 42,
+      "fn": 24,
+      "pr_auc": 0.117
+     },
+     "facilities": {
+      "precision": 0.367,
+      "recall": 0.305,
+      "f1": 0.333,
+      "tp": 47,
+      "fp": 81,
+      "fn": 107,
+      "pr_auc": 0.285
+     },
+     "safety": {
+      "precision": 0.324,
+      "recall": 0.344,
+      "f1": 0.333,
+      "tp": 11,
+      "fp": 23,
+      "fn": 21,
+      "pr_auc": 0.192
+     },
+     "price_value": {
+      "precision": 0.444,
+      "recall": 0.444,
+      "f1": 0.444,
+      "tp": 20,
+      "fp": 25,
+      "fn": 25,
+      "pr_auc": 0.431
+     },
+     "crowd": {
+      "precision": 0.429,
+      "recall": 0.283,
+      "f1": 0.341,
+      "tp": 15,
+      "fp": 20,
+      "fn": 38,
+      "pr_auc": 0.313
+     },
+     "scenery": {
+      "precision": 0.534,
+      "recall": 0.537,
+      "f1": 0.535,
+      "tp": 87,
+      "fp": 76,
+      "fn": 75,
+      "pr_auc": 0.566
+     }
+    },
+    "macro_f1": 0.357,
+    "macro_f1_ci95": [
+     0.312,
+     0.398
+    ],
+    "macro_precision": 0.391,
+    "macro_recall": 0.343,
+    "micro_f1": 0.391,
+    "label_accuracy": 0.884,
+    "exact_match": 0.411,
+    "n": 800
+   },
+   "gold_A_reader1": {
+    "per_topic": {
+     "roads_access": {
+      "precision": 0.636,
+      "recall": 0.304,
+      "f1": 0.412,
+      "tp": 7,
+      "fp": 4,
+      "fn": 16
+     },
+     "cleanliness": {
+      "precision": 0.909,
+      "recall": 0.357,
+      "f1": 0.513,
+      "tp": 10,
+      "fp": 1,
+      "fn": 18
+     },
+     "facilities": {
+      "precision": 0.519,
+      "recall": 0.359,
+      "f1": 0.424,
+      "tp": 14,
+      "fp": 13,
+      "fn": 25
+     },
+     "safety": {
+      "precision": 0.667,
+      "recall": 0.267,
+      "f1": 0.381,
+      "tp": 4,
+      "fp": 2,
+      "fn": 11
+     }
+    },
+    "macro_f1": 0.432,
+    "macro_f1_ci95": [
+     0.317,
+     0.522
+    ],
+    "macro_precision": 0.683,
+    "macro_recall": 0.322,
+    "micro_f1": 0.438,
+    "label_accuracy": 0.812,
+    "exact_match": 0.4,
+    "n": 120
+   },
+   "gold_A_reader2": {
+    "per_topic": {
+     "roads_access": {
+      "precision": 0.545,
+      "recall": 0.273,
+      "f1": 0.364,
+      "tp": 6,
+      "fp": 5,
+      "fn": 16
+     },
+     "cleanliness": {
+      "precision": 0.909,
+      "recall": 0.4,
+      "f1": 0.556,
+      "tp": 10,
+      "fp": 1,
+      "fn": 15
+     },
+     "facilities": {
+      "precision": 0.481,
+      "recall": 0.382,
+      "f1": 0.426,
+      "tp": 13,
+      "fp": 14,
+      "fn": 21
+     },
+     "safety": {
+      "precision": 0.5,
+      "recall": 0.3,
+      "f1": 0.375,
+      "tp": 3,
+      "fp": 3,
+      "fn": 7
+     }
+    },
+    "macro_f1": 0.43,
+    "macro_f1_ci95": [
+     0.309,
+     0.522
+    ],
+    "macro_precision": 0.609,
+    "macro_recall": 0.339,
+    "micro_f1": 0.438,
+    "label_accuracy": 0.829,
+    "exact_match": 0.408,
+    "n": 120
+   },
+   "gold_B_reader1": {
+    "per_topic": {
+     "roads_access": {
+      "precision": 0.857,
+      "recall": 0.25,
+      "f1": 0.387,
+      "tp": 6,
+      "fp": 1,
+      "fn": 18
+     },
+     "cleanliness": {
+      "precision": 0.917,
+      "recall": 0.647,
+      "f1": 0.759,
+      "tp": 11,
+      "fp": 1,
+      "fn": 6
+     },
+     "facilities": {
+      "precision": 0.353,
+      "recall": 0.4,
+      "f1": 0.375,
+      "tp": 6,
+      "fp": 11,
+      "fn": 9
+     },
+     "safety": {
+      "precision": 0.308,
+      "recall": 0.2,
+      "f1": 0.242,
+      "tp": 4,
+      "fp": 9,
+      "fn": 16
+     }
+    },
+    "macro_f1": 0.441,
+    "macro_f1_ci95": [
+     0.327,
+     0.533
+    ],
+    "macro_precision": 0.609,
+    "macro_recall": 0.374,
+    "micro_f1": 0.432,
+    "label_accuracy": 0.778,
+    "exact_match": 0.3,
+    "n": 80
+   }
+  },
+  "M8 Fine-tuned bge-small (33M)": {
+   "meta": {
+    "family": "fine-tuned transformer",
+    "trained": true,
+    "fit_seconds": 356.1,
+    "ms_per_item": 14.45,
+    "training_loss_by_epoch": [
+     0.724,
+     0.52,
+     0.3959,
+     0.3409
+    ]
+   },
+   "thresholds": [
+    0.5449,
+    0.6323,
+    0.3996,
+    0.5095,
+    0.5229,
+    0.521,
+    0.4633
+   ],
+   "cv": {
+    "macro_f1": 0.73,
+    "per_topic_f1": {
+     "roads_access": 0.789,
+     "cleanliness": 0.828,
+     "facilities": 0.563,
+     "safety": 0.587,
+     "price_value": 0.92,
+     "crowd": 0.756,
+     "scenery": 0.668
+    },
+    "fold_macro_f1": [
+     0.738,
+     0.751,
+     0.711,
+     0.705,
+     0.743
+    ],
+    "fold_sd": 0.018
+   },
+   "test_random": {
+    "per_topic": {
+     "roads_access": {
+      "precision": 0.753,
+      "recall": 0.736,
+      "f1": 0.744,
+      "tp": 64,
+      "fp": 21,
+      "fn": 23,
+      "pr_auc": 0.784
+     },
+     "cleanliness": {
+      "precision": 0.871,
+      "recall": 0.818,
+      "f1": 0.844,
+      "tp": 27,
+      "fp": 4,
+      "fn": 6,
+      "pr_auc": 0.886
+     },
+     "facilities": {
+      "precision": 0.537,
+      "recall": 0.76,
+      "f1": 0.629,
+      "tp": 117,
+      "fp": 101,
+      "fn": 37,
+      "pr_auc": 0.711
+     },
+     "safety": {
+      "precision": 0.739,
+      "recall": 0.531,
+      "f1": 0.618,
+      "tp": 17,
+      "fp": 6,
+      "fn": 15,
+      "pr_auc": 0.675
+     },
+     "price_value": {
+      "precision": 0.854,
+      "recall": 0.911,
+      "f1": 0.882,
+      "tp": 41,
+      "fp": 7,
+      "fn": 4,
+      "pr_auc": 0.869
+     },
+     "crowd": {
+      "precision": 0.667,
+      "recall": 0.604,
+      "f1": 0.634,
+      "tp": 32,
+      "fp": 16,
+      "fn": 21,
+      "pr_auc": 0.725
+     },
+     "scenery": {
+      "precision": 0.679,
+      "recall": 0.877,
+      "f1": 0.765,
+      "tp": 142,
+      "fp": 67,
+      "fn": 20,
+      "pr_auc": 0.838
+     }
+    },
+    "macro_f1": 0.731,
+    "macro_f1_ci95": [
+     0.693,
+     0.763
+    ],
+    "macro_precision": 0.729,
+    "macro_recall": 0.748,
+    "micro_f1": 0.717,
+    "label_accuracy": 0.938,
+    "exact_match": 0.656,
+    "n": 800
+   },
+   "gold_A_reader1": {
+    "per_topic": {
+     "roads_access": {
+      "precision": 0.583,
+      "recall": 0.609,
+      "f1": 0.596,
+      "tp": 14,
+      "fp": 10,
+      "fn": 9
+     },
+     "cleanliness": {
+      "precision": 0.885,
+      "recall": 0.821,
+      "f1": 0.852,
+      "tp": 23,
+      "fp": 3,
+      "fn": 5
+     },
+     "facilities": {
+      "precision": 0.547,
+      "recall": 0.897,
+      "f1": 0.68,
+      "tp": 35,
+      "fp": 29,
+      "fn": 4
+     },
+     "safety": {
+      "precision": 0.769,
+      "recall": 0.667,
+      "f1": 0.714,
+      "tp": 10,
+      "fp": 3,
+      "fn": 5
+     }
+    },
+    "macro_f1": 0.711,
+    "macro_f1_ci95": [
+     0.623,
+     0.778
+    ],
+    "macro_precision": 0.696,
+    "macro_recall": 0.748,
+    "micro_f1": 0.707,
+    "label_accuracy": 0.858,
+    "exact_match": 0.542,
+    "n": 120
+   },
+   "gold_A_reader2": {
+    "per_topic": {
+     "roads_access": {
+      "precision": 0.667,
+      "recall": 0.727,
+      "f1": 0.696,
+      "tp": 16,
+      "fp": 8,
+      "fn": 6
+     },
+     "cleanliness": {
+      "precision": 0.808,
+      "recall": 0.84,
+      "f1": 0.824,
+      "tp": 21,
+      "fp": 5,
+      "fn": 4
+     },
+     "facilities": {
+      "precision": 0.484,
+      "recall": 0.912,
+      "f1": 0.633,
+      "tp": 31,
+      "fp": 33,
+      "fn": 3
+     },
+     "safety": {
+      "precision": 0.769,
+      "recall": 1.0,
+      "f1": 0.87,
+      "tp": 10,
+      "fp": 3,
+      "fn": 0
+     }
+    },
+    "macro_f1": 0.756,
+    "macro_f1_ci95": [
+     0.683,
+     0.815
+    ],
+    "macro_precision": 0.682,
+    "macro_recall": 0.87,
+    "micro_f1": 0.716,
+    "label_accuracy": 0.871,
+    "exact_match": 0.583,
+    "n": 120
+   },
+   "gold_B_reader1": {
+    "per_topic": {
+     "roads_access": {
+      "precision": 0.808,
+      "recall": 0.875,
+      "f1": 0.84,
+      "tp": 21,
+      "fp": 5,
+      "fn": 3
+     },
+     "cleanliness": {
+      "precision": 0.842,
+      "recall": 0.941,
+      "f1": 0.889,
+      "tp": 16,
+      "fp": 3,
+      "fn": 1
+     },
+     "facilities": {
+      "precision": 0.355,
+      "recall": 0.733,
+      "f1": 0.478,
+      "tp": 11,
+      "fp": 20,
+      "fn": 4
+     },
+     "safety": {
+      "precision": 0.812,
+      "recall": 0.65,
+      "f1": 0.722,
+      "tp": 13,
+      "fp": 3,
+      "fn": 7
+     }
+    },
+    "macro_f1": 0.732,
+    "macro_f1_ci95": [
+     0.651,
+     0.797
+    ],
+    "macro_precision": 0.704,
+    "macro_recall": 0.8,
+    "micro_f1": 0.726,
+    "label_accuracy": 0.856,
+    "exact_match": 0.512,
+    "n": 80
+   }
+  },
+  "M9 Fine-tuned RoBERTa-base (125M)": {
+   "meta": {
+    "family": "fine-tuned transformer",
+    "trained": true,
+    "fit_seconds": 1603.8,
+    "ms_per_item": 74.39,
+    "training_loss_by_epoch": [
+     0.6423,
+     0.3794,
+     0.2676,
+     0.2154
+    ]
+   },
+   "thresholds": [
+    0.3138,
+    0.523,
+    0.4223,
+    0.5121,
+    0.6164,
+    0.6095,
+    0.4684
+   ],
+   "cv": {
+    "macro_f1": 0.796,
+    "per_topic_f1": {
+     "roads_access": 0.805,
+     "cleanliness": 0.88,
+     "facilities": 0.703,
+     "safety": 0.667,
+     "price_value": 0.919,
+     "crowd": 0.83,
+     "scenery": 0.765
+    },
+    "fold_macro_f1": [
+     0.791,
+     0.815,
+     0.796,
+     0.795,
+     0.78
+    ],
+    "fold_sd": 0.011
+   },
+   "test_random": {
+    "per_topic": {
+     "roads_access": {
+      "precision": 0.642,
+      "recall": 0.885,
+      "f1": 0.744,
+      "tp": 77,
+      "fp": 43,
+      "fn": 10,
+      "pr_auc": 0.828
+     },
+     "cleanliness": {
+      "precision": 0.871,
+      "recall": 0.818,
+      "f1": 0.844,
+      "tp": 27,
+      "fp": 4,
+      "fn": 6,
+      "pr_auc": 0.914
+     },
+     "facilities": {
+      "precision": 0.716,
+      "recall": 0.721,
+      "f1": 0.718,
+      "tp": 111,
+      "fp": 44,
+      "fn": 43,
+      "pr_auc": 0.821
+     },
+     "safety": {
+      "precision": 0.767,
+      "recall": 0.719,
+      "f1": 0.742,
+      "tp": 23,
+      "fp": 7,
+      "fn": 9,
+      "pr_auc": 0.765
+     },
+     "price_value": {
+      "precision": 0.907,
+      "recall": 0.867,
+      "f1": 0.886,
+      "tp": 39,
+      "fp": 4,
+      "fn": 6,
+      "pr_auc": 0.933
+     },
+     "crowd": {
+      "precision": 0.756,
+      "recall": 0.585,
+      "f1": 0.66,
+      "tp": 31,
+      "fp": 10,
+      "fn": 22,
+      "pr_auc": 0.739
+     },
+     "scenery": {
+      "precision": 0.726,
+      "recall": 0.852,
+      "f1": 0.784,
+      "tp": 138,
+      "fp": 52,
+      "fn": 24,
+      "pr_auc": 0.892
+     }
+    },
+    "macro_f1": 0.768,
+    "macro_f1_ci95": [
+     0.734,
+     0.796
+    ],
+    "macro_precision": 0.769,
+    "macro_recall": 0.778,
+    "micro_f1": 0.759,
+    "label_accuracy": 0.949,
+    "exact_match": 0.704,
+    "n": 800
+   },
+   "gold_A_reader1": {
+    "per_topic": {
+     "roads_access": {
+      "precision": 0.581,
+      "recall": 0.783,
+      "f1": 0.667,
+      "tp": 18,
+      "fp": 13,
+      "fn": 5
+     },
+     "cleanliness": {
+      "precision": 0.963,
+      "recall": 0.929,
+      "f1": 0.945,
+      "tp": 26,
+      "fp": 1,
+      "fn": 2
+     },
+     "facilities": {
+      "precision": 0.725,
+      "recall": 0.744,
+      "f1": 0.734,
+      "tp": 29,
+      "fp": 11,
+      "fn": 10
+     },
+     "safety": {
+      "precision": 0.818,
+      "recall": 0.6,
+      "f1": 0.692,
+      "tp": 9,
+      "fp": 2,
+      "fn": 6
+     }
+    },
+    "macro_f1": 0.76,
+    "macro_f1_ci95": [
+     0.673,
+     0.826
+    ],
+    "macro_precision": 0.772,
+    "macro_recall": 0.764,
+    "micro_f1": 0.766,
+    "label_accuracy": 0.896,
+    "exact_match": 0.65,
+    "n": 120
+   },
+   "gold_A_reader2": {
+    "per_topic": {
+     "roads_access": {
+      "precision": 0.613,
+      "recall": 0.864,
+      "f1": 0.717,
+      "tp": 19,
+      "fp": 12,
+      "fn": 3
+     },
+     "cleanliness": {
+      "precision": 0.889,
+      "recall": 0.96,
+      "f1": 0.923,
+      "tp": 24,
+      "fp": 3,
+      "fn": 1
+     },
+     "facilities": {
+      "precision": 0.7,
+      "recall": 0.824,
+      "f1": 0.757,
+      "tp": 28,
+      "fp": 12,
+      "fn": 6
+     },
+     "safety": {
+      "precision": 0.727,
+      "recall": 0.8,
+      "f1": 0.762,
+      "tp": 8,
+      "fp": 3,
+      "fn": 2
+     }
+    },
+    "macro_f1": 0.79,
+    "macro_f1_ci95": [
+     0.707,
+     0.856
+    ],
+    "macro_precision": 0.732,
+    "macro_recall": 0.862,
+    "micro_f1": 0.79,
+    "label_accuracy": 0.912,
+    "exact_match": 0.725,
+    "n": 120
+   },
+   "gold_B_reader1": {
+    "per_topic": {
+     "roads_access": {
+      "precision": 0.719,
+      "recall": 0.958,
+      "f1": 0.821,
+      "tp": 23,
+      "fp": 9,
+      "fn": 1
+     },
+     "cleanliness": {
+      "precision": 1.0,
+      "recall": 0.882,
+      "f1": 0.938,
+      "tp": 15,
+      "fp": 0,
+      "fn": 2
+     },
+     "facilities": {
+      "precision": 0.588,
+      "recall": 0.667,
+      "f1": 0.625,
+      "tp": 10,
+      "fp": 7,
+      "fn": 5
+     },
+     "safety": {
+      "precision": 0.941,
+      "recall": 0.8,
+      "f1": 0.865,
+      "tp": 16,
+      "fp": 1,
+      "fn": 4
+     }
+    },
+    "macro_f1": 0.812,
+    "macro_f1_ci95": [
+     0.738,
+     0.87
+    ],
+    "macro_precision": 0.812,
+    "macro_recall": 0.827,
+    "micro_f1": 0.815,
+    "label_accuracy": 0.909,
+    "exact_match": 0.662,
+    "n": 80
+   }
+  },
+  "H TF-IDF + Naive Bayes OR lexicon": {
+   "meta": {
+    "family": "hybrid: lexicon OR classical ML",
+    "trained": true,
+    "fit_seconds": 0.92,
+    "ms_per_item": 0.02
+   },
+   "thresholds": [
+    0.4306,
+    0.7302,
+    0.6525,
+    0.2573,
+    0.9275,
+    0.5566,
+    0.6388
+   ],
+   "cv": {
+    "macro_f1": 0.767,
+    "per_topic_f1": {
+     "roads_access": 0.757,
+     "cleanliness": 0.88,
+     "facilities": 0.674,
+     "safety": 0.707,
+     "price_value": 0.871,
+     "crowd": 0.77,
+     "scenery": 0.708
+    },
+    "fold_macro_f1": [
+     0.734,
+     0.801,
+     0.763,
+     0.759,
+     0.758
+    ],
+    "fold_sd": 0.022
+   },
+   "test_random": {
+    "per_topic": {
+     "roads_access": {
+      "precision": 0.598,
+      "recall": 0.736,
+      "f1": 0.66,
+      "tp": 64,
+      "fp": 43,
+      "fn": 23
+     },
+     "cleanliness": {
+      "precision": 0.867,
+      "recall": 0.788,
+      "f1": 0.825,
+      "tp": 26,
+      "fp": 4,
+      "fn": 7
+     },
+     "facilities": {
+      "precision": 0.71,
+      "recall": 0.604,
+      "f1": 0.653,
+      "tp": 93,
+      "fp": 38,
+      "fn": 61
+     },
+     "safety": {
+      "precision": 0.636,
+      "recall": 0.438,
+      "f1": 0.519,
+      "tp": 14,
+      "fp": 8,
+      "fn": 18
+     },
+     "price_value": {
+      "precision": 0.85,
+      "recall": 0.756,
+      "f1": 0.8,
+      "tp": 34,
+      "fp": 6,
+      "fn": 11
+     },
+     "crowd": {
+      "precision": 0.86,
+      "recall": 0.698,
+      "f1": 0.771,
+      "tp": 37,
+      "fp": 6,
+      "fn": 16
+     },
+     "scenery": {
+      "precision": 0.588,
+      "recall": 0.765,
+      "f1": 0.665,
+      "tp": 124,
+      "fp": 87,
+      "fn": 38
+     }
+    },
+    "macro_f1": 0.699,
+    "macro_f1_ci95": [
+     0.657,
+     0.733
+    ],
+    "macro_precision": 0.73,
+    "macro_recall": 0.684,
+    "micro_f1": 0.682,
+    "label_accuracy": 0.935,
+    "exact_match": 0.611,
+    "n": 800
+   },
+   "gold_A_reader1": {
+    "per_topic": {
+     "roads_access": {
+      "precision": 0.513,
+      "recall": 0.87,
+      "f1": 0.645,
+      "tp": 20,
+      "fp": 19,
+      "fn": 3
+     },
+     "cleanliness": {
+      "precision": 0.844,
+      "recall": 0.964,
+      "f1": 0.9,
+      "tp": 27,
+      "fp": 5,
+      "fn": 1
+     },
+     "facilities": {
+      "precision": 0.771,
+      "recall": 0.949,
+      "f1": 0.851,
+      "tp": 37,
+      "fp": 11,
+      "fn": 2
+     },
+     "safety": {
+      "precision": 0.917,
+      "recall": 0.733,
+      "f1": 0.815,
+      "tp": 11,
+      "fp": 1,
+      "fn": 4
+     }
+    },
+    "macro_f1": 0.803,
+    "macro_f1_ci95": [
+     0.729,
+     0.861
+    ],
+    "macro_precision": 0.761,
+    "macro_recall": 0.879,
+    "micro_f1": 0.805,
+    "label_accuracy": 0.904,
+    "exact_match": 0.692,
+    "n": 120
+   },
+   "gold_A_reader2": {
+    "per_topic": {
+     "roads_access": {
+      "precision": 0.513,
+      "recall": 0.909,
+      "f1": 0.656,
+      "tp": 20,
+      "fp": 19,
+      "fn": 2
+     },
+     "cleanliness": {
+      "precision": 0.75,
+      "recall": 0.96,
+      "f1": 0.842,
+      "tp": 24,
+      "fp": 8,
+      "fn": 1
+     },
+     "facilities": {
+      "precision": 0.667,
+      "recall": 0.941,
+      "f1": 0.78,
+      "tp": 32,
+      "fp": 16,
+      "fn": 2
+     },
+     "safety": {
+      "precision": 0.833,
+      "recall": 1.0,
+      "f1": 0.909,
+      "tp": 10,
+      "fp": 2,
+      "fn": 0
+     }
+    },
+    "macro_f1": 0.797,
+    "macro_f1_ci95": [
+     0.73,
+     0.853
+    ],
+    "macro_precision": 0.691,
+    "macro_recall": 0.953,
+    "micro_f1": 0.775,
+    "label_accuracy": 0.896,
+    "exact_match": 0.683,
+    "n": 120
+   },
+   "gold_B_reader1": {
+    "per_topic": {
+     "roads_access": {
+      "precision": 0.71,
+      "recall": 0.917,
+      "f1": 0.8,
+      "tp": 22,
+      "fp": 9,
+      "fn": 2
+     },
+     "cleanliness": {
+      "precision": 0.944,
+      "recall": 1.0,
+      "f1": 0.971,
+      "tp": 17,
+      "fp": 1,
+      "fn": 0
+     },
+     "facilities": {
+      "precision": 0.542,
+      "recall": 0.867,
+      "f1": 0.667,
+      "tp": 13,
+      "fp": 11,
+      "fn": 2
+     },
+     "safety": {
+      "precision": 0.938,
+      "recall": 0.75,
+      "f1": 0.833,
+      "tp": 15,
+      "fp": 1,
+      "fn": 5
+     }
+    },
+    "macro_f1": 0.818,
+    "macro_f1_ci95": [
+     0.739,
+     0.879
+    ],
+    "macro_precision": 0.783,
+    "macro_recall": 0.883,
+    "micro_f1": 0.812,
+    "label_accuracy": 0.903,
+    "exact_match": 0.7,
+    "n": 80
+   }
+  },
+  "H TF-IDF + Logistic Regression OR lexicon": {
+   "meta": {
+    "family": "hybrid: lexicon OR classical ML",
+    "trained": true,
+    "fit_seconds": 4.62,
+    "ms_per_item": 0.01
+   },
+   "thresholds": [
+    0.5905,
+    0.3421,
+    0.4946,
+    0.4696,
+    0.604,
+    0.5548,
+    0.5066
+   ],
+   "cv": {
+    "macro_f1": 0.775,
+    "per_topic_f1": {
+     "roads_access": 0.776,
+     "cleanliness": 0.88,
+     "facilities": 0.684,
+     "safety": 0.69,
+     "price_value": 0.871,
+     "crowd": 0.808,
+     "scenery": 0.715
+    },
+    "fold_macro_f1": [
+     0.753,
+     0.804,
+     0.773,
+     0.763,
+     0.776
+    ],
+    "fold_sd": 0.017
+   },
+   "test_random": {
+    "per_topic": {
+     "roads_access": {
+      "precision": 0.717,
+      "recall": 0.759,
+      "f1": 0.737,
+      "tp": 66,
+      "fp": 26,
+      "fn": 21
+     },
+     "cleanliness": {
+      "precision": 0.784,
+      "recall": 0.879,
+      "f1": 0.829,
+      "tp": 29,
+      "fp": 8,
+      "fn": 4
+     },
+     "facilities": {
+      "precision": 0.677,
+      "recall": 0.695,
+      "f1": 0.686,
+      "tp": 107,
+      "fp": 51,
+      "fn": 47
+     },
+     "safety": {
+      "precision": 0.812,
+      "recall": 0.406,
+      "f1": 0.542,
+      "tp": 13,
+      "fp": 3,
+      "fn": 19
+     },
+     "price_value": {
+      "precision": 0.857,
+      "recall": 0.8,
+      "f1": 0.828,
+      "tp": 36,
+      "fp": 6,
+      "fn": 9
+     },
+     "crowd": {
+      "precision": 0.822,
+      "recall": 0.698,
+      "f1": 0.755,
+      "tp": 37,
+      "fp": 8,
+      "fn": 16
+     },
+     "scenery": {
+      "precision": 0.602,
+      "recall": 0.802,
+      "f1": 0.688,
+      "tp": 130,
+      "fp": 86,
+      "fn": 32
+     }
+    },
+    "macro_f1": 0.724,
+    "macro_f1_ci95": [
+     0.683,
+     0.757
+    ],
+    "macro_precision": 0.753,
+    "macro_recall": 0.72,
+    "micro_f1": 0.713,
+    "label_accuracy": 0.94,
+    "exact_match": 0.645,
+    "n": 800
+   },
+   "gold_A_reader1": {
+    "per_topic": {
+     "roads_access": {
+      "precision": 0.525,
+      "recall": 0.913,
+      "f1": 0.667,
+      "tp": 21,
+      "fp": 19,
+      "fn": 2
+     },
+     "cleanliness": {
+      "precision": 0.818,
+      "recall": 0.964,
+      "f1": 0.885,
+      "tp": 27,
+      "fp": 6,
+      "fn": 1
+     },
+     "facilities": {
+      "precision": 0.74,
+      "recall": 0.949,
+      "f1": 0.831,
+      "tp": 37,
+      "fp": 13,
+      "fn": 2
+     },
+     "safety": {
+      "precision": 0.917,
+      "recall": 0.733,
+      "f1": 0.815,
+      "tp": 11,
+      "fp": 1,
+      "fn": 4
+     }
+    },
+    "macro_f1": 0.799,
+    "macro_f1_ci95": [
+     0.723,
+     0.862
+    ],
+    "macro_precision": 0.75,
+    "macro_recall": 0.89,
+    "micro_f1": 0.8,
+    "label_accuracy": 0.9,
+    "exact_match": 0.708,
+    "n": 120
+   },
+   "gold_A_reader2": {
+    "per_topic": {
+     "roads_access": {
+      "precision": 0.525,
+      "recall": 0.955,
+      "f1": 0.677,
+      "tp": 21,
+      "fp": 19,
+      "fn": 1
+     },
+     "cleanliness": {
+      "precision": 0.727,
+      "recall": 0.96,
+      "f1": 0.828,
+      "tp": 24,
+      "fp": 9,
+      "fn": 1
+     },
+     "facilities": {
+      "precision": 0.66,
+      "recall": 0.971,
+      "f1": 0.786,
+      "tp": 33,
+      "fp": 17,
+      "fn": 1
+     },
+     "safety": {
+      "precision": 0.833,
+      "recall": 1.0,
+      "f1": 0.909,
+      "tp": 10,
+      "fp": 2,
+      "fn": 0
+     }
+    },
+    "macro_f1": 0.8,
+    "macro_f1_ci95": [
+     0.734,
+     0.854
+    ],
+    "macro_precision": 0.686,
+    "macro_recall": 0.972,
+    "micro_f1": 0.779,
+    "label_accuracy": 0.896,
+    "exact_match": 0.667,
+    "n": 120
+   },
+   "gold_B_reader1": {
+    "per_topic": {
+     "roads_access": {
+      "precision": 0.75,
+      "recall": 0.875,
+      "f1": 0.808,
+      "tp": 21,
+      "fp": 7,
+      "fn": 3
+     },
+     "cleanliness": {
+      "precision": 0.944,
+      "recall": 1.0,
+      "f1": 0.971,
+      "tp": 17,
+      "fp": 1,
+      "fn": 0
+     },
+     "facilities": {
+      "precision": 0.565,
+      "recall": 0.867,
+      "f1": 0.684,
+      "tp": 13,
+      "fp": 10,
+      "fn": 2
+     },
+     "safety": {
+      "precision": 0.938,
+      "recall": 0.75,
+      "f1": 0.833,
+      "tp": 15,
+      "fp": 1,
+      "fn": 5
+     }
+    },
+    "macro_f1": 0.824,
+    "macro_f1_ci95": [
+     0.746,
+     0.887
+    ],
+    "macro_precision": 0.799,
+    "macro_recall": 0.873,
+    "micro_f1": 0.82,
+    "label_accuracy": 0.909,
+    "exact_match": 0.725,
+    "n": 80
+   }
+  },
+  "H TF-IDF + Linear SVM OR lexicon": {
+   "meta": {
+    "family": "hybrid: lexicon OR classical ML",
+    "trained": true,
+    "fit_seconds": 1.11,
+    "ms_per_item": 0.008
+   },
+   "thresholds": [
+    -0.161,
+    -0.2456,
+    0.0236,
+    -0.1267,
+    0.0598,
+    -0.0679,
+    -0.0034
+   ],
+   "cv": {
+    "macro_f1": 0.783,
+    "per_topic_f1": {
+     "roads_access": 0.78,
+     "cleanliness": 0.891,
+     "facilities": 0.687,
+     "safety": 0.724,
+     "price_value": 0.871,
+     "crowd": 0.816,
+     "scenery": 0.715
+    },
+    "fold_macro_f1": [
+     0.766,
+     0.815,
+     0.777,
+     0.767,
+     0.788
+    ],
+    "fold_sd": 0.018
+   },
+   "test_random": {
+    "per_topic": {
+     "roads_access": {
+      "precision": 0.623,
+      "recall": 0.816,
+      "f1": 0.706,
+      "tp": 71,
+      "fp": 43,
+      "fn": 16
+     },
+     "cleanliness": {
+      "precision": 0.763,
+      "recall": 0.879,
+      "f1": 0.817,
+      "tp": 29,
+      "fp": 9,
+      "fn": 4
+     },
+     "facilities": {
+      "precision": 0.725,
+      "recall": 0.617,
+      "f1": 0.667,
+      "tp": 95,
+      "fp": 36,
+      "fn": 59
+     },
+     "safety": {
+      "precision": 0.824,
+      "recall": 0.438,
+      "f1": 0.571,
+      "tp": 14,
+      "fp": 3,
+      "fn": 18
+     },
+     "price_value": {
+      "precision": 0.833,
+      "recall": 0.778,
+      "f1": 0.805,
+      "tp": 35,
+      "fp": 7,
+      "fn": 10
+     },
+     "crowd": {
+      "precision": 0.796,
+      "recall": 0.736,
+      "f1": 0.765,
+      "tp": 39,
+      "fp": 10,
+      "fn": 14
+     },
+     "scenery": {
+      "precision": 0.604,
+      "recall": 0.809,
+      "f1": 0.691,
+      "tp": 131,
+      "fp": 86,
+      "fn": 31
+     }
+    },
+    "macro_f1": 0.717,
+    "macro_f1_ci95": [
+     0.677,
+     0.751
+    ],
+    "macro_precision": 0.738,
+    "macro_recall": 0.725,
+    "micro_f1": 0.705,
+    "label_accuracy": 0.938,
+    "exact_match": 0.631,
+    "n": 800
+   },
+   "gold_A_reader1": {
+    "per_topic": {
+     "roads_access": {
+      "precision": 0.467,
+      "recall": 0.913,
+      "f1": 0.618,
+      "tp": 21,
+      "fp": 24,
+      "fn": 2
+     },
+     "cleanliness": {
+      "precision": 0.818,
+      "recall": 0.964,
+      "f1": 0.885,
+      "tp": 27,
+      "fp": 6,
+      "fn": 1
+     },
+     "facilities": {
+      "precision": 0.755,
+      "recall": 0.949,
+      "f1": 0.841,
+      "tp": 37,
+      "fp": 12,
+      "fn": 2
+     },
+     "safety": {
+      "precision": 0.917,
+      "recall": 0.733,
+      "f1": 0.815,
+      "tp": 11,
+      "fp": 1,
+      "fn": 4
+     }
+    },
+    "macro_f1": 0.79,
+    "macro_f1_ci95": [
+     0.716,
+     0.849
+    ],
+    "macro_precision": 0.739,
+    "macro_recall": 0.89,
+    "micro_f1": 0.787,
+    "label_accuracy": 0.892,
+    "exact_match": 0.667,
+    "n": 120
+   },
+   "gold_A_reader2": {
+    "per_topic": {
+     "roads_access": {
+      "precision": 0.467,
+      "recall": 0.955,
+      "f1": 0.627,
+      "tp": 21,
+      "fp": 24,
+      "fn": 1
+     },
+     "cleanliness": {
+      "precision": 0.727,
+      "recall": 0.96,
+      "f1": 0.828,
+      "tp": 24,
+      "fp": 9,
+      "fn": 1
+     },
+     "facilities": {
+      "precision": 0.673,
+      "recall": 0.971,
+      "f1": 0.795,
+      "tp": 33,
+      "fp": 16,
+      "fn": 1
+     },
+     "safety": {
+      "precision": 0.833,
+      "recall": 1.0,
+      "f1": 0.909,
+      "tp": 10,
+      "fp": 2,
+      "fn": 0
+     }
+    },
+    "macro_f1": 0.79,
+    "macro_f1_ci95": [
+     0.726,
+     0.844
+    ],
+    "macro_precision": 0.675,
+    "macro_recall": 0.972,
+    "micro_f1": 0.765,
+    "label_accuracy": 0.887,
+    "exact_match": 0.642,
+    "n": 120
+   },
+   "gold_B_reader1": {
+    "per_topic": {
+     "roads_access": {
+      "precision": 0.667,
+      "recall": 0.917,
+      "f1": 0.772,
+      "tp": 22,
+      "fp": 11,
+      "fn": 2
+     },
+     "cleanliness": {
+      "precision": 0.944,
+      "recall": 1.0,
+      "f1": 0.971,
+      "tp": 17,
+      "fp": 1,
+      "fn": 0
+     },
+     "facilities": {
+      "precision": 0.565,
+      "recall": 0.867,
+      "f1": 0.684,
+      "tp": 13,
+      "fp": 10,
+      "fn": 2
+     },
+     "safety": {
+      "precision": 0.938,
+      "recall": 0.75,
+      "f1": 0.833,
+      "tp": 15,
+      "fp": 1,
+      "fn": 5
+     }
+    },
+    "macro_f1": 0.815,
+    "macro_f1_ci95": [
+     0.739,
+     0.878
+    ],
+    "macro_precision": 0.778,
+    "macro_recall": 0.883,
+    "micro_f1": 0.807,
+    "label_accuracy": 0.9,
+    "exact_match": 0.688,
+    "n": 80
+   }
+  },
+  "H Embeddings + Logistic Regression OR lexicon": {
+   "meta": {
+    "family": "hybrid: lexicon OR embeddings + classical ML",
+    "trained": true,
+    "fit_seconds": 0.4,
+    "ms_per_item": 0.022
+   },
+   "thresholds": [
+    0.643,
+    0.8307,
+    0.6666,
+    0.8282,
+    0.7057,
+    0.8037,
+    0.6882
+   ],
+   "cv": {
+    "macro_f1": 0.795,
+    "per_topic_f1": {
+     "roads_access": 0.796,
+     "cleanliness": 0.891,
+     "facilities": 0.706,
+     "safety": 0.721,
+     "price_value": 0.9,
+     "crowd": 0.819,
+     "scenery": 0.731
+    },
+    "fold_macro_f1": [
+     0.788,
+     0.832,
+     0.788,
+     0.768,
+     0.788
+    ],
+    "fold_sd": 0.021
+   },
+   "test_random": {
+    "per_topic": {
+     "roads_access": {
+      "precision": 0.687,
+      "recall": 0.782,
+      "f1": 0.731,
+      "tp": 68,
+      "fp": 31,
+      "fn": 19
+     },
+     "cleanliness": {
+      "precision": 0.829,
+      "recall": 0.879,
+      "f1": 0.853,
+      "tp": 29,
+      "fp": 6,
+      "fn": 4
+     },
+     "facilities": {
+      "precision": 0.691,
+      "recall": 0.669,
+      "f1": 0.68,
+      "tp": 103,
+      "fp": 46,
+      "fn": 51
+     },
+     "safety": {
+      "precision": 0.833,
+      "recall": 0.625,
+      "f1": 0.714,
+      "tp": 20,
+      "fp": 4,
+      "fn": 12
+     },
+     "price_value": {
+      "precision": 0.857,
+      "recall": 0.8,
+      "f1": 0.828,
+      "tp": 36,
+      "fp": 6,
+      "fn": 9
+     },
+     "crowd": {
+      "precision": 0.75,
+      "recall": 0.736,
+      "f1": 0.743,
+      "tp": 39,
+      "fp": 13,
+      "fn": 14
+     },
+     "scenery": {
+      "precision": 0.619,
+      "recall": 0.901,
+      "f1": 0.734,
+      "tp": 146,
+      "fp": 90,
+      "fn": 16
+     }
+    },
+    "macro_f1": 0.755,
+    "macro_f1_ci95": [
+     0.718,
+     0.785
+    ],
+    "macro_precision": 0.752,
+    "macro_recall": 0.77,
+    "micro_f1": 0.733,
+    "label_accuracy": 0.943,
+    "exact_match": 0.661,
+    "n": 800
+   },
+   "gold_A_reader1": {
+    "per_topic": {
+     "roads_access": {
+      "precision": 0.476,
+      "recall": 0.87,
+      "f1": 0.615,
+      "tp": 20,
+      "fp": 22,
+      "fn": 3
+     },
+     "cleanliness": {
+      "precision": 0.844,
+      "recall": 0.964,
+      "f1": 0.9,
+      "tp": 27,
+      "fp": 5,
+      "fn": 1
+     },
+     "facilities": {
+      "precision": 0.72,
+      "recall": 0.923,
+      "f1": 0.809,
+      "tp": 36,
+      "fp": 14,
+      "fn": 3
+     },
+     "safety": {
+      "precision": 0.917,
+      "recall": 0.733,
+      "f1": 0.815,
+      "tp": 11,
+      "fp": 1,
+      "fn": 4
+     }
+    },
+    "macro_f1": 0.785,
+    "macro_f1_ci95": [
+     0.71,
+     0.845
+    ],
+    "macro_precision": 0.739,
+    "macro_recall": 0.873,
+    "micro_f1": 0.78,
+    "label_accuracy": 0.89,
+    "exact_match": 0.65,
+    "n": 120
+   },
+   "gold_A_reader2": {
+    "per_topic": {
+     "roads_access": {
+      "precision": 0.476,
+      "recall": 0.909,
+      "f1": 0.625,
+      "tp": 20,
+      "fp": 22,
+      "fn": 2
+     },
+     "cleanliness": {
+      "precision": 0.75,
+      "recall": 0.96,
+      "f1": 0.842,
+      "tp": 24,
+      "fp": 8,
+      "fn": 1
+     },
+     "facilities": {
+      "precision": 0.6,
+      "recall": 0.882,
+      "f1": 0.714,
+      "tp": 30,
+      "fp": 20,
+      "fn": 4
+     },
+     "safety": {
+      "precision": 0.833,
+      "recall": 1.0,
+      "f1": 0.909,
+      "tp": 10,
+      "fp": 2,
+      "fn": 0
+     }
+    },
+    "macro_f1": 0.772,
+    "macro_f1_ci95": [
+     0.705,
+     0.832
+    ],
+    "macro_precision": 0.665,
+    "macro_recall": 0.938,
+    "micro_f1": 0.74,
+    "label_accuracy": 0.877,
+    "exact_match": 0.625,
+    "n": 120
+   },
+   "gold_B_reader1": {
+    "per_topic": {
+     "roads_access": {
+      "precision": 0.727,
+      "recall": 1.0,
+      "f1": 0.842,
+      "tp": 24,
+      "fp": 9,
+      "fn": 0
+     },
+     "cleanliness": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "tp": 17,
+      "fp": 0,
+      "fn": 0
+     },
+     "facilities": {
+      "precision": 0.591,
+      "recall": 0.867,
+      "f1": 0.703,
+      "tp": 13,
+      "fp": 9,
+      "fn": 2
+     },
+     "safety": {
+      "precision": 0.889,
+      "recall": 0.8,
+      "f1": 0.842,
+      "tp": 16,
+      "fp": 2,
+      "fn": 4
+     }
+    },
+    "macro_f1": 0.847,
+    "macro_f1_ci95": [
+     0.783,
+     0.896
+    ],
+    "macro_precision": 0.802,
+    "macro_recall": 0.917,
+    "micro_f1": 0.843,
+    "label_accuracy": 0.919,
+    "exact_match": 0.7,
+    "n": 80
+   }
+  },
+  "H Embeddings + RBF SVM OR lexicon": {
+   "meta": {
+    "family": "hybrid: lexicon OR embeddings + classical ML",
+    "trained": true,
+    "fit_seconds": 1.83,
+    "ms_per_item": 1.802
+   },
+   "thresholds": [
+    -0.0182,
+    0.0509,
+    -0.0147,
+    -0.0835,
+    0.046,
+    0.1674,
+    0.0429
+   ],
+   "cv": {
+    "macro_f1": 0.811,
+    "per_topic_f1": {
+     "roads_access": 0.819,
+     "cleanliness": 0.913,
+     "facilities": 0.741,
+     "safety": 0.721,
+     "price_value": 0.907,
+     "crowd": 0.827,
+     "scenery": 0.746
+    },
+    "fold_macro_f1": [
+     0.821,
+     0.845,
+     0.81,
+     0.784,
+     0.795
+    ],
+    "fold_sd": 0.021
+   },
+   "test_random": {
+    "per_topic": {
+     "roads_access": {
+      "precision": 0.728,
+      "recall": 0.77,
+      "f1": 0.749,
+      "tp": 67,
+      "fp": 25,
+      "fn": 20
+     },
+     "cleanliness": {
+      "precision": 0.829,
+      "recall": 0.879,
+      "f1": 0.853,
+      "tp": 29,
+      "fp": 6,
+      "fn": 4
+     },
+     "facilities": {
+      "precision": 0.764,
+      "recall": 0.714,
+      "f1": 0.738,
+      "tp": 110,
+      "fp": 34,
+      "fn": 44
+     },
+     "safety": {
+      "precision": 0.875,
+      "recall": 0.656,
+      "f1": 0.75,
+      "tp": 21,
+      "fp": 3,
+      "fn": 11
+     },
+     "price_value": {
+      "precision": 0.857,
+      "recall": 0.8,
+      "f1": 0.828,
+      "tp": 36,
+      "fp": 6,
+      "fn": 9
+     },
+     "crowd": {
+      "precision": 0.804,
+      "recall": 0.774,
+      "f1": 0.788,
+      "tp": 41,
+      "fp": 10,
+      "fn": 12
+     },
+     "scenery": {
+      "precision": 0.609,
+      "recall": 0.864,
+      "f1": 0.714,
+      "tp": 140,
+      "fp": 90,
+      "fn": 22
+     }
+    },
+    "macro_f1": 0.774,
+    "macro_f1_ci95": [
+     0.74,
+     0.803
+    ],
+    "macro_precision": 0.781,
+    "macro_recall": 0.78,
+    "micro_f1": 0.75,
+    "label_accuracy": 0.947,
+    "exact_match": 0.677,
+    "n": 800
+   },
+   "gold_A_reader1": {
+    "per_topic": {
+     "roads_access": {
+      "precision": 0.513,
+      "recall": 0.87,
+      "f1": 0.645,
+      "tp": 20,
+      "fp": 19,
+      "fn": 3
+     },
+     "cleanliness": {
+      "precision": 0.844,
+      "recall": 0.964,
+      "f1": 0.9,
+      "tp": 27,
+      "fp": 5,
+      "fn": 1
+     },
+     "facilities": {
+      "precision": 0.74,
+      "recall": 0.949,
+      "f1": 0.831,
+      "tp": 37,
+      "fp": 13,
+      "fn": 2
+     },
+     "safety": {
+      "precision": 0.917,
+      "recall": 0.733,
+      "f1": 0.815,
+      "tp": 11,
+      "fp": 1,
+      "fn": 4
+     }
+    },
+    "macro_f1": 0.798,
+    "macro_f1_ci95": [
+     0.722,
+     0.858
+    ],
+    "macro_precision": 0.754,
+    "macro_recall": 0.879,
+    "micro_f1": 0.798,
+    "label_accuracy": 0.9,
+    "exact_match": 0.683,
+    "n": 120
+   },
+   "gold_A_reader2": {
+    "per_topic": {
+     "roads_access": {
+      "precision": 0.513,
+      "recall": 0.909,
+      "f1": 0.656,
+      "tp": 20,
+      "fp": 19,
+      "fn": 2
+     },
+     "cleanliness": {
+      "precision": 0.75,
+      "recall": 0.96,
+      "f1": 0.842,
+      "tp": 24,
+      "fp": 8,
+      "fn": 1
+     },
+     "facilities": {
+      "precision": 0.62,
+      "recall": 0.912,
+      "f1": 0.738,
+      "tp": 31,
+      "fp": 19,
+      "fn": 3
+     },
+     "safety": {
+      "precision": 0.833,
+      "recall": 1.0,
+      "f1": 0.909,
+      "tp": 10,
+      "fp": 2,
+      "fn": 0
+     }
+    },
+    "macro_f1": 0.786,
+    "macro_f1_ci95": [
+     0.718,
+     0.845
+    ],
+    "macro_precision": 0.679,
+    "macro_recall": 0.945,
+    "micro_f1": 0.759,
+    "label_accuracy": 0.887,
+    "exact_match": 0.658,
+    "n": 120
+   },
+   "gold_B_reader1": {
+    "per_topic": {
+     "roads_access": {
+      "precision": 0.75,
+      "recall": 1.0,
+      "f1": 0.857,
+      "tp": 24,
+      "fp": 8,
+      "fn": 0
+     },
+     "cleanliness": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "tp": 17,
+      "fp": 0,
+      "fn": 0
+     },
+     "facilities": {
+      "precision": 0.591,
+      "recall": 0.867,
+      "f1": 0.703,
+      "tp": 13,
+      "fp": 9,
+      "fn": 2
+     },
+     "safety": {
+      "precision": 0.938,
+      "recall": 0.75,
+      "f1": 0.833,
+      "tp": 15,
+      "fp": 1,
+      "fn": 5
+     }
+    },
+    "macro_f1": 0.848,
+    "macro_f1_ci95": [
+     0.777,
+     0.904
+    ],
+    "macro_precision": 0.82,
+    "macro_recall": 0.904,
+    "micro_f1": 0.847,
+    "label_accuracy": 0.922,
+    "exact_match": 0.725,
+    "n": 80
+   }
+  },
+  "H Embeddings + XGBoost OR lexicon": {
+   "meta": {
+    "family": "hybrid: lexicon OR embeddings + gradient boosting",
+    "trained": true,
+    "fit_seconds": 34.29,
+    "ms_per_item": 0.09
+   },
+   "thresholds": [
+    0.3134,
+    0.2269,
+    0.1103,
+    0.1307,
+    0.1893,
+    0.1488,
+    0.4684
+   ],
+   "cv": {
+    "macro_f1": 0.786,
+    "per_topic_f1": {
+     "roads_access": 0.794,
+     "cleanliness": 0.891,
+     "facilities": 0.701,
+     "safety": 0.672,
+     "price_value": 0.893,
+     "crowd": 0.816,
+     "scenery": 0.737
+    },
+    "fold_macro_f1": [
+     0.795,
+     0.817,
+     0.779,
+     0.776,
+     0.769
+    ],
+    "fold_sd": 0.017
+   },
+   "test_random": {
+    "per_topic": {
+     "roads_access": {
+      "precision": 0.747,
+      "recall": 0.678,
+      "f1": 0.711,
+      "tp": 59,
+      "fp": 20,
+      "fn": 28
+     },
+     "cleanliness": {
+      "precision": 0.875,
+      "recall": 0.848,
+      "f1": 0.862,
+      "tp": 28,
+      "fp": 4,
+      "fn": 5
+     },
+     "facilities": {
+      "precision": 0.618,
+      "recall": 0.695,
+      "f1": 0.654,
+      "tp": 107,
+      "fp": 66,
+      "fn": 47
+     },
+     "safety": {
+      "precision": 0.783,
+      "recall": 0.562,
+      "f1": 0.655,
+      "tp": 18,
+      "fp": 5,
+      "fn": 14
+     },
+     "price_value": {
+      "precision": 0.857,
+      "recall": 0.8,
+      "f1": 0.828,
+      "tp": 36,
+      "fp": 6,
+      "fn": 9
+     },
+     "crowd": {
+      "precision": 0.714,
+      "recall": 0.755,
+      "f1": 0.734,
+      "tp": 40,
+      "fp": 16,
+      "fn": 13
+     },
+     "scenery": {
+      "precision": 0.625,
+      "recall": 0.833,
+      "f1": 0.714,
+      "tp": 135,
+      "fp": 81,
+      "fn": 27
+     }
+    },
+    "macro_f1": 0.737,
+    "macro_f1_ci95": [
+     0.698,
+     0.77
+    ],
+    "macro_precision": 0.746,
+    "macro_recall": 0.739,
+    "micro_f1": 0.713,
+    "label_accuracy": 0.939,
+    "exact_match": 0.641,
+    "n": 800
+   },
+   "gold_A_reader1": {
+    "per_topic": {
+     "roads_access": {
+      "precision": 0.588,
+      "recall": 0.87,
+      "f1": 0.702,
+      "tp": 20,
+      "fp": 14,
+      "fn": 3
+     },
+     "cleanliness": {
+      "precision": 0.844,
+      "recall": 0.964,
+      "f1": 0.9,
+      "tp": 27,
+      "fp": 5,
+      "fn": 1
+     },
+     "facilities": {
+      "precision": 0.667,
+      "recall": 0.923,
+      "f1": 0.774,
+      "tp": 36,
+      "fp": 18,
+      "fn": 3
+     },
+     "safety": {
+      "precision": 0.917,
+      "recall": 0.733,
+      "f1": 0.815,
+      "tp": 11,
+      "fp": 1,
+      "fn": 4
+     }
+    },
+    "macro_f1": 0.798,
+    "macro_f1_ci95": [
+     0.722,
+     0.857
+    ],
+    "macro_precision": 0.754,
+    "macro_recall": 0.873,
+    "micro_f1": 0.793,
+    "label_accuracy": 0.898,
+    "exact_match": 0.658,
+    "n": 120
+   },
+   "gold_A_reader2": {
+    "per_topic": {
+     "roads_access": {
+      "precision": 0.559,
+      "recall": 0.864,
+      "f1": 0.679,
+      "tp": 19,
+      "fp": 15,
+      "fn": 3
+     },
+     "cleanliness": {
+      "precision": 0.75,
+      "recall": 0.96,
+      "f1": 0.842,
+      "tp": 24,
+      "fp": 8,
+      "fn": 1
+     },
+     "facilities": {
+      "precision": 0.556,
+      "recall": 0.882,
+      "f1": 0.682,
+      "tp": 30,
+      "fp": 24,
+      "fn": 4
+     },
+     "safety": {
+      "precision": 0.833,
+      "recall": 1.0,
+      "f1": 0.909,
+      "tp": 10,
+      "fp": 2,
+      "fn": 0
+     }
+    },
+    "macro_f1": 0.778,
+    "macro_f1_ci95": [
+     0.708,
+     0.834
+    ],
+    "macro_precision": 0.675,
+    "macro_recall": 0.926,
+    "micro_f1": 0.744,
+    "label_accuracy": 0.881,
+    "exact_match": 0.617,
+    "n": 120
+   },
+   "gold_B_reader1": {
+    "per_topic": {
+     "roads_access": {
+      "precision": 0.774,
+      "recall": 1.0,
+      "f1": 0.873,
+      "tp": 24,
+      "fp": 7,
+      "fn": 0
+     },
+     "cleanliness": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "tp": 17,
+      "fp": 0,
+      "fn": 0
+     },
+     "facilities": {
+      "precision": 0.52,
+      "recall": 0.867,
+      "f1": 0.65,
+      "tp": 13,
+      "fp": 12,
+      "fn": 2
+     },
+     "safety": {
+      "precision": 0.882,
+      "recall": 0.75,
+      "f1": 0.811,
+      "tp": 15,
+      "fp": 2,
+      "fn": 5
+     }
+    },
+    "macro_f1": 0.834,
+    "macro_f1_ci95": [
+     0.763,
+     0.888
+    ],
+    "macro_precision": 0.794,
+    "macro_recall": 0.904,
+    "micro_f1": 0.831,
+    "label_accuracy": 0.912,
+    "exact_match": 0.688,
+    "n": 80
+   }
+  },
+  "H Fine-tuned bge-small (33M) OR lexicon": {
+   "meta": {
+    "family": "hybrid: lexicon OR fine-tuned transformer",
+    "trained": true,
+    "fit_seconds": 356.1,
+    "ms_per_item": 14.45,
+    "training_loss_by_epoch": [
+     0.724,
+     0.52,
+     0.3959,
+     0.3409
+    ]
+   },
+   "thresholds": [
+    0.5378,
+    0.6445,
+    0.3996,
+    0.6109,
+    0.6194,
+    0.5798,
+    0.6252
+   ],
+   "cv": {
+    "macro_f1": 0.775,
+    "per_topic_f1": {
+     "roads_access": 0.819,
+     "cleanliness": 0.902,
+     "facilities": 0.576,
+     "safety": 0.709,
+     "price_value": 0.913,
+     "crowd": 0.803,
+     "scenery": 0.702
+    },
+    "fold_macro_f1": [
+     0.753,
+     0.791,
+     0.759,
+     0.772,
+     0.778
+    ],
+    "fold_sd": 0.014
+   },
+   "test_random": {
+    "per_topic": {
+     "roads_access": {
+      "precision": 0.663,
+      "recall": 0.793,
+      "f1": 0.723,
+      "tp": 69,
+      "fp": 35,
+      "fn": 18
+     },
+     "cleanliness": {
+      "precision": 0.806,
+      "recall": 0.879,
+      "f1": 0.841,
+      "tp": 29,
+      "fp": 7,
+      "fn": 4
+     },
+     "facilities": {
+      "precision": 0.527,
+      "recall": 0.76,
+      "f1": 0.622,
+      "tp": 117,
+      "fp": 105,
+      "fn": 37
+     },
+     "safety": {
+      "precision": 0.875,
+      "recall": 0.438,
+      "f1": 0.583,
+      "tp": 14,
+      "fp": 2,
+      "fn": 18
+     },
+     "price_value": {
+      "precision": 0.833,
+      "recall": 0.889,
+      "f1": 0.86,
+      "tp": 40,
+      "fp": 8,
+      "fn": 5
+     },
+     "crowd": {
+      "precision": 0.837,
+      "recall": 0.774,
+      "f1": 0.804,
+      "tp": 41,
+      "fp": 8,
+      "fn": 12
+     },
+     "scenery": {
+      "precision": 0.63,
+      "recall": 0.852,
+      "f1": 0.724,
+      "tp": 138,
+      "fp": 81,
+      "fn": 24
+     }
+    },
+    "macro_f1": 0.737,
+    "macro_f1_ci95": [
+     0.697,
+     0.77
+    ],
+    "macro_precision": 0.739,
+    "macro_recall": 0.769,
+    "micro_f1": 0.711,
+    "label_accuracy": 0.935,
+    "exact_match": 0.626,
+    "n": 800
+   },
+   "gold_A_reader1": {
+    "per_topic": {
+     "roads_access": {
+      "precision": 0.541,
+      "recall": 0.87,
+      "f1": 0.667,
+      "tp": 20,
+      "fp": 17,
+      "fn": 3
+     },
+     "cleanliness": {
+      "precision": 0.818,
+      "recall": 0.964,
+      "f1": 0.885,
+      "tp": 27,
+      "fp": 6,
+      "fn": 1
+     },
+     "facilities": {
+      "precision": 0.542,
+      "recall": 1.0,
+      "f1": 0.703,
+      "tp": 39,
+      "fp": 33,
+      "fn": 0
+     },
+     "safety": {
+      "precision": 0.846,
+      "recall": 0.733,
+      "f1": 0.786,
+      "tp": 11,
+      "fp": 2,
+      "fn": 4
+     }
+    },
+    "macro_f1": 0.76,
+    "macro_f1_ci95": [
+     0.685,
+     0.82
+    ],
+    "macro_precision": 0.687,
+    "macro_recall": 0.892,
+    "micro_f1": 0.746,
+    "label_accuracy": 0.863,
+    "exact_match": 0.55,
+    "n": 120
+   },
+   "gold_A_reader2": {
+    "per_topic": {
+     "roads_access": {
+      "precision": 0.541,
+      "recall": 0.909,
+      "f1": 0.678,
+      "tp": 20,
+      "fp": 17,
+      "fn": 2
+     },
+     "cleanliness": {
+      "precision": 0.727,
+      "recall": 0.96,
+      "f1": 0.828,
+      "tp": 24,
+      "fp": 9,
+      "fn": 1
+     },
+     "facilities": {
+      "precision": 0.472,
+      "recall": 1.0,
+      "f1": 0.642,
+      "tp": 34,
+      "fp": 38,
+      "fn": 0
+     },
+     "safety": {
+      "precision": 0.769,
+      "recall": 1.0,
+      "f1": 0.87,
+      "tp": 10,
+      "fp": 3,
+      "fn": 0
+     }
+    },
+    "macro_f1": 0.755,
+    "macro_f1_ci95": [
+     0.681,
+     0.813
+    ],
+    "macro_precision": 0.627,
+    "macro_recall": 0.967,
+    "micro_f1": 0.715,
+    "label_accuracy": 0.854,
+    "exact_match": 0.533,
+    "n": 120
+   },
+   "gold_B_reader1": {
+    "per_topic": {
+     "roads_access": {
+      "precision": 0.706,
+      "recall": 1.0,
+      "f1": 0.828,
+      "tp": 24,
+      "fp": 10,
+      "fn": 0
+     },
+     "cleanliness": {
+      "precision": 0.85,
+      "recall": 1.0,
+      "f1": 0.919,
+      "tp": 17,
+      "fp": 3,
+      "fn": 0
+     },
+     "facilities": {
+      "precision": 0.389,
+      "recall": 0.933,
+      "f1": 0.549,
+      "tp": 14,
+      "fp": 22,
+      "fn": 1
+     },
+     "safety": {
+      "precision": 0.833,
+      "recall": 0.75,
+      "f1": 0.789,
+      "tp": 15,
+      "fp": 3,
+      "fn": 5
+     }
+    },
+    "macro_f1": 0.771,
+    "macro_f1_ci95": [
+     0.703,
+     0.825
+    ],
+    "macro_precision": 0.695,
+    "macro_recall": 0.921,
+    "micro_f1": 0.761,
+    "label_accuracy": 0.863,
+    "exact_match": 0.512,
+    "n": 80
+   }
+  },
+  "H Fine-tuned RoBERTa-base (125M) OR lexicon": {
+   "meta": {
+    "family": "hybrid: lexicon OR fine-tuned transformer",
+    "trained": true,
+    "fit_seconds": 1603.8,
+    "ms_per_item": 74.39,
+    "training_loss_by_epoch": [
+     0.6423,
+     0.3794,
+     0.2676,
+     0.2154
+    ]
+   },
+   "thresholds": [
+    0.3778,
+    0.51,
+    0.4983,
+    0.5934,
+    0.7262,
+    0.6668,
+    0.5537
+   ],
+   "cv": {
+    "macro_f1": 0.805,
+    "per_topic_f1": {
+     "roads_access": 0.808,
+     "cleanliness": 0.902,
+     "facilities": 0.706,
+     "safety": 0.719,
+     "price_value": 0.918,
+     "crowd": 0.845,
+     "scenery": 0.739
+    },
+    "fold_macro_f1": [
+     0.805,
+     0.82,
+     0.804,
+     0.808,
+     0.783
+    ],
+    "fold_sd": 0.012
+   },
+   "test_random": {
+    "per_topic": {
+     "roads_access": {
+      "precision": 0.616,
+      "recall": 0.885,
+      "f1": 0.726,
+      "tp": 77,
+      "fp": 48,
+      "fn": 10
+     },
+     "cleanliness": {
+      "precision": 0.789,
+      "recall": 0.909,
+      "f1": 0.845,
+      "tp": 30,
+      "fp": 8,
+      "fn": 3
+     },
+     "facilities": {
+      "precision": 0.748,
+      "recall": 0.714,
+      "f1": 0.731,
+      "tp": 110,
+      "fp": 37,
+      "fn": 44
+     },
+     "safety": {
+      "precision": 0.759,
+      "recall": 0.688,
+      "f1": 0.721,
+      "tp": 22,
+      "fp": 7,
+      "fn": 10
+     },
+     "price_value": {
+      "precision": 0.867,
+      "recall": 0.867,
+      "f1": 0.867,
+      "tp": 39,
+      "fp": 6,
+      "fn": 6
+     },
+     "crowd": {
+      "precision": 0.755,
+      "recall": 0.755,
+      "f1": 0.755,
+      "tp": 40,
+      "fp": 13,
+      "fn": 13
+     },
+     "scenery": {
+      "precision": 0.607,
+      "recall": 0.895,
+      "f1": 0.723,
+      "tp": 145,
+      "fp": 94,
+      "fn": 17
+     }
+    },
+    "macro_f1": 0.767,
+    "macro_f1_ci95": [
+     0.733,
+     0.795
+    ],
+    "macro_precision": 0.734,
+    "macro_recall": 0.816,
+    "micro_f1": 0.746,
+    "label_accuracy": 0.944,
+    "exact_match": 0.672,
+    "n": 800
+   },
+   "gold_A_reader1": {
+    "per_topic": {
+     "roads_access": {
+      "precision": 0.524,
+      "recall": 0.957,
+      "f1": 0.677,
+      "tp": 22,
+      "fp": 20,
+      "fn": 1
+     },
+     "cleanliness": {
+      "precision": 0.844,
+      "recall": 0.964,
+      "f1": 0.9,
+      "tp": 27,
+      "fp": 5,
+      "fn": 1
+     },
+     "facilities": {
+      "precision": 0.717,
+      "recall": 0.974,
+      "f1": 0.826,
+      "tp": 38,
+      "fp": 15,
+      "fn": 1
+     },
+     "safety": {
+      "precision": 0.846,
+      "recall": 0.733,
+      "f1": 0.786,
+      "tp": 11,
+      "fp": 2,
+      "fn": 4
+     }
+    },
+    "macro_f1": 0.797,
+    "macro_f1_ci95": [
+     0.722,
+     0.857
+    ],
+    "macro_precision": 0.733,
+    "macro_recall": 0.907,
+    "micro_f1": 0.8,
+    "label_accuracy": 0.898,
+    "exact_match": 0.675,
+    "n": 120
+   },
+   "gold_A_reader2": {
+    "per_topic": {
+     "roads_access": {
+      "precision": 0.5,
+      "recall": 0.955,
+      "f1": 0.656,
+      "tp": 21,
+      "fp": 21,
+      "fn": 1
+     },
+     "cleanliness": {
+      "precision": 0.75,
+      "recall": 0.96,
+      "f1": 0.842,
+      "tp": 24,
+      "fp": 8,
+      "fn": 1
+     },
+     "facilities": {
+      "precision": 0.623,
+      "recall": 0.971,
+      "f1": 0.759,
+      "tp": 33,
+      "fp": 20,
+      "fn": 1
+     },
+     "safety": {
+      "precision": 0.769,
+      "recall": 1.0,
+      "f1": 0.87,
+      "tp": 10,
+      "fp": 3,
+      "fn": 0
+     }
+    },
+    "macro_f1": 0.782,
+    "macro_f1_ci95": [
+     0.709,
+     0.842
+    ],
+    "macro_precision": 0.66,
+    "macro_recall": 0.972,
+    "micro_f1": 0.762,
+    "label_accuracy": 0.885,
+    "exact_match": 0.633,
+    "n": 120
+   },
+   "gold_B_reader1": {
+    "per_topic": {
+     "roads_access": {
+      "precision": 0.686,
+      "recall": 1.0,
+      "f1": 0.814,
+      "tp": 24,
+      "fp": 11,
+      "fn": 0
+     },
+     "cleanliness": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "tp": 17,
+      "fp": 0,
+      "fn": 0
+     },
+     "facilities": {
+      "precision": 0.609,
+      "recall": 0.933,
+      "f1": 0.737,
+      "tp": 14,
+      "fp": 9,
+      "fn": 1
+     },
+     "safety": {
+      "precision": 0.941,
+      "recall": 0.8,
+      "f1": 0.865,
+      "tp": 16,
+      "fp": 1,
+      "fn": 4
+     }
+    },
+    "macro_f1": 0.854,
+    "macro_f1_ci95": [
+     0.789,
+     0.903
+    ],
+    "macro_precision": 0.809,
+    "macro_recall": 0.933,
+    "micro_f1": 0.845,
+    "label_accuracy": 0.919,
+    "exact_match": 0.713,
+    "n": 80
+   }
+  }
+ }
+}

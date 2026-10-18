@@ -4,16 +4,16 @@
  "results": {
   "part_a_headline": {
    "n_rows": 120,
-   "macro_f1": 0.793,
+   "macro_f1": 0.798,
    "per_aspect": {
     "roads_access": {
      "tp": 20,
-     "fp": 14,
+     "fp": 19,
      "fn": 3,
-     "tn": 83,
-     "precision": 0.588,
+     "tn": 78,
+     "precision": 0.513,
      "recall": 0.87,
-     "f1": 0.702,
+     "f1": 0.645,
      "human_positives": 23
     },
     "cleanliness": {
@@ -27,49 +27,49 @@
      "human_positives": 28
     },
     "facilities": {
-     "tp": 33,
-     "fp": 12,
-     "fn": 6,
-     "tn": 69,
-     "precision": 0.733,
-     "recall": 0.846,
-     "f1": 0.786,
+     "tp": 37,
+     "fp": 13,
+     "fn": 2,
+     "tn": 68,
+     "precision": 0.74,
+     "recall": 0.949,
+     "f1": 0.831,
      "human_positives": 39
     },
     "safety": {
      "tp": 11,
-     "fp": 2,
+     "fp": 1,
      "fn": 4,
-     "tn": 103,
-     "precision": 0.846,
+     "tn": 104,
+     "precision": 0.917,
      "recall": 0.733,
-     "f1": 0.786,
+     "f1": 0.815,
      "human_positives": 15
     }
    }
   },
   "part_b_contested": {
    "n_rows": 80,
-   "macro_f1": 0.836,
+   "macro_f1": 0.848,
    "per_aspect": {
     "roads_access": {
-     "tp": 23,
+     "tp": 24,
      "fp": 8,
-     "fn": 1,
+     "fn": 0,
      "tn": 48,
-     "precision": 0.742,
-     "recall": 0.958,
-     "f1": 0.836,
+     "precision": 0.75,
+     "recall": 1.0,
+     "f1": 0.857,
      "human_positives": 24
     },
     "cleanliness": {
      "tp": 17,
-     "fp": 1,
+     "fp": 0,
      "fn": 0,
-     "tn": 62,
-     "precision": 0.944,
+     "tn": 63,
+     "precision": 1.0,
      "recall": 1.0,
-     "f1": 0.971,
+     "f1": 1.0,
      "human_positives": 17
     },
     "facilities": {
@@ -96,46 +96,46 @@
   },
   "all_rows": {
    "n_rows": 200,
-   "macro_f1": 0.817,
+   "macro_f1": 0.825,
    "per_aspect": {
     "roads_access": {
-     "tp": 43,
-     "fp": 22,
-     "fn": 4,
-     "tn": 131,
-     "precision": 0.662,
-     "recall": 0.915,
-     "f1": 0.768,
+     "tp": 44,
+     "fp": 27,
+     "fn": 3,
+     "tn": 126,
+     "precision": 0.62,
+     "recall": 0.936,
+     "f1": 0.746,
      "human_positives": 47
     },
     "cleanliness": {
      "tp": 44,
-     "fp": 6,
+     "fp": 5,
      "fn": 1,
-     "tn": 149,
-     "precision": 0.88,
+     "tn": 150,
+     "precision": 0.898,
      "recall": 0.978,
-     "f1": 0.926,
+     "f1": 0.936,
      "human_positives": 45
     },
     "facilities": {
-     "tp": 46,
-     "fp": 21,
-     "fn": 8,
-     "tn": 125,
-     "precision": 0.687,
-     "recall": 0.852,
-     "f1": 0.76,
+     "tp": 50,
+     "fp": 22,
+     "fn": 4,
+     "tn": 124,
+     "precision": 0.694,
+     "recall": 0.926,
+     "f1": 0.794,
      "human_positives": 54
     },
     "safety": {
      "tp": 26,
-     "fp": 3,
+     "fp": 2,
      "fn": 9,
-     "tn": 162,
-     "precision": 0.897,
+     "tn": 163,
+     "precision": 0.929,
      "recall": 0.743,
-     "f1": 0.812,
+     "f1": 0.825,
      "human_positives": 35
     }
    }

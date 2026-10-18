@@ -5,56 +5,56 @@
   "n_destinations_rated": 300,
   "aspects": {
    "cleanliness": {
-    "n": 95,
-    "spearman_rate_vs_stars": -0.281,
+    "n": 117,
+    "spearman_rate_vs_stars": -0.256,
     "significance": {
-     "p_value": 0.0056,
+     "p_value": 0.0052,
      "significant_at_05": true
     }
    },
    "crowd": {
-    "n": 123,
-    "spearman_rate_vs_stars": -0.309,
+    "n": 162,
+    "spearman_rate_vs_stars": -0.392,
     "significance": {
-     "p_value": 0.0005,
+     "p_value": 0.0,
      "significant_at_05": true
     }
    },
    "facilities": {
-    "n": 102,
-    "spearman_rate_vs_stars": -0.197,
+    "n": 174,
+    "spearman_rate_vs_stars": -0.283,
     "significance": {
-     "p_value": 0.047,
+     "p_value": 0.0001,
      "significant_at_05": true
     }
    },
    "price_value": {
-    "n": 89,
-    "spearman_rate_vs_stars": -0.123,
+    "n": 110,
+    "spearman_rate_vs_stars": -0.081,
     "significance": {
-     "p_value": 0.2516,
+     "p_value": 0.4011,
      "significant_at_05": false
     }
    },
    "roads_access": {
-    "n": 127,
-    "spearman_rate_vs_stars": -0.071,
+    "n": 173,
+    "spearman_rate_vs_stars": -0.019,
     "significance": {
-     "p_value": 0.4284,
+     "p_value": 0.8043,
      "significant_at_05": false
     }
    },
    "safety": {
-    "n": 61,
-    "spearman_rate_vs_stars": 0.091,
+    "n": 99,
+    "spearman_rate_vs_stars": 0.174,
     "significance": {
-     "p_value": 0.4871,
+     "p_value": 0.085,
      "significant_at_05": false
     }
    },
    "scenery": {
-    "n": 220,
-    "spearman_rate_vs_stars": -0.315,
+    "n": 229,
+    "spearman_rate_vs_stars": -0.407,
     "significance": {
      "p_value": 0.0,
      "significant_at_05": true
@@ -62,16 +62,16 @@
    }
   },
   "overall": {
-   "n": 225,
-   "spearman_rate_vs_stars": -0.44,
+   "n": 239,
+   "spearman_rate_vs_stars": -0.482,
    "significance": {
     "p_value": 0.0,
     "significant_at_05": true
    }
   },
   "corpus_vs_public_volume": {
-   "n": 225,
-   "spearman": 0.62,
+   "n": 239,
+   "spearman": 0.656,
    "significance": {
     "p_value": 0.0,
     "significant_at_05": true

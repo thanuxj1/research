@@ -483,39 +483,84 @@ gold set first. Stated here rather than done quietly.
 ### Measured against human labels
 
 The table above was scored on evaluation sets the assistant labelled itself.
-A person outside the pipeline has now labelled 200 rows
-(`scripts/38_evaluate_against_gold.py`, Part A only, n=120):
+Two independent human readers have now labelled 200 rows
+(`scripts/38_evaluate_against_gold.py`, Part A only, n=120; figures from
+`reports/gold_evaluation.json`):
 
 | Aspect | precision | recall | **F1 (human)** | F1 (self-labelled) | change |
 |---|---|---|---|---|---|
-| Cleanliness | 0.818 | 0.964 | **0.885** | 0.901 | −0.016 |
+| Cleanliness | 0.844 | 0.964 | **0.900** | 0.901 | -0.001 |
 | Facilities | 0.733 | 0.846 | **0.786** | 0.773 | +0.013 |
-| Roads & Access | 0.500 | 0.870 | **0.635** | 0.914 | **−0.279** |
-| Safety | 0.394 | 0.867 | **0.542** | 0.755 | **−0.213** |
-| | | | **0.712 macro** | | |
+| Safety | 0.846 | 0.733 | **0.786** | 0.755 | +0.031 |
+| Roads & Access | 0.588 | 0.870 | **0.702** | 0.914 | **-0.212** |
+| | | | **0.793 macro** | | |
 
-**Cleanliness and facilities held. Roads and safety did not** — and those are
-the two aspects the trained classifiers were introduced for, so the
-self-labelled evaluation was flattering precisely the components it existed to
-justify.
+**Roads and access is the one that did not hold up**: the self-labelled test
+flattered it (0.914) and the human gold set puts it at 0.702. The failure is
+precision, not recall: recall is 0.73-0.96, so the pipeline finds what is
+there, and roads over-tags (precision 0.588). The annotator hit this by hand
+within four rows -- "the tuk tuk drivers try to get a commission" tagged
+roads_access -- before any number said so.
 
-The failure is **precision, not recall**. Recall is 0.85–0.96: the pipeline
-finds what is there. Safety precision is 0.394, so three in five safety tags
-are wrong; roads is 0.500. It over-tags. The annotator hit this by hand within
-four rows — "We saw a few monkeys, a deer and a few birds" tagged safety,
-"the tuk tuk drivers try to get a commission" tagged roads_access — before any
-number said so.
-
-Part B (contested cases, n=80) scores *higher* at 0.808 macro. That is a
+Part B (contested cases, n=80) scores higher at 0.836 macro. That is a
 sampling artefact: it oversamples rows where the methods disagreed, which are
 rows where something fired confidently, so it is denser in true positives.
-Headline accuracy is Part A only, per `goldset_focused_sampling.json`.
+Headline accuracy is Part A only, per `goldset_focused_sampling.json`; the two
+parts are never pooled.
 
 **The caveat that travels with these numbers:** scored against annotator 1 as
 the gold standard. A second annotator labelled the same 200 rows independently
-at **kappa 0.746** (substantial), so the scheme behind these labels is
-measurably reliable — with `facilities` the weakest at 0.559. See open
-problem #1.
+(Cohen's kappa 0.718 to 0.941 across the four aspects, see open problem #1),
+so the scheme behind these labels is measurably reliable.
+
+---
+
+### All seven topics, on random sentences (AI-annotated)
+
+The human gold set covers four topics and was drawn mostly from sentences the
+pipeline had already tagged, so it can see wrong tags but hardly any missed ones.
+`scripts/52_ai_annotated_eval.py` measures every topic, recall included, on
+**800 sentences drawn at random from the whole corpus** (two independent draws,
+500 + 300), labelled by an AI annotator (Claude) blind to the system.
+
+**These are AI labels, reported as such.** They live in `reports/ai_annotated/`
+with `labelled_by=claude`, never enter the human gold set, and are never
+reported as human agreement. How far they can be trusted is measured, not
+assumed: the same annotator labelled the 120 Part A gold rows blind.
+
+| topic | presence kappa: AI vs reader 1 | AI vs reader 2 | reader 1 vs reader 2 |
+|---|---|---|---|
+| Cleanliness | 0.98 | 0.95 | 0.93 |
+| Facilities | 0.78 | 0.79 | 0.82 |
+| Safety | 0.79 | 0.90 | 0.69 |
+| Roads & Access | 0.70 | 0.77 | 0.70 |
+
+On presence it agrees with each human about as well as the humans agree with
+each other. On verdict it is weaker for roads (0.58 against 0.82 between humans).
+
+| topic | mentions | precision | recall | F1 |
+|---|---|---|---|---|
+| Price & Value | 46 | 0.91 | 0.83 | 0.86 |
+| Cleanliness | 27 | 0.95 | 0.78 | 0.86 |
+| Crowding & Noise | 45 | 0.96 | 0.58 | 0.72 |
+| Scenery | 165 | 0.63 | 0.67 | 0.65 |
+| Roads & Access | 80 | 0.73 | 0.41 | 0.53 |
+| Safety | 35 | 0.93 | 0.37 | 0.53 |
+| Facilities | 137 | 0.74 | 0.23 | 0.36 |
+| **macro** | | | | **0.64** |
+
+Bootstrap intervals are in `reports/ai_annotated_eval.json`. **Precise but
+conservative**: what it tags is usually right; it misses many mentions,
+facilities most of all. The misses do not shift most complaint shares (found vs
+missed: roads 0.44/0.43, facilities 0.21/0.23, price 0.64/0.67, scenery
+0.11/0.16); safety is the exception (0.58/0.75), so its rate is if anything
+understated.
+
+**A bigger lexicon did not fix it.** `scripts/53_lexicon_v2_test.py`: patterns
+chosen on the 500-sentence draw and pruned to add no false positive on the human
+gold set lifted macro-F1 0.66 -> 0.82 on that draw, but only 0.646 -> 0.651 on the
+fresh 300. That was fitting, so the lexicon is unchanged and no published figure
+moved. Recall needs a learned extractor validated on human labels.
 
 ---
 
@@ -560,19 +605,21 @@ tree and asserts every count and rate is unchanged.
    independently labelled the 200-row focused set, each working from a blank
    sheet with no sight of the other's answers.
 
-   **Cohen's kappa = 0.746 — substantial.**
+   **Cohen's kappa 0.718 to 0.941 across the four aspects** (from
+   `reports/agreement.json`; claims rest on the lower bound of each interval).
 
-   | aspect | kappa | exact agreement | |
-   |---|---|---|---|
-   | Cleanliness | 0.947 | 98.0% | almost perfect |
-   | Roads & Access | 0.756 | 90.5% | substantial |
-   | Safety | 0.721 | 92.5% | substantial |
-   | Facilities | **0.559** | 80.5% | **moderate — the guidelines are soft here** |
+   | aspect | kappa | 95% interval | exact agreement | |
+   |---|---|---|---|---|
+   | Cleanliness | 0.941 | 0.875 to 0.986 | 98.0% | almost perfect |
+   | Safety | 0.756 | 0.621 to 0.872 | 93.5% | substantial |
+   | Facilities | 0.737 | 0.619 to 0.838 | 90.0% | substantial |
+   | Roads & Access | 0.718 | 0.594 to 0.826 | 90.0% | substantial; lower bound 0.594 misses 0.60 by 0.006 |
 
-   Facilities is the weak spot, and both the second annotator and a separate
-   automated pass diverged in the same place: the line between "mentioned"
-   (`X`) and "not really about this aspect" (blank). The scheme distinguishes
-   complaining from praising cleanly and is vague about bare mentions.
+   Roads and facilities are the weakest. Both the second annotator and a
+   separate automated pass diverged in the same place: the line between
+   "mentioned" (`X`) and "not really about this aspect" (blank). The scheme
+   distinguishes complaining from praising cleanly and is vague about bare
+   mentions.
 
    Accuracy is reported against annotator 1 as the gold standard; kappa is the
    reliability of the scheme that produced it. Two rows were adjudicated by a
@@ -615,17 +662,19 @@ tree and asserts every count and rate is unchanged.
    accuracy.** `scripts/33_ablate_rules.py` switches each off and rebuilds the
    tree (`reports/rule_ablation.json`):
 
-   | rule off | safety rate | worst aspect |
+   | rule off | safety rate | highest-rate aspect |
    |---|---|---|
-   | *(none — deployed)* | 50.9% | safety |
-   | request rule | 48.8% | safety |
-   | **safety recall** | **46.7%** | **price & value** |
-   | site rule | 50.9% | safety |
-   | all three | 44.1% | price & value |
+   | *(none, deployed)* | 69.8% | safety |
+   | request rule | 68.8% | safety |
+   | **safety recall** | **60.2%** | safety |
+   | site rule | 69.8% | safety |
+   | all three | 57.0% | safety |
 
-   **The headline claim depends on a single rule.** Switching off the safety
-   recall alone drops safety below price & value. Whether the 215 labels it
-   flips are *correct* still needs #1 — impact is not accuracy.
+   **The size of the headline rate depends on a single rule.** Switching off
+   the safety recall rule drops the national safety rate from 69.8% to 60.2%,
+   but safety stays the highest-rate aspect in every variant (price & value is
+   next at 48-51%). Whether the labels the rule flips are *correct* still needs
+   more polarity ground truth -- impact is not accuracy.
 
    The domain patch, listed here previously as a third risk, is **not
    deployed**: it feeds `pol_hybrid` (Method C), a comparison column, while

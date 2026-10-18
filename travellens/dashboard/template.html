@@ -2,7 +2,7 @@
 <title>LostinSriLanka</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=IBM+Plex+Mono:wght@400;500&display=swap">
 
 <style>
 /* ---------------------------------------------------------------- tokens */
@@ -167,7 +167,7 @@ h3.section-title {
   padding: 11px 14px;
   background: var(--surface);
   border: 1px solid var(--line-soft);
-  border-radius: 3px;
+  border-radius: 10px;
   text-align: left; width: 100%; font: inherit; color: inherit;
   cursor: pointer;
 }
@@ -193,7 +193,7 @@ h3.section-title {
 .chip {
   font-family: var(--f-mono); font-size: 11px; font-weight: 600;
   text-transform: uppercase; letter-spacing: .06em;
-  padding: 2px 5px; border-radius: 2px; white-space: nowrap;
+  padding: 2px 5px; border-radius: 6px; white-space: nowrap;
 }
 .chip-low  { background: var(--warn-soft); color: var(--warn); }
 .chip-ctrl { background: var(--accent-soft); color: var(--accent); }
@@ -217,8 +217,7 @@ h3.section-title {
 .rank-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(258px, 1fr)); gap: 12px; }
 .rank-card {
   background: var(--surface); border: 1px solid var(--line-soft);
-  border-radius: 3px; padding: 14px 16px;
-}
+  border-radius: 16px; padding: 14px 16px; box-shadow: var(--shadow);}
 .rank-card h4 {
   font-family: var(--f-display); font-size: 12.5px; font-weight: 600;
   margin: 0 0 10px; display: flex; justify-content: space-between; gap: 10px;
@@ -253,7 +252,7 @@ h3.section-title {
   cursor: pointer; text-align: left;
 }
 .dest-table button:hover { text-decoration: underline; }
-.table-scroll { overflow-x: auto; background: var(--surface); border: 1px solid var(--line-soft); border-radius: 3px; }
+.table-scroll { overflow-x: auto; background: var(--surface); border: 1px solid var(--line-soft); border-radius: 10px; }
 
 /* ---------------------------------------------------------- source links */
 .srclinks {
@@ -275,8 +274,7 @@ h3.section-title {
 .story-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(272px, 1fr)); gap: 12px; }
 .story-card {
   background: var(--surface); border: 1px solid var(--line-soft);
-  border-radius: 4px; padding: 13px 15px; display: flex; flex-direction: column; gap: 7px;
-}
+  border-radius: 16px; padding: 13px 15px; display: flex; flex-direction: column; gap: 7px; box-shadow: var(--shadow);}
 .story-card a.story-title {
   font-weight: 600; font-size: 14.5px; color: var(--ink); text-decoration: none;
   line-height: 1.4;
@@ -286,7 +284,7 @@ h3.section-title {
 .story-head { display: flex; align-items: center; gap: 7px; flex-wrap: wrap; }
 .story-kind {
   font-family: var(--f-mono); font-size: 11px; font-weight: 600; text-transform: uppercase;
-  letter-spacing: .06em; padding: 2px 6px; border-radius: 2px;
+  letter-spacing: .06em; padding: 2px 6px; border-radius: 6px;
 }
 .story-kind.youtube { background: var(--critical-soft); color: var(--critical); }
 .story-kind.reddit  { background: var(--warn-soft);     color: var(--warn); }
@@ -297,7 +295,7 @@ h3.section-title {
    It has to be legible enough that the reader never mistakes it for local. */
 .story-foreign {
   font-family: var(--f-mono); font-size: 11px; letter-spacing: .04em;
-  color: var(--ink-muted); border: 1px solid currentColor; border-radius: 3px;
+  color: var(--ink-muted); border: 1px solid currentColor; border-radius: 6px;
   padding: 0 4px; margin-left: 6px; white-space: nowrap; opacity: .85;
 }
 .story-snip { font-size: 12.5px; color: var(--ink-muted); line-height: 1.5; }
@@ -325,7 +323,7 @@ h3.section-title {
 .quote-side button {
   font-family: var(--f-mono); font-size: 11px; padding: 5px 11px;
   background: var(--surface); color: var(--ink-muted);
-  border: 1px solid var(--line); border-radius: 2px; cursor: pointer;
+  border: 1px solid var(--line); border-radius: 10px; cursor: pointer;
 }
 .quote-side button:hover:not(:disabled) { border-color: var(--accent); color: var(--ink); }
 .quote-side button[aria-pressed="true"] {
@@ -343,7 +341,7 @@ h3.section-title {
 .quote-flag {
   display: inline-block; margin-right: 7px;
   font-family: var(--f-mono); font-size: 10px; text-transform: uppercase;
-  letter-spacing: .06em; padding: 1px 5px; border-radius: 2px;
+  letter-spacing: .06em; padding: 1px 5px; border-radius: 10px;
   background: var(--warn-soft); color: var(--warn); vertical-align: 1px;
 }
 .quote.is-low-conf { border-left-style: dashed; }
@@ -364,7 +362,7 @@ h3.section-title {
   color: var(--ink-muted);
 }
 .quote-controls button {
-  font: inherit; padding: 3px 9px; border-radius: 2px; cursor: pointer;
+  font: inherit; padding: 3px 9px; border-radius: 10px; cursor: pointer;
   background: var(--surface); color: var(--ink-muted);
   border: 1px solid var(--line);
 }
@@ -382,7 +380,7 @@ h3.section-title {
 .quote-controls .sep { color: var(--ink-faint); padding: 0 2px; }
 .quote-band {
   font-family: var(--f-mono); font-size: 11px; color: var(--ink-faint);
-  border: 1px solid var(--line-soft); border-radius: 2px; padding: 1px 5px;
+  border: 1px solid var(--line-soft); border-radius: 6px; padding: 1px 5px;
   margin-right: 7px;
 }
 .quote-meta {
@@ -411,8 +409,7 @@ h3.section-title {
 .map-shell {
   display: grid; grid-template-columns: minmax(0, 300px) 1fr; gap: 20px;
   background: var(--surface); border: 1px solid var(--line-soft);
-  border-radius: 3px; padding: 18px 20px;
-}
+  border-radius: 16px; padding: 18px 20px; box-shadow: var(--shadow);}
 /* Fixed height with preserveAspectRatio letterboxing: Sri Lanka's 1:1.7
    footprint would otherwise force an 800px-tall column. */
 .map-svg { width: 100%; height: auto; display: block; }
@@ -428,7 +425,7 @@ h3.section-title {
 .aspect-picker button {
   font-family: var(--f-mono); font-size: 11px; padding: 4px 9px;
   background: var(--surface); color: var(--ink-muted);
-  border: 1px solid var(--line); border-radius: 2px; cursor: pointer;
+  border: 1px solid var(--line); border-radius: 10px; cursor: pointer;
 }
 .aspect-picker button:hover { border-color: var(--accent); color: var(--ink); }
 .aspect-picker button[aria-pressed="true"] {
@@ -471,7 +468,7 @@ h3.section-title {
   display: flex; align-items: center; gap: 8px; margin-bottom: 10px;
 }
 .map-selected-note button {
-  font: inherit; padding: 3px 9px; border-radius: 2px; cursor: pointer;
+  font: inherit; padding: 3px 9px; border-radius: 10px; cursor: pointer;
   background: var(--surface); color: var(--accent); border: 1px solid var(--line);
 }
 .map-selected-note button:hover { border-color: var(--accent); }
@@ -489,7 +486,7 @@ h3.section-title {
 
 /* ---------------------------------------------------------------- 3D map */
 #map-canvas {
-  display: block; width: 100%; border-radius: 3px;
+  display: block; width: 100%; border-radius: 6px;
   background: transparent; cursor: grab; touch-action: none;
 }
 #map-canvas:active { cursor: grabbing; }
@@ -534,7 +531,7 @@ h3.section-title {
 .view-switch button {
   font-family: var(--f-mono); font-size: 11px; padding: 4px 10px;
   background: var(--surface); color: var(--ink-muted);
-  border: 1px solid var(--line); border-radius: 2px; cursor: pointer;
+  border: 1px solid var(--line); border-radius: 10px; cursor: pointer;
 }
 .view-switch button[aria-pressed="true"] {
   background: var(--accent-fill); border-color: var(--accent-fill); color: #F8FAFC;
@@ -678,7 +675,7 @@ h3.section-title, h3, .section-title {
 .map-shell, .table-scroll {
   background: var(--surface);
   border: 1px solid var(--line-soft);
-  border-radius: 4px;
+  border-radius: 10px;
   box-shadow: none;
 }
 .story-card {
@@ -697,7 +694,7 @@ h3.section-title, h3, .section-title {
 .aspect-picker button, .view-switch button, .quote-controls button {
   background: none;
   border: 1px solid var(--line);
-  border-radius: 2px;
+  border-radius: 10px;
   font-family: var(--f-mono);
   font-size: var(--t-micro);
   letter-spacing: .04em;
@@ -872,7 +869,7 @@ h3.section-title, h3, .section-title {
 .detail-open {
   appearance: none; cursor: pointer;
   background: none; border: 1px solid var(--line);
-  border-radius: 2px; padding: 10px 16px;
+  border-radius: 10px; padding: 10px 16px;
   font-family: var(--f-mono); font-size: var(--t-micro);
   letter-spacing: .06em; color: var(--ink);
   transition: border-color .16s ease, background .16s ease;
@@ -948,7 +945,7 @@ h3.section-title, h3, .section-title {
 .dest-photo { margin: 0 0 20px; }
 .dest-photo img {
   width: 100%; max-height: 260px; object-fit: cover; display: block;
-  border-radius: 3px; border: 1px solid var(--line);
+  border-radius: 6px; border: 1px solid var(--line);
 }
 .dest-photo figcaption {
   font-size: 12px; color: var(--ink-faint); margin-top: 6px;
@@ -1116,7 +1113,7 @@ body.method-in-panel .wrap > footer.foot { display: none; }
 }
 .pager-step {
   appearance: none; cursor: pointer;
-  background: none; border: 1px solid var(--line); border-radius: 2px;
+  background: none; border: 1px solid var(--line); border-radius: 10px;
   padding: 6px 12px; color: var(--ink);
   font-family: var(--f-mono); font-size: var(--t-micro); letter-spacing: .04em;
   transition: border-color .16s ease, background .16s ease;
@@ -1229,7 +1226,7 @@ body.method-in-panel .wrap > footer.foot { display: none; }
 .map-head-tools { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
 .pin-btn {
   appearance: none; cursor: pointer;
-  background: none; border: 1px solid var(--line); border-radius: 2px;
+  background: none; border: 1px solid var(--line); border-radius: 10px;
   padding: 4px 10px; color: var(--ink-muted);
   font-family: var(--f-mono); font-size: var(--t-micro); letter-spacing: .04em;
 }
@@ -1338,7 +1335,7 @@ body.method-in-panel .wrap > footer.foot { display: none; }
 .map-select {
   appearance: none; width: 100%; cursor: pointer;
   background: var(--surface); color: var(--ink);
-  border: 1px solid var(--line); border-radius: 2px;
+  border: 1px solid var(--line); border-radius: 10px;
   padding: 7px 28px 7px 10px;
   font-family: var(--f-mono); font-size: var(--t-micro); letter-spacing: .04em;
   background-image: linear-gradient(45deg, transparent 50%, var(--ink-faint) 50%),
@@ -1408,7 +1405,7 @@ body.method-in-panel .wrap > footer.foot { display: none; }
 .lede-place {
   appearance: none; cursor: pointer;
   display: inline-flex; align-items: baseline; gap: 8px;
-  background: none; border: 1px solid var(--line); border-radius: 2px;
+  background: none; border: 1px solid var(--line); border-radius: 10px;
   padding: 6px 10px; color: var(--ink);
   font-family: var(--f-body); font-size: var(--t-small);
   transition: border-color .16s ease, background .16s ease;
@@ -1576,7 +1573,123 @@ body.method-in-panel .wrap > footer.foot { display: none; }
   .bento-hero .map-side .map-help,
   .bento-hero .map-side .map3d-aside { grid-column: 1 / -1; }
 }
+
+/* platform-theme:start */
+/* Shared with the AI Assistant and Food Guide tabs -- see scripts/60_apply_platform_theme.py */
+:root {
+  --paper: #F8FAFC; --ground: #F8FAFC; --surface: #FFFFFF; --surface-2: #F1F5F9;
+  --line: #E2E8F0; --line-soft: #EEF2F6;
+  --ink: #0F172A; --ink-muted: #475569; --ink-faint: #64748B;
+  --accent: #059669; --accent-soft: #ECFDF5; --accent-fill: #059669;
+  --accent-on-fill: #FFFFFF; --accent-text: #047857;
+  --good: #047857; --good-soft: #ECFDF5;
+  --brand-ink: #0D1B2A; --brand-ink2: #0D1B2A; --brand-gold: #E8B84B;
+  --f-display: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --f-body:    "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --f-mono:    "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --shadow: 0 1px 2px rgba(15,23,42,.04), 0 6px 20px rgba(15,23,42,.06);
+}
+:root[data-theme="dark"] {
+  --paper: #0B1220; --ground: #0B1220; --surface: #111A2B; --surface-2: #1A2538;
+  --line: #26324A; --line-soft: #1E2A3E;
+  --ink: #F1F5F9; --ink-muted: #A7B3C6; --ink-faint: #8391A7;
+  --accent: #34D399; --accent-soft: rgba(52,211,153,.14); --accent-fill: #34D399;
+  --accent-on-fill: #06281D; --accent-text: #6EE7B7;
+  --good: #34D399; --good-soft: rgba(52,211,153,.14);
+}
+body { font-feature-settings: "cv11", "ss01"; }
+h1, h2, h3, .brand, .lede, .an-num { letter-spacing: -.02em; }
+h1, h2, .brand, .an-num { font-weight: 800 !important; }
+h3 { font-weight: 700; }
+td.num, .counter, .an-td-num, [class*="pct"], [class*="-num"] { font-variant-numeric: tabular-nums; }
+button, select, input, textarea { font-family: var(--f-body); }
+button { transition: background .15s, color .15s, border-color .15s, box-shadow .15s; }
+
+/* masthead = the platform's navy bar with the gold "in" */
+.masthead { background: var(--brand-ink) !important; }
+.tab[aria-selected="true"] { color: var(--brand-gold) !important; border-bottom-color: var(--brand-gold) !important; }
+
+/* Inside the platform the navy bar is already on screen; the second dark band is
+   replaced by a light sub-navigation with pill tabs, like the Food Guide header. */
+html.embedded .masthead {
+  background: var(--surface) !important; padding: 10px 0 !important; margin-bottom: 24px !important;
+  border-bottom: 1px solid var(--line); box-shadow: 0 1px 2px rgba(15,23,42,.03);
+}
+html.embedded .tabs {
+  margin-top: 0 !important; gap: 4px; width: fit-content; padding: 4px !important;
+  background: var(--surface-2); border: 1px solid var(--line); border-radius: 12px;
+  max-width: none; margin-left: max(24px, calc((100% - 1040px) / 2 + 24px)) !important;
+}
+html.embedded .tab {
+  color: var(--ink-muted) !important; border-bottom: 0 !important; border-radius: 9px !important;
+  padding: 7px 16px !important; font-size: 13.5px; font-weight: 600;
+}
+html.embedded .tab:hover { color: var(--ink) !important; background: rgba(15,23,42,.04); }
+/* ---- Map first. The Map tab used to spend ~330px on two stacked intros (the
+   portal's sentence, then the dashboard's 44px title, deck and evidence note)
+   before the map began, so the map was cut off inside its frame. Now the
+   portal's sentence is dropped on that tab, the frame loses its card border,
+   and inside the frame the dashboard header collapses to one compact line
+   (the evidence note stays, small, because it is a statement of scope). The
+   map and its panel then fill the frame, which is sized to the window. */
+#panel-map > .lede, #panel-map > .sub { display: none !important; }
+.frame-wrap { border: 0 !important; border-radius: 0 !important; background: transparent !important;
+  box-shadow: none !important; overflow: visible !important; }
+:root[data-framed="true"] .wrap { padding-top: 6px !important; }
+:root[data-framed="true"] .view-head {
+  display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 14px; margin: 0 0 12px !important; }
+:root[data-framed="true"] h2.view-title, :root[data-framed="true"] .view-title {
+  font-size: 22px !important; margin: 0 !important; line-height: 1.2; }
+:root[data-framed="true"] .view-deck { margin: 0 !important; font-size: 13.5px; color: var(--ink-muted); }
+:root[data-framed="true"] .view-deck, :root[data-framed="true"] .evidence-note { max-width: none !important; }
+:root[data-framed="true"] .map-head { margin-bottom: 8px !important; }
+:root[data-framed="true"] .map-head .section-title { font-size: 18px !important; }
+/* the map is sized from the window, less the header, toolbar and card padding
+   above and below it, so the whole island is on screen without scrolling */
+:root[data-framed="true"] .map-svg {
+  width: min(100%, max(240px, calc(min(100vh - 190px, 700px) * 0.5957))) !important; }
+:root[data-framed="true"] .view-head .evidence-note {
+  flex-basis: 100%; margin: 2px 0 0 !important; padding: 0 !important; border: 0 !important;
+  font-size: 12px; color: var(--ink-faint); }
+
+/* ---- Map tab as a dashboard screen: the frame spans the window (16px gutters)
+   so the dashboard's two-column layout engages -- map + its controls on the
+   left, the findings panel (headline, worst districts, every topic) on the
+   right -- instead of the findings sitting below the fold. */
+#panel-map .frame-wrap { width: calc(100vw - 32px); margin-left: calc(50% - 50vw + 16px); }
+:root[data-framed="true"] .wrap { max-width: 1680px !important; padding: 0 16px 12px !important; }
+:root[data-framed="true"] .view-head .evidence-note { flex-basis: auto !important; margin: 0 !important; }
+:root[data-framed="true"] .view-head .evidence-note::before { content: "·  "; }
+@media (min-width: 1080px) {
+  :root[data-framed="true"] .bento { column-gap: 32px !important; }
+  :root[data-framed="true"] .bento-hero .map-shell:not(.is-3d) {
+    grid-template-columns: auto minmax(180px, 230px) !important; align-items: start; gap: 24px; }
+  :root[data-framed="true"] .bento-hero .map-shell:not(.is-3d) .map-side {
+    display: flex !important; flex-direction: column; gap: 14px;
+    margin-top: 0 !important; padding-top: 0 !important; border-top: 0 !important;
+    align-items: stretch !important; }
+  :root[data-framed="true"] .bento-hero .map-shell:not(.is-3d) .map-side > *,
+  :root[data-framed="true"] .bento-hero .map-side select { width: 100%; box-sizing: border-box; }
+  /* 3D is a landscape figure: full card width, controls as a compact band below */
+  :root[data-framed="true"] .bento-hero .map-shell.is-3d { grid-template-columns: minmax(0, 1fr) !important; }
+  :root[data-framed="true"] .bento:has(.map-shell.is-3d) { grid-template-columns: minmax(0, 1.9fr) minmax(0, 1fr) !important; }
+  :root[data-framed="true"] .map-shell.is-3d .map-side {
+    grid-template-columns: minmax(160px, 220px) 1fr !important; gap: 10px 24px !important;
+    margin-top: 10px !important; padding-top: 10px !important; }
+}
+
+/* legend keys read as sentences, not shouted labels */
+.map3d-legend .key, .scale-ends span { text-transform: none !important; letter-spacing: 0 !important;
+  font-size: 12.5px !important; color: var(--ink-muted); }
+.map3d-legend { gap: 6px 20px !important; }
+
+html.embedded .tab[aria-selected="true"] {
+  color: #FFFFFF !important; background: var(--accent-fill) !important;
+  box-shadow: 0 1px 2px rgba(5,150,105,.25);
+}
+/* platform-theme:end */
 </style>
+<script>/* platform-theme */if(new URLSearchParams(location.search).get('embedded')==='1'||window.top!==window.self)document.documentElement.classList.add('embedded');</script>
 
 <header class="masthead">
   <div class="masthead-inner">
@@ -1841,11 +1954,10 @@ body.method-in-panel .wrap > footer.foot { display: none; }
                String(ev.window[1]).slice(0, 4);
     var when = new Date(ev.observation_end + "T00:00:00Z")
       .toLocaleDateString(undefined, { year: "numeric", month: "long" });
-    return '<p class="evidence-note">Evidence spans ' + span +
-      ' and ends with the last collection in ' + when +
-      (age ? ', ' + age.text + ' ago' : '') +
-      '. Nothing here reflects conditions since. The age bands below are ' +
-      'measured from collection, not from today.</p>';
+    /* One short line; the longer caveat is kept as the tooltip. */
+    return '<p class="evidence-note" title="Nothing here reflects conditions since collection ' +
+      'stopped. Age bands are measured from collection, not from today.">Reviews ' + span +
+      ', collected up to ' + when + (age ? ' (' + age.text + ' ago)' : '') + '</p>';
   }
 
   /* How old is the newest evidence, right now, in the reader's browser?
@@ -2470,7 +2582,9 @@ body.method-in-panel .wrap > footer.foot { display: none; }
        island adrift in a 600px-tall card. Each view now carries its own
        aspect, and in 3D the rail moves below so the canvas takes the full
        width (see .map-shell.is-3d). */
-    var budget = Math.max(200, Math.min(window.innerHeight - 160, 545));
+    /* Framed in the app's Map tab the header above takes ~70px more. */
+    var budget = Math.max(200, Math.min(window.innerHeight -
+      (document.documentElement.getAttribute("data-framed") ? 250 : 160), 545));
     wCss = Math.min(wCss, budget * ISO_AR);
     var hCss = Math.round(wCss / ISO_AR);
     if (cv.width !== Math.round(wCss * dpr) || cv.height !== Math.round(hCss * dpr)) {
@@ -3023,9 +3137,8 @@ body.method-in-panel .wrap > footer.foot { display: none; }
     var vals = mapValues(MAP_ASPECT);
     if (!name || !vals[name]) {
       var withData = Object.keys(vals).length;
-      box.innerHTML = '<span class="ro-hint">Hover or tap a district &mdash; ' +
-        withData + ' of ' + GEO.features.length + ' have review data. ' +
-        'Shaded by <strong>' + esc(C_LABEL(MAP_ASPECT)) + '</strong>.</span>';
+      box.innerHTML = '<span class="ro-hint">Tap a district for details &middot; ' +
+        withData + ' of ' + GEO.features.length + ' districts have data</span>';
       return;
     }
     var v = vals[name];
@@ -3089,7 +3202,7 @@ body.method-in-panel .wrap > footer.foot { display: none; }
          run two-abreast instead of as one 400px stack. */
       '<div class="map-side">' +
         '<div class="map-group">' +
-          '<label class="group-label" for="map-aspect">Colour the map by</label>' +
+          '<label class="group-label" for="map-aspect">Topic</label>' +
           '<select class="map-select" id="map-aspect">' + picker + '</select>' +
         '</div>' +
         '<div class="scale-block"><div class="scale-bar">' +
@@ -3105,7 +3218,7 @@ body.method-in-panel .wrap > footer.foot { display: none; }
            fold. <details> is the native disclosure: no script, keyboard
            operable, and find-in-page opens it to reveal a match inside.
            Nothing is removed, only folded. */
-        '<details class="map-help"><summary>How to read this map' +
+        '<details class="map-help"><summary>How to read' +
         '<span class="map-help-n">4 notes</span></summary>' +
         '<div class="map-notes">' +
         '<div class="nodata-note"><span class="nodata-swatch hatch-swatch"></span>' +
@@ -3301,9 +3414,8 @@ body.method-in-panel .wrap > footer.foot { display: none; }
          title now states what the page is FOR, and the deck says what it is
          built from, in one sentence that reads. */
       '<div class="view-head"><h2 class="view-title">Where visitors complain</h2>' +
-      '<p class="view-deck">' + c.n_reviews.toLocaleString() + ' reviews of ' +
-        c.n_destinations + ' places across ' + c.n_districts +
-        ' districts, read for what went wrong &mdash; and where.</p>' +
+      '<p class="view-deck">' + c.n_reviews.toLocaleString() + ' reviews &middot; ' +
+        c.n_destinations + ' places &middot; ' + c.n_districts + ' districts</p>' +
       /* Stated on the front page, not buried in a methods note. Every rate on
          this dashboard describes a period that ended when collection stopped,
          and a reader deciding anything today needs that in the same glance as
@@ -3884,7 +3996,9 @@ body.method-in-panel .wrap > footer.foot { display: none; }
     /* If the panel is not on screen -- a click low on a tall map -- bring it
        to the reader rather than making them hunt for the answer. */
     var panel = document.querySelector(".bento-panel");
-    if (panel) {
+    /* Side by side (>= 1080px) the panel is already beside the map; scrolling
+       to it only pushed the page header out of view. */
+    if (panel && window.innerWidth < 1080) {
       var box = panel.getBoundingClientRect();
       if (box.top < 0 || box.top > window.innerHeight * 0.6) {
         panel.scrollIntoView({ behavior: motionOK() ? "smooth" : "auto",

@@ -1,0 +1,601 @@
+# labelled_by=claude. Same codes as labels_test_random.txt
+1 wP
+2 vP
+3
+4 vP cP
+5 wN
+6
+7 rP
+8 vX
+9
+10
+11 rN
+12 fN wN
+13 vP
+14 fP
+15 wP
+16
+17 rX vP
+18 pX fX
+19
+20 pX
+21
+22 rN
+23
+24 wP
+25 pN
+26 pN fN
+27 cN
+28 rX
+29 pN
+30
+31 wX
+32 cP
+33 pN
+34
+35
+36 vN
+37 cP
+38 rX
+39
+40 rP
+41 vP fX
+42 rN
+43 vP
+44 rP
+45 vP
+46 wX
+47
+48
+49 wP
+50 pP
+51 sN
+52 fP
+53 fN
+54 cN
+55
+56 fP
+57 vP wN
+58 fX
+59 wN
+60 wX
+61 cX
+62 wN
+63 cX
+64
+65
+66 pN
+67 pX
+68
+69 pN
+70 rX
+71 fP
+72 cN vP
+73 fP rP
+74 pN
+75 wP
+76 rN
+77 wP
+78 rN
+79 rN
+80
+81 fP rP
+82 sN
+83 pN
+84 pX
+85 pN
+86 rN
+87 vP
+88 vP cP
+89 pX
+90
+91 pP fN
+92 pN
+93 pN
+94
+95 cN
+96 sN
+97
+98 pX
+99
+100 fP
+101 pN
+102 pN
+103 pX
+104 pP wX
+105
+106 pN
+107 fN sN
+108 sP
+109 pN fN
+110 sP
+111 fN
+112 wP
+113 vP
+114 vP
+115 wP rP
+116 fP
+117 vP
+118 wN
+119 fP
+120 sN
+121 fN
+122 fN
+123
+124 vX
+125 wX
+126 rP
+127 vP
+128 wP
+129 wX
+130 fP
+131 fX
+132 vP
+133 vX
+134 wP
+135 rP vP
+136
+137
+138 rN
+139 wP
+140 wP
+141 cN
+142 wP
+143 sN
+144 cN rN
+145
+146 pX
+147 fP
+148 wP cP
+149 wP pX rX
+150 rP
+151
+152 wX
+153
+154 fP
+155 rP
+156 sN
+157
+158
+159 rP
+160 rP
+161 sN
+162 wP
+163 fP
+164
+165 fP
+166 pX
+167
+168 sN rN
+169 fP
+170 sN
+171 cP wP
+172
+173 wN
+174 wP
+175 pX rX
+176
+177 wP rP
+178 sN
+179 rP
+180 sN
+181 rX
+182 fP
+183 sN fN
+184 cN
+185 cN
+186 wP
+187
+188 cN
+189 rP
+190 cN fN
+191 wX
+192 sN
+193 cN
+194 fP
+195 rP
+196
+197 rP
+198 wP
+199 rN
+200 rP
+201 cP
+202
+203 wP
+204 fP
+205
+206
+207 wP
+208 pN
+209 rN
+210 cP fP
+211 fX
+212 fP
+213 vN
+214 fP
+215
+216 fP
+217 wP vP
+218 pN
+219 vX
+220 fP
+221 fP rP
+222
+223 sN
+224
+225 cP
+226 rP
+227
+228 pP
+229
+230
+231 cN
+232 rX
+233 sX
+234 rP fP
+235 cP
+236 fN
+237 rX vN
+238 sN
+239 fX
+240 wP
+241 fP
+242 cN
+243 wP
+244
+245
+246 fP rP
+247 pP
+248
+249 fP
+250 vP
+251 pP fP
+252
+253 pX
+254
+255 fN
+256 pX fX
+257
+258 pP
+259 wX
+260 fN
+261 pX
+262 pN
+263 rX
+264 cP vP
+265 fP
+266 pN fN
+267
+268 vP
+269
+270 pN
+271 pX
+272
+273 pN
+274 pN
+275 rP
+276 rN
+277 wN
+278
+279 cP
+280
+281
+282 rP
+283 vX
+284 cN
+285 cP vP
+286 sX
+287 pN
+288 vP
+289 fX wN
+290 rN
+291 wP
+292
+293 wP
+294 wN
+295
+296 wN
+297 rN
+298 rN
+299 wX
+300 rX
+301 pN
+302 cP wP
+303 cP wP
+304 wN
+305 sN
+306 fP pP
+307 pN
+308 vP
+309 wP
+310 fX
+311
+312
+313
+314 fX
+315 vP
+316 sN
+317
+318 vX
+319 fX pX
+320 fX
+321
+322 wX
+323 pX
+324 sN
+325
+326
+327 rP
+328 vP sP
+329 pN
+330
+331 rX
+332 wP cP fP
+333 cP vP
+334 wX
+335 pX rX
+336 cP
+337 fP
+338
+339
+340 cP
+341 rX
+342 sN
+343 pN
+344
+345
+346 cN
+347 wP
+348 rX
+349 pN
+350 vP sN
+351 rN
+352 wP
+353 wX
+354 fP
+355 vP rP
+356 pN
+357
+358 pN
+359
+360
+361 wP
+362 rN
+363 vP
+364 fN
+365 vX
+366 vP
+367
+368
+369
+370 pN
+371 vX
+372 cP rP
+373
+374 cX
+375 wP
+376 pN
+377 rP pP
+378 rP
+379 sN
+380 sN
+381 wN rN
+382
+383
+384 pP fP
+385 wP
+386 rN
+387 vP fX
+388 wP
+389 sN
+390 wP fP cP
+391 pX fX
+392 cN fX
+393 fP
+394 sX
+395 pN
+396 wN
+397 wX
+398 wN
+399 rX pX
+400 pN
+401 vP
+402
+403
+404 cN
+405 fP
+406
+407 vP rN
+408 rX
+409 pX
+410 pX fN
+411 cN
+412 rP
+413 wP rP
+414 wN fN
+415 pX
+416
+417 sN
+418 cP fP
+419 pX
+420 cP
+421 wX
+422 wP vP
+423 vP cN fN
+424 fP
+425 vP
+426 fP
+427 vP
+428 cP
+429 vP wP fP
+430 pP cP wP rP
+431
+432 wN
+433 fN pN
+434 cN
+435 fP
+436 fN
+437 pN
+438 rN
+439 fX
+440 rX
+441 rX
+442 fN
+443 pX
+444 pX
+445 vP
+446 rN
+447 fP
+448 rP
+449
+450
+451
+452 wP
+453 pN
+454
+455 cX
+456
+457 pN
+458
+459 fN
+460 fX
+461 fN
+462
+463
+464 fN
+465 sN
+466 rX
+467 rX
+468
+469
+470 wP cP
+471 wP
+472 rX
+473 cP vP
+474 wP
+475 wP
+476
+477
+478 fN
+479 wN
+480 rX
+481 pP fP
+482 fP
+483 vP
+484 wN
+485 cP fP pP
+486 pX rX
+487 rN
+488 fP
+489 fN
+490 rX
+491 fN
+492 sN
+493 pX
+494 fX
+495
+496 vX
+497 wP
+498 cP fP
+499
+500 sN
+501 fP
+502
+503 cN fN
+504 cP wP
+505
+506 fN
+507 cX vP
+508
+509 fP
+510 rN
+511
+512 cN
+513 sN
+514 vP
+515 sN
+516 cP
+517
+518 pN
+519 rP
+520 sN
+521 pX
+522 rP
+523 pX
+524 wP
+525 cN
+526 rP vP
+527 cX
+528 rN
+529
+530
+531
+532
+533 vX
+534
+535 pN
+536 cP
+537 cP wP
+538
+539 cN
+540 pX
+541
+542 vP rP
+543
+544 pN
+545 cN vP
+546 vP
+547 wX
+548
+549
+550 wX
+551 pX
+552 sN
+553 vP
+554 cN
+555 sN
+556
+557 cN
+558
+559
+560 vX
+561 rP
+562 sN
+563 cP wP vP
+564 pN
+565 wP
+566
+567 rN
+568
+569
+570 cP
+571 fP
+572 rP
+573
+574 wP
+575 pN
+576 pX
+577 fN
+578 vN
+579 fN
+580 cP wP
+581 pX
+582 cN
+583 rP
+584
+585
+586
+587
+588 pX
+589
+590 vP fX
+591 pX
+592 vP
+593 rP
+594
+595 rP vP
+596 rX
+597 sP
+598 fP
+599 wN
+600

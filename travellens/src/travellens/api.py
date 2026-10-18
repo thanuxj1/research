@@ -199,6 +199,7 @@ def _escape_like(value: str) -> str:
 # without torch installed; lazy loading lets the lexicon fallback take over.
 _trained_model: Optional[object] = None  # TransformerPolarity (Method E) once loaded
 _use_trained: Optional[bool] = None   # None = not yet determined
+_method_name = ["E_transformer_rules"]  # or "F_final_models" once those load
 
 # Uvicorn runs every `def` handler in a worker thread, so concurrent requests
 # reach _get_polarity_method() at the same time. _use_trained is only assigned
@@ -238,10 +239,25 @@ def _get_polarity_method() -> tuple:
     # first callers serialise. Re-tested inside the lock because another
     # thread may have finished the load while this one waited.
     if _use_trained is not None:
-        return _trained_model, ("E_transformer_rules" if _use_trained else "A_lexicon")
+        return _trained_model, (_method_name[0] if _use_trained else "A_lexicon")
     with _model_lock:
         if _use_trained is not None:
-            return _trained_model, ("E_transformer_rules" if _use_trained else "A_lexicon")
+            return _trained_model, (_method_name[0] if _use_trained else "A_lexicon")
+        # The deployed models (final_models.py), when they are on disk: the
+        # same two models the batch pipeline uses (scripts/62), so a review
+        # scored here gets the verdict the dashboard would give it.
+        try:
+            from . import final_models as FM
+            if FM.available():
+                FM._load_topic()
+                FM._load_verdict()
+                _trained_model, _use_trained = FM, True
+                _method_name[0] = "F_final_models"
+                print("  [api] polarity method: final models ({} | {})".format(
+                    FM.MODEL_NAMES["topic"], FM.MODEL_NAMES["verdict"]))
+                return _trained_model, _method_name[0]
+        except Exception as exc:
+            print("  [api] final models failed to load ({}), using Method E".format(exc))
         try:
             # ROBERTA_MODEL + ROBERTA_LABELS, not the bare default. This
             # was the real bug in the first version of this fix:
@@ -268,7 +284,7 @@ def _get_polarity_method() -> tuple:
             print("  [api] transformer failed to load ({}), "
                   "falling back to lexicon".format(exc))
             _use_trained = False
-    return _trained_model, ("E_transformer_rules" if _use_trained else "A_lexicon")
+    return _trained_model, (_method_name[0] if _use_trained else "A_lexicon")
 
 
 # --------------------------------------------------------------------------
@@ -321,6 +337,9 @@ def _analyse_text(text: str) -> tuple:
     if truncated:
         pieces = pieces[:MAX_SEGMENTS_PER_REVIEW]
 
+    if method == "F_final_models":
+        return _analyse_final(model, pieces), method, truncated
+
     for piece in pieces:
         # Stage 3 -- what is this piece ABOUT?
         aspect_keys = tag_segment(piece)
@@ -369,6 +388,39 @@ def _analyse_text(text: str) -> tuple:
         })
 
     return results, method, truncated
+
+
+def _analyse_final(FM, pieces: List[str]) -> List[Dict]:
+    """The deployed models on every piece at once (batched; same calls as scripts/62).
+
+    `aspect_polarity` is the fine-tuned verdict per topic -- exactly what
+    verdict_final.csv holds for a corpus sentence. `polarity` (segment level)
+    is that verdict rolled up the way the summary is: any complaint wins, then
+    praise, else fact; an untagged piece keeps the lexicon label, which is
+    reported but never counted. Trigger words are listed for the topics the
+    lexicon found; a topic the embedding model added has none to show.
+    """
+    tags = FM.tag_topics(pieces) if pieces else []
+    pairs = [(p, k) for p, ks in zip(pieces, tags) for k in ks]
+    verdicts = iter(FM.predict_verdicts(pairs)) if pairs else iter(())
+    results = []
+    for piece, keys in zip(pieces, tags):
+        per_aspect = {k: next(verdicts)[0] for k in keys}
+        lex_label, lex_score = lexicon_polarity(piece)
+        vals = set(per_aspect.values())
+        label = ("N" if "N" in vals else "P" if "P" in vals else "X") if vals else lex_label
+        triggers: List[str] = []
+        for key in keys:
+            triggers.extend(matched_terms(piece, key))
+        results.append({
+            "segment_text": piece,
+            "aspects": keys,
+            "polarity": label,
+            "aspect_polarity": per_aspect,
+            "polarity_score": round(lex_score, 4),
+            "triggered_words": sorted(set(triggers)),
+        })
+    return results
 
 
 def _summarise(segments: List[Dict]) -> Dict[str, Optional[str]]:
@@ -526,7 +578,7 @@ class AnalyseResponse(BaseModel):
     destination: str
     district: str
     submitted_at: str
-    polarity_method: str        # which method scored this: E_transformer_rules or A_lexicon
+    polarity_method: str        # F_final_models, E_transformer_rules or A_lexicon
     segments: List[SegmentResult]
     summary: Dict[str, Optional[str]]
     stored: bool
@@ -559,7 +611,7 @@ def health():
         # directory -- irrelevant since Method E does not use it. This
         # reports whether the ACTIVE method actually is the transformer, so
         # it stays true to what /analyse is really doing right now.
-        "model_available": method == "E_transformer_rules",
+        "model_available": method in ("E_transformer_rules", "F_final_models"),
         "submissions_backend": backend,
         "db": str(SUBMISSIONS_DB) if backend == "sqlite" else "postgres (Neon)",
     }
@@ -623,46 +675,42 @@ _ASP_COLS = {
     "asp_crowd":        ("crowding_noise", "Crowding & Noise"),
     "asp_scenery":      ("scenery_nature", "Scenery & Nature"),
 }
+_HIER_KEY = {"crowding_noise": "crowd", "scenery_nature": "scenery"}
 
 
 def _build_corpus_summary() -> dict:
-    """Read segments_scored.csv and return the shape ReviewsPanel.jsx expects."""
+    """The shape ReviewsPanel.jsx and the portal's Analytics tab expect.
+
+    Rates come from hierarchy.json -- the aggregation the dashboard and the report
+    are built from -- so this endpoint cannot disagree with them. An earlier version
+    recounted segments_scored.csv using the segment-level pol_final alone, skipping
+    the per-aspect correction chain (polarity.aspect_polarity), and published 60.2%
+    for safety beside the dashboard's 69.8%.
+    """
+    import json
     import pandas as pd
 
-    path = C.DATA_PROCESSED / "segments_scored.csv"
-    needed = (["review_id", "destination", "district", "n_aspects", "pol_final"]
-              + list(_ASP_COLS.keys()))
-    seg = pd.read_csv(path, usecols=needed)
-    tagged = seg[seg["n_aspects"] > 0]
-
+    h = json.loads((C.DATA_PROCESSED / "hierarchy.json").read_text(encoding="utf8"))
     aspects = []
-    for col, (key, label) in _ASP_COLS.items():
-        sub = tagged[tagged[col] == True]
-        neg = int((sub["pol_final"] == "N").sum())
-        pos = int((sub["pol_final"] == "P").sum())
-        total = neg + pos
-        rate = round(100 * neg / total, 1) if total else 0.0
+    for key, label in _ASP_COLS.values():
+        a = h["aspects"][_HIER_KEY.get(key, key)]
         aspects.append({"key": key, "label": label,
-                         "complaint_rate": rate,
-                         "n_negative": neg, "n_positive": pos})
+                        "complaint_rate": round(100 * a["complaint_rate"], 1),
+                        "n_negative": int(a["n_negative"]), "n_positive": int(a["n_positive"])})
 
-    # Worst districts for safety complaints.
-    safety_tagged = tagged[tagged["asp_safety"] == True]
-    safety_neg = safety_tagged[safety_tagged["pol_final"] == "N"]
-    worst = (safety_neg.groupby("district")
-                       .size()
-                       .sort_values(ascending=False)
-                       .head(3)
-                       .reset_index(name="complaint_count"))
-    worst_list = [{"district": r.district, "complaint_count": int(r.complaint_count)}
-                  for r in worst.itertuples(index=False)]
+    # Worst districts for safety complaints, by count (as before), from the same tree.
+    worst = sorted(((d, v["aspects"].get("safety", {}).get("n_negative", 0))
+                    for d, v in h["districts"].items()), key=lambda x: -x[1])[:3]
+    worst_list = [{"district": d, "complaint_count": int(n)} for d, n in worst if n]
 
+    reviews = pd.read_csv(C.DATA_PROCESSED / "segments_scored.csv", usecols=["review_id"])
     return {
-        "total_reviews": int(seg["review_id"].nunique()),
-        "destinations":  int(seg["destination"].nunique()),
-        "districts":     int(seg["district"].nunique()),
+        "total_reviews": int(reviews["review_id"].nunique()),
+        "destinations":  int(h["coverage"]["n_destinations"]),
+        "districts":     int(h["coverage"]["n_districts"]),
         "aspects":       aspects,
         "worst_safety_districts": worst_list,
+        "source": "hierarchy.json (same aggregation as the dashboard)",
     }
 
 
@@ -707,6 +755,10 @@ def analyse(req: ReviewRequest, request: Request):
     differ whenever a sentence says different things about different aspects.
 
     **Polarity method (in priority order):**
+    - `F_final_models` — the two models chosen by the model comparison
+      (reports/model_comparison/MODEL_COMPARISON.md): topics from the rule
+      lexicon OR an embedding-SVM, verdicts from RoBERTa fine-tuned on
+      (topic, sentence) pairs. The same models the dashboard is built from.
     - `E_transformer_rules` — the same transformer + correction-rule pipeline
       the research dashboard is built from (src/travellens/polarity.py), so a
       review submitted here scores consistently with the published report.

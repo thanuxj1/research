@@ -4,39 +4,30 @@
   "scope": "Four aspects only. scenery, price_value and crowd have no human labels in this repository, so no polarity accuracy can be reported for them and none should be quoted.",
   "how_to_read_it": "Claims rest on the LOWER bound of ci95, not the point estimate: 11 to 33 pairs per aspect means one row moves an aspect several points. Read every accuracy against human_ceiling for the same aspect -- two people reading these sentences agree 83-98% of the time, so 100% is not the standard. unanimous_pairs is the fairest single figure: a pair the two readers themselves split on has no defensible right answer to score against.",
   "supplementary_sheet": {
-    "status": "in use",
-    "rows_scored": 420,
-    "aspects": [
-      "cleanliness",
-      "crowd",
-      "facilities",
-      "price_value",
-      "roads_access",
-      "safety",
-      "scenery"
-    ]
+    "status": "excluded",
+    "reason": "these pairs were used to train the deployed verdict model (fine-tuned RoBERTa); scoring it on them would be training accuracy"
   },
   "comparing_the_two_samples": "The focused gold set and the supplementary sheet are drawn from the same tagging frame -- both are rule-lexicon tagged, and all 420 supplementary pairs pass the same rule gate the gold pairs do -- so the two are directly comparable. What differs is sample size and, more importantly, WHO READ THEM. roads_access scores 0.421 against annotator 1 (n=19), 0.571 against annotator 2 (n=19) and 0.800 against the supplementary reader (n=60): three readers, three answers, on the same task. The spread between readers is larger than the spread between any two methods this project has compared, which is the single most important thing to carry into a write-up of these numbers.",
   "two_errors_separated": "supplementary_sample scores the verdict on every pair the pipeline tags -- which is the population the published complaint rates are computed over, and therefore the right figure for 'how accurate is what we count'. It carries two mistakes at once: a wrong tag and a wrong verdict. supplementary_correctly_tagged removes the first by keeping only pairs a human says really are about the topic, so the verdict is the only thing being scored. Read them together: the gap between the two is the cost of extraction error, and the second figure is the ceiling the polarity model would reach if extraction were perfect.",
   "supplementary_limitation": "ONE reader, so there is no agreement figure and no ceiling for the three aspects it alone covers -- scenery, price_value and crowd. That reader is also the system's author, which is the same class of limitation as open problem #1. It is mitigated but not removed by the sheet being blind: the system's verdict was not shown, so the labelling could not be anchored on the answer being tested. A second reader over a subset would close it, the way the focused gold set was closed.",
-  "extraction_misses": 16,
+  "extraction_misses": 17,
   "extraction_misses_note": "Pairs a human judged present that the extractor did not find. Not scored here -- that is aspect extraction, measured by reports/gold_evaluation.json.",
   "human_ceiling": {
     "per_aspect": {
       "roads_access": {
-        "n_pairs_both_judged_present": 31,
-        "human_agreement": 0.871,
+        "n_pairs_both_judged_present": 34,
+        "human_agreement": 0.853,
         "ci95": [
-          0.742,
-          0.968
+          0.735,
+          0.971
         ]
       },
       "facilities": {
-        "n_pairs_both_judged_present": 37,
-        "human_agreement": 0.811,
+        "n_pairs_both_judged_present": 39,
+        "human_agreement": 0.821,
         "ci95": [
-          0.676,
-          0.919
+          0.692,
+          0.923
         ]
       },
       "cleanliness": {
@@ -56,60 +47,58 @@
         ]
       }
     },
-    "macro": 0.904
+    "macro": 0.902
   },
   "results": {
     "part_a_headline": {
-      "n_pairs": 90,
+      "n_pairs": 95,
       "vs_annotator1": {
         "per_aspect": {
           "roads_access": {
-            "n": 19,
-            "accuracy": 0.421,
+            "n": 20,
+            "accuracy": 0.7,
             "ci95": [
-              0.211,
-              0.632
+              0.5,
+              0.9
             ],
             "confusion_human_to_system": {
-              "N->X": 6,
-              "X->X": 6,
-              "P->X": 3,
-              "N->N": 2,
+              "X->X": 7,
+              "N->N": 6,
+              "N->X": 3,
+              "P->X": 2,
               "X->P": 1,
-              "X->N": 1
+              "P->P": 1
             }
           },
           "facilities": {
-            "n": 33,
-            "accuracy": 0.636,
+            "n": 37,
+            "accuracy": 0.703,
             "ci95": [
-              0.485,
-              0.788
+              0.541,
+              0.838
             ],
             "confusion_human_to_system": {
-              "P->P": 12,
-              "P->X": 7,
-              "X->X": 6,
-              "N->N": 3,
-              "X->N": 2,
-              "N->X": 1,
-              "X->P": 1,
+              "P->P": 18,
+              "N->N": 4,
+              "P->X": 4,
+              "X->X": 4,
+              "X->P": 3,
+              "X->N": 3,
               "P->N": 1
             }
           },
           "cleanliness": {
             "n": 27,
-            "accuracy": 0.852,
+            "accuracy": 0.889,
             "ci95": [
-              0.704,
-              0.963
+              0.778,
+              1.0
             ],
             "confusion_human_to_system": {
-              "P->P": 14,
+              "P->P": 15,
               "N->N": 9,
-              "X->P": 2,
-              "P->X": 1,
-              "X->N": 1
+              "X->N": 2,
+              "X->P": 1
             }
           },
           "safety": {
@@ -128,44 +117,44 @@
             }
           }
         },
-        "macro_accuracy": 0.636,
-        "pooled_accuracy": 0.656,
+        "macro_accuracy": 0.732,
+        "pooled_accuracy": 0.747,
         "pooled_ci95": [
-          0.556,
-          0.744
+          0.653,
+          0.832
         ],
-        "n_pairs": 90
+        "n_pairs": 95
       },
       "vs_annotator2": {
         "per_aspect": {
           "roads_access": {
-            "n": 14,
-            "accuracy": 0.571,
+            "n": 15,
+            "accuracy": 0.8,
             "ci95": [
-              0.286,
-              0.786
+              0.6,
+              1.0
             ],
             "confusion_human_to_system": {
               "X->X": 7,
-              "N->X": 5,
-              "N->N": 1,
-              "X->N": 1
+              "N->N": 5,
+              "N->X": 2,
+              "X->P": 1
             }
           },
           "facilities": {
-            "n": 28,
-            "accuracy": 0.679,
+            "n": 30,
+            "accuracy": 0.867,
             "ci95": [
-              0.5,
-              0.857
+              0.733,
+              0.967
             ],
             "confusion_human_to_system": {
-              "P->P": 12,
-              "P->X": 5,
-              "X->X": 4,
-              "N->N": 3,
-              "N->X": 2,
+              "P->P": 18,
+              "N->N": 5,
+              "X->X": 3,
+              "X->P": 1,
               "X->N": 1,
+              "P->X": 1,
               "P->N": 1
             }
           },
@@ -179,7 +168,7 @@
             "confusion_human_to_system": {
               "P->P": 14,
               "N->N": 9,
-              "X->P": 1
+              "X->N": 1
             }
           },
           "safety": {
@@ -196,44 +185,42 @@
             }
           }
         },
-        "macro_accuracy": 0.747,
-        "pooled_accuracy": 0.76,
+        "macro_accuracy": 0.851,
+        "pooled_accuracy": 0.872,
         "pooled_ci95": [
-          0.667,
-          0.853
+          0.795,
+          0.936
         ],
-        "n_pairs": 75
+        "n_pairs": 78
       },
       "unanimous_pairs": {
         "per_aspect": {
           "roads_access": {
-            "n": 11,
-            "accuracy": 0.455,
+            "n": 12,
+            "accuracy": 0.833,
             "ci95": [
-              0.182,
-              0.727
+              0.583,
+              1.0
             ],
             "confusion_human_to_system": {
-              "N->X": 5,
-              "X->X": 4,
-              "N->N": 1,
-              "X->N": 1
+              "N->N": 5,
+              "X->X": 5,
+              "N->X": 2
             }
           },
           "facilities": {
-            "n": 24,
-            "accuracy": 0.708,
+            "n": 26,
+            "accuracy": 0.885,
             "ci95": [
-              0.5,
-              0.875
+              0.731,
+              1.0
             ],
             "confusion_human_to_system": {
-              "P->P": 12,
-              "P->X": 4,
-              "N->N": 3,
+              "P->P": 17,
+              "N->N": 4,
               "X->X": 2,
-              "N->X": 1,
               "X->N": 1,
+              "P->X": 1,
               "P->N": 1
             }
           },
@@ -247,7 +234,7 @@
             "confusion_human_to_system": {
               "P->P": 14,
               "N->N": 9,
-              "X->P": 1
+              "X->N": 1
             }
           },
           "safety": {
@@ -264,32 +251,32 @@
             }
           }
         },
-        "macro_accuracy": 0.718,
-        "pooled_accuracy": 0.761,
+        "macro_accuracy": 0.857,
+        "pooled_accuracy": 0.886,
         "pooled_ci95": [
-          0.657,
-          0.866
+          0.814,
+          0.957
         ],
-        "n_pairs": 67
+        "n_pairs": 70
       },
       "gap_to_human_ceiling": {
         "roads_access": {
-          "system": 0.421,
-          "human_ceiling": 0.871,
-          "gap": 0.45,
-          "share_of_ceiling": 0.483
+          "system": 0.7,
+          "human_ceiling": 0.853,
+          "gap": 0.153,
+          "share_of_ceiling": 0.821
         },
         "facilities": {
-          "system": 0.636,
-          "human_ceiling": 0.811,
-          "gap": 0.175,
-          "share_of_ceiling": 0.784
+          "system": 0.703,
+          "human_ceiling": 0.821,
+          "gap": 0.118,
+          "share_of_ceiling": 0.856
         },
         "cleanliness": {
-          "system": 0.852,
+          "system": 0.889,
           "human_ceiling": 0.975,
-          "gap": 0.123,
-          "share_of_ceiling": 0.874
+          "gap": 0.086,
+          "share_of_ceiling": 0.912
         },
         "safety": {
           "system": 0.636,
@@ -300,112 +287,109 @@
       }
     },
     "part_b_contested": {
-      "n_pairs": 66,
+      "n_pairs": 69,
       "vs_annotator1": {
         "per_aspect": {
           "roads_access": {
-            "n": 21,
-            "accuracy": 0.381,
+            "n": 24,
+            "accuracy": 0.75,
             "ci95": [
-              0.19,
-              0.571
+              0.583,
+              0.917
             ],
             "confusion_human_to_system": {
-              "N->X": 4,
-              "P->P": 4,
-              "P->X": 3,
-              "X->P": 3,
-              "X->N": 3,
-              "X->X": 3,
-              "N->N": 1
+              "X->X": 7,
+              "P->P": 6,
+              "N->N": 5,
+              "N->X": 2,
+              "X->P": 2,
+              "P->X": 1,
+              "X->N": 1
             }
           },
           "facilities": {
             "n": 13,
-            "accuracy": 0.462,
+            "accuracy": 0.538,
             "ci95": [
-              0.231,
+              0.308,
               0.769
             ],
             "confusion_human_to_system": {
-              "P->P": 5,
-              "P->X": 2,
-              "N->X": 2,
+              "P->P": 4,
+              "P->X": 3,
+              "N->N": 3,
               "N->P": 1,
               "P->N": 1,
-              "X->N": 1,
-              "N->N": 1
+              "X->N": 1
             }
           },
           "cleanliness": {
             "n": 17,
-            "accuracy": 0.294,
+            "accuracy": 0.235,
             "ci95": [
-              0.118,
-              0.529
+              0.059,
+              0.471
             ],
             "confusion_human_to_system": {
-              "X->N": 10,
-              "X->X": 3,
+              "X->N": 12,
               "N->N": 2,
-              "P->X": 2
+              "X->X": 1,
+              "P->P": 1,
+              "P->N": 1
             }
           },
           "safety": {
             "n": 15,
-            "accuracy": 0.867,
+            "accuracy": 1.0,
             "ci95": [
-              0.667,
+              1.0,
               1.0
             ],
             "confusion_human_to_system": {
-              "N->N": 13,
-              "N->X": 1,
-              "P->N": 1
+              "N->N": 14,
+              "P->P": 1
             }
           }
         },
-        "macro_accuracy": 0.501,
-        "pooled_accuracy": 0.485,
+        "macro_accuracy": 0.631,
+        "pooled_accuracy": 0.638,
         "pooled_ci95": [
-          0.364,
-          0.606
+          0.522,
+          0.754
         ],
-        "n_pairs": 66
+        "n_pairs": 69
       },
       "vs_annotator2": {
         "per_aspect": {
           "roads_access": {
-            "n": 17,
-            "accuracy": 0.412,
+            "n": 19,
+            "accuracy": 0.842,
             "ci95": [
-              0.176,
-              0.647
+              0.632,
+              1.0
             ],
             "confusion_human_to_system": {
-              "P->P": 5,
-              "N->X": 4,
-              "P->X": 3,
-              "X->N": 2,
-              "N->N": 1,
-              "X->X": 1,
-              "X->P": 1
+              "P->P": 7,
+              "N->N": 5,
+              "X->X": 4,
+              "P->X": 2,
+              "N->X": 1
             }
           },
           "facilities": {
             "n": 9,
-            "accuracy": 0.222,
+            "accuracy": 0.556,
             "ci95": [
-              0.0,
-              0.556
+              0.222,
+              0.889
             ],
             "confusion_human_to_system": {
+              "N->N": 3,
               "X->P": 2,
-              "P->X": 2,
-              "N->X": 2,
-              "X->N": 1,
               "P->P": 1,
-              "N->N": 1
+              "P->X": 1,
+              "X->X": 1,
+              "P->N": 1
             }
           },
           "cleanliness": {
@@ -416,66 +400,63 @@
               0.5
             ],
             "confusion_human_to_system": {
-              "X->N": 9,
-              "X->X": 2,
+              "X->N": 10,
+              "P->N": 2,
               "N->N": 2,
-              "P->X": 2,
-              "P->N": 1
+              "X->X": 1,
+              "P->P": 1
             }
           },
           "safety": {
             "n": 15,
-            "accuracy": 0.867,
+            "accuracy": 1.0,
             "ci95": [
-              0.667,
+              1.0,
               1.0
             ],
             "confusion_human_to_system": {
-              "N->N": 13,
-              "N->X": 1,
-              "P->N": 1
+              "N->N": 14,
+              "P->P": 1
             }
           }
         },
-        "macro_accuracy": 0.438,
-        "pooled_accuracy": 0.456,
+        "macro_accuracy": 0.662,
+        "pooled_accuracy": 0.678,
         "pooled_ci95": [
-          0.333,
-          0.596
+          0.559,
+          0.797
         ],
-        "n_pairs": 57
+        "n_pairs": 59
       },
       "unanimous_pairs": {
         "per_aspect": {
           "roads_access": {
-            "n": 16,
-            "accuracy": 0.375,
+            "n": 17,
+            "accuracy": 0.882,
             "ci95": [
-              0.125,
-              0.625
+              0.706,
+              1.0
             ],
             "confusion_human_to_system": {
-              "N->X": 4,
-              "P->P": 4,
-              "P->X": 3,
-              "X->N": 2,
-              "N->N": 1,
-              "X->X": 1,
-              "X->P": 1
+              "P->P": 6,
+              "N->N": 5,
+              "X->X": 4,
+              "N->X": 1,
+              "P->X": 1
             }
           },
           "facilities": {
             "n": 6,
-            "accuracy": 0.333,
+            "accuracy": 0.667,
             "ci95": [
-              0.0,
-              0.667
+              0.333,
+              1.0
             ],
             "confusion_human_to_system": {
-              "P->X": 2,
-              "N->X": 2,
+              "N->N": 3,
               "P->P": 1,
-              "N->N": 1
+              "P->X": 1,
+              "P->N": 1
             }
           },
           "cleanliness": {
@@ -486,609 +467,174 @@
               0.533
             ],
             "confusion_human_to_system": {
-              "X->N": 9,
-              "X->X": 2,
+              "X->N": 10,
               "N->N": 2,
-              "P->X": 2
+              "X->X": 1,
+              "P->P": 1,
+              "P->N": 1
             }
           },
           "safety": {
             "n": 15,
-            "accuracy": 0.867,
+            "accuracy": 1.0,
             "ci95": [
-              0.667,
+              1.0,
               1.0
             ],
             "confusion_human_to_system": {
-              "N->N": 13,
-              "N->X": 1,
-              "P->N": 1
+              "N->N": 14,
+              "P->P": 1
             }
           }
         },
-        "macro_accuracy": 0.461,
-        "pooled_accuracy": 0.481,
+        "macro_accuracy": 0.704,
+        "pooled_accuracy": 0.717,
         "pooled_ci95": [
-          0.346,
-          0.615
+          0.604,
+          0.83
         ],
-        "n_pairs": 52
+        "n_pairs": 53
       },
       "gap_to_human_ceiling": {
         "roads_access": {
-          "system": 0.381,
-          "human_ceiling": 0.871,
-          "gap": 0.49,
-          "share_of_ceiling": 0.437
+          "system": 0.75,
+          "human_ceiling": 0.853,
+          "gap": 0.103,
+          "share_of_ceiling": 0.879
         },
         "facilities": {
-          "system": 0.462,
-          "human_ceiling": 0.811,
-          "gap": 0.349,
-          "share_of_ceiling": 0.57
+          "system": 0.538,
+          "human_ceiling": 0.821,
+          "gap": 0.283,
+          "share_of_ceiling": 0.655
         },
         "cleanliness": {
-          "system": 0.294,
+          "system": 0.235,
           "human_ceiling": 0.975,
-          "gap": 0.681,
-          "share_of_ceiling": 0.302
+          "gap": 0.74,
+          "share_of_ceiling": 0.241
         },
         "safety": {
-          "system": 0.867,
+          "system": 1.0,
           "human_ceiling": 0.958,
-          "gap": 0.091,
-          "share_of_ceiling": 0.905
-        }
-      }
-    },
-    "supplementary_sample": {
-      "n_pairs": 420,
-      "vs_annotator1": {
-        "per_aspect": {
-          "roads_access": {
-            "n": 60,
-            "accuracy": 0.8,
-            "ci95": [
-              0.683,
-              0.9
-            ],
-            "confusion_human_to_system": {
-              "X->X": 28,
-              "P->P": 18,
-              "P->N": 4,
-              "X->N": 4,
-              "N->N": 2,
-              "X->P": 1,
-              "N->X": 1,
-              "P->X": 1,
-              "N->P": 1
-            }
-          },
-          "facilities": {
-            "n": 30,
-            "accuracy": 0.7,
-            "ci95": [
-              0.533,
-              0.867
-            ],
-            "confusion_human_to_system": {
-              "P->P": 13,
-              "X->X": 6,
-              "X->P": 3,
-              "N->N": 2,
-              "X->N": 2,
-              "N->X": 2,
-              "P->N": 1,
-              "P->X": 1
-            }
-          },
-          "cleanliness": {
-            "n": 30,
-            "accuracy": 0.633,
-            "ci95": [
-              0.467,
-              0.8
-            ],
-            "confusion_human_to_system": {
-              "N->N": 8,
-              "P->P": 7,
-              "X->X": 4,
-              "X->N": 3,
-              "P->X": 2,
-              "P->N": 2,
-              "N->P": 2,
-              "X->P": 1,
-              "N->X": 1
-            }
-          },
-          "safety": {
-            "n": 60,
-            "accuracy": 0.733,
-            "ci95": [
-              0.617,
-              0.85
-            ],
-            "confusion_human_to_system": {
-              "N->N": 24,
-              "P->P": 18,
-              "N->X": 4,
-              "P->X": 3,
-              "P->N": 3,
-              "X->N": 3,
-              "X->X": 2,
-              "X->P": 2,
-              "N->P": 1
-            }
-          },
-          "price_value": {
-            "n": 80,
-            "accuracy": 0.6,
-            "ci95": [
-              0.487,
-              0.7
-            ],
-            "confusion_human_to_system": {
-              "X->X": 29,
-              "P->P": 13,
-              "P->X": 13,
-              "X->N": 9,
-              "X->P": 7,
-              "N->N": 6,
-              "P->N": 2,
-              "N->X": 1
-            }
-          },
-          "crowd": {
-            "n": 80,
-            "accuracy": 0.725,
-            "ci95": [
-              0.625,
-              0.812
-            ],
-            "confusion_human_to_system": {
-              "P->P": 47,
-              "N->N": 8,
-              "N->X": 7,
-              "P->X": 6,
-              "N->P": 6,
-              "X->X": 3,
-              "X->P": 2,
-              "X->N": 1
-            }
-          },
-          "scenery": {
-            "n": 80,
-            "accuracy": 0.762,
-            "ci95": [
-              0.662,
-              0.85
-            ],
-            "confusion_human_to_system": {
-              "P->P": 37,
-              "X->X": 24,
-              "X->P": 11,
-              "N->P": 3,
-              "X->N": 2,
-              "P->X": 2,
-              "N->X": 1
-            }
-          }
-        },
-        "macro_accuracy": 0.708,
-        "pooled_accuracy": 0.712,
-        "pooled_ci95": [
-          0.667,
-          0.755
-        ],
-        "n_pairs": 420
-      },
-      "vs_annotator2": {
-        "per_aspect": {},
-        "macro_accuracy": null,
-        "pooled_accuracy": null,
-        "pooled_ci95": [
-          null,
-          null
-        ],
-        "n_pairs": 0
-      },
-      "unanimous_pairs": {
-        "per_aspect": {},
-        "macro_accuracy": null,
-        "pooled_accuracy": null,
-        "pooled_ci95": [
-          null,
-          null
-        ],
-        "n_pairs": 0
-      },
-      "gap_to_human_ceiling": {
-        "roads_access": {
-          "system": 0.8,
-          "human_ceiling": 0.871,
-          "gap": 0.071,
-          "share_of_ceiling": 0.918
-        },
-        "facilities": {
-          "system": 0.7,
-          "human_ceiling": 0.811,
-          "gap": 0.111,
-          "share_of_ceiling": 0.863
-        },
-        "cleanliness": {
-          "system": 0.633,
-          "human_ceiling": 0.975,
-          "gap": 0.342,
-          "share_of_ceiling": 0.649
-        },
-        "safety": {
-          "system": 0.733,
-          "human_ceiling": 0.958,
-          "gap": 0.225,
-          "share_of_ceiling": 0.765
-        }
-      }
-    },
-    "supplementary_correctly_tagged": {
-      "n_pairs": 332,
-      "vs_annotator1": {
-        "per_aspect": {
-          "roads_access": {
-            "n": 54,
-            "accuracy": 0.796,
-            "ci95": [
-              0.685,
-              0.889
-            ],
-            "confusion_human_to_system": {
-              "X->X": 26,
-              "P->P": 15,
-              "P->N": 4,
-              "X->N": 3,
-              "N->N": 2,
-              "X->P": 1,
-              "N->X": 1,
-              "P->X": 1,
-              "N->P": 1
-            }
-          },
-          "facilities": {
-            "n": 22,
-            "accuracy": 0.682,
-            "ci95": [
-              0.5,
-              0.864
-            ],
-            "confusion_human_to_system": {
-              "P->P": 9,
-              "X->X": 4,
-              "X->P": 3,
-              "N->N": 2,
-              "X->N": 2,
-              "P->N": 1,
-              "N->X": 1
-            }
-          },
-          "cleanliness": {
-            "n": 20,
-            "accuracy": 0.65,
-            "ci95": [
-              0.45,
-              0.85
-            ],
-            "confusion_human_to_system": {
-              "N->N": 6,
-              "P->P": 5,
-              "X->N": 2,
-              "X->X": 2,
-              "P->N": 2,
-              "P->X": 1,
-              "N->P": 1,
-              "X->P": 1
-            }
-          },
-          "safety": {
-            "n": 48,
-            "accuracy": 0.833,
-            "ci95": [
-              0.729,
-              0.938
-            ],
-            "confusion_human_to_system": {
-              "N->N": 20,
-              "P->P": 18,
-              "P->X": 3,
-              "P->N": 2,
-              "X->N": 2,
-              "X->X": 2,
-              "N->X": 1
-            }
-          },
-          "price_value": {
-            "n": 65,
-            "accuracy": 0.6,
-            "ci95": [
-              0.477,
-              0.723
-            ],
-            "confusion_human_to_system": {
-              "X->X": 21,
-              "P->P": 13,
-              "P->X": 13,
-              "X->P": 6,
-              "N->N": 5,
-              "X->N": 5,
-              "P->N": 2
-            }
-          },
-          "crowd": {
-            "n": 66,
-            "accuracy": 0.682,
-            "ci95": [
-              0.576,
-              0.788
-            ],
-            "confusion_human_to_system": {
-              "P->P": 38,
-              "N->X": 7,
-              "N->N": 6,
-              "N->P": 6,
-              "P->X": 5,
-              "X->P": 2,
-              "X->X": 1,
-              "X->N": 1
-            }
-          },
-          "scenery": {
-            "n": 57,
-            "accuracy": 0.807,
-            "ci95": [
-              0.702,
-              0.895
-            ],
-            "confusion_human_to_system": {
-              "P->P": 29,
-              "X->X": 17,
-              "X->P": 4,
-              "N->P": 3,
-              "X->N": 2,
-              "N->X": 1,
-              "P->X": 1
-            }
-          }
-        },
-        "macro_accuracy": 0.721,
-        "pooled_accuracy": 0.726,
-        "pooled_ci95": [
-          0.678,
-          0.774
-        ],
-        "n_pairs": 332
-      },
-      "vs_annotator2": {
-        "per_aspect": {},
-        "macro_accuracy": null,
-        "pooled_accuracy": null,
-        "pooled_ci95": [
-          null,
-          null
-        ],
-        "n_pairs": 0
-      },
-      "unanimous_pairs": {
-        "per_aspect": {},
-        "macro_accuracy": null,
-        "pooled_accuracy": null,
-        "pooled_ci95": [
-          null,
-          null
-        ],
-        "n_pairs": 0
-      },
-      "gap_to_human_ceiling": {
-        "roads_access": {
-          "system": 0.796,
-          "human_ceiling": 0.871,
-          "gap": 0.075,
-          "share_of_ceiling": 0.914
-        },
-        "facilities": {
-          "system": 0.682,
-          "human_ceiling": 0.811,
-          "gap": 0.129,
-          "share_of_ceiling": 0.841
-        },
-        "cleanliness": {
-          "system": 0.65,
-          "human_ceiling": 0.975,
-          "gap": 0.325,
-          "share_of_ceiling": 0.667
-        },
-        "safety": {
-          "system": 0.833,
-          "human_ceiling": 0.958,
-          "gap": 0.125,
-          "share_of_ceiling": 0.87
+          "gap": -0.042,
+          "share_of_ceiling": 1.044
         }
       }
     },
     "all_rows": {
-      "n_pairs": 576,
+      "n_pairs": 164,
       "vs_annotator1": {
         "per_aspect": {
           "roads_access": {
-            "n": 100,
-            "accuracy": 0.64,
+            "n": 44,
+            "accuracy": 0.727,
             "ci95": [
-              0.55,
-              0.73
+              0.591,
+              0.864
             ],
             "confusion_human_to_system": {
-              "X->X": 37,
-              "P->P": 22,
-              "N->X": 11,
-              "X->N": 8,
-              "P->X": 7,
-              "X->P": 5,
-              "N->N": 5,
-              "P->N": 4,
-              "N->P": 1
+              "X->X": 14,
+              "N->N": 11,
+              "P->P": 7,
+              "N->X": 5,
+              "X->P": 3,
+              "P->X": 3,
+              "X->N": 1
             }
           },
           "facilities": {
-            "n": 76,
-            "accuracy": 0.632,
+            "n": 50,
+            "accuracy": 0.66,
             "ci95": [
-              0.526,
-              0.737
+              0.52,
+              0.78
             ],
             "confusion_human_to_system": {
-              "P->P": 30,
-              "X->X": 12,
-              "P->X": 10,
-              "N->N": 6,
-              "N->X": 5,
-              "X->N": 5,
-              "X->P": 4,
-              "P->N": 3,
+              "P->P": 22,
+              "N->N": 7,
+              "P->X": 7,
+              "X->X": 4,
+              "X->N": 4,
+              "X->P": 3,
+              "P->N": 2,
               "N->P": 1
             }
           },
           "cleanliness": {
-            "n": 74,
-            "accuracy": 0.635,
+            "n": 44,
+            "accuracy": 0.636,
             "ci95": [
-              0.527,
-              0.743
+              0.5,
+              0.773
             ],
             "confusion_human_to_system": {
-              "P->P": 21,
-              "N->N": 19,
+              "P->P": 16,
               "X->N": 14,
-              "X->X": 7,
-              "P->X": 5,
-              "X->P": 3,
-              "P->N": 2,
-              "N->P": 2,
-              "N->X": 1
+              "N->N": 11,
+              "X->X": 1,
+              "X->P": 1,
+              "P->N": 1
             }
           },
           "safety": {
-            "n": 86,
-            "accuracy": 0.744,
+            "n": 26,
+            "accuracy": 0.846,
             "ci95": [
-              0.651,
-              0.837
+              0.692,
+              0.962
             ],
             "confusion_human_to_system": {
-              "N->N": 44,
-              "P->P": 18,
-              "N->X": 6,
-              "X->N": 4,
-              "P->N": 4,
-              "X->P": 3,
-              "P->X": 3,
-              "N->P": 2,
-              "X->X": 2
-            }
-          },
-          "price_value": {
-            "n": 80,
-            "accuracy": 0.6,
-            "ci95": [
-              0.487,
-              0.7
-            ],
-            "confusion_human_to_system": {
-              "X->X": 29,
-              "P->P": 13,
-              "P->X": 13,
-              "X->N": 9,
-              "X->P": 7,
-              "N->N": 6,
-              "P->N": 2,
-              "N->X": 1
-            }
-          },
-          "crowd": {
-            "n": 80,
-            "accuracy": 0.725,
-            "ci95": [
-              0.625,
-              0.812
-            ],
-            "confusion_human_to_system": {
-              "P->P": 47,
-              "N->N": 8,
-              "N->X": 7,
-              "P->X": 6,
-              "N->P": 6,
-              "X->X": 3,
-              "X->P": 2,
-              "X->N": 1
-            }
-          },
-          "scenery": {
-            "n": 80,
-            "accuracy": 0.762,
-            "ci95": [
-              0.662,
-              0.85
-            ],
-            "confusion_human_to_system": {
-              "P->P": 37,
-              "X->X": 24,
-              "X->P": 11,
-              "N->P": 3,
-              "X->N": 2,
-              "P->X": 2,
-              "N->X": 1
+              "N->N": 21,
+              "X->N": 1,
+              "N->P": 1,
+              "P->P": 1,
+              "N->X": 1,
+              "X->P": 1
             }
           }
         },
-        "macro_accuracy": 0.677,
-        "pooled_accuracy": 0.677,
+        "macro_accuracy": 0.717,
+        "pooled_accuracy": 0.701,
         "pooled_ci95": [
-          0.639,
-          0.715
+          0.628,
+          0.768
         ],
-        "n_pairs": 576
+        "n_pairs": 164
       },
       "vs_annotator2": {
         "per_aspect": {
           "roads_access": {
-            "n": 31,
-            "accuracy": 0.484,
+            "n": 34,
+            "accuracy": 0.824,
             "ci95": [
-              0.323,
-              0.677
+              0.706,
+              0.941
             ],
             "confusion_human_to_system": {
-              "N->X": 9,
-              "X->X": 8,
-              "P->P": 5,
-              "P->X": 3,
-              "X->N": 3,
-              "N->N": 2,
+              "X->X": 11,
+              "N->N": 10,
+              "P->P": 7,
+              "N->X": 3,
+              "P->X": 2,
               "X->P": 1
             }
           },
           "facilities": {
-            "n": 37,
-            "accuracy": 0.568,
+            "n": 39,
+            "accuracy": 0.795,
             "ci95": [
-              0.405,
-              0.73
+              0.667,
+              0.923
             ],
             "confusion_human_to_system": {
-              "P->P": 13,
-              "P->X": 7,
-              "N->N": 4,
+              "P->P": 19,
+              "N->N": 8,
               "X->X": 4,
-              "N->X": 4,
-              "X->P": 2,
-              "X->N": 2,
-              "P->N": 1
+              "X->P": 3,
+              "P->X": 2,
+              "P->N": 2,
+              "X->N": 1
             }
           },
           "cleanliness": {
@@ -1099,72 +645,67 @@
               0.8
             ],
             "confusion_human_to_system": {
-              "P->P": 14,
+              "P->P": 15,
               "N->N": 11,
-              "X->N": 9,
-              "X->X": 2,
-              "P->X": 2,
-              "P->N": 1,
-              "X->P": 1
+              "X->N": 11,
+              "P->N": 2,
+              "X->X": 1
             }
           },
           "safety": {
             "n": 24,
-            "accuracy": 0.833,
+            "accuracy": 0.917,
             "ci95": [
-              0.667,
-              0.958
+              0.792,
+              1.0
             ],
             "confusion_human_to_system": {
-              "N->N": 20,
-              "N->X": 2,
+              "N->N": 21,
               "N->P": 1,
-              "P->N": 1
+              "P->P": 1,
+              "N->X": 1
             }
           }
         },
-        "macro_accuracy": 0.64,
-        "pooled_accuracy": 0.629,
+        "macro_accuracy": 0.803,
+        "pooled_accuracy": 0.788,
         "pooled_ci95": [
-          0.545,
-          0.712
+          0.715,
+          0.854
         ],
-        "n_pairs": 132
+        "n_pairs": 137
       },
       "unanimous_pairs": {
         "per_aspect": {
           "roads_access": {
-            "n": 27,
-            "accuracy": 0.407,
+            "n": 29,
+            "accuracy": 0.862,
             "ci95": [
-              0.222,
-              0.593
+              0.724,
+              0.966
             ],
             "confusion_human_to_system": {
-              "N->X": 9,
-              "X->X": 5,
-              "P->P": 4,
-              "P->X": 3,
-              "X->N": 3,
-              "N->N": 2,
-              "X->P": 1
+              "N->N": 10,
+              "X->X": 9,
+              "P->P": 6,
+              "N->X": 3,
+              "P->X": 1
             }
           },
           "facilities": {
-            "n": 30,
-            "accuracy": 0.633,
+            "n": 32,
+            "accuracy": 0.844,
             "ci95": [
-              0.467,
-              0.8
+              0.719,
+              0.969
             ],
             "confusion_human_to_system": {
-              "P->P": 13,
-              "P->X": 6,
-              "N->N": 4,
-              "N->X": 3,
+              "P->P": 18,
+              "N->N": 7,
               "X->X": 2,
-              "X->N": 1,
-              "P->N": 1
+              "P->X": 2,
+              "P->N": 2,
+              "X->N": 1
             }
           },
           "cleanliness": {
@@ -1175,61 +716,60 @@
               0.821
             ],
             "confusion_human_to_system": {
-              "P->P": 14,
+              "P->P": 15,
               "N->N": 11,
-              "X->N": 9,
-              "X->X": 2,
-              "P->X": 2,
-              "X->P": 1
+              "X->N": 11,
+              "X->X": 1,
+              "P->N": 1
             }
           },
           "safety": {
             "n": 23,
-            "accuracy": 0.826,
+            "accuracy": 0.913,
             "ci95": [
-              0.652,
-              0.957
+              0.783,
+              1.0
             ],
             "confusion_human_to_system": {
-              "N->N": 19,
-              "N->X": 2,
+              "N->N": 20,
               "N->P": 1,
-              "P->N": 1
+              "P->P": 1,
+              "N->X": 1
             }
           }
         },
-        "macro_accuracy": 0.639,
-        "pooled_accuracy": 0.639,
+        "macro_accuracy": 0.828,
+        "pooled_accuracy": 0.813,
         "pooled_ci95": [
-          0.546,
-          0.723
+          0.74,
+          0.878
         ],
-        "n_pairs": 119
+        "n_pairs": 123
       },
       "gap_to_human_ceiling": {
         "roads_access": {
-          "system": 0.64,
-          "human_ceiling": 0.871,
-          "gap": 0.231,
-          "share_of_ceiling": 0.735
+          "system": 0.727,
+          "human_ceiling": 0.853,
+          "gap": 0.126,
+          "share_of_ceiling": 0.852
         },
         "facilities": {
-          "system": 0.632,
-          "human_ceiling": 0.811,
-          "gap": 0.179,
-          "share_of_ceiling": 0.779
+          "system": 0.66,
+          "human_ceiling": 0.821,
+          "gap": 0.161,
+          "share_of_ceiling": 0.804
         },
         "cleanliness": {
-          "system": 0.635,
+          "system": 0.636,
           "human_ceiling": 0.975,
-          "gap": 0.34,
-          "share_of_ceiling": 0.651
+          "gap": 0.339,
+          "share_of_ceiling": 0.652
         },
         "safety": {
-          "system": 0.744,
+          "system": 0.846,
           "human_ceiling": 0.958,
-          "gap": 0.214,
-          "share_of_ceiling": 0.777
+          "gap": 0.112,
+          "share_of_ceiling": 0.883
         }
       }
     }

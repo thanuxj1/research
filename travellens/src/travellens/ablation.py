@@ -58,7 +58,9 @@ REPORT_JSON = C.REPORTS / "rule_ablation.json"
 # pol_roberta is Method D: the model's own answer, before the request rule.
 VARIANTS = [
     ("deployed", "pol_final", True, True,
-     "all three rules on -- the published numbers"),
+     "the deployed models (embedding-SVM topics + fine-tuned RoBERTa) -- the published numbers"),
+    ("previous_chain", "pol_final", True, True,
+     "the previous chain: lexicon topics + zero-shot RoBERTa + all three rules"),
     ("no_request_rule", "pol_roberta", True, True,
      "the model's own label, politely phrased complaints left neutral"),
     ("no_safety_recall", "pol_final", False, True,
@@ -96,8 +98,12 @@ def run(seg: pd.DataFrame, reviews=None, verbose: bool = True) -> Dict:
     for name, pol_col, recall, site, note in VARIANTS:
         if verbose:
             print("\n  [{}] {}".format(name, note))
+        # "deployed" is the final models; every other variant re-runs the
+        # previous chain (zero-shot RoBERTa + correction rules), which is the
+        # only chain the rules belong to, with rules switched on or off.
         tree = build_tree(seg, pol_col=pol_col, reviews=reviews,
-                          safety_recall=recall, site_rule=site)
+                          safety_recall=recall, site_rule=site,
+                          use_final=(name == "deployed"))
         results[name] = {
             "note": note,
             "polarity_column": pol_col,

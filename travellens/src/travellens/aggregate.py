@@ -222,7 +222,8 @@ def _quotes(group: pd.DataFrame, pol_col: str, limit: int = QUOTES_PER_NODE,
 def long_table(seg: pd.DataFrame, pol_col: str = DEFAULT_POLARITY_COL,
                sources=None, reviews: Optional[pd.DataFrame] = None,
                use_trained: bool = False, safety_recall: bool = True,
-               site_rule: bool = True, verbose: bool = True) -> pd.DataFrame:
+               site_rule: bool = True, verbose: bool = True,
+               use_final: bool = True) -> pd.DataFrame:
     """One row per (segment, aspect), scored by the DEPLOYED chain.
 
     Extracted from build_tree so that anything measuring the published output
@@ -234,8 +235,20 @@ def long_table(seg: pd.DataFrame, pol_col: str = DEFAULT_POLARITY_COL,
 
     build_tree() aggregates this. reliability.py resamples it.
     """
-    n_col = "u_n_aspects" if "u_n_aspects" in seg.columns else "n_aspects"
-    df = seg[(seg[n_col] > 0) & seg[pol_col].notna()].copy()
+    # The deployed models (final_models.py): when scripts/62 has run, topic
+    # membership comes from fAsp_* and the verdict from verdict_final.csv. Both
+    # were chosen by the model comparison (scripts 57-59) and are measured as a
+    # unit, so the hand-written correction chain below -- written for the
+    # zero-shot RoBERTa it replaces -- is not stacked on top of them.
+    from .final_models import VERDICT_CSV
+    final_on = (use_final and VERDICT_CSV.exists()
+                and ("fAsp_" + next(iter(C.ASPECTS))) in seg.columns)
+    if final_on:
+        n_col = "f_n_aspects"
+        df = seg[seg[n_col] > 0].copy()
+    else:
+        n_col = "u_n_aspects" if "u_n_aspects" in seg.columns else "n_aspects"
+        df = seg[(seg[n_col] > 0) & seg[pol_col].notna()].copy()
 
     if sources:
         if reviews is None:
@@ -267,8 +280,10 @@ def long_table(seg: pd.DataFrame, pol_col: str = DEFAULT_POLARITY_COL,
     long_rows = []
     chosen = {}
     for key in C.ASPECTS:
-        pick = ASPECT_EXTRACTOR.get(key, "rules")
-        if pick == "safety_model" and ("sAsp_" + key) in df.columns:
+        pick = "final" if final_on else ASPECT_EXTRACTOR.get(key, "rules")
+        if pick == "final":
+            col = "fAsp_" + key
+        elif pick == "safety_model" and ("sAsp_" + key) in df.columns:
             col = "sAsp_" + key
         elif pick == "trained" and ("tAsp_" + key) in df.columns:
             col = "tAsp_" + key
@@ -304,6 +319,20 @@ def long_table(seg: pd.DataFrame, pol_col: str = DEFAULT_POLARITY_COL,
     # Deploying it would degrade the safety signal this project exists to
     # surface. Set use_trained=True only once the model has been retrained on
     # human aspect-level labels and measured against the gold set.
+    if final_on:
+        fv = pd.read_csv(VERDICT_CSV)
+        long = long.merge(fv, on=["segment_id", "aspect"], how="left")
+        missing = int(long["pol_fm"].isna().sum())
+        if missing:
+            raise ValueError("%d (segment, aspect) pairs have no final verdict -- "
+                             "rerun scripts/62_apply_final_models.py" % missing)
+        long[pol_col] = long["pol_fm"]
+        long["pol_roberta_conf"] = long["pol_fm_conf"]
+        if verbose:
+            print("  deployed models: %s | %s" % (
+                "topic = lexicon OR embedding-SVM", "verdict = fine-tuned RoBERTa"))
+        return long
+
     trained_path = C.DATA_PROCESSED / "polarity_by_aspect.csv"
     if trained_path.exists():
         tr = pd.read_csv(trained_path)
@@ -358,7 +387,7 @@ def long_table(seg: pd.DataFrame, pol_col: str = DEFAULT_POLARITY_COL,
 def build_tree(seg: pd.DataFrame, pol_col: str = DEFAULT_POLARITY_COL,
                sources=None, reviews: Optional[pd.DataFrame] = None,
                use_trained: bool = False, safety_recall: bool = True,
-               site_rule: bool = True) -> Dict:
+               site_rule: bool = True, use_final: bool = True) -> Dict:
     """Build the full Sri Lanka -> district -> destination -> aspect tree.
 
     `sources` optionally restricts the tree to reviews from particular
@@ -369,7 +398,7 @@ def build_tree(seg: pd.DataFrame, pol_col: str = DEFAULT_POLARITY_COL,
     """
     long = long_table(seg, pol_col=pol_col, sources=sources, reviews=reviews,
                       use_trained=use_trained, safety_recall=safety_recall,
-                      site_rule=site_rule)
+                      site_rule=site_rule, use_final=use_final)
 
     suppressed = {"destination_aspect": 0, "district_aspect": 0}
 

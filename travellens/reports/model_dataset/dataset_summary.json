@@ -1,0 +1,107 @@
+{
+  "labelled_by": "claude (AI annotator, calibrated against the human gold set; see ai_annotated_eval.json)",
+  "train": {
+    "sentences": 1500,
+    "by_batch": {
+      "train_dense": 600,
+      "train_random_2026_10_11": 500,
+      "train_random": 400
+    },
+    "topics": {
+      "roads_access": {
+        "mentions": 197,
+        "N": 44,
+        "P": 79,
+        "X": 74
+      },
+      "cleanliness": {
+        "mentions": 92,
+        "N": 33,
+        "P": 53,
+        "X": 6
+      },
+      "facilities": {
+        "mentions": 272,
+        "N": 66,
+        "P": 149,
+        "X": 57
+      },
+      "safety": {
+        "mentions": 68,
+        "N": 50,
+        "P": 12,
+        "X": 6
+      },
+      "price_value": {
+        "mentions": 153,
+        "N": 65,
+        "P": 26,
+        "X": 62
+      },
+      "crowd": {
+        "mentions": 144,
+        "N": 33,
+        "P": 82,
+        "X": 29
+      },
+      "scenery": {
+        "mentions": 247,
+        "N": 27,
+        "P": 186,
+        "X": 34
+      }
+    }
+  },
+  "test_random": {
+    "sentences": 800,
+    "by_batch": {
+      "test_random": 500,
+      "test_random_2026_10_11": 300
+    },
+    "topics": {
+      "roads_access": {
+        "mentions": 87,
+        "N": 18,
+        "P": 31,
+        "X": 38
+      },
+      "cleanliness": {
+        "mentions": 33,
+        "N": 17,
+        "P": 16,
+        "X": 0
+      },
+      "facilities": {
+        "mentions": 154,
+        "N": 26,
+        "P": 97,
+        "X": 31
+      },
+      "safety": {
+        "mentions": 32,
+        "N": 19,
+        "P": 8,
+        "X": 5
+      },
+      "price_value": {
+        "mentions": 45,
+        "N": 16,
+        "P": 12,
+        "X": 17
+      },
+      "crowd": {
+        "mentions": 53,
+        "N": 22,
+        "P": 21,
+        "X": 10
+      },
+      "scenery": {
+        "mentions": 162,
+        "N": 10,
+        "P": 141,
+        "X": 11
+      }
+    }
+  },
+  "train_test_overlap": 0
+}

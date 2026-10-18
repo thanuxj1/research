@@ -12,11 +12,11 @@
   "aspects": {
     "roads_access": {
       "label": "Roads & Access",
-      "precision": 0.588,
+      "precision": 0.513,
       "recall": 0.87,
-      "f1": 0.702,
+      "f1": 0.645,
       "human_positives": 23,
-      "confidence": "high",
+      "confidence": "low",
       "measured_on": "focused gold set, Part A (n=120), 2 independent human passes",
       "human_readers": 2,
       "label_files": [
@@ -46,9 +46,9 @@
     },
     "facilities": {
       "label": "Facilities",
-      "precision": 0.733,
-      "recall": 0.846,
-      "f1": 0.786,
+      "precision": 0.74,
+      "recall": 0.949,
+      "f1": 0.831,
       "human_positives": 39,
       "confidence": "high",
       "measured_on": "focused gold set, Part A (n=120), 2 independent human passes",
@@ -114,9 +114,9 @@
     },
     "safety": {
       "label": "Safety",
-      "precision": 0.846,
+      "precision": 0.917,
       "recall": 0.733,
-      "f1": 0.786,
+      "f1": 0.815,
       "human_positives": 15,
       "confidence": "high",
       "measured_on": "focused gold set, Part A (n=120), 2 independent human passes",

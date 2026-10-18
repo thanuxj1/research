@@ -114,8 +114,10 @@ def test_a_blank_sheet_is_not_an_error(report):
     """The normal state before anyone sits down with it."""
     supp = report.get("supplementary_sheet")
     assert supp is not None
+    # "excluded": the sheet's pairs trained the deployed verdict model
+    # (final_models.py), so they are kept out of every accuracy figure.
     assert supp["status"] in ("no sheet yet", "sheet exists but is blank",
-                              "in use")
+                              "in use", "excluded")
 
 
 def test_the_sheet_never_shows_the_system_verdict():

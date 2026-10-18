@@ -1,0 +1,450 @@
+{
+ "what_this_is": "Accuracy for all seven topics from a 500-segment RANDOM sample labelled by Claude (AI), blind to system output, plus a calibration of that annotator against the two human readers.",
+ "annotator": "Claude (Anthropic), AI assistant. NOT a human reader. labelled_by='claude'.",
+ "how_to_read_it": "Trust in these figures rests on the calibration block: where the annotator agrees with each human about as well as the humans agree with each other, its labels are a usable substitute for that topic; where it agrees less (roads verdict), treat the figure with more caution. Intervals are bootstrap 95% (2,000 resamples); topics with few positives have wide intervals.",
+ "calibration": {
+  "n_rows": 120,
+  "topics": {
+   "roads_access": {
+    "presence_kappa_claude_vs_reader1": {
+     "kappa": 0.697,
+     "ci95": [
+      0.522,
+      0.849
+     ]
+    },
+    "presence_kappa_claude_vs_reader2": {
+     "kappa": 0.77,
+     "ci95": [
+      0.613,
+      0.902
+     ]
+    },
+    "presence_kappa_reader1_vs_reader2": {
+     "kappa": 0.699,
+     "ci95": [
+      0.513,
+      0.847
+     ]
+    },
+    "verdict_agreement_claude_vs_reader1": 0.579,
+    "verdict_n_claude": 19,
+    "verdict_agreement_claude_vs_reader2": 0.85,
+    "verdict_n_claude_reader2": 20,
+    "verdict_agreement_reader1_vs_reader2": 0.824,
+    "verdict_n_readers": 17
+   },
+   "cleanliness": {
+    "presence_kappa_claude_vs_reader1": {
+     "kappa": 0.976,
+     "ci95": [
+      0.916,
+      1.0
+     ]
+    },
+    "presence_kappa_claude_vs_reader2": {
+     "kappa": 0.951,
+     "ci95": [
+      0.87,
+      1.0
+     ]
+    },
+    "presence_kappa_reader1_vs_reader2": {
+     "kappa": 0.927,
+     "ci95": [
+      0.831,
+      1.0
+     ]
+    },
+    "verdict_agreement_claude_vs_reader1": 0.963,
+    "verdict_n_claude": 27,
+    "verdict_agreement_claude_vs_reader2": 1.0,
+    "verdict_n_claude_reader2": 25,
+    "verdict_agreement_reader1_vs_reader2": 1.0,
+    "verdict_n_readers": 25
+   },
+   "facilities": {
+    "presence_kappa_claude_vs_reader1": {
+     "kappa": 0.781,
+     "ci95": [
+      0.656,
+      0.888
+     ]
+    },
+    "presence_kappa_claude_vs_reader2": {
+     "kappa": 0.794,
+     "ci95": [
+      0.672,
+      0.897
+     ]
+    },
+    "presence_kappa_reader1_vs_reader2": {
+     "kappa": 0.823,
+     "ci95": [
+      0.701,
+      0.924
+     ]
+    },
+    "verdict_agreement_claude_vs_reader1": 0.75,
+    "verdict_n_claude": 36,
+    "verdict_agreement_claude_vs_reader2": 0.765,
+    "verdict_n_claude_reader2": 34,
+    "verdict_agreement_reader1_vs_reader2": 0.875,
+    "verdict_n_readers": 32
+   },
+   "safety": {
+    "presence_kappa_claude_vs_reader1": {
+     "kappa": 0.792,
+     "ci95": [
+      0.576,
+      0.943
+     ]
+    },
+    "presence_kappa_claude_vs_reader2": {
+     "kappa": 0.9,
+     "ci95": [
+      0.733,
+      1.0
+     ]
+    },
+    "presence_kappa_reader1_vs_reader2": {
+     "kappa": 0.689,
+     "ci95": [
+      0.432,
+      0.883
+     ]
+    },
+    "verdict_agreement_claude_vs_reader1": 0.909,
+    "verdict_n_claude": 11,
+    "verdict_agreement_claude_vs_reader2": 1.0,
+    "verdict_n_claude_reader2": 10,
+    "verdict_agreement_reader1_vs_reader2": 0.889,
+    "verdict_n_readers": 9
+   }
+  }
+ },
+ "random_sample": {
+  "n_rows": 800,
+  "topics": {
+   "roads_access": {
+    "annotated_positives": 80,
+    "prevalence": 0.1,
+    "tp": 33,
+    "fp": 12,
+    "fn": 47,
+    "precision": 0.733,
+    "precision_ci95": [
+     0.605,
+     0.861
+    ],
+    "recall": 0.412,
+    "recall_ci95": [
+     0.303,
+     0.521
+    ],
+    "f1": 0.528,
+    "f1_ci95": [
+     0.417,
+     0.63
+    ],
+    "verdict_accuracy": 0.576,
+    "verdict_n": 33,
+    "verdict_ci95": [
+     0.394,
+     0.728
+    ]
+   },
+   "cleanliness": {
+    "annotated_positives": 27,
+    "prevalence": 0.034,
+    "tp": 21,
+    "fp": 1,
+    "fn": 6,
+    "precision": 0.955,
+    "precision_ci95": [
+     0.857,
+     1.0
+    ],
+    "recall": 0.778,
+    "recall_ci95": [
+     0.6,
+     0.929
+    ],
+    "f1": 0.857,
+    "f1_ci95": [
+     0.731,
+     0.947
+    ],
+    "verdict_accuracy": 0.762,
+    "verdict_n": 21,
+    "verdict_ci95": [
+     0.571,
+     0.952
+    ]
+   },
+   "facilities": {
+    "annotated_positives": 137,
+    "prevalence": 0.171,
+    "tp": 32,
+    "fp": 11,
+    "fn": 105,
+    "precision": 0.744,
+    "precision_ci95": [
+     0.61,
+     0.875
+    ],
+    "recall": 0.234,
+    "recall_ci95": [
+     0.165,
+     0.307
+    ],
+    "f1": 0.356,
+    "f1_ci95": [
+     0.263,
+     0.447
+    ],
+    "verdict_accuracy": 0.812,
+    "verdict_n": 32,
+    "verdict_ci95": [
+     0.687,
+     0.938
+    ]
+   },
+   "safety": {
+    "annotated_positives": 35,
+    "prevalence": 0.044,
+    "tp": 13,
+    "fp": 1,
+    "fn": 22,
+    "precision": 0.929,
+    "precision_ci95": [
+     0.75,
+     1.0
+    ],
+    "recall": 0.371,
+    "recall_ci95": [
+     0.216,
+     0.533
+    ],
+    "f1": 0.531,
+    "f1_ci95": [
+     0.333,
+     0.693
+    ],
+    "verdict_accuracy": 0.462,
+    "verdict_n": 13,
+    "verdict_ci95": [
+     0.231,
+     0.692
+    ]
+   },
+   "price_value": {
+    "annotated_positives": 46,
+    "prevalence": 0.058,
+    "tp": 38,
+    "fp": 4,
+    "fn": 8,
+    "precision": 0.905,
+    "precision_ci95": [
+     0.804,
+     0.978
+    ],
+    "recall": 0.826,
+    "recall_ci95": [
+     0.71,
+     0.93
+    ],
+    "f1": 0.864,
+    "f1_ci95": [
+     0.782,
+     0.932
+    ],
+    "verdict_accuracy": 0.789,
+    "verdict_n": 38,
+    "verdict_ci95": [
+     0.658,
+     0.895
+    ]
+   },
+   "crowd": {
+    "annotated_positives": 45,
+    "prevalence": 0.056,
+    "tp": 26,
+    "fp": 1,
+    "fn": 19,
+    "precision": 0.963,
+    "precision_ci95": [
+     0.875,
+     1.0
+    ],
+    "recall": 0.578,
+    "recall_ci95": [
+     0.429,
+     0.723
+    ],
+    "f1": 0.722,
+    "f1_ci95": [
+     0.6,
+     0.829
+    ],
+    "verdict_accuracy": 0.538,
+    "verdict_n": 26,
+    "verdict_ci95": [
+     0.346,
+     0.731
+    ]
+   },
+   "scenery": {
+    "annotated_positives": 165,
+    "prevalence": 0.206,
+    "tp": 111,
+    "fp": 64,
+    "fn": 54,
+    "precision": 0.634,
+    "precision_ci95": [
+     0.564,
+     0.704
+    ],
+    "recall": 0.673,
+    "recall_ci95": [
+     0.601,
+     0.743
+    ],
+    "f1": 0.653,
+    "f1_ci95": [
+     0.59,
+     0.708
+    ],
+    "verdict_accuracy": 0.865,
+    "verdict_n": 111,
+    "verdict_ci95": [
+     0.802,
+     0.928
+    ]
+   }
+  },
+  "macro_f1": 0.644,
+  "macro_verdict_accuracy": 0.686
+ },
+ "calibration_part_b": {
+  "n_rows": 80,
+  "topics": {
+   "roads_access": {
+    "presence_kappa_claude_vs_reader1": {
+     "kappa": 0.767,
+     "ci95": [
+      0.609,
+      0.912
+     ]
+    },
+    "presence_kappa_claude_vs_reader2": {
+     "kappa": 0.794,
+     "ci95": [
+      0.62,
+      0.935
+     ]
+    },
+    "presence_kappa_reader1_vs_reader2": {
+     "kappa": 0.729,
+     "ci95": [
+      0.548,
+      0.881
+     ]
+    },
+    "verdict_agreement_claude_vs_reader1": 0.81,
+    "verdict_n_claude": 21,
+    "verdict_agreement_claude_vs_reader2": 0.905,
+    "verdict_n_claude_reader2": 21,
+    "verdict_agreement_reader1_vs_reader2": 0.895,
+    "verdict_n_readers": 19
+   },
+   "cleanliness": {
+    "presence_kappa_claude_vs_reader1": {
+     "kappa": 0.963,
+     "ci95": [
+      0.874,
+      1.0
+     ]
+    },
+    "presence_kappa_claude_vs_reader2": {
+     "kappa": 0.925,
+     "ci95": [
+      0.805,
+      1.0
+     ]
+    },
+    "presence_kappa_reader1_vs_reader2": {
+     "kappa": 0.962,
+     "ci95": [
+      0.867,
+      1.0
+     ]
+    },
+    "verdict_agreement_claude_vs_reader1": 0.235,
+    "verdict_n_claude": 17,
+    "verdict_agreement_claude_vs_reader2": 0.25,
+    "verdict_n_claude_reader2": 16,
+    "verdict_agreement_reader1_vs_reader2": 0.938,
+    "verdict_n_readers": 16
+   },
+   "facilities": {
+    "presence_kappa_claude_vs_reader1": {
+     "kappa": 0.64,
+     "ci95": [
+      0.399,
+      0.836
+     ]
+    },
+    "presence_kappa_claude_vs_reader2": {
+     "kappa": 0.59,
+     "ci95": [
+      0.342,
+      0.8
+     ]
+    },
+    "presence_kappa_reader1_vs_reader2": {
+     "kappa": 0.537,
+     "ci95": [
+      0.253,
+      0.764
+     ]
+    },
+    "verdict_agreement_claude_vs_reader1": 0.364,
+    "verdict_n_claude": 11,
+    "verdict_agreement_claude_vs_reader2": 0.7,
+    "verdict_n_claude_reader2": 10,
+    "verdict_agreement_reader1_vs_reader2": 0.667,
+    "verdict_n_readers": 9
+   },
+   "safety": {
+    "presence_kappa_claude_vs_reader1": {
+     "kappa": 0.754,
+     "ci95": [
+      0.567,
+      0.908
+     ]
+    },
+    "presence_kappa_claude_vs_reader2": {
+     "kappa": 0.817,
+     "ci95": [
+      0.633,
+      0.958
+     ]
+    },
+    "presence_kappa_reader1_vs_reader2": {
+     "kappa": 0.793,
+     "ci95": [
+      0.613,
+      0.933
+     ]
+    },
+    "verdict_agreement_claude_vs_reader1": 0.933,
+    "verdict_n_claude": 15,
+    "verdict_agreement_claude_vs_reader2": 0.933,
+    "verdict_n_claude_reader2": 15,
+    "verdict_agreement_reader1_vs_reader2": 1.0,
+    "verdict_n_readers": 16
+   }
+  }
+ }
+}
