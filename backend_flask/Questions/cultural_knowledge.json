@@ -1,0 +1,156 @@
+{
+    "dress_code": {
+        "title": "Temple Dress Code",
+        "description": "Guidelines for respectful clothing when visiting religious and cultural places in Sri Lanka.",
+        "guidance": [
+            "Wear clothing that covers shoulders and knees.",
+            "Avoid shorts, mini skirts, and sleeveless tops.",
+            "White or light-colored clothing is preferred at many temples.",
+            "Remove hats, caps, and sunglasses before entering sacred places.",
+            "Carry a shawl or scarf if unsure about dress appropriateness."
+        ],
+        "avoid": [
+            "Tight or revealing clothing",
+            "Clothing with offensive prints",
+            "Beachwear inside temples"
+        ],
+        "recommended_locations": [
+            "Temple of the Tooth",
+            "Gangaramaya Temple",
+            "Kelaniya Temple",
+            "Dambulla Cave Temple"
+        ]
+    },
+    "etiquette": {
+        "title": "Religious Etiquette",
+        "description": "Behavior guidance for tourists visiting sacred and cultural places.",
+        "guidance": [
+            "Remove shoes before entering temple areas.",
+            "Speak quietly and respectfully.",
+            "Respect worshippers and religious ceremonies.",
+            "Do not touch monks unnecessarily.",
+            "Do not point feet toward Buddha statues.",
+            "Stand respectfully when religious rituals are happening."
+        ],
+        "avoid": [
+            "Loud conversations",
+            "Public displays of affection",
+            "Climbing on sacred structures"
+        ],
+        "recommended_locations": [
+            "Anuradhapura",
+            "Polonnaruwa",
+            "Kataragama Temple"
+        ]
+    },
+    "photography_rules": {
+        "title": "Photography Guidance",
+        "description": "Important photography etiquette for sacred places and cultural events.",
+        "guidance": [
+            "Ask permission before taking photos of people.",
+            "Avoid disrespectful selfies with Buddha statues.",
+            "Flash photography may not be allowed indoors.",
+            "Some temples prohibit photography in sacred areas.",
+            "Respect signs indicating photography restrictions."
+        ],
+        "avoid": [
+            "Turning your back toward Buddha statues in selfies",
+            "Drone photography without permission",
+            "Interrupting ceremonies for photos"
+        ],
+        "recommended_locations": [
+            "Temple of the Tooth",
+            "Dambulla Cave Temple",
+            "Kandy Perahera"
+        ]
+    },
+    "language_phrase": {
+        "title": "Useful Local Phrases",
+        "description": "Basic Sinhala and Tamil phrases helpful for tourists in Sri Lanka.",
+        "guidance": [
+            "Ayubowan = Hello / Greetings (Sinhala)",
+            "Istuti = Thank you (Sinhala)",
+            "Vanakkam = Hello (Tamil)",
+            "Nandri = Thank you (Tamil)",
+            "Using local greetings is appreciated by Sri Lankans."
+        ],
+        "examples": [
+            {
+                "english": "Hello",
+                "sinhala": "ආයුබෝවන්",
+                "tamil": "வணக்கம்"
+            },
+            {
+                "english": "Thank You",
+                "sinhala": "ස්තුතියි",
+                "tamil": "நன்றி"
+            }
+        ]
+    },
+    "travel_timing": {
+        "title": "Best Time to Visit Sri Lanka",
+        "description": "Sri Lanka has two monsoon seasons that affect different coasts at different times, so the best time to visit depends on which region you plan to explore.",
+        "guidance": [
+            "December to March is the best time for the west and south coasts (Colombo, Galle, Mirissa, Bentota) and the hill country (Kandy, Nuwara Eliya, Ella).",
+            "May to September is the best time for the east coast (Trincomalee, Arugam Bay, Nilaveli).",
+            "The cultural triangle (Anuradhapura, Polonnaruwa, Sigiriya, Dambulla) can be visited year-round.",
+            "Shoulder months (April and September to November) offer fewer crowds with a moderate chance of rain.",
+            "Peak tourist season and prices run from December to April."
+        ],
+        "avoid": [
+            "Visiting the west/south coast during the Yala monsoon (May to September)",
+            "Visiting the east coast during the Maha monsoon (October to January)"
+        ],
+        "recommended_locations": [
+            "Galle",
+            "Mirissa",
+            "Kandy",
+            "Ella",
+            "Sigiriya"
+        ]
+    },
+    "local_food": {
+        "title": "Sri Lankan Food & Dining Culture",
+        "description": "Traditional dishes and dining customs to know when eating in Sri Lanka.",
+        "guidance": [
+            "Rice and curry is the staple meal, usually with several vegetable, meat, or fish curries.",
+            "Hoppers (appa) and kottu roti are popular street food and evening meals.",
+            "Many Sri Lankans eat with their right hand rather than cutlery.",
+            "Meals are often mildly to very spicy; ask for 'less spicy' if you are sensitive to heat.",
+            "Try local fruits like king coconut (thambili), rambutan, and wood apple."
+        ],
+        "avoid": [
+            "Eating or passing food with your left hand",
+            "Assuming all dishes are mild — ask before ordering if unsure",
+            "Wasting food, which is considered disrespectful"
+        ],
+        "recommended_locations": [
+            "Colombo food street markets",
+            "Kandy local eateries",
+            "Galle Fort cafes",
+            "Jaffna for northern Tamil cuisine"
+        ]
+    },
+    "festival_guidance": {
+        "title": "Festival Guidance",
+        "description": "Cultural awareness tips during Sri Lankan festivals and religious events.",
+        "guidance": [
+            "Dress modestly during festivals.",
+            "Follow crowd control and safety instructions.",
+            "Respect religious processions and rituals.",
+            "Arrive early for major events due to crowds.",
+            "Keep public spaces clean during celebrations."
+        ],
+        "avoid": [
+            "Blocking parade routes",
+            "Using drones without permission",
+            "Disrespecting cultural performances"
+        ],
+        "recommended_festivals": [
+            "Vesak Festival",
+            "Kandy Esala Perahera",
+            "Sinhala and Tamil New Year",
+            "Thai Pongal"
+        ]
+    }
+}
