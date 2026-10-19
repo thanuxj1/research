@@ -1,7 +1,8 @@
 from flask import Flask, Blueprint, request, jsonify
 from pathlib import Path
 from dotenv import load_dotenv
-
+import pandas as pd
+import joblib
 
 BASE_DIR = Path(__file__).resolve().parent
 
@@ -47,6 +48,45 @@ except ImportError:  # running as a script
     from real_time_data_engine import fetch_fuel_prices, fetch_hotel_prices, fetch_public_transport_fares, fetch_attraction_information, fetch_route_information, build_real_time_data_summary
     from final_system_validator import run_final_system_validation
 
+# load model and encoders
+try:
+    budget_model = joblib.load(BASE_DIR / "xgb_budget_model.pkl")
+    le_interest = joblib.load(BASE_DIR / "le_interest.pkl")
+    le_travel = joblib.load(BASE_DIR / "le_travel.pkl")
+    le_transport = joblib.load(BASE_DIR / "le_transport.pkl")
+    le_budget = joblib.load(BASE_DIR / "le_budget.pkl")
+    le_route = joblib.load(BASE_DIR / "le_route.pkl")
+    ml_models_loaded = True
+except Exception as ml_load_err:
+    print(f"Warning: ML budget model loading failed: {ml_load_err}")
+    ml_models_loaded = False
+
+try:
+    hotels_df = pd.read_csv(BASE_DIR / "hotels_300.csv")
+except Exception:
+    hotels_df = None
+
+
+def get_hotels(route):
+    if hotels_df is None or hotels_df.empty or not route:
+        return []
+    places = [
+        p.strip()
+        for p in route.split("->")
+        if p.strip() != "Colombo"
+    ]
+    hotels = []
+    for place in places:
+        result = hotels_df[hotels_df["place"] == place]
+        if not result.empty:
+            hotel = result.sample(1).iloc[0]
+            hotels.append({
+                "place": place,
+                "hotel_name": hotel["hotel_name"],
+                "price_lkr": int(hotel["avg_price_lkr"])
+            })
+    return hotels
+
 # ==========================================
 # HOME
 # ==========================================
@@ -60,18 +100,11 @@ def home():
 
     })
 
-# ==========================================
-# PREDICT API
-# ==========================================
 
 @bp.route("/predict", methods=["POST"])
 def predict():
 
     try:
-
-        # ==========================================
-        # GET & NORMALIZE INPUT
-        # ==========================================
 
         raw_data = request.get_json() or {}
 
@@ -106,9 +139,6 @@ def predict():
         include_snacks = bool(raw_data.get("include_snacks", False))
         food_preferences = raw_data.get("food_preferences")
 
-        # ==========================================
-        # GENERATE ROUTE
-        # ==========================================
 
         predicted_route = generate_route(
 
@@ -117,9 +147,6 @@ def predict():
             budget
         )
 
-        # ==========================================
-        # CALCULATE ROUTE DISTANCE
-        # ==========================================
 
         route_dist_res = calculate_route_distance(predicted_route)
 
@@ -500,7 +527,91 @@ def predict():
         calculated_food_total = final_trip_cost["cost_breakdown"]["food_lkr"]
         calculated_attraction_total = final_trip_cost["cost_breakdown"]["attractions_lkr"]
 
+        # ==========================================
+        # AI-PLANNER (XGBOOST ML MODEL PREDICTION)
+        # ==========================================
+        ai_planner_data = None
+        if ml_models_loaded:
+            try:
+                if budget < 60000:
+                    budget_level = "low"
+                elif budget < 150000:
+                    budget_level = "medium"
+                else:
+                    budget_level = "high"
+
+                try:
+                    interest_encoded = le_interest.transform([interest])[0]
+                except Exception:
+                    interest_encoded = 0
+
+                try:
+                    travel_encoded = le_travel.transform([travel_type])[0]
+                except Exception:
+                    travel_encoded = 0
+
+                try:
+                    transport_encoded = le_transport.transform([transport_mode])[0]
+                except Exception:
+                    transport_encoded = 0
+
+                try:
+                    budget_encoded = le_budget.transform([budget_level])[0]
+                except Exception:
+                    budget_encoded = 0
+
+                safe_route = "Colombo -> Kandy -> Nuwara Eliya -> Ella -> Colombo"
+                target_route_str = predicted_route or safe_route
+                try:
+                    route_encoded = le_route.transform([target_route_str])[0]
+                except Exception:
+                    try:
+                        route_encoded = le_route.transform([safe_route])[0]
+                    except Exception:
+                        route_encoded = 0
+
+                budget_input = pd.DataFrame([[
+                    days,
+                    budget_encoded,
+                    interest_encoded,
+                    travel_encoded,
+                    transport_encoded,
+                    route_encoded
+                ]], columns=[
+                    "days",
+                    "budget_level",
+                    "interest",
+                    "travel_type",
+                    "transport_mode",
+                    "recommended_route"
+                ])
+
+                ml_predicted_budget_val = round(float(budget_model.predict(budget_input)[0]), 2)
+                ml_hotel_cost_val = round(ml_predicted_budget_val * 0.45, 2)
+                ml_fuel_cost_val = round(ml_predicted_budget_val * 0.20, 2)
+                ml_food_cost_val = round(ml_predicted_budget_val * 0.15, 2)
+                ml_attraction_cost_val = round(ml_predicted_budget_val * 0.20, 2)
+                ml_daily_budget_val = round(ml_predicted_budget_val / max(1, days), 2)
+                ml_hotels_val = get_hotels(predicted_route)
+
+                ai_planner_data = {
+                    "predicted_route": predicted_route,
+                    "estimated_total_budget_lkr": ml_predicted_budget_val,
+                    "estimated_daily_budget_lkr": ml_daily_budget_val,
+                    "estimated_hotel_cost_lkr": ml_hotel_cost_val,
+                    "estimated_fuel_cost_lkr": ml_fuel_cost_val,
+                    "estimated_food_cost_lkr": ml_food_cost_val,
+                    "estimated_attraction_cost_lkr": ml_attraction_cost_val,
+                    "recommended_hotels": ml_hotels_val
+                }
+            except Exception as ml_err:
+                ai_planner_data = {
+                    "error": f"ML model prediction error: {str(ml_err)}"
+                }
+
         prediction = {
+
+            "ai_planner": ai_planner_data,
 
             "predicted_route": final_selected_route,
 
@@ -595,6 +706,8 @@ def predict():
 
                 "transport_mode": transport_mode
             },
+
+            "ai_planner": ai_planner_data,
 
             "prediction": prediction
         }

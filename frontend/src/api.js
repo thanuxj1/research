@@ -1,28 +1,28 @@
 // Global API Service for SafeTravel Assistance & Budget Planner Endpoints
-const API_BASE_URL = 'http://51.20.34.58:5001';
+const API_BASE_URL = 'http://54.234.54.197:5001';
 
 const ASSISTANCE_ENDPOINTS = [
-  'http://51.20.34.58:5001/assistance/recommend',   // Remote server
-  '/assistance/recommend',                       // Same-origin via Vite Proxy
-  'http://127.0.0.1:5001/assistance/recommend',   // Local fallback
-  'http://localhost:5001/assistance/recommend',   // Localhost fallback
-  'http://127.0.0.1:5000/assistance/recommend',   // Secondary fallback
+  '/assistance/recommend',                          // Same-origin via Vite Proxy (fastest & reliable in browser)
+  'http://54.234.54.197:5001/assistance/recommend', // Live AWS server direct
+  'http://127.0.0.1:5001/assistance/recommend',     // Local fallback
+  'http://localhost:5001/assistance/recommend',     // Localhost fallback
+  'http://127.0.0.1:5000/assistance/recommend',     // Secondary fallback
 ];
 
 const BUDGET_ENDPOINTS = [
-  'http://51.20.34.58:5001/budget_planner/predict',  // Remote server
-  '/budget_planner/predict',                      // Same-origin via Vite Proxy
-  'http://127.0.0.1:5001/budget_planner/predict',  // Local fallback
-  'http://localhost:5001/budget_planner/predict',  // Localhost fallback
-  'http://127.0.0.1:5000/budget_planner/predict',  // Secondary fallback
+  '/budget_planner/predict',                         // Same-origin via Vite Proxy
+  'http://54.234.54.197:5001/budget_planner/predict', // Live AWS server direct
+  'http://127.0.0.1:5001/budget_planner/predict',     // Local fallback
+  'http://localhost:5001/budget_planner/predict',     // Localhost fallback
+  'http://127.0.0.1:5000/budget_planner/predict',     // Secondary fallback
 ];
 
 const CULTURAL_ENDPOINTS = [
-  'http://51.20.34.58:5001/questions/predict',       // Remote server
-  '/questions/predict',                           // Same-origin via Vite Proxy
-  'http://127.0.0.1:5001/questions/predict',       // Local fallback
-  'http://localhost:5001/questions/predict',       // Localhost fallback
-  'http://127.0.0.1:5000/questions/predict',       // Secondary fallback
+  '/questions/predict',                              // Same-origin via Vite Proxy
+  'http://54.234.54.197:5001/questions/predict',      // Live AWS server direct
+  'http://127.0.0.1:5001/questions/predict',          // Local fallback
+  'http://localhost:5001/questions/predict',          // Localhost fallback
+  'http://127.0.0.1:5000/questions/predict',          // Secondary fallback
 ];
 
 // Comprehensive place metadata mapping for all Sri Lankan destinations
@@ -204,19 +204,22 @@ export async function getRecommendations(userText = '', overrideParams = {}) {
               image: `/images/${pName.toLowerCase().replace(/\s+/g, '_')}.png`,
             };
 
-            const numScore = item.score != null ? Math.round(item.score) : 65;
-            const numCrowd = item.crowd != null ? parseFloat(Number(item.crowd).toFixed(2)) : 100;
-            const weatherVal = item.weather || 'Low';
+            const numScore = item.score != null
+              ? Math.round(item.score)
+              : (item.ai_recommendation?.overall_score != null ? Math.round(item.ai_recommendation.overall_score) : null);
+            const numCrowd = item.crowd != null ? parseFloat(Number(item.crowd).toFixed(2)) : null;
+            const weatherVal = item.weather || item.weather_suitability?.condition || null;
+            const crowdLabel = item.crowd_label || item.crowd_safety?.crowd_level || (numCrowd != null ? (numCrowd < 110 ? 'Low' : numCrowd < 200 ? 'Moderate' : 'High') : null);
 
             return {
               ...item,
               place: pName,
-              desc: meta.desc,
-              image: meta.image,
+              desc: item.desc || meta.desc,
+              image: item.image || meta.image,
               score: numScore,
               crowd: numCrowd,
               weather: weatherVal,
-              crowd_label: item.crowd_label || (numCrowd < 110 ? 'Low' : numCrowd < 200 ? 'Moderate' : 'High'),
+              crowd_label: crowdLabel,
             };
           });
 
@@ -227,6 +230,9 @@ export async function getRecommendations(userText = '', overrideParams = {}) {
             rawJson: data,
             requestPayload: payload,
             errorDetail: null,
+            // Set when the request names a place outside Sri Lanka or a misspelled one
+            locationWarning: data.warning || null,
+            invalidLocations: Array.isArray(data.invalid_locations) ? data.invalid_locations : [],
           };
         }
       } else {
@@ -237,23 +243,14 @@ export async function getRecommendations(userText = '', overrideParams = {}) {
     }
   }
 
-  const fallbackRecs = generateFallbackRecommendations(userText);
-  const fallbackRoutes = generateFallbackRouteRecommendations(userText, payload.days);
+  // NOTE: Strictly preserve contract — do not generate mock results as fallback for API failure.
   return {
-    recommendations: fallbackRecs,
-    route_recommendations: fallbackRoutes,
+    recommendations: [],
+    route_recommendations: [],
     isLive: false,
-    rawJson: {
-      route_recommendations: fallbackRoutes,
-      recommendations: fallbackRecs.map(({ place, crowd, weather, score }) => ({
-        place,
-        crowd,
-        weather,
-        score,
-      })),
-    },
+    rawJson: null,
     requestPayload: payload,
-    errorDetail: lastError,
+    errorDetail: lastError || 'Unable to connect to the recommendation service. Please verify network access or server status.',
   };
 }
 
