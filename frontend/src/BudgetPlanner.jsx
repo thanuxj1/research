@@ -934,7 +934,7 @@ export default function BudgetPlanner({ onBack }) {
                 <div style={styles.debugInspectorContainer}>
                   <div style={styles.debugInspectorHeader}>
                     <span style={{ fontSize: 12.5, fontWeight: 700, color: '#f8fafc' }}>
-                      🔌 Backend API JSON Inspector (http://51.20.34.58:5001/budget_planner/predict)
+                      🔌 Backend API JSON Inspector (http://54.234.54.197:5001/budget_planner/predict)
                     </span>
                     <span style={{ fontSize: 11, fontWeight: 700, color: isLiveApi ? '#34d399' : '#fbbf24' }}>
                       {isLiveApi ? 'LIVE SERVER 200 OK' : 'FALLBACK SIMULATION MODE'}

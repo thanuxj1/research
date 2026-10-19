@@ -1,6 +1,10 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 
+// Backend for /assistance, /budget_planner and /questions.
+// Run with BACKEND_URL=http://127.0.0.1:5001 to use a local backend instead of AWS.
+const BACKEND_URL = process.env.BACKEND_URL || 'http://54.234.54.197:5001'
+
 export default defineConfig({
   plugins: [react()],
   server: {
@@ -12,17 +16,17 @@ export default defineConfig({
         changeOrigin: true,
       },
       '/assistance': {
-        target: 'http://51.20.34.58:5001',
+        target: BACKEND_URL,
         changeOrigin: true,
         secure: false,
       },
       '/budget_planner': {
-        target: 'http://51.20.34.58:5001',
+        target: BACKEND_URL,
         changeOrigin: true,
         secure: false,
       },
       '/questions': {
-        target: 'http://51.20.34.58:5001',
+        target: BACKEND_URL,
         changeOrigin: true,
         secure: false,
       },
