@@ -1710,26 +1710,29 @@ function anRenderDests() {
     ? `Praised (${topicLabel})`
     : "Total reviews";
 
+  const rateHeader = AN_VIEW === "praised" ? "Praise rate" : "Complaint rate";
+  // Same evidence floor as the map (config.MIN_MENTIONS_DISPLAY): a rate
+  // resting on fewer than 10 opinions is an anecdote, so it is not shown.
+  const MIN_OPINIONS = 10;
+
   el.innerHTML = `<table class="an-table">
     <thead><tr>
       <th>#</th>
       <th>Destination</th>
       <th>District</th>
       <th class="an-td-num">${esc(colHeader)}</th>
-      <th class="an-td-num">Rate</th>
+      <th class="an-td-num" title="Share of opinions (complaints + praise) about ${esc(topicLabel)}; hidden below ${MIN_OPINIONS} opinions">${rateHeader}</th>
     </tr></thead>
     <tbody>
     ${rows.map((r, i) => {
       let mainVal, rate;
-      if (AN_VIEW === "complaints") {
-        mainVal = r.neg.toLocaleString();
-        rate    = r.n > 0 ? (r.rate * 100).toFixed(1) + "%" : "—";
-      } else if (AN_VIEW === "praised") {
+      const enough = r.n >= MIN_OPINIONS;
+      if (AN_VIEW === "praised") {
         mainVal = r.pos.toLocaleString();
-        rate    = r.n > 0 ? (r.praiseRate * 100).toFixed(1) + "%" : "—";
+        rate    = enough ? (r.praiseRate * 100).toFixed(1) + "%" : "—";
       } else {
-        mainVal = r.reviews.toLocaleString();
-        rate    = "—";
+        mainVal = AN_VIEW === "complaints" ? r.neg.toLocaleString() : r.reviews.toLocaleString();
+        rate    = enough ? (r.rate * 100).toFixed(1) + "%" : "—";
       }
       return `<tr>
         <td class="an-td-num an-td-muted">${i + 1}</td>

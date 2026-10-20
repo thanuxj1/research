@@ -323,10 +323,19 @@ def _analyse_text(text: str) -> tuple:
     # so "though." (the second half of a contrast-split sentence) survived
     # as its own opinion unit there but not here -- two code paths meant to
     # be the same engine, disagreeing on what a review contains.
-    pieces = [
-        p for p in split_into_segments(text)
-        if len(p.split()) >= MIN_SEGMENT_WORDS
-    ]
+    #
+    # Short pieces are analysed rather than dropped up front, then kept only
+    # if the topic model finds something in them (see _keep below). Dropping
+    # them blind lost real opinions: in "Beautiful place, but the path was
+    # slippery" the contrast split leaves "Beautiful place" at two words, and
+    # the scenery praise vanished. The models label such fragments correctly
+    # ("Beautiful place" -> scenery P, "Overpriced" -> price N), and an empty
+    # one ("though.", "Even") gets no topic and is still discarded.
+    pieces = [p for p in split_into_segments(text) if p.split()]
+
+    def _keep(segs):
+        return [s for s in segs
+                if s["aspects"] or len(s["segment_text"].split()) >= MIN_SEGMENT_WORDS]
 
     # A second bound behind ReviewRequest.text's max_length. One transformer
     # call per segment is the cost centre here, and the request holds a
@@ -338,7 +347,7 @@ def _analyse_text(text: str) -> tuple:
         pieces = pieces[:MAX_SEGMENTS_PER_REVIEW]
 
     if method == "F_final_models":
-        return _analyse_final(model, pieces), method, truncated
+        return _keep(_analyse_final(model, pieces)), method, truncated
 
     for piece in pieces:
         # Stage 3 -- what is this piece ABOUT?
@@ -387,7 +396,7 @@ def _analyse_text(text: str) -> tuple:
             "triggered_words": sorted(set(triggers)),
         })
 
-    return results, method, truncated
+    return _keep(results), method, truncated
 
 
 def _analyse_final(FM, pieces: List[str]) -> List[Dict]:
