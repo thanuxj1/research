@@ -14,9 +14,9 @@ export default defineConfig({
     port: 3000,
     open: true,
     proxy: {
-      "/assistance":    { target: "http://51.20.34.58:5001", changeOrigin: true },
-      "/budget_planner":{ target: "http://51.20.34.58:5001", changeOrigin: true },
-      "/questions":     { target: "http://51.20.34.58:5001", changeOrigin: true },
+      "/assistance":    { target: "http://54.234.54.197:5001", changeOrigin: true },
+      "/budget_planner":{ target: "http://54.234.54.197:5001", changeOrigin: true },
+      "/questions":     { target: "http://54.234.54.197:5001", changeOrigin: true },
       "/travellens":    { target: "http://127.0.0.1:8080",   changeOrigin: true },
       "/food":          { target: "http://127.0.0.1:8080",   changeOrigin: true },
     },

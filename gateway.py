@@ -68,7 +68,7 @@ ROOT = Path(__file__).resolve().parent
 UPSTREAMS: Dict[str, str] = {
     "food_api": "http://127.0.0.1:8001",
     # Flask AI services — deployed host or local.
-    "flask": "http://51.20.34.58:5001",
+    "flask": "http://54.234.54.197:5001",
 }
 
 SPAS = {
