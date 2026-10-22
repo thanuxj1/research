@@ -679,39 +679,6 @@ mounts the drawer now, and both the component and its API helper say so at the t
 rather than sitting there looking live. Re-attaching it is one piece of state in
 `App.jsx` and one call site.
 
-### Dish photos
-
-Every dish has a photo, and the API has no image field. The client derives the
-path from the dish name — `dishSlug('Kiri Toffee (Milk Toffee)')` gives
-`dishes/kiri-toffee-milk-toffee.jpg` — because the name is already the join key
-for the CSV, the descriptions, the price table and the venue profiles. Nothing new
-has to be kept in sync on the server, and no card waits on a second request to
-learn where its picture lives.
-
-Deriving the path costs something, though: it is a claim the server cannot check.
-`npm run verify` checks it instead, in **both** directions, using the same
-`dishSlug` the app imports rather than a second copy of the rule. A dish with no
-photo fails the build, and so does a photo with no dish — the second being the one
-that hides, because it means a dish was renamed in the CSV and the stale file is
-still being shipped while the new name renders a hole. Photos are imported by
-`node scripts/import-dish-images.mjs <source-dir>`, which matches on the slug (so
-`Mutton Curry (Lamb Curry).jpg` binds to `Mutton Curry`) and treats every
-ambiguity as a hard error, because a card wearing the wrong dish's photo is worse
-than a card with none: nothing downstream can detect it.
-
-The photo sits in a fixed 16:9 box with `object-fit: cover`. The set is not
-uniform — 52 of the 155 files are 16:9, 51 are 3:2, 8 are 4:3, across 53 distinct
-pixel sizes — so letting each file set its own height would give the grid ragged
-rows and a reflow as each image arrived. A 3:2 box was measured against 16:9 and
-comes out level on how much of the set it crops, so card density decided it; 66
-files are not cropped at all, and the two square photos lose 44% of their height,
-which makes them the ones to replace first. The loading skeleton reserves the same
-box. `alt` is empty by design: the photo says nothing the `<h3>` beside it does
-not, and an empty `alt` is how you say "decorative here" instead of leaving it
-unlabelled.
-
----
-
 ## Testing
 
 421 tests, stdlib `unittest`, no ML dependencies and no network required:
